@@ -7,12 +7,12 @@ This app helps you record what you eat and manage your diet
 
 
 ## 👥 Member
-Jiyun Kim  
+Jiyoon Kim : chupki0531@gmail.com  
 Sanghyun Kim : vison901@gmail.com  
 Sowon Jeong : sowon0512@gmail.com  
 Jaekang Lee : aa54389aa@gmail.com  
-Teajin Kim  
-Jaehyun Lee  
+Teajin Kim : songtaejin990@gmail.com  
+Jaehyun Lee 
   
 ## 🛠️Used
 language : Java, Javascript(ReactNative)  
