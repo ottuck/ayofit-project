@@ -15,3 +15,5 @@ export const GlobalStyles = {
     blackOpacity50: "rgba(0,0,0,0.5)",
   },
 };
+
+
