@@ -11,14 +11,15 @@ Jiyoon Kim : chupki0531@gmail.com
 Sanghyun Kim : vison901@gmail.com  
 Sowon Jeong : sowon0512@gmail.com  
 Jaekang Lee : aa54389aa@gmail.com  
-Teajin Kim : songtaejin990@gmail.com  
+Taejin Song : songtaejin990@gmail.com  
 Jaehyun Lee 
   
 ## 🛠️Used
-language : Java, Javascript(ReactNative)  
-Build : Gradle, EAS build  
-DB : Oracle Cloud DB  
-VCS : Git  
+language : Java, JavaScript ES6     
+Library : Spring Boot, React, React Native  
+Build : Gradle, EAS build   
+DB : Oracle Cloud DB    
+VCS : GitHub
 
 ## Features
 
@@ -34,6 +35,7 @@ VCS : Git
 <img width="635" alt="스크린샷 2023-08-10 오전 9 17 47" src="https://github.com/ottuck/pikapedia-project/assets/116790133/0c64b7c6-9d32-4250-a0b2-333c24a1cc46">
 <img width="635" alt="스크린샷 2023-08-10 오전 9 18 02" src="https://github.com/ottuck/pikapedia-project/assets/116790133/339bfeed-b18d-42e9-948d-d3fe032d5794">
 <img width="635" alt="스크린샷 2023-08-10 오전 9 18 16" src="https://github.com/ottuck/pikapedia-project/assets/116790133/0187f233-e4a3-43bc-945d-e83b0c614386">
+
 
 
 # Thank You !
