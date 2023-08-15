@@ -210,3 +210,48 @@ export const TodaysWeightKg = styled.Text`
   font-size: 18.5px;
   font-weight: 600;
 `;
+
+export const DateContainer = styled.View`
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+`;
+
+export const DateButtonContainer = styled.View`
+  flex-direction: row;
+  width: 320px;
+  height: 36px;
+  border-radius: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-top: 16px;
+`;
+
+export const DateButton = styled.TouchableOpacity`
+  width: 105px;
+  height: 31.8px;
+  justify-content: center;
+  align-items: center;
+  background-color: ${(props) =>
+    props.isActive ? "rgba(255, 255, 255, 0.6)" : "transparent"};
+  border-radius: 16px;
+  shadow-color: ${(props) =>
+    props.isActive ? "rgba(0, 0, 0, 1)" : "transparent"};
+  shadow-offset: ${(props) => (props.isActive ? "0px 8px" : "0px 0px")};
+  shadow-opacity: 1;
+  shadow-radius: 8px;
+  elevation: ${(props) => (props.isActive ? "16" : "0")};
+`;
+
+export const DateButtonText = styled.Text`
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  text-align: center;
+  color: ${(props) =>
+    props.isActive ? "rgba(255, 255, 255, 0.65)" : "rgba(255, 255, 255, 0.45)"};
+`;
