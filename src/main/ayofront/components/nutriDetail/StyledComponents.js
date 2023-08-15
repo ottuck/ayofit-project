@@ -102,7 +102,7 @@ export const HomeNavButton = styled.TouchableOpacity`
     shadow-offset: 0px 4px;
     shadow-opacity: 0.0625;
     shadow-radius: 4px;
-    elevation: 10; 
+    elevation: 6; 
   `}
 `;
 
