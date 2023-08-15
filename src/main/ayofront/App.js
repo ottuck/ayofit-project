@@ -2,6 +2,10 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import axios from "axios";
+import Constants from "expo-constants";
+import { StatusBar } from "expo-status-bar";
+import { useEffect, useState } from "react";
 
 import NutriDetailScreen from "./screens/nutriDetail/nutriDetail_test";
 import RecordScreen from "./screens/record/record_test";
@@ -13,6 +17,21 @@ import { GlobalStyles } from "./components/UI/styles";
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+
+  const [hello, setHello] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`${uri}/api/user`)
+      .then((response) => {
+        setHello(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => console.log(error));
+  }, []);
+
   return (
     <NavigationContainer style={styles.navigationContainer}>
       <Tab.Navigator
