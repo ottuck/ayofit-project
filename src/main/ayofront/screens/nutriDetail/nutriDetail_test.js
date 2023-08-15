@@ -3,18 +3,21 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Button,
-  TextInput,
   SafeAreaView,
   Animated,
   Image,
+  FlatList,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { ScrollView } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Constants from "expo-constants";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Progress from "react-native-progress";
+import { AnimatedCircularProgress } from "react-native-circular-progress";
+import MyRecordsComponent from "../../components/nutriDetail/MyRecordsComponent";
+import DetailsComponent from "../../components/nutriDetail/DetailsComponent";
 import {
   HomeSafeAreaView,
   HomeUserContainer,
@@ -91,10 +94,8 @@ function NutriDetailScreen() {
         ))}
       </HomeNavButtonContainer>
 
-      {/* {selectedHomeNavButton === 0 && <Text>나의 기록</Text>}
-      {selectedHomeNavButton === 1 && <Text>세부 정보</Text>} */}
-      {/* {selectedHomeNavButton === 0 && <MyRecordsComponent />}
-      {selectedHomeNavButton === 1 && <DetailsComponent />} */}
+      {selectedHomeNavButton === 0 && <MyRecordsComponent />}
+      {selectedHomeNavButton === 1 && <DetailsComponent />}
     </HomeSafeAreaView>
   );
 }

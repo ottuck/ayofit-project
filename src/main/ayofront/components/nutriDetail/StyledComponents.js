@@ -112,5 +112,101 @@ export const HomeNavButtonText = styled.Text`
   letter-spacing: -0.5px;
   text-align: center;
   color: ${(props) =>
-    props.active ? "rgba(0, 0, 0, 0.55)" : "rgba(255, 255, 255, 0.55)"};
+    props.active ? "rgba(0, 0, 0, 0.65)" : "rgba(255, 255, 255, 0.55)"};
+`;
+
+export const MyRecordsDailyNutritionContainer = styled.View`
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 92%;
+  height: 202px;
+  margin-vertical: 48px;
+  margin-horizontal: 16px;
+  border-radius: 20px;
+`;
+
+export const CircularProgressContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 3.2px;
+  padding-horizontal: 8.8px;
+`;
+
+export const CircularProgressTextContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+`;
+
+export const CircularProgressCarbText = styled.Text`
+  font-size: 17.5px;
+  margin-left: -0.6px;
+  font-weight: 600;
+  color: "rgba(0, 0, 0, 0.7)";
+`;
+
+export const CircularProgressPercentage = styled.Text`
+  font-size: 17.5px;
+  margin-left: 5.2px;
+  font-weight: 800;
+  color: "rgba(0, 0, 0, 0.7)";
+`;
+
+export const DailyConsumptionContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 30px;
+  margin-top: 16px;
+`;
+
+export const DailyConsumptionText = styled.Text`
+  color: #000000;
+  font-size: 18.5px;
+  font-weight: 500;
+`;
+
+export const DailyConsumptionKcal = styled.Text`
+  color: #fb9129;
+  font-size: 18.5px;
+  font-weight: 600;
+`;
+
+export const FaintLine = styled.View`
+  height: 1px;
+  width: 92%;
+  background-color: "rgba(0, 0, 0, 0.25)";
+  margin-horizontal: 12px;
+  margin-vertical: 10px;
+`;
+
+export const MyRecordsTodaysWeightContainer = styled.View`
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 100%;
+  height: 280px;
+  margin-vertical: 48px;
+  border-radius: 20px;
+`;
+
+export const TodaysWeightTextContainer = styled.View`
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 30px;
+  margin-top: 16px;
+  margin-left: 20px;
+`;
+
+export const TodaysWeightText = styled.Text`
+  color: #000000;
+  font-size: 18.5px;
+  font-weight: 500;
+`;
+
+export const TodaysWeightKg = styled.Text`
+  color: #fb9129;
+  font-size: 18.5px;
+  font-weight: 600;
 `;
