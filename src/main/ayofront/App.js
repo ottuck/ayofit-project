@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import NutriDetailScreen from "./screens/nutriDetail/nutriDetail_test";
-import RecordScreen from "./screens/record/record_test";
+import RecordNavigator from "./screens/record/RecordNavigator";
 import FastScreen from "./screens/fast/fast_test";
 import PedometerScreen from "./screens/pedometer/pedometer_test";
 import AccountScreen from "./screens/account/account_test";
@@ -16,7 +16,11 @@ export default function App() {
   return (
     <NavigationContainer style={styles.navigationContainer}>
       <Tab.Navigator
-        screenOptions={({ route }) => ({
+         screenOptions={({ route }) => ({
+          tabBarHideOnKeyboard: true,
+          tabBarShowLabel: false,
+          headerShown: false,
+
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
@@ -44,7 +48,7 @@ export default function App() {
         })}
       >
         <Tab.Screen name="HOME" component={NutriDetailScreen} />
-        <Tab.Screen name="DIET RECORD" component={RecordScreen} />
+        <Tab.Screen name="DIET RECORD" component={RecordNavigator} />
         <Tab.Screen name="CHALLENGE" component={FastScreen} />
         <Tab.Screen name="STEP COUNTER" component={PedometerScreen} />
         <Tab.Screen name="MY PAGE" component={AccountScreen} />
