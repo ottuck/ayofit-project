@@ -110,11 +110,11 @@ const DetailsComponent = () => {
     setFatPercentage(fatPercent);
   };
 
-  const getTodayNutrition = () => {
+  const getTodayNutrition = (specificDate = formattedToday) => {
     axios
-      .get(`${uri}/api/nutrition/daily/user1/${formattedToday}`)
+      .get(`${uri}/api/nutrition/daily/user1/${specificDate}`)
       .then((response) => {
-        setSelectedDate(formattedToday);
+        setSelectedDate(specificDate);
         setSelectedDateMeals(response.data);
         setDailyNutrition(response.data);
       })
@@ -266,6 +266,9 @@ const DetailsComponent = () => {
 
   const handleDateChange = (newDate) => {
     // 새로운 날짜를 받아서 데이터를 다시 요청합니다.
+
+    let formattedNewDate = newDate.toISOString().split("T")[0];
+    getTodayNutrition(formattedNewDate);
     fetchData(newDate);
   };
 

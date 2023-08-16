@@ -195,8 +195,9 @@ const MyRecordsComponent = () => {
           yAxisSuffix="kg"
           yAxisInterval={7}
           chartConfig={{
-            backgroundGradientFrom: "rgba(255, 255, 255, 0.5)",
-            backgroundGradientTo: "rgba(255, 255, 255, 0.5)",
+            backgroundColor: "#FFF4EC",
+            backgroundGradientFrom: "#FFF4EC",
+            backgroundGradientTo: "#FFF4EC",
             decimalPlaces: 1,
             color: (opacity = 1) => "#E46C0A",
             labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
