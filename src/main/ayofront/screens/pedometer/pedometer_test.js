@@ -30,7 +30,7 @@ import {
 } from "@expo-google-fonts/open-sans";
 import { GlobalStyles } from "../../components/UI/styles";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 function PedometerScreen() {
   const [steps, setSteps] = useState(0);
@@ -54,6 +54,15 @@ function PedometerScreen() {
     OpenSans_700Bold_Italic,
     OpenSans_800ExtraBold_Italic,
   });
+
+  useEffect(() => {
+    async function hideSplashScreen() {
+      if (fontsLoaded) {
+        await SplashScreen.hideAsync();
+      }
+    }
+    hideSplashScreen();
+  }, [fontsLoaded]);
 
   useEffect(() => {
     const accelerometerSubscription = Accelerometer.addListener(
