@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, ImageBackground, ScrollView, TouchableOpacity, TextInput, Modal } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, ImageBackground, ScrollView, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -55,7 +55,7 @@ const RecordMain = ({ navigation }) => {
             <View style={styles.foodRecordContainer}>
               <TouchableOpacity>
                 <AntDesign name="close" style={styles.recordDeleteButton} />
-              </TouchableOpacity>
+                </TouchableOpacity>
               <View>
                 <Text style={styles.foodInfo}>Food: Carrot</Text>
                 <Text style={styles.foodInfo}>Calories: 41.3 Kcal</Text>
