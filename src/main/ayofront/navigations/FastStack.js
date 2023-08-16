@@ -11,7 +11,7 @@ import FastDate from "../components/fast/FastDate";
 import {MethodContainer, MethodTitle, MethodCTouch, MethodCText, MethodCEndTouch,PlanContainer,PlanTitle,PlanMethodText,PlanMethodCView,PlanMethodC
     ,PlanEndView,PlanEndText,PlanConfirmV,PlanConfirmB,PlanConfirmT,ConfirmScroll,ConfirmContainer,ConfirmTitle,ConfirmTime,ConfirmBtn,ConfirmText
     ,TimerContainer,TimerTitle,TimerHomeBtn,TimerHomeBT,EndTimeText,MethodCTextS,ConfirmMessage,ConfirmMView,ConfirmStart,ConfrimSText,ConfirmEnd
-    ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView
+    ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView,FirstMainPage,MainBtn,MainText
 } from '../components/fast/FastingStyled';
 
 
@@ -46,6 +46,17 @@ let nowminutes = MinuteNumber(nowTime.getMinutes());
 let HourMinutes = `${nowHours}:${nowminutes}`
 
 //-------------------------------------------------------------------------------//
+
+
+const FastMainPage = ({navigation : { navigate } }) => (
+    <FirstMainPage>
+       <MainBtn onPress={() => navigate("FastingMethod")}>
+            <MainText>+ Set up your plan</MainText>
+        </MainBtn>
+    </FirstMainPage>
+    );
+    
+
 
 const FastMethod = ({ navigation }) => {
     const[seletedDate, setSelectedDate] = useState('');
@@ -240,7 +251,7 @@ function MyTimer({ route, navigation: {navigate} }) {
 
     return (
         <TimerContainer>
-            <TimerHomeBtn onPress={() => navigate("Tabs", {screen:"FastMain"})}>
+            <TimerHomeBtn onPress={() => navigate("FastMainPage")}>
             <TimerHomeBT>Reset     <Entypo name="trash" size={24} color="black" /></TimerHomeBT> 
             </TimerHomeBtn>
             <TouchableOpacity activeOpacity={0} onPress={() => setIsPlaying(prev => !prev)}>
@@ -302,6 +313,7 @@ const FastStack = () => (
         headerTintColor: "black",
         headerBackTitleVisible: false,
     }}>
+    <NativeStack.Screen name="FastMainPage" component={FastMainPage} />
     <NativeStack.Screen name="FastingMethod" component={FastMethod} />
     <NativeStack.Screen name="ConfirmFastPlan" component={FastConfirm} />
     <NativeStack.Screen name="FastPlan" component={FastPlan} />
