@@ -1,4 +1,11 @@
-import { TextInput, View, Text, StyleSheet } from "react-native";
+import {
+  TextInput,
+  View,
+  Text,
+  StyleSheet,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { GlobalStyles } from "../../UI/styles";
 
 function Input({ label, textInputConfig, style }) {
