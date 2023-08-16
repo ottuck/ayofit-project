@@ -1,5 +1,25 @@
 import styled from "styled-components/native"
-
+//-------------------FastImg------------------------------//
+export const FastMainImage = styled.View`
+width: 100%;
+height: 100%;
+position : relative;
+`;
+export const FastHeaderImg = styled.Image`
+width: 100%;
+height: 33%;
+resize-mode: cover;
+`;
+export const FastOverlay = styled.Image`
+position: absolute;
+top: 0;
+left: 0;
+z-index: 1;
+opacity: 0.7;
+width: 100%;
+height: 35%;
+resize-mode: cover;
+`;
 //-------------------MainPage-----------------------------//
 export const MainBtn = styled.TouchableOpacity`
  border-radius : 20px;
@@ -7,6 +27,7 @@ export const MainBtn = styled.TouchableOpacity`
  height : 60px;
  align-items: center;
  justify-content: center;
+bottom: 330px;
 `;
 export const MainText = styled.Text`
  color : #00000080;
@@ -143,7 +164,7 @@ flex: 1;
 `;
 export const ConfirmContainer = styled.View`
 background-color: #FFE9D8;
-height : 780px;
+height : 600px;
 `;
 export const ConfirmTitle = styled.Text`
 font-size: 19px;
@@ -185,7 +206,7 @@ color : #000000;
 export const ConfirmMView = styled.View`
 justify-content : center;
 align-items: center;
-bottom : -280px;
+bottom : -100px;
 `;
 export const ConfirmTView = styled.View`
 align-items: center;
@@ -219,6 +240,7 @@ font-weight : 500;
 white-space : pre;
 `;
 //--------------------Timer(Stack.js)----------------------//
+
 export const TimerContainer = styled.View`
 flex:1;
 align-items: center;
@@ -235,11 +257,9 @@ border-radius : 50px;
 align-items: center;
 justify-content: center;
 border : 1px solid #FFE9D8;
-bottom : -80px;
 height : 70px;
 width : 35%;
-right : -120;
-bottom : 50;
+right : -120px;
 margin-bottom : 30px;
 `;
 export const TimerHomeBT = styled.Text`
@@ -270,7 +290,7 @@ font-size: 18px;
 font-weight : 500;
 `;
 export const TimerEnd = styled.View`
-margin-top : 40px;
+margin-top : 20px;
 width: 330px;
 height: 50px;
 background-color : #E46C0A33;

@@ -1,5 +1,5 @@
 import React, { useState,} from "react";
-import { StyleSheet, TouchableOpacity,Text } from 'react-native';
+import { StyleSheet, TouchableOpacity,Text,Image } from 'react-native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -11,9 +11,10 @@ import FastDate from "../components/fast/FastDate";
 import {MethodContainer, MethodTitle, MethodCTouch, MethodCText, MethodCEndTouch,PlanContainer,PlanTitle,PlanMethodText,PlanMethodCView,PlanMethodC
     ,PlanEndView,PlanEndText,PlanConfirmV,PlanConfirmB,PlanConfirmT,ConfirmScroll,ConfirmContainer,ConfirmTitle,ConfirmTime,ConfirmBtn,ConfirmText
     ,TimerContainer,TimerTitle,TimerHomeBtn,TimerHomeBT,EndTimeText,MethodCTextS,ConfirmMessage,ConfirmMView,ConfirmStart,ConfrimSText,ConfirmEnd
-    ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView,FirstMainPage,MainBtn,MainText
+    ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView,FirstMainPage,MainBtn,MainText,FastMainImage,FastHeaderImg,FastOverlay
 } from '../components/fast/FastingStyled';
-
+import FastHeader1 from '../images/FastImage/FastHeader1.png'
+import FastHeader2 from '../images/FastImage/FastHeader2.png'
 
 //-------------------------------current Time------------------------------//
 let nowDate = new Date();
@@ -45,11 +46,18 @@ let nowminutes = MinuteNumber(nowTime.getMinutes());
 
 let HourMinutes = `${nowHours}:${nowminutes}`
 
-//-------------------------------------------------------------------------------//
+//----------------------오버레이 이미지------------------------------------//
+const OverlayedImage = () => (
+    <FastMainImage>
+      <FastHeaderImg source={FastHeader1} />
+      <FastOverlay source={FastHeader2} />
+    </FastMainImage>
+  );
 
-
+//---------------------StackPage-----------------------------------------//
 const FastMainPage = ({navigation : { navigate } }) => (
     <FirstMainPage>
+        <OverlayedImage />
        <MainBtn onPress={() => navigate("FastingMethod")}>
             <MainText>+ Set up your plan</MainText>
         </MainBtn>
@@ -106,6 +114,7 @@ const FastMethod = ({ navigation }) => {
     return(
 <MethodContainer>
 <MethodTitle>
+<OverlayedImage />
     Please choose a method<Ionicons name="checkmark" size={28} color="black" />
 </MethodTitle>
 <MethodCTouch onPress={() => selectMethod(12)}>
