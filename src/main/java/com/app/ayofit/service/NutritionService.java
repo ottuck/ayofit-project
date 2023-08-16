@@ -31,6 +31,7 @@ public class NutritionService {
         calendar.setTime(currentDate);
         // 일주일 전 날짜 계산
         calendar.add(Calendar.WEEK_OF_YEAR, -1);
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
         // 일주일 전 날짜를 Date 형태로 가져오기
         Date oneWeekAgo = calendar.getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

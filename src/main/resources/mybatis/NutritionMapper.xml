@@ -18,7 +18,7 @@
     <select id="getMonthlyNutrition" resultType="com.app.ayofit.model.NutritionInfo">
         SELECT SUM(r_carbohydrate) as totalCarbohydrate, SUM(r_protein) as totalProtein, SUM(r_fat) as totalFat
         FROM record_meal
-        WHERE r_id = #{userId} AND r_meal_date BETWEEN #{month} AND (sysdate + 1)
+        WHERE r_id = #{userId} AND r_meal_date BETWEEN #{month} AND sysdate
     </select>
     
 </mapper>

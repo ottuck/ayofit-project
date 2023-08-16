@@ -2,8 +2,9 @@ import styled from "styled-components/native";
 import * as Progress from "react-native-progress";
 
 export const HomeSafeAreaView = styled.SafeAreaView`
-  flex: 1;
+  height: 1020px;
   background-color: #ffe9d8;
+  padding-top: 28px;
 `;
 
 export const HomeUserContainer = styled.View`
@@ -25,7 +26,7 @@ export const HomeHelloText = styled.Text`
 export const HomeAyoText = styled.Text`
   color: #e46c0a;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 21px;
 `;
 
 export const HomeDateText = styled.Text`
@@ -118,7 +119,7 @@ export const HomeNavButtonText = styled.Text`
 export const MyRecordsDailyNutritionContainer = styled.View`
   background-color: rgba(255, 255, 255, 0.5);
   width: 92%;
-  height: 202px;
+  height: 200px;
   margin-vertical: 48px;
   margin-horizontal: 16px;
   border-radius: 20px;
@@ -184,7 +185,7 @@ export const FaintLine = styled.View`
 export const MyRecordsTodaysWeightContainer = styled.View`
   background-color: rgba(255, 255, 255, 0.5);
   width: 100%;
-  height: 280px;
+  height: 286px;
   margin-vertical: 48px;
   border-radius: 20px;
 `;
@@ -221,7 +222,7 @@ export const DateContainer = styled.View`
 export const DateButtonContainer = styled.View`
   flex-direction: row;
   width: 320px;
-  height: 36px;
+  height: 36.2px;
   border-radius: 20px;
   background-color: rgba(0, 0, 0, 0.5);
   align-items: center;
@@ -233,7 +234,7 @@ export const DateButtonContainer = styled.View`
 
 export const DateButton = styled.TouchableOpacity`
   width: 105px;
-  height: 31.8px;
+  height: 31.6px;
   justify-content: center;
   align-items: center;
   background-color: ${(props) =>

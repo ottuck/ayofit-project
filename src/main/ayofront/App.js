@@ -55,6 +55,7 @@ export default function App() {
           },
           tabBarActiveTintColor: GlobalStyles.colors.primary500,
           tabBarInactiveTintColor: GlobalStyles.colors.blackOpacity50,
+          headerShown: false,
           tabBarStyle: {
             backgroundColor: GlobalStyles.colors.primary50,
             borderRadius: 16,

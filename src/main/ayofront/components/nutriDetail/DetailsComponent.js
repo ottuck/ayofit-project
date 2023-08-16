@@ -35,6 +35,7 @@ const DetailsComponent = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDateMeals, setSelectedDateMeals] = useState([]);
   const [dailyNutrition, setDailyNutrition] = useState([]);
+  const [weeklyNutrition, setWeeklyNutrition] = useState([]);
   const [monthlyNutrition, setMonthlyNutrition] = useState([]);
 
   let totalCarbohydrate = 0;
@@ -49,12 +50,17 @@ const DetailsComponent = () => {
 
   let totalCalories = totalCarbohydrate * 4 + totalProtein * 4 + totalFat * 9;
 
-  const todayInTokyo = new Date();
+  let todayInTokyo = new Date();
   todayInTokyo.setHours(todayInTokyo.getHours() + 9); // 도쿄 시간대에 맞게 시간을 조정.
-  const formattedToday = todayInTokyo.toISOString().split("T")[0]; // ISO 형식을 사용하여 날짜만 가져오기.
+  let formattedToday = todayInTokyo.toISOString().split("T")[0]; // ISO 형식을 사용하여 날짜만 가져오기.
   let formattedMonth = formattedToday.substring(0, 7) + "-01"; // 월의 시작 날짜를 설정.
   // formattedMonth += "01"; 위에서 "-01"을 붙이지 않을 경우 두줄로 이렇게도 작성할수있음.
   // console.log(formattedMonth); 2023-08-01
+
+  let weeklyStartDate = new Date(todayInTokyo);
+  weeklyStartDate.setDate(weeklyStartDate.getDate() - 6); // 일주일 전으로 이동
+  let formattedStartDate = weeklyStartDate.toISOString().split("T")[0];
+  // console.log(formattedStartDate);
 
   const getTodayNutrition = () => {
     axios
@@ -67,16 +73,26 @@ const DetailsComponent = () => {
       .catch((error) => console.log(error));
   };
 
-  // const getMonthNutrition = () => {
-  //   axios
-  //     .get(`${uri}/api/nutrition/monthly/user1/${formattedMonth}`)
-  //     .then((response) => {
-  //       // console.log(response.data);
-  //       setSelectedDate(formattedMonth);
-  //       setSelectedDateMeals(response.data);
-  //     })
-  //     .catch((error) => console.log(error));
-  // };
+  const getWeeklyNutrition = () => {
+    axios
+      .get(`${uri}/api/nutrition/weekly/user1`)
+      .then((response) => {
+        // console.log(response.data);
+        setWeeklyNutrition(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const getMonthNutrition = () => {
+    axios
+      .get(`${uri}/api/nutrition/monthly/user1/${formattedMonth}`)
+      .then((response) => {
+        // console.log(response.data);
+        setSelectedDate(formattedMonth);
+        setSelectedDateMeals(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
 
   useEffect(() => {
     axios
@@ -88,14 +104,23 @@ const DetailsComponent = () => {
       .catch((error) => console.log(error));
     getTodayNutrition();
 
-    // axios
-    //   .get(`${uri}/api/nutrition/monthly/user1/${formattedMonth}`)
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     setMonthlyNutrition(response.data);
-    //   })
-    //   .catch((error) => console.log(error));
-    // getMonthNutrition();
+    axios
+      .get(`${uri}/api/nutrition/weekly/user1`)
+      .then((response) => {
+        console.log(response.data);
+        setWeeklyNutrition(response.data);
+      })
+      .catch((error) => console.log(error));
+    getWeeklyNutrition();
+
+    axios
+      .get(`${uri}/api/nutrition/monthly/user1/${formattedMonth}`)
+      .then((response) => {
+        console.log(response.data);
+        setMonthlyNutrition(response.data);
+      })
+      .catch((error) => console.log(error));
+    getMonthNutrition();
   }, []);
 
   let totalNutrients =
@@ -112,13 +137,13 @@ const DetailsComponent = () => {
 
   // 각각의 원에 대한 애니메이션 값 상태
   const [carbAnimationValue, setCarbAnimationValue] = useState(
-    new Animated.Value(60)
+    new Animated.Value(65)
   );
   const [proteinAnimationValue, setProteinAnimationValue] = useState(
-    new Animated.Value(60)
+    new Animated.Value(65)
   );
   const [fatAnimationValue, setFatAnimationValue] = useState(
-    new Animated.Value(60)
+    new Animated.Value(65)
   );
 
   useEffect(() => {
@@ -138,7 +163,7 @@ const DetailsComponent = () => {
       }).start();
     } else {
       Animated.timing(carbAnimationValue, {
-        toValue: 60,
+        toValue: 65,
         duration: 700,
         useNativeDriver: false,
       }).start();
@@ -152,7 +177,7 @@ const DetailsComponent = () => {
       }).start();
     } else {
       Animated.timing(proteinAnimationValue, {
-        toValue: 60,
+        toValue: 65,
         duration: 700,
         useNativeDriver: false,
       }).start();
@@ -166,7 +191,7 @@ const DetailsComponent = () => {
       }).start();
     } else {
       Animated.timing(fatAnimationValue, {
-        toValue: 60,
+        toValue: 65,
         duration: 700,
         useNativeDriver: false,
       }).start();
@@ -196,9 +221,9 @@ const DetailsComponent = () => {
       </DateContainer>
 
       <View style={styles.dateNutritionInfo}>
-        <Text style={{ color: "#000000", fontWeight: "500", fontSize: 16 }}>
+        <Text style={{ color: "#000000", fontWeight: "500", fontSize: 18 }}>
           Daily Calorie Consumption :{" "}
-          <Text style={{ color: "#FB9129", fontWeight: "600", fontSize: 17 }}>
+          <Text style={{ color: "#FB9129", fontWeight: "600", fontSize: 19 }}>
             {Math.round(totalCalories)} kcal
           </Text>
         </Text>
@@ -207,7 +232,7 @@ const DetailsComponent = () => {
           <View style={styles.progressBarContainer}>
             <Progress.Bar
               progress={carbPercentage / 100}
-              width={160}
+              width={172}
               height={12}
               color={"#E0F0B5"}
               backgroundColor={"rgba(0, 0, 0, 0.2)"}
@@ -218,7 +243,7 @@ const DetailsComponent = () => {
             </Text>
             <Progress.Bar
               progress={proteinPercentage / 100}
-              width={160}
+              width={172}
               height={12}
               color={"#FFEC99"}
               backgroundColor={"rgba(0, 0, 0, 0.2)"}
@@ -229,7 +254,7 @@ const DetailsComponent = () => {
             </Text>
             <Progress.Bar
               progress={fatPercentage / 100}
-              width={160}
+              width={172}
               height={12}
               color={"#FFD6D1"}
               backgroundColor={"rgba(0, 0, 0, 0.2)"}
@@ -301,14 +326,6 @@ const DetailsComponent = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      <View
-        style={{
-          width: 312,
-          height: 220,
-          backgroundColor: "white",
-          marginTop: 20,
-        }}
-      ></View>
       <View style={styles.diamondContainer}>
         {/* 첫 번째 원 */}
         <Animated.View
@@ -321,7 +338,13 @@ const DetailsComponent = () => {
             },
           ]}
         >
-          <Text>{`${fatPercentage.toFixed(2)}%`}</Text>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "600",
+              color: "rgba(0, 0, 0, 0.8)",
+            }}
+          >{`${fatPercentage.toFixed(2)}%`}</Text>
         </Animated.View>
 
         {/* 두 번째 원 */}
@@ -336,7 +359,13 @@ const DetailsComponent = () => {
               },
             ]}
           >
-            <Text>{`${carbPercentage.toFixed(2)}%`}</Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "600",
+                color: "rgba(0, 0, 0, 0.8)",
+              }}
+            >{`${carbPercentage.toFixed(2)}%`}</Text>
           </Animated.View>
           {/* 세 번째 원 */}
           <Animated.View
@@ -349,8 +378,25 @@ const DetailsComponent = () => {
               },
             ]}
           >
-            <Text>{`${proteinPercentage.toFixed(2)}%`}</Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "600",
+                color: "rgba(0, 0, 0, 0.8)",
+              }}
+            >{`${proteinPercentage.toFixed(2)}%`}</Text>
           </Animated.View>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            width: "100%",
+            justifyContent: "space-around",
+          }}
+        >
+          <Text>Carb</Text>
+          <Text>Protein</Text>
+          <Text>Fat</Text>
         </View>
       </View>
     </View>
@@ -361,14 +407,19 @@ export default DetailsComponent;
 
 const styles = StyleSheet.create({
   diamondContainer: {
-    borderWidth: 1,
-    borderColor: "black",
     alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.45)",
+    width: "92%",
+    height: 180,
+    borderRadius: 16,
     marginTop: 20,
+    marginHorizontal: 16,
   },
   circleRow: {
     flexDirection: "row",
-    marginTop: -6,
+    marginTop: -8,
+    marginLeft: -10,
   },
   circle: {
     width: 60,
@@ -376,11 +427,11 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 1.6,
+    marginHorizontal: 1,
   },
   dateNutritionInfo: {
     width: "92%",
-    height: "31%",
+    height: "42%",
     backgroundColor: "rgba(255, 255, 255, 0.45)",
     borderRadius: 16,
     marginTop: 16,
@@ -390,24 +441,24 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
   },
   faintLine: {
-    height: 1,
+    height: 1.2,
     width: "92%",
     backgroundColor: "rgba(0, 0, 0, 0.25)",
-    marginVertical: 8,
+    marginVertical: 12.6,
   },
   mainNutritionDetailsContainer: {
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.65)",
     width: "92%",
     height: "56%",
     borderRadius: 16,
-    backgroundColor: "rgba(255, 255, 255, 0.65)",
   },
   progressBarContainer: {
     height: "100%",
     justifyContent: "space-evenly",
     marginTop: 6,
-    marginLeft: 12,
+    marginLeft: 22,
   },
   progressBarPer: {
     fontSize: 16,
@@ -418,7 +469,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     height: "100%",
     marginTop: -1.6,
-    marginLeft: 20,
+    marginLeft: 22,
   },
   progressBarValueContainer: {
     flexDirection: "row",
@@ -431,11 +482,11 @@ const styles = StyleSheet.create({
   },
   nutritionValueText: {
     marginTop: 16,
-    fontSize: 17.5,
+    fontSize: 17.6,
     fontWeight: "600",
   },
   nutritionValue: {
-    fontSize: 16,
+    fontSize: 16.2,
     fontWeight: "600",
     color: "rgba(0, 0, 0, 0.5)",
   },
