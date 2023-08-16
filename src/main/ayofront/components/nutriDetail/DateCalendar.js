@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 
-const DateCalendar = ({ mode }) => {
+const DateCalendar = ({ mode, onDateChange }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const today = new Date();
   today.setDate(today.getDate()); // 도쿄,서울 날짜와 맞추기위해 + 1
@@ -57,6 +57,7 @@ const DateCalendar = ({ mode }) => {
 
     if (newDate.setHours(0, 0, 0, 0) <= today) {
       setSelectedDate(newDate); // 새로운 날짜로 설정
+      onDateChange(newDate);
     }
   };
 

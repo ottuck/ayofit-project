@@ -32,23 +32,30 @@ import DateCalendar from "./DateCalendar";
 const DetailsComponent = () => {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDateMeals, setSelectedDateMeals] = useState([]);
   const [dailyNutrition, setDailyNutrition] = useState([]);
   const [weeklyNutrition, setWeeklyNutrition] = useState([]);
   const [monthlyNutrition, setMonthlyNutrition] = useState([]);
 
-  let totalCarbohydrate = 0;
-  let totalProtein = 0;
-  let totalFat = 0;
+  const [dailyTotalCarbohydrate, setDailyTotalCarbohydrate] = useState(0);
+  const [dailyTotalProtein, setDailyTotalProtein] = useState(0);
+  const [dailyTotalFat, setDailyTotalFat] = useState(0);
+  const [weeklyTotalCarbohydrate, setWeeklyTotalCarbohydrate] = useState(0);
+  const [weeklyTotalProtein, setWeeklyTotalProtein] = useState(0);
+  const [weeklyTotalFat, setWeeklyTotalFat] = useState(0);
+  const [monthlyTotalCarbohydrate, setMonthlyTotalCarbohydrate] = useState(0);
+  const [monthlyTotalProtein, setMonthlyTotalProtein] = useState(0);
+  const [monthlyTotalFat, setMonthlyTotalFat] = useState(0);
 
-  if (selectedDateMeals.length > 0 && selectedDateMeals[0]) {
-    totalCarbohydrate = selectedDateMeals[0].totalCarbohydrate;
-    totalProtein = selectedDateMeals[0].totalProtein;
-    totalFat = selectedDateMeals[0].totalFat;
-  }
-
-  let totalCalories = totalCarbohydrate * 4 + totalProtein * 4 + totalFat * 9;
+  const [totalCarbohydrate, setTotalCarbohydrate] = useState(0);
+  const [totalProtein, setTotalProtein] = useState(0);
+  const [totalFat, setTotalFat] = useState(0);
+  const [totalCalories, setTotalCalories] = useState(0);
+  const [carbPercentage, setCarbPercentage] = useState(0);
+  const [proteinPercentage, setProteinPercentage] = useState(0);
+  const [fatPercentage, setFatPercentage] = useState(0);
 
   let todayInTokyo = new Date();
   todayInTokyo.setHours(todayInTokyo.getHours() + 9); // 도쿄 시간대에 맞게 시간을 조정.
@@ -57,18 +64,59 @@ const DetailsComponent = () => {
   // formattedMonth += "01"; 위에서 "-01"을 붙이지 않을 경우 두줄로 이렇게도 작성할수있음.
   // console.log(formattedMonth); 2023-08-01
 
-  let weeklyStartDate = new Date(todayInTokyo);
-  weeklyStartDate.setDate(weeklyStartDate.getDate() - 6); // 일주일 전으로 이동
-  let formattedStartDate = weeklyStartDate.toISOString().split("T")[0];
-  // console.log(formattedStartDate);
+  const computeNutritionForMode = () => {
+    let carbs, proteins, fats;
+
+    switch (mode) {
+      case "Day":
+        if (dailyNutrition[0]) {
+          carbs = dailyNutrition[0].totalCarbohydrate;
+          proteins = dailyNutrition[0].totalProtein;
+          fats = dailyNutrition[0].totalFat;
+        }
+        break;
+
+      case "Week":
+        carbs = weeklyTotalCarbohydrate;
+        proteins = weeklyTotalProtein;
+        fats = weeklyTotalFat;
+        break;
+      case "Month":
+        if (monthlyNutrition[0]) {
+          carbs = monthlyNutrition[0].totalCarbohydrate;
+          proteins = monthlyNutrition[0].totalProtein;
+          fats = monthlyNutrition[0].totalFat;
+        }
+        break;
+      default:
+        break;
+    }
+
+    const calories = carbs * 4 + proteins * 4 + fats * 9;
+    let totalNutrients = carbs + proteins + fats;
+
+    const carbPercent = totalNutrients ? (carbs / totalNutrients) * 100 : 0;
+    const proteinPercent = totalNutrients
+      ? (proteins / totalNutrients) * 100
+      : 0;
+    const fatPercent = totalNutrients ? (fats / totalNutrients) * 100 : 0;
+
+    setTotalCarbohydrate(carbs);
+    setTotalProtein(proteins);
+    setTotalFat(fats);
+    setTotalCalories(calories);
+    setCarbPercentage(carbPercent);
+    setProteinPercentage(proteinPercent);
+    setFatPercentage(fatPercent);
+  };
 
   const getTodayNutrition = () => {
     axios
       .get(`${uri}/api/nutrition/daily/user1/${formattedToday}`)
       .then((response) => {
-        // console.log(response.data);
         setSelectedDate(formattedToday);
         setSelectedDateMeals(response.data);
+        setDailyNutrition(response.data);
       })
       .catch((error) => console.log(error));
   };
@@ -77,7 +125,10 @@ const DetailsComponent = () => {
     axios
       .get(`${uri}/api/nutrition/weekly/user1`)
       .then((response) => {
-        // console.log(response.data);
+        const data = response.data[0];
+        setWeeklyTotalCarbohydrate(data.totalCarbohydrate);
+        setWeeklyTotalProtein(data.totalProtein);
+        setWeeklyTotalFat(data.totalFat);
         setWeeklyNutrition(response.data);
       })
       .catch((error) => console.log(error));
@@ -87,7 +138,6 @@ const DetailsComponent = () => {
     axios
       .get(`${uri}/api/nutrition/monthly/user1/${formattedMonth}`)
       .then((response) => {
-        // console.log(response.data);
         setSelectedDate(formattedMonth);
         setSelectedDateMeals(response.data);
       })
@@ -95,31 +145,8 @@ const DetailsComponent = () => {
   };
 
   useEffect(() => {
-    axios
-      .get(`${uri}/api/nutrition/daily/user1/${formattedToday}`)
-      .then((response) => {
-        console.log(response.data);
-        setDailyNutrition(response.data);
-      })
-      .catch((error) => console.log(error));
     getTodayNutrition();
-
-    axios
-      .get(`${uri}/api/nutrition/weekly/user1`)
-      .then((response) => {
-        console.log(response.data);
-        setWeeklyNutrition(response.data);
-      })
-      .catch((error) => console.log(error));
     getWeeklyNutrition();
-
-    axios
-      .get(`${uri}/api/nutrition/monthly/user1/${formattedMonth}`)
-      .then((response) => {
-        console.log(response.data);
-        setMonthlyNutrition(response.data);
-      })
-      .catch((error) => console.log(error));
     getMonthNutrition();
   }, []);
 
@@ -128,11 +155,11 @@ const DetailsComponent = () => {
     (selectedDateMeals[0]?.totalProtein || 0) +
     (selectedDateMeals[0]?.totalFat || 0);
 
-  let carbPercentage =
+  let computedCarbPercentage =
     (selectedDateMeals[0]?.totalCarbohydrate / totalNutrients) * 100 || 0;
-  let proteinPercentage =
+  let computedProteinPercentage =
     (selectedDateMeals[0]?.totalProtein / totalNutrients) * 100 || 0;
-  let fatPercentage =
+  let computedFatPercentage =
     (selectedDateMeals[0]?.totalFat / totalNutrients) * 100 || 0;
 
   // 각각의 원에 대한 애니메이션 값 상태
@@ -201,6 +228,63 @@ const DetailsComponent = () => {
   const [dateButton, setDateButton] = useState(0);
   const mode = ["Day", "Week", "Month"][dateButton];
 
+  const fetchData = (mode) => {
+    let endpoint = "";
+    switch (mode) {
+      case "daily":
+        endpoint = `${uri}/api/nutrition/daily/user1/${formattedToday}`;
+        break;
+      case "weekly":
+        endpoint = `${uri}/api/nutrition/weekly/user1`;
+        break;
+      case "monthly":
+        endpoint = `${uri}/api/nutrition/monthly/user1/${formattedMonth}`;
+        break;
+      default:
+        break;
+    }
+
+    axios
+      .get(endpoint)
+      .then((response) => {
+        if (mode === "daily") {
+          setSelectedDateMeals(response.data);
+        } else if (mode === "weekly") {
+          setWeeklyNutrition(response.data);
+        } else if (mode === "monthly") {
+          setMonthlyNutrition(response.data);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const handleDateButtonClick = (index) => {
+    setDateButton(index);
+    const modes = ["daily", "weekly", "monthly"];
+    fetchData(modes[index]);
+  };
+
+  const handleDateChange = (newDate) => {
+    // 새로운 날짜를 받아서 데이터를 다시 요청합니다.
+    fetchData(newDate);
+  };
+
+  useEffect(() => {
+    fetchData("daily");
+  }, []);
+
+  useEffect(() => {
+    computeNutritionForMode();
+  }, [
+    dateButton,
+    dailyNutrition,
+    weeklyNutrition,
+    monthlyNutrition,
+    weeklyTotalCarbohydrate,
+    weeklyTotalProtein,
+    weeklyTotalFat,
+  ]);
+
   return (
     <View>
       <DateContainer>
@@ -209,7 +293,7 @@ const DetailsComponent = () => {
             <DateButton
               key={dateButtonText}
               isActive={dateButton === index}
-              onPress={() => setDateButton(index)}
+              onPress={() => handleDateButtonClick(index)}
             >
               <DateButtonText isActive={dateButton === index}>
                 {dateButtonText}
@@ -217,7 +301,7 @@ const DetailsComponent = () => {
             </DateButton>
           ))}
         </DateButtonContainer>
-        <DateCalendar mode={mode} />
+        <DateCalendar mode={mode} onDateChange={handleDateChange} />
       </DateContainer>
 
       <View style={styles.dateNutritionInfo}>
