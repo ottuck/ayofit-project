@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+import {
+  Keyboard,
+  StyleSheet,
+  Text,
+  TouchableNativeFeedback,
+  View,
+} from "react-native";
 
 import { GlobalStyles } from "../../components/UI/styles";
 import Input from "../../components/account/UI/Input";
@@ -12,68 +18,74 @@ function AccountNutri({ navigation }) {
   const goToMainTabs = () => {
     navigation.navigate("MainTabs");
   };
+
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
   return (
-    <View style={styles.container}>
-      <View style={styles.top}>
-        <Text style={styles.topText}>Tell us about your goals</Text>
-        <Text style={styles.topText}>to get started.</Text>
-      </View>
-      <View style={styles.calorieContainer}>
-        <Input
-          style={styles.calorieInput}
-          label="Daily Calorie Goal"
-          textInputConfig={{
-            keyboardType: "decimal-pad",
-            maxLength: 5,
-            autoCorrect: false,
-            placeholder: "kcal",
-          }}
-        />
-      </View>
-      <View style={styles.nutrientContainer}>
-        <Text style={styles.text}>Nutrients Goal</Text>
-        <View style={styles.nutriInputContainer}>
+    <TouchableNativeFeedback onPress={dismissKeyboard}>
+      <View style={styles.container}>
+        <View style={styles.top}>
+          <Text style={styles.topText}>Tell us about your goals</Text>
+          <Text style={styles.topText}>to get started.</Text>
+        </View>
+        <View style={styles.calorieContainer}>
           <Input
-            label="Carb"
-            style={styles.input}
+            style={styles.calorieInput}
+            label="Daily Calorie Goal"
             textInputConfig={{
               keyboardType: "decimal-pad",
               maxLength: 5,
               autoCorrect: false,
-              placeholder: "g",
-            }}
-          />
-          <Input
-            label="Protein"
-            style={styles.input}
-            textInputConfig={{
-              keyboardType: "decimal-pad",
-              maxLength: 5,
-              autoCorrect: false,
-              placeholder: "g",
-            }}
-          />
-          <Input
-            label="Fat"
-            style={styles.input}
-            textInputConfig={{
-              keyboardType: "decimal-pad",
-              maxLength: 5,
-              autoCorrect: false,
-              placeholder: "g",
+              placeholder: "kcal",
             }}
           />
         </View>
+        <View style={styles.nutrientContainer}>
+          <Text style={styles.text}>Nutrients Goal</Text>
+          <View style={styles.nutriInputContainer}>
+            <Input
+              label="Carb"
+              style={styles.input}
+              textInputConfig={{
+                keyboardType: "decimal-pad",
+                maxLength: 5,
+                autoCorrect: false,
+                placeholder: "g",
+              }}
+            />
+            <Input
+              label="Protein"
+              style={styles.input}
+              textInputConfig={{
+                keyboardType: "decimal-pad",
+                maxLength: 5,
+                autoCorrect: false,
+                placeholder: "g",
+              }}
+            />
+            <Input
+              label="Fat"
+              style={styles.input}
+              textInputConfig={{
+                keyboardType: "decimal-pad",
+                maxLength: 5,
+                autoCorrect: false,
+                placeholder: "g",
+              }}
+            />
+          </View>
+        </View>
+        <View style={styles.btnContainer}>
+          <Button style={styles.prevBtn} onPress={goToAccountInfo}>
+            Prev
+          </Button>
+          <Button style={styles.confirmBtn} onPress={goToMainTabs}>
+            Confirm
+          </Button>
+        </View>
       </View>
-      <View style={styles.btnContainer}>
-        <Button style={styles.prevBtn} onPress={goToAccountInfo}>
-          Prev
-        </Button>
-        <Button style={styles.confirmBtn} onPress={goToMainTabs}>
-          Confirm
-        </Button>
-      </View>
-    </View>
+    </TouchableNativeFeedback>
   );
 }
 
