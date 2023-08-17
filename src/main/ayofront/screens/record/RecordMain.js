@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, ImageBackground, ScrollView, TouchableOpacity, Button, Modal, TextInput } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, ImageBackground, ScrollView, TouchableOpacity, Modal } from 'react-native'
 import React, { useState } from 'react'
 import DatePicker from 'react-native-modern-datepicker';
 
@@ -23,7 +23,7 @@ const RecordMain = ({ navigation }) => {
 
   const showDatepicker = () => {
     openModal();
-    setMode('monthYear');
+    setMode('calendar');
   };
   const showTimepicker = () => {
     openModal();
@@ -39,7 +39,6 @@ const RecordMain = ({ navigation }) => {
           <TouchableOpacity onPress={showDatepicker}>
             <View style={styles.headerContainer}>
               <Text style={styles.headerTitle}> August 16, 2023 </Text>
-              {/* {date && <Text>Selected Month and Year: {date}</Text>} */}
             </View>
           </TouchableOpacity>
 
@@ -91,11 +90,9 @@ const RecordMain = ({ navigation }) => {
                   <View style={{ flexDirection: 'row' }}>
                     <Text style={styles.recordTime1}>AM</Text>
                     <Text style={styles.recordTime2}>12:15</Text>
-                    {/* {time && <Text>Selected Time: {time}</Text>} */}
                   </View>
                 </TouchableOpacity>
               </View>
-
               <View style={styles.foodNutrientContainer}>
                 <View style={styles.foodNutrientBox}>
                   <Text style={styles.foodNutrient}>Carb</Text>
@@ -113,26 +110,21 @@ const RecordMain = ({ navigation }) => {
             </View>
           </ScrollView>
 
-          <Modal animationType="slide" visible={modalVisible}>
-            <TouchableOpacity onPress={closeModal}>
-              <AntDesign name="close" style={styles.modalCloseButton} />
-            </TouchableOpacity>
-            {mode === 'time' ? (
-              <DatePicker
-                mode="time"
-                minuteInterval={3}
-                onTimeChange={selectedTime => {
-                  setTime(selectedTime);
-                }
-              }
-              />
-            ) : (
-              <DatePicker
-                mode="monthYear"
-                selectorStartingYear={2023}
-                onMonthYearChange={selectedDate => setDate(selectedDate)}
-              />
-            )}
+          <Modal animationType="slide" visible={modalVisible} transparent={true} >
+              <View style={{marginTop:'50%'}}>
+                <TouchableOpacity onPress={closeModal} >
+                  <AntDesign name="close" style={styles.modalCloseButton} />
+                </TouchableOpacity>
+                  <DatePicker style={styles.datePicker}
+                    mode={mode}
+                    minuteInterval={10}
+                    onTimeChange={selectedTime => {
+                      setTime(selectedTime);
+                    }}
+                    selectorStartingYear={2023}
+                    onMonthYearChange={selectedDate => setDate(selectedDate)} 
+                    />
+              </View>
           </Modal>
 
         </ImageBackground>
@@ -298,11 +290,13 @@ const styles = StyleSheet.create({
     color: 'rgba(0, 0, 0, 0.3)',
   },
 
-  //모달 디자인
+  //타임 피커 디자인
+  datePicker:{
+    borderRadius: 30,
+  },
   modalCloseButton: {
-    marginTop: 50,
     left: '90%',
     fontSize: 25,
-    color: 'rgba(0, 0, 0, 0.1)',
+    color: 'rgba(0, 0, 0, 0.3)',
   },
 });
