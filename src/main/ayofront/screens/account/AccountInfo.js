@@ -18,9 +18,37 @@ function AccountInfo({ navigation }) {
     navigation.navigate("AccountNutri");
   };
 
-  const [selectedGender, setSelectedGender] = useState("");
+  const [infoValues, setInfoValues] = useState({
+    gender: "",
+    age: "",
+    height: "",
+    curWeight: "",
+    tarWeight: "",
+    activity: "",
+    calorie: "",
+    carb: "",
+    protein: "",
+    fat: "",
+  });
 
-  const [selectedActivity, setSelectedActivity] = useState("");
+  function infoChangedHandler(infoIdentifier, enteredInfoVal) {
+    setInfoValues((curInfoVal) => {
+      if (infoIdentifier === "gender") {
+        return {
+          ...curInfoVal,
+          gender: enteredInfoVal,
+        };
+      }
+      if (infoIdentifier === "activity") {
+        return {
+          ...curInfoVal,
+          activity: enteredInfoVal,
+        };
+      }
+      return { ...curInfoVal, [infoIdentifier]: enteredInfoVal };
+    });
+  }
+  console.log(infoValues);
 
   return (
     <KeyboardAvoidingView
@@ -42,14 +70,14 @@ function AccountInfo({ navigation }) {
                   icon="male"
                   size={45}
                   label="male"
-                  onPress={() => setSelectedGender("male")}
+                  onPress={() => infoChangedHandler("gender", "male")}
                   color={
-                    selectedGender === "male"
+                    infoValues.gender === "male"
                       ? GlobalStyles.colors.primary500
                       : "black"
                   }
                   style={
-                    selectedGender === "male" ? styles.genderLabel : "black"
+                    infoValues.gender === "male" ? styles.genderLabel : "black"
                   }
                 />
               </View>
@@ -58,14 +86,16 @@ function AccountInfo({ navigation }) {
                   icon="female"
                   size={45}
                   label="female"
-                  onPress={() => setSelectedGender("female")}
+                  onPress={() => infoChangedHandler("gender", "female")}
                   color={
-                    selectedGender === "female"
+                    infoValues.gender === "female"
                       ? GlobalStyles.colors.primary500
                       : "black"
                   }
                   style={
-                    selectedGender === "female" ? styles.genderLabel : "black"
+                    infoValues.gender === "female"
+                      ? styles.genderLabel
+                      : "black"
                   }
                 />
               </View>
@@ -80,6 +110,8 @@ function AccountInfo({ navigation }) {
                   textInputConfig={{
                     keyboardType: "decimal-pad",
                     autoCorrect: false,
+                    onChangeText: infoChangedHandler.bind(this, "age"),
+                    value: infoValues.age,
                   }}
                 />
               </View>
@@ -92,6 +124,8 @@ function AccountInfo({ navigation }) {
                     maxLength: 5,
                     autoCorrect: false,
                     placeholder: "cm",
+                    onChangeText: infoChangedHandler.bind(this, "height"),
+                    value: infoValues.height,
                   }}
                 />
               </View>
@@ -107,6 +141,8 @@ function AccountInfo({ navigation }) {
                     keyboardType: "decimal-pad",
                     autoCorrect: false,
                     placeholder: "kg",
+                    onChangeText: infoChangedHandler.bind(this, "curWeight"),
+                    value: infoValues.curWeight,
                   }}
                 />
               </View>
@@ -118,6 +154,8 @@ function AccountInfo({ navigation }) {
                     keyboardType: "decimal-pad",
                     autoCorrect: false,
                     placeholder: "kg",
+                    onChangeText: infoChangedHandler.bind(this, "tarWeight"),
+                    value: infoValues.tarWeight,
                   }}
                 />
               </View>
@@ -133,24 +171,24 @@ function AccountInfo({ navigation }) {
                 label="High"
                 icon="slightly-smile"
                 size={40}
-                onPress={() => setSelectedActivity("high")}
-                color={selectedActivity === "high" ? "#CE4257" : "black"}
+                onPress={() => infoChangedHandler("activity", "high")}
+                color={infoValues.activity === "high" ? "#CE4257" : "black"}
               />
               <IconButton
                 style={styles.moderate}
                 label="Moderate"
                 icon="neutral"
                 size={40}
-                onPress={() => setSelectedActivity("moderate")}
-                color={selectedActivity === "moderate" ? "#FF7F51" : "black"}
+                onPress={() => infoChangedHandler("activity", "moderate")}
+                color={infoValues.activity === "moderate" ? "#FF7F51" : "black"}
               />
               <IconButton
                 style={styles.low}
                 label="Low"
                 icon="dizzy"
                 size={40}
-                onPress={() => setSelectedActivity("low")}
-                color={selectedActivity === "low" ? "#FF9B54" : "black"}
+                onPress={() => infoChangedHandler("activity", "low")}
+                color={infoValues.activity === "low" ? "#FF9B54" : "black"}
               />
             </View>
           </View>

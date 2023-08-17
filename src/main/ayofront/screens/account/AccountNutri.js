@@ -9,6 +9,7 @@ import {
 import { GlobalStyles } from "../../components/UI/styles";
 import Input from "../../components/account/UI/Input";
 import Button from "../../components/account/UI/Button";
+import { useState } from "react";
 
 function AccountNutri({ navigation }) {
   const goToAccountInfo = () => {
@@ -22,6 +23,28 @@ function AccountNutri({ navigation }) {
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
+
+  const [infoValues, setInfoValues] = useState({
+    gender: "",
+    age: "",
+    height: "",
+    curWeight: "",
+    tarWeight: "",
+    activity: "",
+    calorie: "",
+    carb: "",
+    protein: "",
+    fat: "",
+  });
+
+  function infoChangedHandler(infoIdentifier, enteredInfoVal) {
+    setInfoValues((curInfoVal) => {
+      return { ...curInfoVal, [infoIdentifier]: enteredInfoVal };
+    });
+  }
+
+  console.log(infoValues);
+
   return (
     <TouchableNativeFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
@@ -39,6 +62,8 @@ function AccountNutri({ navigation }) {
               maxLength: 5,
               autoCorrect: false,
               placeholder: "kcal",
+              onChangeText: infoChangedHandler.bind(this, "calorie"),
+              value: infoValues.calorie,
             }}
           />
         </View>
@@ -53,6 +78,8 @@ function AccountNutri({ navigation }) {
                 maxLength: 5,
                 autoCorrect: false,
                 placeholder: "g",
+                onChangeText: infoChangedHandler.bind(this, "carb"),
+                value: infoValues.carb,
               }}
             />
             <Input
@@ -63,6 +90,8 @@ function AccountNutri({ navigation }) {
                 maxLength: 5,
                 autoCorrect: false,
                 placeholder: "g",
+                onChangeText: infoChangedHandler.bind(this, "protein"),
+                value: infoValues.protein,
               }}
             />
             <Input
@@ -73,6 +102,8 @@ function AccountNutri({ navigation }) {
                 maxLength: 5,
                 autoCorrect: false,
                 placeholder: "g",
+                onChangeText: infoChangedHandler.bind(this, "fat"),
+                value: infoValues.fat,
               }}
             />
           </View>
