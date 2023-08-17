@@ -32,6 +32,8 @@ import { GlobalStyles } from "../../components/UI/styles";
 
 // SplashScreen.preventAutoHideAsync();
 
+const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
 function PedometerScreen() {
   const [steps, setSteps] = useState(0);
   const [isWalking, setIsWalking] = useState(false);
@@ -39,6 +41,16 @@ function PedometerScreen() {
   const [newGoal, setNewGoal] = useState("");
   const [congratulationsVisible, setCongratulationsVisible] = useState(false);
   const congratulationsOpacity = new Animated.Value(0);
+
+  const [daysAchieved, setDaysAchieved] = useState([
+    true,
+    true,
+    false,
+    true,
+    false,
+    false,
+    true,
+  ]);
 
   let [fontsLoaded] = useFonts({
     OpenSans_300Light,
@@ -160,6 +172,26 @@ function PedometerScreen() {
 
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
+      <View style={styles.dayContainerWrapper}>
+        <View style={styles.daysContainer}>
+          {daysOfWeek.map((day, index) => (
+            <View key={index} style={styles.dayContainer}>
+              <Text style={styles.dayText}>{day}</Text>
+              <View style={styles.dayCircle}>
+                {daysAchieved[index] ? (
+                  <Image
+                    source={require("../../assets/day-check-icon.png")}
+                    style={styles.bottomTextIcon}
+                  />
+                ) : (
+                  <Text style={styles.xMark}>✕</Text>
+                )}
+              </View>
+            </View>
+          ))}
+        </View>
+      </View>
+
       {/* Progress Ring */}
       <View style={styles.progressContainer}>
         <CircularProgress
@@ -177,7 +209,7 @@ function PedometerScreen() {
         />
         <View style={styles.progressIconContainer}>
           <Image
-            source={require("../../assets/marathon-shoes.png")} // 이미지 파일의 경로
+            source={require("../../assets/marathon-shoes.png")}
             style={styles.progressIcon}
           />
         </View>
@@ -202,15 +234,30 @@ function PedometerScreen() {
           </Text>
         </View>
       </View>
-      <View style={styles.BottomTextContainer}>
-        <View>
-          <Text style={styles.text}>{stepsToKilometers(steps)} km</Text>
+      <View style={styles.bottomTextContainer}>
+        <View style={styles.bottomTextBox}>
+          <Image
+            source={require("../../assets/distance-icon.png")}
+            style={styles.bottomTextIcon}
+          />
+          <Text style={styles.customText}>Distance</Text>
+          <Text
+            style={[styles.customText, { fontFamily: "OpenSans_400Regular" }]}
+          >
+            {stepsToKilometers(steps)} km
+          </Text>
         </View>
 
-        <View>
-          {/* ing */}
-          <Text style={styles.customText}>
-            Calories Burned: {calculateCaloriesBurned()} kcal
+        <View style={styles.bottomTextBox}>
+          <Image
+            source={require("../../assets/calories-burned-icon.png")}
+            style={styles.bottomTextIcon}
+          />
+          <Text style={styles.customText}>Calories Burned</Text>
+          <Text
+            style={[styles.customText, { fontFamily: "OpenSans_400Regular" }]}
+          >
+            {calculateCaloriesBurned()} kcal
           </Text>
         </View>
       </View>
@@ -255,20 +302,43 @@ function PedometerScreen() {
 }
 
 const styles = StyleSheet.create({
-  customText: {
-    fontFamily: "OpenSans_700Bold_Italic",
-    fontSize: 28,
-  },
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: GlobalStyles.colors.primary50,
   },
-  text: {
-    fontSize: 20,
-    marginBottom: 18,
+  dayContainerWrapper: {
+    flexDirection: "row",
   },
+  daysContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: 20,
+    marginHorizontal: 24,
+  },
+  dayCircle: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: GlobalStyles.colors.primary500,
+    borderStyle: "dashed",
+    backgroundColor: `rgba(228,108,10,0.5)`,
+  },
+  dayTextContainer: {
+    position: "absolute", // to center dayText for each circle
+  },
+  dayText: {
+    color: "black",
+    fontSize: 14,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+
   progressContainer: {
     alignItems: "center",
   },
@@ -293,6 +363,21 @@ const styles = StyleSheet.create({
   },
   bottomTextContainer: {
     flexDirection: "row",
+  },
+
+  bottomTextBox: {
+    flex: 1,
+  },
+  bottomTextIcon: {
+    width: 30,
+    height: 30,
+    alignSelf: "center",
+  },
+
+  customText: {
+    fontFamily: "OpenSans_700Bold_Italic",
+    fontSize: 14,
+    textAlign: "center",
   },
   inputContainer: {
     alignItems: "center",
