@@ -1,10 +1,22 @@
-import { View, Text, StyleSheet, ImageBackground, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput } from "react-native";
-import React, { useState } from "react";
+import { View, Text, StyleSheet, ImageBackground, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { BlurView } from 'expo-blur';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 
+
 function RecordScreen({ navigation }) {
+  //모달 관련 
+  const [modalVisible, setModalVisible] = useState(false);
+  const openModal = () => {
+    setModalVisible(true);
+  };
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
+  //검색 관련
   const [searchText, setSearchText] = useState("");
   const searchSubmit = () => {
     // 여기서 검색어를 처리하거나 필요한 작업을 수행합니다.
@@ -12,22 +24,14 @@ function RecordScreen({ navigation }) {
 
     // RecordMain.js로 네비게이션을 수행합니다.
     navigation.navigate("RecordMain");
+    closeModal();
   };
 
-  //모달 관련 
-  const [modalVisible, setModalVisible] = useState(false);
-  const openSearchModal = () => {
-    setModalVisible(true);
-  };
-  const closeSearchModal = () => {
-    setModalVisible(false);
-  };
 
-  const backgroundImage = require('../../images/background-img.png');
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
+        <ImageBackground source={require('../../images/background-img.png')} style={styles.backgroundImage}>
 
           <View style={styles.headerContainer}>
             <Text style={styles.headerTitle}> Diet Record</Text>
@@ -39,13 +43,9 @@ function RecordScreen({ navigation }) {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.cardScroll}
           >
-
-
-
             <View style={styles.cardContainer}>
               <View style={styles.cardImageContainer}>
-
-                <TouchableOpacity onPress={openSearchModal}>
+                <TouchableOpacity onPress={openModal}>
                   <Feather name="plus-circle" style={styles.plusIcon} />
                 </TouchableOpacity>
               </View>
@@ -68,86 +68,32 @@ function RecordScreen({ navigation }) {
                 </View>
               </View>
             </View>
-
-            <View style={styles.cardContainer}>
-              <View style={styles.cardImageContainer}>
-
-                <TouchableOpacity onPress={openSearchModal}>
-                  <Feather name="plus-circle" style={styles.plusIcon} />
-                </TouchableOpacity>
-                {/* <TouchableOpacity onPress={() => navigation.navigate("SearchModal")}>
-                  <Feather name="plus-circle" style={styles.plusIcon} />
-                </TouchableOpacity> */}
-              </View>
-              <View style={{ width: '90%' }}>
-                <View style={styles.textContainer}>
-                  <View>
-                    <Text style={styles.mealTime}>BreakFast : </Text>
-                    <Text style={styles.nutrientText}>Carb : </Text>
-                    <Text style={styles.nutrientText}>Protein :  </Text>
-                    <Text style={styles.nutrientText}>Fat : </Text>
-                    <Text style={styles.TotalValue}>Total calories : </Text>
-                  </View>
-                  <View>
-                    <Text style={styles.mealTime}>AM 09:44</Text>
-                    <Text style={styles.nutrientValue}>55g</Text>
-                    <Text style={styles.nutrientValue}>16.4g</Text>
-                    <Text style={styles.nutrientValue}>21.5g</Text>
-                    <Text style={styles.TotalValue}>487kcal</Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-
-            <View style={styles.cardContainer}>
-              <View style={styles.cardImageContainer}>
-
-                <TouchableOpacity onPress={openSearchModal}>
-                  <Feather name="plus-circle" style={styles.plusIcon} />
-                </TouchableOpacity>
-              </View>
-              <View style={{ width: '90%' }}>
-                <View style={styles.textContainer}>
-                  <View>
-                    <Text style={styles.mealTime}>BreakFast : </Text>
-                    <Text style={styles.nutrientText}>Carb : </Text>
-                    <Text style={styles.nutrientText}>Protein :  </Text>
-                    <Text style={styles.nutrientText}>Fat : </Text>
-                    <Text style={styles.TotalValue}>Total calories : </Text>
-                  </View>
-                  <View>
-                    <Text style={styles.mealTime}>AM 09:44</Text>
-                    <Text style={styles.nutrientValue}>55g</Text>
-                    <Text style={styles.nutrientValue}>16.4g</Text>
-                    <Text style={styles.nutrientValue}>21.5g</Text>
-                    <Text style={styles.TotalValue}>487kcal</Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-
-
 
           </ScrollView>
 
           <Modal animationType="slide" visible={modalVisible} transparent={true} >
-            <View style={styles.modalScreen}>
-              <TouchableOpacity onPress={closeSearchModal} >
-                <AntDesign name="close" style={styles.modalCloseButton} />
-              </TouchableOpacity>
-              <View style={styles.modalSearchContainer}>
-                <TouchableOpacity>
-                  <FontAwesome5 name="search" style={styles.modalSearchButton} />
+            <BlurView style={{ flex: 1 }}>
+              <View style={styles.modalScreen}>
+                <TouchableOpacity onPress={closeModal} >
+                  <AntDesign name="close" style={styles.modalCloseButton} />
                 </TouchableOpacity>
-                <TextInput
-                  placeholder="Search your food"
-                  style={styles.modalTextInput}
-                  value={searchText}
-                  onChangeText={(text) => setSearchText(text)}
-                  onSubmitEditing={searchSubmit}
-                />
+                <View style={styles.modalSearchContainer}>
+                  <TouchableOpacity>
+                    <FontAwesome5 name="search" style={styles.modalSearchButton} />
+                  </TouchableOpacity>
+                  <TextInput
+                    placeholder="Search your food"
+                    style={styles.modalTextInput}
+                    value={searchText}
+                    onChangeText={(text) => setSearchText(text)}
+                    onSubmitEditing={searchSubmit}
+                  />
+                  <TouchableOpacity>
+                    <AntDesign name="closecircleo" style={styles.clearButton} />
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
+            </BlurView>
           </Modal>
 
         </ImageBackground>
@@ -246,15 +192,16 @@ const styles = StyleSheet.create({
   //모달 디자인
   modalScreen: {
     flex: 1,
-    marginTop: '35%',
-    backgroundColor: 'rgba(255,255,255,0.8)',
-    borderRadius: 10,
+    marginTop: '11%',
+    backgroundColor: 'rgba(255,255,255,0.6)',
+    borderRadius: 30,
+    padding: 15,
   },
   modalCloseButton: {
     margin: 10,
     left: '90%',
     fontSize: 25,
-    color: '#cecece',
+    color: 'rgba(0, 0, 0, 0.1)',
   },
   modalSearchContainer: {
     alignItems: 'center',
@@ -264,12 +211,11 @@ const styles = StyleSheet.create({
   modalTextInput: {
     width: '80%',
     height: 45,
-    borderColor: '#cecece',
+    borderColor: 'rgba(0, 0, 0, 0.3)',
     borderWidth: 1,
     borderRadius: 10,
     paddingLeft: 50,
-    color: 'orange',
-    fontSize: 16
+    fontSize: 16,
   },
   modalSearchButton: {
     fontSize: 20,
@@ -279,4 +225,11 @@ const styles = StyleSheet.create({
     top: 13,
     zIndex: 1
   },
+  clearButton: {
+    fontSize: 20,
+    color: 'rgba(0, 0, 0, 0.2)',
+    position: 'absolute',
+    left: '32%',
+    bottom: 12,
+  }
 });

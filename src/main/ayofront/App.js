@@ -12,6 +12,10 @@ import PedometerScreen from "./screens/pedometer/PedometerScreen";
 import AccountScreen from "./screens/account/account_test";
 import { GlobalStyles } from "./components/UI/styles";
 
+import TimePickerExample from "./screens/record/TimePickerExample";
+
+
+
 const Tab = createBottomTabNavigator();
 
 export default function App() {
