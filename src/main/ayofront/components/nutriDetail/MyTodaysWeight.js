@@ -37,7 +37,7 @@ const MyTodaysWeight = () => {
             datasets: [
               {
                 data: [58.2, 58.2, 58, 58.5, 58.2, 58.5, 58.3], // 여기에 몸무게 데이터
-                color: () => "#E46C0A", // 라인 색상 지정
+                color: () => "#E46C0A",
                 strokeWidth: 3,
               },
             ],

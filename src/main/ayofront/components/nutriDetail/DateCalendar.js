@@ -48,7 +48,6 @@ const DateCalendar = ({ mode, onDateChange }) => {
     let newDate = new Date(selectedDate);
     if (mode === "Day") {
       newDate.setDate(selectedDate.getDate() + offset);
-      console.log(11);
     } else if (mode === "Week") {
       newDate.setDate(selectedDate.getDate() + offset * 7);
     } else {
