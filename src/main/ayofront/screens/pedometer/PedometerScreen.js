@@ -8,27 +8,34 @@ import {
   TouchableOpacity,
   View,
   Image,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { Accelerometer } from "expo-sensors";
-import { LinearGradient } from "expo-linear-gradient";
-import CircularProgress from "react-native-circular-progress-indicator";
 import * as SplashScreen from "expo-splash-screen";
-import {
-  useFonts,
-  OpenSans_300Light,
-  OpenSans_400Regular,
-  OpenSans_500Medium,
-  OpenSans_600SemiBold,
-  OpenSans_700Bold,
-  OpenSans_800ExtraBold,
-  OpenSans_300Light_Italic,
-  OpenSans_400Regular_Italic,
-  OpenSans_500Medium_Italic,
-  OpenSans_600SemiBold_Italic,
-  OpenSans_700Bold_Italic,
-  OpenSans_800ExtraBold_Italic,
-} from "@expo-google-fonts/open-sans";
+// import {
+//   useFonts,
+//   OpenSans_300Light,
+//   OpenSans_400Regular,
+//   OpenSans_500Medium,
+//   OpenSans_600SemiBold,
+//   OpenSans_700Bold,
+//   OpenSans_800ExtraBold,
+//   OpenSans_300Light_Italic,
+//   OpenSans_400Regular_Italic,
+//   OpenSans_500Medium_Italic,
+//   OpenSans_600SemiBold_Italic,
+//   OpenSans_700Bold_Italic,
+//   OpenSans_800ExtraBold_Italic,
+// } from "@expo-google-fonts/open-sans";
 import { GlobalStyles } from "../../components/UI/styles";
+import PedometerProgressRing from "../../components/pedometer/PedometerProgressRing";
+import PedometerDailyCircles from "../../components/pedometer/PedometerDailyCheck";
+import CongratulationsMessage from "../../components/pedometer/CongratulationsMessage";
+import DistanceCaloriesBox from "../../components/pedometer/DistanceCaloriesBox";
+import GoalInput from "../../components/pedometer/GoalInput";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -52,29 +59,29 @@ function PedometerScreen() {
     true,
   ]);
 
-  let [fontsLoaded] = useFonts({
-    OpenSans_300Light,
-    OpenSans_400Regular,
-    OpenSans_500Medium,
-    OpenSans_600SemiBold,
-    OpenSans_700Bold,
-    OpenSans_800ExtraBold,
-    OpenSans_300Light_Italic,
-    OpenSans_400Regular_Italic,
-    OpenSans_500Medium_Italic,
-    OpenSans_600SemiBold_Italic,
-    OpenSans_700Bold_Italic,
-    OpenSans_800ExtraBold_Italic,
-  });
+  // let [fontsLoaded] = useFonts({
+  //   OpenSans_300Light,
+  //   OpenSans_400Regular,
+  //   OpenSans_500Medium,
+  //   OpenSans_600SemiBold,
+  //   OpenSans_700Bold,
+  //   OpenSans_800ExtraBold,
+  //   OpenSans_300Light_Italic,
+  //   OpenSans_400Regular_Italic,
+  //   OpenSans_500Medium_Italic,
+  //   OpenSans_600SemiBold_Italic,
+  //   OpenSans_700Bold_Italic,
+  //   OpenSans_800ExtraBold_Italic,
+  // });
 
-  useEffect(() => {
-    async function hideSplashScreen() {
-      if (fontsLoaded) {
-        await SplashScreen.hideAsync();
-      }
-    }
-    hideSplashScreen();
-  }, [fontsLoaded]);
+  // useEffect(() => {
+  //   async function hideSplashScreen() {
+  //     if (fontsLoaded) {
+  //       await SplashScreen.hideAsync();
+  //     }
+  //   }
+  //   hideSplashScreen();
+  // }, [fontsLoaded]);
 
   useEffect(() => {
     const accelerometerSubscription = Accelerometer.addListener(
@@ -143,15 +150,6 @@ function PedometerScreen() {
     }, 3000); //
   };
 
-  const calculateAchievementPercentage = () => {
-    if (goal === 0) {
-      return 0;
-    }
-    let percentage = (steps / goal) * 100;
-    percentage = Math.min(percentage, 100); // up to 100%
-    return percentage.toFixed(0);
-  };
-
   const calculateCaloriesBurned = () => {
     // const weightInKg = 70; // User's Weight
     const caloriesPerStep = 0.035;
@@ -160,144 +158,66 @@ function PedometerScreen() {
     return totalCaloriesBurned.toFixed(2);
   };
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (fontsLoaded) {
+  //     await SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded]);
 
-  if (!fontsLoaded) {
-    return null;
-  }
+  // if (!fontsLoaded) {
+  //   return null;
+  // }
 
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <View style={styles.dayContainerWrapper}>
-        <View style={styles.daysContainer}>
-          {daysOfWeek.map((day, index) => (
-            <View key={index} style={styles.dayContainer}>
-              <Text style={styles.dayText}>{day}</Text>
-              <View style={styles.dayCircle}>
-                {daysAchieved[index] ? (
-                  <Image
-                    source={require("../../assets/day-check-icon.png")}
-                    style={styles.bottomTextIcon}
-                  />
-                ) : (
-                  <Text style={styles.xMark}>✕</Text>
-                )}
-              </View>
+    // <View style={styles.container} onLayout={onLayoutRootView}>
+    // <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <>
+          <View style={styles.dayContainerWrapper}>
+            <View style={styles.daysContainer}>
+              {daysOfWeek.map((day, index) => (
+                <PedometerDailyCircles
+                  key={index}
+                  day={day}
+                  isAchieved={daysAchieved[index]}
+                />
+              ))}
             </View>
-          ))}
-        </View>
-      </View>
+          </View>
 
-      {/* Progress Ring */}
-      <View style={styles.progressContainer}>
-        <CircularProgress
-          value={calculateAchievementPercentage()}
-          radius={180}
-          progressValueColor={GlobalStyles.colors.primary500}
-          duration={500}
-          strokeColorConfig={[
-            { color: GlobalStyles.colors.gradientGreen, value: 0 },
-            { color: GlobalStyles.colors.gradientYellow, value: 50 },
-            { color: GlobalStyles.colors.primary200, value: 100 },
-          ]}
-          activeStrokeWidth={24}
-          inActiveStrokeOpacity={0.3}
-        />
-        <View style={styles.progressIconContainer}>
-          <Image
-            source={require("../../assets/marathon-shoes.png")}
-            style={styles.progressIcon}
+          {/* progress ring */}
+          <PedometerProgressRing steps={steps} goal={goal} />
+
+          <View style={styles.bottomTextContainer}>
+            <DistanceCaloriesBox
+              iconSource={require("../../assets/distance-icon.png")}
+              title="Distance"
+              value={`${stepsToKilometers(steps)} km`}
+            />
+
+            <DistanceCaloriesBox
+              iconSource={require("../../assets/calories-burned-icon.png")}
+              title="Calories Burned"
+              value={`${calculateCaloriesBurned()} kcal`}
+            />
+          </View>
+
+          {/* User Input Area */}
+          <GoalInput
+            newGoal={newGoal}
+            onGoalChange={setNewGoal}
+            onUpdateGoal={updateGoal}
           />
-        </View>
-        <View style={styles.progressTextContainer}>
-          <Text style={styles.progressText}>%</Text>
-          <Text style={styles.progressText}>Achieved</Text>
-          <Text
-            style={[
-              styles.progressText,
-              { color: GlobalStyles.colors.blackOpacity50 },
-            ]}
-          >
-            Current Status: {steps.toLocaleString()} steps
-          </Text>
-          <Text
-            style={[
-              styles.progressText,
-              { color: GlobalStyles.colors.blackOpacity50 },
-            ]}
-          >
-            Goal: {goal.toLocaleString()} steps
-          </Text>
-        </View>
-      </View>
-      <View style={styles.bottomTextContainer}>
-        <View style={styles.bottomTextBox}>
-          <Image
-            source={require("../../assets/distance-icon.png")}
-            style={styles.bottomTextIcon}
-          />
-          <Text style={styles.customText}>Distance</Text>
-          <Text
-            style={[styles.customText, { fontFamily: "OpenSans_400Regular" }]}
-          >
-            {stepsToKilometers(steps)} km
-          </Text>
-        </View>
 
-        <View style={styles.bottomTextBox}>
-          <Image
-            source={require("../../assets/calories-burned-icon.png")}
-            style={styles.bottomTextIcon}
-          />
-          <Text style={styles.customText}>Calories Burned</Text>
-          <Text
-            style={[styles.customText, { fontFamily: "OpenSans_400Regular" }]}
-          >
-            {calculateCaloriesBurned()} kcal
-          </Text>
-        </View>
-      </View>
-
-      {/* User Input Area */}
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter your goal"
-          value={newGoal}
-          onChangeText={(text) => setNewGoal(text)}
-          keyboardType="numeric"
-        />
-        <TouchableOpacity style={styles.button} onPress={updateGoal}>
-          <Text style={styles.buttonText}>Update</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Congratulations Message */}
-      {congratulationsVisible && (
-        <Animated.View style={styles.congratulationsContainer}>
-          <Animated.View
-            style={[
-              styles.congratulations,
-              { opacity: congratulationsOpacity },
-            ]}
-          >
-            <LinearGradient
-              colors={[
-                GlobalStyles.colors.gradientYellow,
-                GlobalStyles.colors.gradientGreen,
-              ]}
-              style={styles.gradientBackground}
-            >
-              <Text style={styles.congratulationsText}>Congratulations!</Text>
-            </LinearGradient>
-          </Animated.View>
-        </Animated.View>
-      )}
-    </View>
+          {/* Congratulations Message */}
+          <CongratulationsMessage isVisible={congratulationsVisible} />
+        </>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -318,120 +238,10 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     marginHorizontal: 24,
   },
-  dayCircle: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: GlobalStyles.colors.primary500,
-    borderStyle: "dashed",
-    backgroundColor: `rgba(228,108,10,0.5)`,
-  },
-  dayTextContainer: {
-    position: "absolute", // to center dayText for each circle
-  },
-  dayText: {
-    color: "black",
-    fontSize: 14,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-
-  progressContainer: {
-    alignItems: "center",
-  },
-  progressIconContainer: {
-    position: "absolute",
-    top: "15%",
-    zIndex: 999,
-  },
-  progressIcon: {
-    width: 72,
-    height: 72,
-  },
-  progressTextContainer: {
-    position: "absolute",
-    top: "60%",
-    zIndex: 999,
-  },
-  progressText: {
-    color: GlobalStyles.colors.primary500,
-    fontSize: 18,
-    textAlign: "center",
-  },
   bottomTextContainer: {
     flexDirection: "row",
-  },
-
-  bottomTextBox: {
-    flex: 1,
-  },
-  bottomTextIcon: {
-    width: 30,
-    height: 30,
-    alignSelf: "center",
-  },
-
-  customText: {
-    fontFamily: "OpenSans_700Bold_Italic",
-    fontSize: 14,
-    textAlign: "center",
-  },
-  inputContainer: {
-    alignItems: "center",
-  },
-  input: {
-    marginTop: 20,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    width: 200,
-  },
-  button: {
-    marginTop: 10,
-    backgroundColor: GlobalStyles.colors.primary500,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  congratulationsContainer: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 999,
-  },
-  congratulations: {
-    backgroundColor: "transparent",
-    padding: 10,
-    borderRadius: 5,
-    width: 300,
-    height: 200,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  congratulationsText: {
-    color: "white",
-    fontSize: 32,
-    fontWeight: "bold",
-  },
-  gradientBackground: {
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: "tomato",
   },
 });
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, Dimensions, SafeAreaView } from "react-native";
+import { Image, Dimensions, SafeAreaView, StatusBar } from "react-native";
 import Onboarding from "react-native-onboarding-swiper";
 import { GlobalStyles } from "../components/UI/styles";
 
@@ -12,6 +12,10 @@ const OnboardingScreen = ({ onComplete }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar
+        backgroundColor={GlobalStyles.colors.primary500}
+        barStyle="default"
+      />
       <Onboarding
         pages={[
           {
