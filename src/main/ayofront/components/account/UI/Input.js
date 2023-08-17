@@ -26,13 +26,14 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 20,
-    marginBottom: 4,
+    marginBottom: 10,
   },
   input: {
-    backgroundColor: GlobalStyles.colors.primary100,
+    backgroundColor: GlobalStyles.colors.whiteOpacity50,
     padding: 6,
     paddingLeft: 10,
-    borderRadius: 10,
+    borderRadius: 20,
     fontSize: 20,
+    borderWidth: 1,
   },
 });
