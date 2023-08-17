@@ -10,6 +10,10 @@ import PedometerScreen from "./screens/pedometer/pedometer_test";
 import AccountScreen from "./screens/account/account_test";
 import { GlobalStyles } from "./components/UI/styles";
 
+import TimePickerExample from "./screens/record/TimePickerExample";
+
+
+
 const Tab = createBottomTabNavigator();
 
 export default function App() {
@@ -18,7 +22,7 @@ export default function App() {
       <Tab.Navigator
          screenOptions={({ route }) => ({
           tabBarHideOnKeyboard: true,
-          tabBarShowLabel: false,
+          tabBarShowLabel: true,
           headerShown: false,
 
           tabBarIcon: ({ focused, color, size }) => {
@@ -47,7 +51,7 @@ export default function App() {
           },
         })}
       >
-        <Tab.Screen name="HOME" component={NutriDetailScreen} />
+        <Tab.Screen name="HOME" component={TimePickerExample} />
         <Tab.Screen name="DIET RECORD" component={RecordNavigator} />
         <Tab.Screen name="CHALLENGE" component={FastScreen} />
         <Tab.Screen name="STEP COUNTER" component={PedometerScreen} />

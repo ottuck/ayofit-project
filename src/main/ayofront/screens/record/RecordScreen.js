@@ -5,16 +5,18 @@ import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 
+
 function RecordScreen({ navigation }) {
   //모달 관련 
   const [modalVisible, setModalVisible] = useState(false);
-  const openSearchModal = () => {
+  const openModal = () => {
     setModalVisible(true);
   };
-  const closeSearchModal = () => {
+  const closeModal = () => {
     setModalVisible(false);
   };
 
+  //검색 관련
   const [searchText, setSearchText] = useState("");
   const searchSubmit = () => {
     // 여기서 검색어를 처리하거나 필요한 작업을 수행합니다.
@@ -22,14 +24,14 @@ function RecordScreen({ navigation }) {
 
     // RecordMain.js로 네비게이션을 수행합니다.
     navigation.navigate("RecordMain");
-    closeSearchModal();
+    closeModal();
   };
 
-  const backgroundImage = require('../../images/background-img.png');
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
+        <ImageBackground source={require('../../images/background-img.png')} style={styles.backgroundImage}>
 
           <View style={styles.headerContainer}>
             <Text style={styles.headerTitle}> Diet Record</Text>
@@ -43,7 +45,7 @@ function RecordScreen({ navigation }) {
           >
             <View style={styles.cardContainer}>
               <View style={styles.cardImageContainer}>
-                <TouchableOpacity onPress={openSearchModal}>
+                <TouchableOpacity onPress={openModal}>
                   <Feather name="plus-circle" style={styles.plusIcon} />
                 </TouchableOpacity>
               </View>
@@ -66,13 +68,13 @@ function RecordScreen({ navigation }) {
                 </View>
               </View>
             </View>
+
           </ScrollView>
 
           <Modal animationType="slide" visible={modalVisible} transparent={true} >
-            {/* <BlurView style={styles.modalScreen}> */}
             <BlurView style={{ flex: 1 }}>
               <View style={styles.modalScreen}>
-                <TouchableOpacity onPress={closeSearchModal} >
+                <TouchableOpacity onPress={closeModal} >
                   <AntDesign name="close" style={styles.modalCloseButton} />
                 </TouchableOpacity>
                 <View style={styles.modalSearchContainer}>

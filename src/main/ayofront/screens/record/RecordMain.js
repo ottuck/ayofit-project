@@ -1,19 +1,47 @@
-import { StyleSheet, Text, View, SafeAreaView, ImageBackground, ScrollView, TouchableOpacity, Button } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, SafeAreaView, ImageBackground, ScrollView, TouchableOpacity, Button, Modal, TextInput } from 'react-native'
+import React, { useState } from 'react'
+import DatePicker from 'react-native-modern-datepicker';
+
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 
 const RecordMain = ({ navigation }) => {
-  const backgroundImage = require('../../images/background-img.png');
+  //모달 관련 
+  const [modalVisible, setModalVisible] = useState(false);
+  const openModal = () => {
+    setModalVisible(true);
+  };
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
+  //DateTime Picker
+  const [mode, setMode] = useState('time');
+  const [time, setTime] = useState('');
+  const [date, setDate] = useState('');
+
+  const showDatepicker = () => {
+    openModal();
+    setMode('monthYear');
+  };
+  const showTimepicker = () => {
+    openModal();
+    setMode('time');
+  };
+
+  //랜더링 화면
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
+        <ImageBackground source={require('../../images/background-img.png')} style={styles.backgroundImage}>
 
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerTitle}> August 16, 2023 </Text>
-          </View>
+          <TouchableOpacity onPress={showDatepicker}>
+            <View style={styles.headerContainer}>
+              <Text style={styles.headerTitle}> August 16, 2023 </Text>
+              {/* {date && <Text>Selected Month and Year: {date}</Text>} */}
+            </View>
+          </TouchableOpacity>
 
           <View style={styles.cardContainer}>
             <View style={styles.cardImageContainer} >
@@ -59,10 +87,11 @@ const RecordMain = ({ navigation }) => {
                   <Text style={styles.foodInfo}>Food: Carrot</Text>
                   <Text style={styles.foodInfo}>Calories: 41.3 Kcal</Text>
                 </View>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={showTimepicker}>
                   <View style={{ flexDirection: 'row' }}>
                     <Text style={styles.recordTime1}>AM</Text>
                     <Text style={styles.recordTime2}>12:15</Text>
+                    {/* {time && <Text>Selected Time: {time}</Text>} */}
                   </View>
                 </TouchableOpacity>
               </View>
@@ -84,12 +113,35 @@ const RecordMain = ({ navigation }) => {
             </View>
           </ScrollView>
 
+          <Modal animationType="slide" visible={modalVisible}>
+            <TouchableOpacity onPress={closeModal}>
+              <AntDesign name="close" style={styles.modalCloseButton} />
+            </TouchableOpacity>
+            {mode === 'time' ? (
+              <DatePicker
+                mode="time"
+                minuteInterval={3}
+                onTimeChange={selectedTime => {
+                  setTime(selectedTime);
+                }
+              }
+              />
+            ) : (
+              <DatePicker
+                mode="monthYear"
+                selectorStartingYear={2023}
+                onMonthYearChange={selectedDate => setDate(selectedDate)}
+              />
+            )}
+          </Modal>
+
         </ImageBackground>
       </View>
     </SafeAreaView>
   );
 }
 export default RecordMain;
+
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -160,7 +212,7 @@ const styles = StyleSheet.create({
   },
   recordButton: {
     height: 40,
-    width: 170,
+    width: 160,
     borderRadius: 20,
     backgroundColor: '#FFB172',
     shadowOffset: { width: 0, height: 2 },
@@ -169,7 +221,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 5,
+    marginHorizontal: 10,
   },
   buttonText: {
     fontSize: 20,
@@ -244,8 +296,13 @@ const styles = StyleSheet.create({
   recordDeleteButton: {
     fontSize: 23,
     color: 'rgba(0, 0, 0, 0.3)',
-  }
+  },
 
-  //버튼 영역
-
+  //모달 디자인
+  modalCloseButton: {
+    marginTop: 50,
+    left: '90%',
+    fontSize: 25,
+    color: 'rgba(0, 0, 0, 0.1)',
+  },
 });
