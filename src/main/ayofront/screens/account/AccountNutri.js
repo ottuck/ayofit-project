@@ -32,6 +32,7 @@ function AccountNutri({ navigation }) {
         <View style={styles.calorieContainer}>
           <Input
             style={styles.calorieInput}
+            labelStyle={styles.label}
             label="Daily Calorie Goal"
             textInputConfig={{
               keyboardType: "decimal-pad",
@@ -106,11 +107,11 @@ const styles = StyleSheet.create({
   },
   topText: {
     fontSize: 28,
-    fontWeight: "bold",
+    fontWeight: "700",
   },
   text: {
     fontSize: 20,
-    fontWeight: "400",
+    fontWeight: "600",
     marginBottom: 10,
   },
   calorieContainer: {
@@ -118,6 +119,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     paddingHorizontal: 20,
     justifyContent: "flex-start",
+  },
+  label: {
+    fontWeight: "600",
   },
   calorieInput: {
     marginVertical: 10,

@@ -8,10 +8,10 @@ import {
 } from "react-native";
 import { GlobalStyles } from "../../UI/styles";
 
-function Input({ label, textInputConfig, style }) {
+function Input({ label, textInputConfig, style, labelStyle }) {
   return (
     <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, labelStyle]}>{label}</Text>
       <TextInput style={[styles.input, style]} {...textInputConfig}></TextInput>
     </View>
   );
