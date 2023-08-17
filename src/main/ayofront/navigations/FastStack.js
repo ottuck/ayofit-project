@@ -11,10 +11,11 @@ import FastDate from "../components/fast/FastDate";
 import {MethodContainer, MethodTitle, MethodCTouch, MethodCText, MethodCEndTouch,PlanContainer,PlanTitle,PlanMethodText,PlanMethodCView,PlanMethodC
     ,PlanEndView,PlanEndText,PlanConfirmV,PlanConfirmB,PlanConfirmT,ConfirmScroll,ConfirmContainer,ConfirmTitle,ConfirmTime,ConfirmBtn,ConfirmText
     ,TimerContainer,TimerTitle,TimerHomeBtn,TimerHomeBT,EndTimeText,MethodCTextS,ConfirmMessage,ConfirmMView,ConfirmStart,ConfrimSText,ConfirmEnd
-    ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView,FirstMainPage,MainBtn,MainText,FastMainImage,FastHeaderImg,FastOverlay
+    ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView,FirstMainPage,MainBtn,MainText,FastMainImage
+    ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM
 } from '../components/fast/FastingStyled';
-import FastHeader1 from '../images/FastImage/FastHeader1.png'
-import FastHeader2 from '../images/FastImage/FastHeader2.png'
+import LinearGradient from "react-native-linear-gradient";
+
 
 //-------------------------------current Time------------------------------//
 let nowDate = new Date();
@@ -46,21 +47,14 @@ let nowminutes = MinuteNumber(nowTime.getMinutes());
 
 let HourMinutes = `${nowHours}:${nowminutes}`
 
-//----------------------오버레이 이미지------------------------------------//
-const OverlayedImage = () => (
-    <FastMainImage>
-      <FastHeaderImg source={FastHeader1} />
-      <FastOverlay source={FastHeader2} />
-    </FastMainImage>
-  );
-
 //---------------------StackPage-----------------------------------------//
 const FastMainPage = ({navigation : { navigate } }) => (
     <FirstMainPage>
-        <OverlayedImage />
-       <MainBtn onPress={() => navigate("FastingMethod")}>
+        <LinearGradient colors={['2.7deg','rgba(245,212,212,1) 8.5%', 'rgba(252,251,224,1) 90.2%' ]}>
+        <MainBtn onPress={() => navigate("FastingMethod")}>
             <MainText>+ Set up your plan</MainText>
         </MainBtn>
+    </LinearGradient>
     </FirstMainPage>
     );
     
@@ -112,29 +106,29 @@ const FastMethod = ({ navigation }) => {
         });
     };
     return(
-<MethodContainer>
+<MethodScrollView>
+<MethodContainer>  
 <MethodTitle>
-<OverlayedImage />
     Please choose a method<Ionicons name="checkmark" size={28} color="black" />
 </MethodTitle>
 <MethodCTouch onPress={() => selectMethod(12)}>
-    <MethodCText>12H        <FontAwesome5 name="minus" size={24} color="#E46C0A" />       12H</MethodCText>
-    <MethodCTextS> fasting                                       relaxing</MethodCTextS>
+<MethodCText>12H           <FontAwesome5 name="minus" size={24} color="#E46C0A" />         12H</MethodCText>
+<MethodCTextS> fasting                                       relaxing</MethodCTextS>
 </MethodCTouch>
 <MethodCTouch onPress={() => selectMethod(14)}>
-<MethodCText>14H        <FontAwesome5 name="minus" size={24} color="#E46C0A" />       10H</MethodCText>
+<MethodCText>14H           <FontAwesome5 name="minus" size={24} color="#E46C0A" />         10H</MethodCText>
     <MethodCTextS> fasting                                       relaxing</MethodCTextS>
 </MethodCTouch>
 <MethodCTouch onPress={() => selectMethod(16)}>
-<MethodCText>16H        <FontAwesome5 name="minus" size={24} color="#E46C0A" />         8H</MethodCText>
+<MethodCText>16H           <FontAwesome5 name="minus" size={24} color="#E46C0A" />           8H</MethodCText>
     <MethodCTextS> fasting                                       relaxing</MethodCTextS>
 </MethodCTouch>
 <MethodCTouch onPress={() => selectMethod(18)}>
-<MethodCText>18H        <FontAwesome5 name="minus" size={24} color="#E46C0A" />         6H</MethodCText>
+<MethodCText>18H           <FontAwesome5 name="minus" size={24} color="#E46C0A" />           6H</MethodCText>
     <MethodCTextS> fasting                                       relaxing</MethodCTextS>
 </MethodCTouch>
 <MethodCTouch onPress={() => selectMethod(20)}>
-<MethodCText>20H        <FontAwesome5 name="minus" size={24} color="#E46C0A" />         4H</MethodCText>
+<MethodCText>20H          <FontAwesome5 name="minus" size={24} color="#E46C0A" />           4H</MethodCText>
     <MethodCTextS> fasting                                       relaxing</MethodCTextS>
 </MethodCTouch>
 <MethodCEndTouch onPress={() => selectMethod(24)}>
@@ -142,6 +136,7 @@ const FastMethod = ({ navigation }) => {
     <MethodCTextS>fasting</MethodCTextS>
 </MethodCEndTouch>
 </MethodContainer>
+</MethodScrollView>
 );
 };
 
@@ -149,14 +144,37 @@ const FastMethod = ({ navigation }) => {
 const FastPlan = ({ navigation }) => {
     const[seletedDate, setSelectedDate] = useState('');
     const[selectedTime,setSelectedTime] = useState('');
+
+    const calculateEndTime = (selectedDateTime, seletedValue) => {
+        let endHour = selectedDateTime.getHours() + parseInt(seletedValue);
+        let endMinute = selectedDateTime.getMinutes();
+
+        if (endHour >= 24) {
+            endHour -= 24;
+            selectedDateTime.setDate(selectedDateTime.getDate() + 1);
+        }
+
+        let selectedYear = selectedDateTime.getFullYear();
+        let selectedMonth = MonthNumber(selectedDateTime.getMonth() + 1);
+        let selectedDay = DateNumber(selectedDateTime.getDate());
+
+        return `${selectedYear}/${selectedMonth}/${selectedDay} : ${TimeNumber(endHour)}:${TimeNumber(endMinute)}`;
+    };
+    
     const selectsecond = (seletedValue) => {
+        let selectedDateTime = new Date(`${seletedDate}T${selectedTime}`);
+        let endTime = calculateEndTime(selectedDateTime, seletedValue);
+
         const stringFormat = `${seletedValue} - ${24 - seletedValue}`;
 
             navigation.navigate("ConfirmFastPlan",{
                 seletedValue: {
                     number: seletedValue,
                     string: stringFormat,
-                }, 
+                },
+                seletedDate: seletedDate,
+                selectedTime: selectedTime,
+                endTime: endTime,
             });
     };
 const route = useRoute();
@@ -187,7 +205,7 @@ return(
 <PlanEndView>
  <PlanEndText>
     It ends at  {"\n"}
-{route.params.endTime}
+    {route.params.endTime}
 </PlanEndText>
 </PlanEndView>
 <PlanConfirmV>
@@ -211,13 +229,20 @@ const FastConfirm = ({ navigation }) => {
     };
 const route = useRoute();
 const confirmTime = route.params.seletedValue;
+
+const stringFormat = `${confirmTime.number}H`;
+const stringFormat2 =`${24 - confirmTime.number}H`
 return(
 
 <ConfirmScroll>
 <ConfirmContainer>
-    <ConfirmTitle>
-    </ConfirmTitle>
-    <ConfirmTime> {confirmTime.string} </ConfirmTime>
+    <ConfirmHeader>
+    <ConfirmTime>{stringFormat}</ConfirmTime>
+    <ConfirmTimeText>fasting </ConfirmTimeText>
+    <ConfirmTextM><FontAwesome5 name="minus" size={15} color="#E46C0A" /></ConfirmTextM>
+    <ConfirmTime> {stringFormat2}</ConfirmTime>
+    <ConfirmTimeText>relaxing</ConfirmTimeText>
+    </ConfirmHeader>
     <ConfirmTView>
     <ConfirmStart>
         <ConfrimSText>
@@ -279,7 +304,7 @@ function MyTimer({ route, navigation: {navigate} }) {
                         return (
                             <>
                              <Text style={{ color:"#505050", fontSize: 18 }}>
-                               Elpased Time
+                               Elapsed Time
                                 </Text>
                                 <Text style={{ color, fontSize: 40 }}>
                                 {`${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}`}

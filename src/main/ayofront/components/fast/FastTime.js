@@ -21,7 +21,7 @@ const FastTime = ({ onTimeChange }) => {
     onTimeChange(newTime);
     toggleTimePicker();
   }
-
+//----------------------현재 시간---------------//
   let nowTime = new Date();
 
   function TimeNumber(time) {
@@ -62,6 +62,7 @@ const FastTime = ({ onTimeChange }) => {
             mode="time"
             minuteInterval={1}
             style={styles.timePicker}
+            is24Hour={true}
           />
         </ModalContent2>
       </Modal>
@@ -72,6 +73,7 @@ const FastTime = ({ onTimeChange }) => {
 const styles = StyleSheet.create({
   timePicker: {
     borderRadius: 10,
+
   },
 });
 

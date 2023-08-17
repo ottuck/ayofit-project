@@ -1,25 +1,5 @@
 import styled from "styled-components/native"
-//-------------------FastImg------------------------------//
-export const FastMainImage = styled.View`
-width: 100%;
-height: 100%;
-position : relative;
-`;
-export const FastHeaderImg = styled.Image`
-width: 100%;
-height: 33%;
-resize-mode: cover;
-`;
-export const FastOverlay = styled.Image`
-position: absolute;
-top: 0;
-left: 0;
-z-index: 1;
-opacity: 0.7;
-width: 100%;
-height: 35%;
-resize-mode: cover;
-`;
+
 //-------------------MainPage-----------------------------//
 export const MainBtn = styled.TouchableOpacity`
  border-radius : 20px;
@@ -27,7 +7,7 @@ export const MainBtn = styled.TouchableOpacity`
  height : 60px;
  align-items: center;
  justify-content: center;
-bottom: 330px;
+
 `;
 export const MainText = styled.Text`
  color : #00000080;
@@ -42,16 +22,22 @@ justify-content: center;
 background-color : #FFE9D8;
 `;
 //---------------------FastMethod(Stack.js)----------------------//
-export const MethodContainer = styled.ScrollView`
+export const MethodScrollView = styled.ScrollView`
 width:100%;
-height:auto;
+height:100%;
+background-color: #FFE9D8;
+`;
+export const MethodContainer = styled.View`
+width:100%;
+height:850px;
 background-color: #FFE9D8;
 `;
 export const MethodTitle = styled.Text`
 font-size: 20px;
 align-self: center;
-margin-top : 100px;
 color: black;
+bottom: 50px;
+margin-top: 100px;
 `;
 export const MethodCTouch = styled.TouchableOpacity`
 border-radius : 20px;
@@ -63,6 +49,7 @@ margin-left : 20px;
 margin-right : 20px;
 align-items: center;
 justify-content: center;
+bottom: 50px;
 `;
 export const MethodCText = styled.Text`
 font-size: 30px;
@@ -87,6 +74,7 @@ margin-right : 20px;
 margin-bottom : 30px;
 align-items: center;
 justify-content: center;
+bottom: 50px;
 `;
 //---------------FastPlan(Stack.js)---------------//
 export const PlanContainer = styled.ScrollView`
@@ -166,19 +154,33 @@ export const ConfirmContainer = styled.View`
 background-color: #FFE9D8;
 height : 600px;
 `;
-export const ConfirmTitle = styled.Text`
-font-size: 19px;
-margin-top : 100px;
-margin-left : 35px;
-line-height : 25px;
-color: black;
-`;
+
 export const ConfirmTime = styled.Text`
 align-self: center;
 font-size: 35px;
 color : #E46C0A;
 margin-top : 20px;
 margin-right : 10px;
+`;
+export const ConfirmTimeText = styled.Text`
+align-self: center;
+font-size: 15px;
+color : black;
+margin-top : 20px;
+margin-right : 10px;
+`;
+export const ConfirmTextM = styled.Text`
+align-self: center;
+font-size: 15px;
+color : black;
+margin-top : 20px;
+margin-right : 10px;
+padding : 5px;
+`;
+export const ConfirmHeader = styled.View`
+flex-direction: row;
+align-items: center;
+justify-content: center;
 `;
 export const ConfirmBtn = styled.TouchableOpacity`
 border: 1px solid #808e9b;
