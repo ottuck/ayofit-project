@@ -12,9 +12,10 @@ import {MethodContainer, MethodTitle, MethodCTouch, MethodCText, MethodCEndTouch
     ,PlanEndView,PlanEndText,PlanConfirmV,PlanConfirmB,PlanConfirmT,ConfirmScroll,ConfirmContainer,ConfirmTitle,ConfirmTime,ConfirmBtn,ConfirmText
     ,TimerContainer,TimerTitle,TimerHomeBtn,TimerHomeBT,EndTimeText,MethodCTextS,ConfirmMessage,ConfirmMView,ConfirmStart,ConfrimSText,ConfirmEnd
     ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView,FirstMainPage,MainBtn,MainText,FastMainImage
-    ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM
+    ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM,FastBGImgView,
 } from '../components/fast/FastingStyled';
-import LinearGradient from "react-native-linear-gradient";
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 
 //-------------------------------current Time------------------------------//
@@ -47,15 +48,19 @@ let nowminutes = MinuteNumber(nowTime.getMinutes());
 
 let HourMinutes = `${nowHours}:${nowminutes}`
 
+//-----------------------------------------------------------------------//
+
+
 //---------------------StackPage-----------------------------------------//
 const FastMainPage = ({navigation : { navigate } }) => (
     <FirstMainPage>
-        <LinearGradient colors={['2.7deg','rgba(245,212,212,1) 8.5%', 'rgba(252,251,224,1) 90.2%' ]}>
-        <MainBtn onPress={() => navigate("FastingMethod")}>
-            <MainText>+ Set up your plan</MainText>
-        </MainBtn>
+    <LinearGradient colors={['#000000','#89fffd','pink']} style={{ height: '500px'}}>
+
+    <MainBtn onPress={() => navigate("FastingMethod")}>
+        <MainText>+ Set up your plan</MainText>
+    </MainBtn>
     </LinearGradient>
-    </FirstMainPage>
+</FirstMainPage>
     );
     
 

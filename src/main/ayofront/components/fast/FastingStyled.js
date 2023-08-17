@@ -19,7 +19,17 @@ width : 100%;
 height : 100%;
 align-items: center;
 justify-content: center;
-background-color : #FFE9D8;
+
+`;
+//---------------------------------------------------------------//
+export const FastBGImgView = styled.View`
+width: 100%;
+height: 100%;
+`;
+export const FastBGImg = styled.ImageBackground`
+width: 100%;
+height: 750px;
+z-index : -1;
 `;
 //---------------------FastMethod(Stack.js)----------------------//
 export const MethodScrollView = styled.ScrollView`
