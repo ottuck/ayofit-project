@@ -54,6 +54,7 @@ function MainTabsScreen() {
           borderRadius: 16,
           height: 65,
         },
+        headerShown: false,
       })}
     >
       <Tab.Screen name="HOME" component={NutriDetailScreen} />
@@ -92,12 +93,12 @@ export default function App() {
         />
         <NavigationContainer style={styles.navigationContainer}>
           <Stack.Navigator>
-            <Stack.Screen
+            {/* <Stack.Screen
               name="AccountInfo"
               component={AccountInfo}
               options={{ headerShown: false }}
-            />
-            <Stack.Screen name="AccountNutri" component={AccountNutri} />
+            /> */}
+            {/* <Stack.Screen name="AccountNutri" component={AccountNutri} /> */}
             <Stack.Screen
               name="MainTabs"
               component={MainTabsScreen}

@@ -67,7 +67,8 @@ const OnboardingScreen = ({ onComplete }) => {
             subtitle: "",
           },
         ]}
-        showSkip={false}
+        showSkip={true}
+        onSkip={onComplete}
         onDone={onComplete}
       />
     </SafeAreaView>

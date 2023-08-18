@@ -48,7 +48,7 @@ const PedometerProgressRing = ({ steps, goal }) => {
         <Text
           style={[
             styles.progressText,
-            { color: GlobalStyles.colors.blackOpacity50 },
+            { color: GlobalStyles.colors.primary500, fontWeight: "bold" },
           ]}
         >
           Goal: {goal.toLocaleString()} steps

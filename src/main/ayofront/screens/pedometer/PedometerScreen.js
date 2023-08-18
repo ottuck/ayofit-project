@@ -1,35 +1,16 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Animated,
   Easing,
   StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
   View,
-  Image,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
 import { Accelerometer } from "expo-sensors";
-import * as SplashScreen from "expo-splash-screen";
-// import {
-//   useFonts,
-//   OpenSans_300Light,
-//   OpenSans_400Regular,
-//   OpenSans_500Medium,
-//   OpenSans_600SemiBold,
-//   OpenSans_700Bold,
-//   OpenSans_800ExtraBold,
-//   OpenSans_300Light_Italic,
-//   OpenSans_400Regular_Italic,
-//   OpenSans_500Medium_Italic,
-//   OpenSans_600SemiBold_Italic,
-//   OpenSans_700Bold_Italic,
-//   OpenSans_800ExtraBold_Italic,
-// } from "@expo-google-fonts/open-sans";
+
 import { GlobalStyles } from "../../components/UI/styles";
 import PedometerProgressRing from "../../components/pedometer/PedometerProgressRing";
 import PedometerDailyCircles from "../../components/pedometer/PedometerDailyCheck";
@@ -37,14 +18,12 @@ import CongratulationsMessage from "../../components/pedometer/CongratulationsMe
 import DistanceCaloriesBox from "../../components/pedometer/DistanceCaloriesBox";
 import GoalInput from "../../components/pedometer/GoalInput";
 
-// SplashScreen.preventAutoHideAsync();
-
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function PedometerScreen() {
   const [steps, setSteps] = useState(0);
   const [isWalking, setIsWalking] = useState(false);
-  const [goal, setGoal] = useState(10000);
+  const [goal, setGoal] = useState(100);
   const [newGoal, setNewGoal] = useState("");
   const [congratulationsVisible, setCongratulationsVisible] = useState(false);
   const congratulationsOpacity = new Animated.Value(0);
@@ -58,30 +37,6 @@ function PedometerScreen() {
     false,
     true,
   ]);
-
-  // let [fontsLoaded] = useFonts({
-  //   OpenSans_300Light,
-  //   OpenSans_400Regular,
-  //   OpenSans_500Medium,
-  //   OpenSans_600SemiBold,
-  //   OpenSans_700Bold,
-  //   OpenSans_800ExtraBold,
-  //   OpenSans_300Light_Italic,
-  //   OpenSans_400Regular_Italic,
-  //   OpenSans_500Medium_Italic,
-  //   OpenSans_600SemiBold_Italic,
-  //   OpenSans_700Bold_Italic,
-  //   OpenSans_800ExtraBold_Italic,
-  // });
-
-  // useEffect(() => {
-  //   async function hideSplashScreen() {
-  //     if (fontsLoaded) {
-  //       await SplashScreen.hideAsync();
-  //     }
-  //   }
-  //   hideSplashScreen();
-  // }, [fontsLoaded]);
 
   useEffect(() => {
     const accelerometerSubscription = Accelerometer.addListener(
@@ -158,25 +113,13 @@ function PedometerScreen() {
     return totalCaloriesBurned.toFixed(2);
   };
 
-  // const onLayoutRootView = useCallback(async () => {
-  //   if (fontsLoaded) {
-  //     await SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded]);
-
-  // if (!fontsLoaded) {
-  //   return null;
-  // }
-
   return (
-    // <View style={styles.container} onLayout={onLayoutRootView}>
-    // <View style={styles.container}>
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <>
+        <View>
           <View style={styles.dayContainerWrapper}>
             <View style={styles.daysContainer}>
               {daysOfWeek.map((day, index) => (
@@ -215,7 +158,7 @@ function PedometerScreen() {
 
           {/* Congratulations Message */}
           <CongratulationsMessage isVisible={congratulationsVisible} />
-        </>
+        </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
