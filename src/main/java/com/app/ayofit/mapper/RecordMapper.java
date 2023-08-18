@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package com.app.ayofit.mapper;
 
 import java.util.List;
@@ -13,3 +14,13 @@ public interface RecordMapper {
 	RecordDTO getFoodInfoById(String n_no);
 	List<RecordDTO> searchFoodByName(String n_food_name);
 }
+=======
+package com.app.ayofit.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface RecordMapper {
+
+}
+>>>>>>> 1fedae1c4af3b3025f934a96329a7dce5fd2341a

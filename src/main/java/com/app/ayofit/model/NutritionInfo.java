@@ -40,6 +40,12 @@ public class NutritionInfo {
 	public void setTotalFat(double totalFat) {
 		this.totalFat = totalFat;
 	}
+
+	@Override
+	public String toString() {
+		return "NutritionInfo [totalCarbohydrate=" + totalCarbohydrate + ", totalProtein=" + totalProtein
+				+ ", totalFat=" + totalFat + "]";
+	}
     
     
     
