@@ -6,10 +6,13 @@ import {
   SafeAreaView,
   StatusBar,
 } from "react-native";
+import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import Constants from "expo-constants";
+import { useEffect, useState } from "react";
 import OnboardingScreen from "./screens/Onboarding";
 import NutriDetailScreen from "./screens/nutriDetail/nutriDetail_test";
 import RecordScreen from "./screens/record/RecordNavigator";
@@ -20,8 +23,6 @@ import AccountInfo from "./screens/account/AccountInfo";
 import AccountNutri from "./screens/account/AccountNutri";
 import { GlobalStyles } from "./components/UI/styles";
 import FontProvider from "./components/FontProvider";
-
-import TimePickerExample from "./screens/record/TimePickerExample";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -67,6 +68,8 @@ function MainTabsScreen() {
 }
 
 export default function App() {
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [completedOnboarding, setCompletedOnboarding] = useState(false);
 

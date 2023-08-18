@@ -72,7 +72,7 @@ function RecordScreen({ navigation }) {
           </ScrollView>
 
           <Modal animationType="slide" visible={modalVisible} transparent={true} >
-            <BlurView style={{ flex: 1 }}>
+            <BlurView style={{ flex: 1}}>
               <View style={styles.modalScreen}>
                 <TouchableOpacity onPress={closeModal} >
                   <AntDesign name="close" style={styles.modalCloseButton} />
