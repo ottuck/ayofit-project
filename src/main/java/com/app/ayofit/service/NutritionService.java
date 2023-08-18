@@ -43,9 +43,14 @@ public class NutritionService {
 //        System.out.println(endDate);
 //    	return nutritionMapper.getWeeklyNutrition(userId, endDate);
 //    }
-
-    public List<NutritionInfo> getMonthlyNutrition(String userId, String month) {
-        return nutritionMapper.getMonthlyNutrition(userId, month);
+    
+    public List<NutritionInfo> getMonthlyNutrition(String userId, String startDate, String endDate) {
+        return nutritionMapper.getMonthlyNutrition(userId, startDate, endDate);
     }
+
+//    public List<NutritionInfo> getMonthlyNutrition(String userId, String month) {
+//        return nutritionMapper.getMonthlyNutrition(userId, month);
+//    }
+    
 }
 
