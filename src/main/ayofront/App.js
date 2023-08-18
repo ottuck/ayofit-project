@@ -1,5 +1,12 @@
+import { useState } from "react";
+import {
+  StyleSheet,
+  Image,
+  Dimensions,
+  SafeAreaView,
+  StatusBar,
+} from "react-native";
 import "react-native-gesture-handler";
-import { StyleSheet, Image, Dimensions, SafeAreaView } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -15,6 +22,7 @@ import AccountScreen from "./screens/account/account_test";
 import AccountInfo from "./screens/account/AccountInfo";
 import AccountNutri from "./screens/account/AccountNutri";
 import { GlobalStyles } from "./components/UI/styles";
+import FontProvider from "./components/FontProvider";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -47,6 +55,7 @@ function MainTabsScreen() {
           borderRadius: 16,
           height: 65,
         },
+        headerShown: false,
       })}
     >
       <Tab.Screen name="HOME" component={NutriDetailScreen} />
@@ -80,21 +89,27 @@ export default function App() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <NavigationContainer style={styles.navigationContainer}>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="AccountInfo"
-            component={AccountInfo}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="AccountNutri" component={AccountNutri} />
-          <Stack.Screen
-            name="MainTabs"
-            component={MainTabsScreen}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <FontProvider>
+        <StatusBar
+          backgroundColor={GlobalStyles.colors.primary500}
+          barStyle="default"
+        />
+        <NavigationContainer style={styles.navigationContainer}>
+          <Stack.Navigator>
+            {/* <Stack.Screen
+              name="AccountInfo"
+              component={AccountInfo}
+              options={{ headerShown: false }}
+            /> */}
+            {/* <Stack.Screen name="AccountNutri" component={AccountNutri} /> */}
+            <Stack.Screen
+              name="MainTabs"
+              component={MainTabsScreen}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </FontProvider>
     </SafeAreaView>
   );
 }
