@@ -7,12 +7,13 @@ export const MainBtn = styled.TouchableOpacity`
  height : 60px;
  align-items: center;
  justify-content: center;
-
 `;
 export const MainText = styled.Text`
- color : #00000080;
- font-size : 20px;
- font-weight : 600
+ color : black;
+ text-shadow: 2px 3px 5px #f8d5bc;
+ opacity: 0.8;
+ font-size : 22px;
+ font-weight : 400
 `;
 export const FirstMainPage = styled.View`
 width : 100%;
@@ -40,7 +41,7 @@ background-color: #FFE9D8;
 export const MethodContainer = styled.View`
 width:100%;
 height:850px;
-background-color: #FFE9D8;
+
 `;
 export const MethodTitle = styled.Text`
 font-size: 20px;
@@ -60,18 +61,43 @@ margin-right : 20px;
 align-items: center;
 justify-content: center;
 bottom: 50px;
+position: relative;
+`;
+export const MethodLeftContent = styled.View`
+width: 40%;
+position: absolute;
+left : 30px;
+
 `;
 export const MethodCText = styled.Text`
 font-size: 30px;
 font-weight: 600;
 color: #E46C0A;
-white-space : pre;
+
 `;
 export const MethodCTextS = styled.Text`
 font-size: 15px;
+padding-left:3px;
 font-weight: 400;
 color: black;
-white-space : pre;
+`;
+export const MethodCText2 = styled.Text`
+font-size: 30px;
+font-weight: 600;
+color: #E46C0A;
+text-align:right;
+`;
+export const MethodCTextS2 = styled.Text`
+font-size: 15px;
+font-weight: 400;
+color: black;
+text-align:right;
+`;
+export const MethodRightContent = styled.View`
+width: 40%;
+position: absolute;
+right : 30px;
+
 `;
 export const MethodCEndTouch = styled.TouchableOpacity`
 border-radius : 20px;
@@ -88,17 +114,14 @@ bottom: 50px;
 `;
 //---------------FastPlan(Stack.js)---------------//
 export const PlanContainer = styled.ScrollView`
-flex:1;
 background-color: #FFE9D8;
 width: 100%;
 `;
 export const PlanTitle = styled.Text`
 font-size: 17px;
-margin-top : 100px;
 margin-left : 35px;
 line-height : 25px;
 color: black;
-background-color: #FFE9D8;
 `;
 export const PlanMethodText = styled.Text`
 font-size: 18px;
@@ -106,7 +129,6 @@ font-weight : 500;
 margin-top : 50px;
 margin-left : 35px;
 line-height : 25px;
-background-color: #FFE9D8;
 `;
 export const PlanMethodCView = styled.TouchableOpacity`
 align-items: center;
@@ -131,15 +153,14 @@ align-items: center;
 justify-content: center;
 margin-top : 50px;
 width : 100%;
-height : 50px;
+height : 100px;
 `;
 export const PlanEndText = styled.Text`
-font-size : 17px;
-white-space : pre;
+font-size : 20px;
+line-height : 28px;
 `;
 export const PlanConfirmV = styled.View`
-height: 150px;
-background-color: #FFE9D8;
+height: 130px;
 `;
 export const PlanConfirmB = styled.TouchableOpacity`
 background-color: #E46C0A;
@@ -148,7 +169,7 @@ width : 85%;
 height : 50px;
 align-items: center;
 justify-content: center;
-margin-top : 50px;
+margin-top : 45px;
 margin-left : 30px;
 `;
 export const PlanConfirmT = styled.Text`
@@ -162,28 +183,29 @@ flex: 1;
 `;
 export const ConfirmContainer = styled.View`
 background-color: #FFE9D8;
-height : 600px;
+height: 710px;
+position : relative;
 `;
 
 export const ConfirmTime = styled.Text`
 align-self: center;
 font-size: 35px;
 color : #E46C0A;
-margin-top : 20px;
+top: 170px;
 margin-right : 10px;
 `;
 export const ConfirmTimeText = styled.Text`
 align-self: center;
 font-size: 15px;
 color : black;
-margin-top : 20px;
+top: 170px;
 margin-right : 10px;
 `;
 export const ConfirmTextM = styled.Text`
 align-self: center;
 font-size: 15px;
 color : black;
-margin-top : 20px;
+top: 175px;
 margin-right : 10px;
 padding : 5px;
 `;
@@ -199,7 +221,7 @@ background-color: #E46C0A;
 height: 50px;
 width: 85%;
 position : absolute;
-bottom : 30px;
+bottom : 130px;
 margin-left : 30px;
 margin-right : 20px;
 align-items: center;
@@ -218,14 +240,15 @@ color : #000000;
 export const ConfirmMView = styled.View`
 justify-content : center;
 align-items: center;
-bottom : -100px;
+top:-300px;
 `;
 export const ConfirmTView = styled.View`
 align-items: center;
 justify-content: center;
+height: 100%;
 `;
 export const ConfirmStart = styled.View`
-margin-top : 30px;
+top: -100px;
 width: 85%;
 height: 50px;
 background-color : #E46C0A33;
@@ -238,6 +261,7 @@ font-size: 18px;
 font-weight : 500;
 `;
 export const ConfirmEnd = styled.View`
+top: -100px;
 margin-top : 30px;
 width: 85%;
 height: 50px;
@@ -269,8 +293,8 @@ border-radius : 50px;
 align-items: center;
 justify-content: center;
 border : 1px solid #FFE9D8;
-height : 70px;
-width : 35%;
+height : 50px;
+width : 33%;
 right : -120px;
 margin-bottom : 30px;
 `;

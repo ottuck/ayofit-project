@@ -12,7 +12,7 @@ import {MethodContainer, MethodTitle, MethodCTouch, MethodCText, MethodCEndTouch
     ,PlanEndView,PlanEndText,PlanConfirmV,PlanConfirmB,PlanConfirmT,ConfirmScroll,ConfirmContainer,ConfirmTitle,ConfirmTime,ConfirmBtn,ConfirmText
     ,TimerContainer,TimerTitle,TimerHomeBtn,TimerHomeBT,EndTimeText,MethodCTextS,ConfirmMessage,ConfirmMView,ConfirmStart,ConfrimSText,ConfirmEnd
     ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView,FirstMainPage,MainBtn,MainText,FastMainImage
-    ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM,FastBGImgView,
+    ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM,MethodLeftContent,MethodRightContent,MethodCText2,MethodCTextS2
 } from '../components/fast/FastingStyled';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -53,14 +53,13 @@ let HourMinutes = `${nowHours}:${nowminutes}`
 
 //---------------------StackPage-----------------------------------------//
 const FastMainPage = ({navigation : { navigate } }) => (
+<LinearGradient colors={['#f7d7be','#e7a370']}>
     <FirstMainPage>
-    <LinearGradient colors={['#000000','#89fffd','pink']} style={{ height: '500px'}}>
-
     <MainBtn onPress={() => navigate("FastingMethod")}>
         <MainText>+ Set up your plan</MainText>
     </MainBtn>
-    </LinearGradient>
 </FirstMainPage>
+    </LinearGradient>
     );
     
 
@@ -111,35 +110,75 @@ const FastMethod = ({ navigation }) => {
         });
     };
     return(
+
+
+
 <MethodScrollView>
 <MethodContainer>  
+<LinearGradient colors={['#f7d7be','#e7a370']}>
 <MethodTitle>
     Please choose a method<Ionicons name="checkmark" size={28} color="black" />
 </MethodTitle>
 <MethodCTouch onPress={() => selectMethod(12)}>
-<MethodCText>12H           <FontAwesome5 name="minus" size={24} color="#E46C0A" />         12H</MethodCText>
-<MethodCTextS> fasting                                       relaxing</MethodCTextS>
+<MethodLeftContent>
+<MethodCText>12H</MethodCText>
+<MethodCTextS>fasting</MethodCTextS>
+</MethodLeftContent>
+<FontAwesome5 name="minus" size={24} color="#E46C0A" />
+<MethodRightContent>
+<MethodCText2>12H</MethodCText2>
+<MethodCTextS2>relaxing</MethodCTextS2>
+</MethodRightContent>
 </MethodCTouch>
 <MethodCTouch onPress={() => selectMethod(14)}>
-<MethodCText>14H           <FontAwesome5 name="minus" size={24} color="#E46C0A" />         10H</MethodCText>
-    <MethodCTextS> fasting                                       relaxing</MethodCTextS>
+<MethodLeftContent>
+<MethodCText>14H</MethodCText>
+<MethodCTextS>fasting</MethodCTextS>
+</MethodLeftContent>
+<FontAwesome5 name="minus" size={24} color="#E46C0A" />
+<MethodRightContent>
+<MethodCText2>10H</MethodCText2>
+<MethodCTextS2>relaxing</MethodCTextS2>
+</MethodRightContent>
 </MethodCTouch>
 <MethodCTouch onPress={() => selectMethod(16)}>
-<MethodCText>16H           <FontAwesome5 name="minus" size={24} color="#E46C0A" />           8H</MethodCText>
-    <MethodCTextS> fasting                                       relaxing</MethodCTextS>
+<MethodLeftContent>
+<MethodCText>16H</MethodCText>
+<MethodCTextS>fasting</MethodCTextS>
+</MethodLeftContent>
+<FontAwesome5 name="minus" size={24} color="#E46C0A" />
+<MethodRightContent>
+<MethodCText2>8H</MethodCText2>
+<MethodCTextS2>relaxing</MethodCTextS2>
+</MethodRightContent>
 </MethodCTouch>
 <MethodCTouch onPress={() => selectMethod(18)}>
-<MethodCText>18H           <FontAwesome5 name="minus" size={24} color="#E46C0A" />           6H</MethodCText>
-    <MethodCTextS> fasting                                       relaxing</MethodCTextS>
+<MethodLeftContent>
+<MethodCText>18H</MethodCText>
+<MethodCTextS>fasting</MethodCTextS>
+</MethodLeftContent>
+<FontAwesome5 name="minus" size={24} color="#E46C0A" />
+<MethodRightContent>
+<MethodCText2>6H</MethodCText2>
+<MethodCTextS2>relaxing</MethodCTextS2>
+</MethodRightContent>
 </MethodCTouch>
 <MethodCTouch onPress={() => selectMethod(20)}>
-<MethodCText>20H          <FontAwesome5 name="minus" size={24} color="#E46C0A" />           4H</MethodCText>
-    <MethodCTextS> fasting                                       relaxing</MethodCTextS>
+<MethodLeftContent>
+<MethodCText>20H</MethodCText>
+<MethodCTextS>fasting</MethodCTextS>
+</MethodLeftContent>
+<FontAwesome5 name="minus" size={24} color="#E46C0A" />
+<MethodRightContent>
+<MethodCText2>4H</MethodCText2>
+<MethodCTextS2>relaxing</MethodCTextS2>
+</MethodRightContent>
 </MethodCTouch>
 <MethodCEndTouch onPress={() => selectMethod(24)}>
     <MethodCText>24H</MethodCText>
     <MethodCTextS>fasting</MethodCTextS>
 </MethodCEndTouch>
+</LinearGradient>
 </MethodContainer>
 </MethodScrollView>
 );
@@ -149,26 +188,9 @@ const FastMethod = ({ navigation }) => {
 const FastPlan = ({ navigation }) => {
     const[seletedDate, setSelectedDate] = useState('');
     const[selectedTime,setSelectedTime] = useState('');
-
-    const calculateEndTime = (selectedDateTime, seletedValue) => {
-        let endHour = selectedDateTime.getHours() + parseInt(seletedValue);
-        let endMinute = selectedDateTime.getMinutes();
-
-        if (endHour >= 24) {
-            endHour -= 24;
-            selectedDateTime.setDate(selectedDateTime.getDate() + 1);
-        }
-
-        let selectedYear = selectedDateTime.getFullYear();
-        let selectedMonth = MonthNumber(selectedDateTime.getMonth() + 1);
-        let selectedDay = DateNumber(selectedDateTime.getDate());
-
-        return `${selectedYear}/${selectedMonth}/${selectedDay} : ${TimeNumber(endHour)}:${TimeNumber(endMinute)}`;
-    };
     
     const selectsecond = (seletedValue) => {
-        let selectedDateTime = new Date(`${seletedDate}T${selectedTime}`);
-        let endTime = calculateEndTime(selectedDateTime, seletedValue);
+
 
         const stringFormat = `${seletedValue} - ${24 - seletedValue}`;
 
@@ -179,7 +201,7 @@ const FastPlan = ({ navigation }) => {
                 },
                 seletedDate: seletedDate,
                 selectedTime: selectedTime,
-                endTime: endTime,
+
             });
     };
 const route = useRoute();
@@ -187,6 +209,7 @@ const selectMethod = route.params.seletedValue;
 
 return(
 <PlanContainer>
+<LinearGradient colors={['#f7d7be','#e7a370']}>
 <PlanTitle>{"\n"}
 </PlanTitle>
 <PlanMethodText>
@@ -218,6 +241,7 @@ return(
     <PlanConfirmT>Next</PlanConfirmT>
 </PlanConfirmB>
 </PlanConfirmV>
+</LinearGradient>
 </PlanContainer>
 );
 };
@@ -241,6 +265,7 @@ return(
 
 <ConfirmScroll>
 <ConfirmContainer>
+<LinearGradient colors={['#f7d7be','#e7a370']}>
     <ConfirmHeader>
     <ConfirmTime>{stringFormat}</ConfirmTime>
     <ConfirmTimeText>fasting </ConfirmTimeText>
@@ -266,6 +291,7 @@ return(
     <ConfirmBtn onPress={() => selectTimer(confirmTime.number) }>
     <ConfirmText>Confirm</ConfirmText>
     </ConfirmBtn>
+    </LinearGradient>
 </ConfirmContainer>
 </ConfirmScroll>
 );
@@ -290,6 +316,7 @@ function MyTimer({ route, navigation: {navigate} }) {
 
     return (
         <TimerContainer>
+            <LinearGradient colors={['#f7d7be','#e7a370']}></LinearGradient>
             <TimerHomeBtn onPress={() => navigate("FastMainPage")}>
             <TimerHomeBT>Reset     <Entypo name="trash" size={24} color="black" /></TimerHomeBT> 
             </TimerHomeBtn>
