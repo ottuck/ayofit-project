@@ -2,7 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.app.ayofit.mapper.PedometerMapper">
-
-	
-	
+  <select id="getAllPedometerData" resultType="PedometerDTO">
+    select * from pedometer
+  </select>
+  <select id="getAchievementsBetweenDates" resultType="com.app.ayofit.model.PedometerDTO">
+        SELECT * FROM pedometer_table
+        WHERE pDate BETWEEN #{startDate} AND #{endDate}
+    </select>
+ <insert id="addPedometerData" parameterType="com.app.ayofit.model.PedometerDTO">
+    insert into pedometer values (stepcounter_seq.nextval, #{pId}, #{pDate}, #{pStepcnt}, #{pStepgoal})
+  </insert>
 </mapper>
