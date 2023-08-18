@@ -38,6 +38,8 @@ public class NutritionController {
         @PathVariable String startDate,
         @PathVariable String endDate
     ) {
+		System.out.println(startDate);
+		System.out.println(endDate);
         List<NutritionInfo> info = nutritionService.getWeeklyNutrition(userId, startDate, endDate);
         return new ResponseEntity<>(info, HttpStatus.OK);
     }
@@ -48,11 +50,22 @@ public class NutritionController {
 //		List<NutritionInfo> info = nutritionService.getWeeklyNutrition(userId);
 //		return new ResponseEntity<>(info, HttpStatus.OK);
 //	}
-
-	@GetMapping("/monthly/{userId}/{month}")
-	public ResponseEntity<List<NutritionInfo>> getMonthlyNutrition(@PathVariable String userId,
-			@PathVariable String month) {
-		List<NutritionInfo> info = nutritionService.getMonthlyNutrition(userId, month);
-		return new ResponseEntity<>(info, HttpStatus.OK);
+	
+	@GetMapping("/monthly/{userId}/{startDate}/{endDate}")
+	public ResponseEntity<List<NutritionInfo>> getMonthlyNutrition(
+	    @PathVariable String userId,
+	    @PathVariable String startDate,
+	    @PathVariable String endDate
+	) {
+	    List<NutritionInfo> info = nutritionService.getMonthlyNutrition(userId, startDate, endDate);
+	    return new ResponseEntity<>(info, HttpStatus.OK);
 	}
+
+//	@GetMapping("/monthly/{userId}/{month}")
+//	public ResponseEntity<List<NutritionInfo>> getMonthlyNutrition(@PathVariable String userId,
+//			@PathVariable String month) {
+//		List<NutritionInfo> info = nutritionService.getMonthlyNutrition(userId, month);
+//		return new ResponseEntity<>(info, HttpStatus.OK);
+//	}
+	
 }
