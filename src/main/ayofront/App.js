@@ -1,17 +1,14 @@
-import { useState } from "react";
 import { StyleSheet, Image, Dimensions, SafeAreaView } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import axios from "axios";
 import Constants from "expo-constants";
-import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import OnboardingScreen from "./screens/Onboarding";
 import NutriDetailScreen from "./screens/nutriDetail/nutriDetail_test";
 import RecordNavigator from "./screens/record/RecordNavigator";
-import FastScreen from "./screens/fast/fast_test";
+import FastScreen from "./screens/fast/FastMainPage";
 import PedometerScreen from "./screens/pedometer/PedometerScreen";
 import AccountScreen from "./screens/account/account_test";
 import AccountInfo from "./screens/account/AccountInfo";
