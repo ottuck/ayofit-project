@@ -22,6 +22,7 @@ import AccountInfo from "./screens/account/AccountInfo";
 import AccountNutri from "./screens/account/AccountNutri";
 import { GlobalStyles } from "./components/UI/styles";
 import FontProvider from "./components/FontProvider";
+import AccountsContextProvider from "./store/accounts_context";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -87,29 +88,35 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <FontProvider>
-        <StatusBar
-          backgroundColor={GlobalStyles.colors.primary500}
-          barStyle="default"
-        />
-        <NavigationContainer style={styles.navigationContainer}>
-          <Stack.Navigator>
-            {/* <Stack.Screen
-              name="AccountInfo"
-              component={AccountInfo}
-              options={{ headerShown: false }}
-            /> */}
-            {/* <Stack.Screen name="AccountNutri" component={AccountNutri} /> */}
-            <Stack.Screen
-              name="MainTabs"
-              component={MainTabsScreen}
-              options={{ headerShown: false }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </FontProvider>
-    </SafeAreaView>
+    <AccountsContextProvider>
+      <SafeAreaView style={{ flex: 1 }}>
+        <FontProvider>
+          <StatusBar
+            backgroundColor={GlobalStyles.colors.primary500}
+            barStyle="default"
+          />
+          <NavigationContainer style={styles.navigationContainer}>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="AccountInfo"
+                component={AccountInfo}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="AccountNutri"
+                component={AccountNutri}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="MainTabs"
+                component={MainTabsScreen}
+                options={{ headerShown: false }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </FontProvider>
+      </SafeAreaView>
+    </AccountsContextProvider>
   );
 }
 

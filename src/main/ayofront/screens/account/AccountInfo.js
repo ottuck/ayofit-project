@@ -11,44 +11,80 @@ import { GlobalStyles } from "../../components/UI/styles";
 import Input from "../../components/account/UI/Input";
 import IconButton from "../../components/account/UI/IconButton";
 import Button from "../../components/account/UI/Button";
-import { useState } from "react";
+import { useAccountsContext } from "../../store/accounts_context";
 
 function AccountInfo({ navigation }) {
   const goToAccountNutri = () => {
     navigation.navigate("AccountNutri");
   };
 
-  const [infoValues, setInfoValues] = useState({
-    gender: "",
-    age: "",
-    height: "",
-    curWeight: "",
-    tarWeight: "",
-    activity: "",
-    calorie: "",
-    carb: "",
-    protein: "",
-    fat: "",
-  });
+  const { accountInfos, setAccountInfos } = useAccountsContext();
+
+  // const [infoValues, setInfoValues] = useState({
+  //   gender: "",
+  //   age: "",
+  //   height: "",
+  //   curWeight: "",
+  //   tarWeight: "",
+  //   activity: "",
+  //   calorie: "",
+  //   carb: "",
+  //   protein: "",
+  //   fat: "",
+  // });
 
   function infoChangedHandler(infoIdentifier, enteredInfoVal) {
-    setInfoValues((curInfoVal) => {
-      if (infoIdentifier === "gender") {
-        return {
-          ...curInfoVal,
-          gender: enteredInfoVal,
-        };
-      }
-      if (infoIdentifier === "activity") {
-        return {
-          ...curInfoVal,
-          activity: enteredInfoVal,
-        };
-      }
-      return { ...curInfoVal, [infoIdentifier]: enteredInfoVal };
+    setAccountInfos({
+      ...accountInfos,
+      [infoIdentifier]: enteredInfoVal,
     });
   }
-  console.log(infoValues);
+
+  // console.log(accountInfos);.
+
+  const calculateGoals = () => {
+    let squaredHeight =
+      accountInfos.height * 0.01 * (accountInfos.height * 0.01);
+    let standardWeight = 0;
+    let calculatedCalories = 0;
+    if (accountInfos.gender === "male") {
+      standardWeight = squaredHeight * 22;
+    } else {
+      standardWeight = squaredHeight * 21;
+    }
+
+    if (accountInfos.activity === "low") {
+      calculatedCalories = standardWeight * 25;
+    } else if (accountInfos.activity === "moderate") {
+      calculatedCalories = standardWeight * 30;
+    } else {
+      calculatedCalories = standardWeight * 40;
+    }
+
+    // console.log(calculatedCalories.toFixed(1));
+
+    const roundedCalculatedCalories = calculatedCalories.toFixed(1);
+
+    const carbRatio = 0.5;
+    const proteinRatio = 0.3;
+    const fatRatio = 0.2;
+
+    const carbCalories = roundedCalculatedCalories * carbRatio;
+    const proteinCalories = roundedCalculatedCalories * proteinRatio;
+    const fatCalories = roundedCalculatedCalories * fatRatio;
+
+    const carbGrams = (carbCalories / 4).toFixed(1);
+    const proteinGrams = (proteinCalories / 4).toFixed(1);
+    const fatGrams = (fatCalories / 9).toFixed(1);
+
+    setAccountInfos({
+      ...accountInfos,
+      calorie: roundedCalculatedCalories,
+      carb: carbGrams,
+      protein: proteinGrams,
+      fat: fatGrams,
+    });
+  };
 
   return (
     <KeyboardAvoidingView
@@ -72,12 +108,14 @@ function AccountInfo({ navigation }) {
                   label="male"
                   onPress={() => infoChangedHandler("gender", "male")}
                   color={
-                    infoValues.gender === "male"
+                    accountInfos.gender === "male"
                       ? GlobalStyles.colors.primary500
                       : "black"
                   }
                   style={
-                    infoValues.gender === "male" ? styles.genderLabel : "black"
+                    accountInfos.gender === "male"
+                      ? styles.genderLabel
+                      : "black"
                   }
                 />
               </View>
@@ -88,12 +126,12 @@ function AccountInfo({ navigation }) {
                   label="female"
                   onPress={() => infoChangedHandler("gender", "female")}
                   color={
-                    infoValues.gender === "female"
+                    accountInfos.gender === "female"
                       ? GlobalStyles.colors.primary500
                       : "black"
                   }
                   style={
-                    infoValues.gender === "female"
+                    accountInfos.gender === "female"
                       ? styles.genderLabel
                       : "black"
                   }
@@ -111,7 +149,7 @@ function AccountInfo({ navigation }) {
                     keyboardType: "decimal-pad",
                     autoCorrect: false,
                     onChangeText: infoChangedHandler.bind(this, "age"),
-                    value: infoValues.age,
+                    value: accountInfos.age,
                   }}
                 />
               </View>
@@ -125,7 +163,7 @@ function AccountInfo({ navigation }) {
                     autoCorrect: false,
                     placeholder: "cm",
                     onChangeText: infoChangedHandler.bind(this, "height"),
-                    value: infoValues.height,
+                    value: accountInfos.height,
                   }}
                 />
               </View>
@@ -142,7 +180,7 @@ function AccountInfo({ navigation }) {
                     autoCorrect: false,
                     placeholder: "kg",
                     onChangeText: infoChangedHandler.bind(this, "curWeight"),
-                    value: infoValues.curWeight,
+                    value: accountInfos.curWeight,
                   }}
                 />
               </View>
@@ -155,7 +193,7 @@ function AccountInfo({ navigation }) {
                     autoCorrect: false,
                     placeholder: "kg",
                     onChangeText: infoChangedHandler.bind(this, "tarWeight"),
-                    value: infoValues.tarWeight,
+                    value: accountInfos.tarWeight,
                   }}
                 />
               </View>
@@ -172,7 +210,7 @@ function AccountInfo({ navigation }) {
                 icon="slightly-smile"
                 size={40}
                 onPress={() => infoChangedHandler("activity", "high")}
-                color={infoValues.activity === "high" ? "#CE4257" : "black"}
+                color={accountInfos.activity === "high" ? "#CE4257" : "black"}
               />
               <IconButton
                 style={styles.moderate}
@@ -180,7 +218,9 @@ function AccountInfo({ navigation }) {
                 icon="neutral"
                 size={40}
                 onPress={() => infoChangedHandler("activity", "moderate")}
-                color={infoValues.activity === "moderate" ? "#FF7F51" : "black"}
+                color={
+                  accountInfos.activity === "moderate" ? "#FF7F51" : "black"
+                }
               />
               <IconButton
                 style={styles.low}
@@ -188,12 +228,18 @@ function AccountInfo({ navigation }) {
                 icon="dizzy"
                 size={40}
                 onPress={() => infoChangedHandler("activity", "low")}
-                color={infoValues.activity === "low" ? "#FF9B54" : "black"}
+                color={accountInfos.activity === "low" ? "#FF9B54" : "black"}
               />
             </View>
           </View>
           <View style={styles.next}>
-            <Button style={styles.nextBtn} onPress={goToAccountNutri}>
+            <Button
+              style={styles.nextBtn}
+              onPress={() => {
+                calculateGoals();
+                goToAccountNutri();
+              }}
+            >
               Next
             </Button>
           </View>
