@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   StyleSheet,
   Image,
@@ -16,7 +15,7 @@ import { useEffect, useState } from "react";
 import OnboardingScreen from "./screens/Onboarding";
 import NutriDetailScreen from "./screens/nutriDetail/nutriDetail_test";
 import RecordScreen from "./screens/record/RecordNavigator";
-import FastScreen from "./screens/fast/FastMainPage";
+import FastMainPage from "./screens/fast/FastMainPage";
 import PedometerScreen from "./screens/pedometer/PedometerScreen";
 import AccountScreen from "./screens/account/account_test";
 import AccountInfo from "./screens/account/AccountInfo";
