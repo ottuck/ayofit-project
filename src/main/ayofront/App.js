@@ -1,9 +1,11 @@
-import { useState } from "react";
+import "react-native-gesture-handler";
 import { StyleSheet, Image, Dimensions, SafeAreaView } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import Constants from "expo-constants";
+import { useEffect, useState } from "react";
 import OnboardingScreen from "./screens/Onboarding";
 import NutriDetailScreen from "./screens/nutriDetail/nutriDetail_test";
 import RecordScreen from "./screens/record/RecordNavigator";
@@ -57,6 +59,8 @@ function MainTabsScreen() {
 }
 
 export default function App() {
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [completedOnboarding, setCompletedOnboarding] = useState(false);
 
