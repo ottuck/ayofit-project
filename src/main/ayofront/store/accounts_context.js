@@ -1,22 +1,28 @@
 import { createContext } from "react";
 
-export const AccountsContext = createContext({
-  accountInfos: {
-    gender: "",
-    age: "",
-    height: "",
-    curWeight: "",
-    tarWeight: "",
-    activity: "",
-    calorie: "",
-    carb: "",
-    protein: "",
-    fat: "",
-  },
-  setAccountInfos: () => {},
-});
+const AccountsContext = createContext();
 
-function accountInfosReducer(state, action) {}
+const initialState = {
+  gender: "",
+  age: "",
+  height: "",
+  curWeight: "",
+  tarWeight: "",
+  activity: "",
+  calorie: "",
+  carb: "",
+  protein: "",
+  fat: "",
+},
+
+function accountInfosReducer(state, action) {
+  switch (action.type) {
+    case "UPDATE_ACCOUNT_INFO":
+      return {... state, ...action.payload}
+    default :
+      return state;  
+  }
+}
 
 function AccountsContextProvider({ children }) {
   return (
