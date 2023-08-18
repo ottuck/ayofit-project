@@ -123,19 +123,19 @@ function PedometerScreen() {
     };
   }, []); // 빈 배열을 전달하여 컴포넌트 마운트 시에만 실행되도록 함
 
-  // const fetchAllPedometerData = () => {
-  //   axios
-  //     .get(`${uri}/api/pedometer/test`)
-  //     .then((response) => {
-  //       console.log(uri);
-  //       console.log(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching pedometer data:", error);
-  //     });
-  // };
+  const fetchAllPedometerData = () => {
+    axios
+      .get(`${uri}/api/pedometer/test`)
+      .then((response) => {
+        console.log(uri);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching pedometer data:", error);
+      });
+  };
 
-  // fetchAllPedometerData();
+  fetchAllPedometerData();
 
   useEffect(() => {
     const accelerometerSubscription = Accelerometer.addListener(
