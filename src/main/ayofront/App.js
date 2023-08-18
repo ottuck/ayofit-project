@@ -7,7 +7,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import OnboardingScreen from "./screens/Onboarding";
 import NutriDetailScreen from "./screens/nutriDetail/nutriDetail_test";
 import RecordNavigator from "./screens/record/RecordNavigator";
-import FastScreen from "./screens/fast/fast_test";
+import FastMainPage from "./screens/fast/FastMainPage";
 import PedometerScreen from "./screens/pedometer/PedometerScreen";
 import AccountScreen from "./screens/account/account_test";
 import AccountInfo from "./screens/account/AccountInfo";
@@ -51,7 +51,7 @@ function MainTabsScreen() {
     >
       <Tab.Screen name="HOME" component={NutriDetailScreen} />
       <Tab.Screen name="DIET RECORD" component={RecordScreen} />
-      <Tab.Screen name="CHALLENGE" component={FastScreen} />
+      <Tab.Screen name="CHALLENGE" component={FastMainPage} />
       <Tab.Screen name="STEP COUNTER" component={PedometerScreen} />
       <Tab.Screen name="MY PAGE" component={AccountScreen} />
     </Tab.Navigator>
@@ -113,7 +113,7 @@ export default function App() {
         >
           <Tab.Screen name="HOME" component={NutriDetailScreen} />
           <Tab.Screen name="DIET RECORD" component={RecordNavigator} />
-          <Tab.Screen name="CHALLENGE" component={FastScreen} />
+          <Tab.Screen name="CHALLENGE" component={FastMainPage} />
           <Tab.Screen name="STEP COUNTER" component={PedometerScreen} />
           <Tab.Screen name="MY PAGE" component={AccountScreen} />
         </Tab.Navigator>

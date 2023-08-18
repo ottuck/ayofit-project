@@ -53,14 +53,13 @@ let HourMinutes = `${nowHours}:${nowminutes}`
 
 //---------------------StackPage-----------------------------------------//
 const FastMainPage = ({navigation : { navigate } }) => (
+    <LinearGradient colors={['#FFE9D8','#e7a370']}>
     <FirstMainPage>
-    <LinearGradient colors={['#000000','#89fffd','pink']} style={{ height: '500px'}}>
-
     <MainBtn onPress={() => navigate("FastingMethod")}>
         <MainText>+ Set up your plan</MainText>
     </MainBtn>
-    </LinearGradient>
 </FirstMainPage>
+    </LinearGradient>
     );
     
 
@@ -113,6 +112,7 @@ const FastMethod = ({ navigation }) => {
     return(
 <MethodScrollView>
 <MethodContainer>  
+<LinearGradient colors={['#f7d7be','#e7a370']}>
 <MethodTitle>
     Please choose a method<Ionicons name="checkmark" size={28} color="black" />
 </MethodTitle>
@@ -140,6 +140,7 @@ const FastMethod = ({ navigation }) => {
     <MethodCText>24H</MethodCText>
     <MethodCTextS>fasting</MethodCTextS>
 </MethodCEndTouch>
+</LinearGradient>
 </MethodContainer>
 </MethodScrollView>
 );

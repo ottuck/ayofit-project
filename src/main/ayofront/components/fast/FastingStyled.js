@@ -10,7 +10,8 @@ export const MainBtn = styled.TouchableOpacity`
 
 `;
 export const MainText = styled.Text`
- color : #00000080;
+ color : black;
+ opacity : 0.9;
  font-size : 20px;
  font-weight : 600
 `;
