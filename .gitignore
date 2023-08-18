@@ -1,6 +1,6 @@
 
 ### 전자 지갑##
-application.properties
+/application.properties
 
 ##VS Code 설정
 .vscode/setting.json
