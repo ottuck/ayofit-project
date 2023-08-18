@@ -35,6 +35,7 @@ const DetailsComponent = () => {
 
   const [selectedDate, setSelectedDate] = useState(formattedToday);
   const [selectedDateMeals, setSelectedDateMeals] = useState([]);
+  const [resetDate, setResetDate] = useState(false);
   const [dailyNutrition, setDailyNutrition] = useState([]);
   const [weeklyNutrition, setWeeklyNutrition] = useState([]);
   const [monthlyNutrition, setMonthlyNutrition] = useState([]);
@@ -43,11 +44,17 @@ const DetailsComponent = () => {
   const [dailyTotalProtein, setDailyTotalProtein] = useState(0);
   const [dailyTotalFat, setDailyTotalFat] = useState(0);
 
-  const [weeklyStartDate, setWeeklyStartDate] = useState(weeklyStartDate);
-  const [weeklyEndDate, setWeeklyEndDate] = useState(weeklyEndDate);
+  const [weeklyStartDate, setWeeklyStartDate] = useState(weekStartDate);
+  const [weeklyEndDate, setWeeklyEndDate] = useState(formattedToday);
   const [weeklyTotalCarbohydrate, setWeeklyTotalCarbohydrate] = useState(0);
   const [weeklyTotalProtein, setWeeklyTotalProtein] = useState(0);
   const [weeklyTotalFat, setWeeklyTotalFat] = useState(0);
+
+  const [monthlyStartDate, setMonthlyStartDate] = useState(formattedMonth);
+  const [monthlyEndDate, setMonthlyEndDate] = useState(formattedToday);
+  const [monthlyTotalCarbohydrate, setMonthlyTotalCarbohydrate] = useState(0);
+  const [monthlyTotalProtein, setMonthlyTotalProtein] = useState(0);
+  const [monthlyTotalFat, setMonthlyTotalFat] = useState(0);
 
   const [totalCarbohydrate, setTotalCarbohydrate] = useState(0);
   const [totalProtein, setTotalProtein] = useState(0);
@@ -61,6 +68,9 @@ const DetailsComponent = () => {
   todayInTokyo.setHours(todayInTokyo.getHours() + 9); // 도쿄 시간대에 맞게 시간을 조정.
   let formattedToday = todayInTokyo.toISOString().split("T")[0]; // ISO 형식을 사용하여 날짜만 가져오기.
   let formattedMonth = formattedToday.substring(0, 7) + "-01"; // 월의 시작 날짜를 설정.
+  let weekStartDate = new Date();
+  weekStartDate.setDate(todayInTokyo.getDate() - 6);
+  weekStartDate = weekStartDate.toISOString().split("T")[0];
   // formattedMonth += "01"; 위에서 "-01"을 붙이지 않을 경우 두줄로 이렇게도 작성할수있음.
   // console.log(formattedMonth); 2023-08-01
 
@@ -80,11 +90,9 @@ const DetailsComponent = () => {
         fats = weeklyTotalFat;
         break;
       case "Month":
-        if (monthlyNutrition[0]) {
-          carbs = monthlyNutrition[0].totalCarbohydrate;
-          proteins = monthlyNutrition[0].totalProtein;
-          fats = monthlyNutrition[0].totalFat;
-        }
+        carbs = monthlyTotalCarbohydrate;
+        proteins = monthlyTotalProtein;
+        fats = monthlyTotalFat;
         break;
       default:
         break;
@@ -98,7 +106,6 @@ const DetailsComponent = () => {
       ? (proteins / totalNutrients) * 100
       : 0;
     const fatPercent = totalNutrients ? (fats / totalNutrients) * 100 : 0;
-
     setTotalCarbohydrate(carbs);
     setTotalProtein(proteins);
     setTotalFat(fats);
@@ -118,17 +125,21 @@ const DetailsComponent = () => {
     axios
       .get(`${uri}/api/nutrition/daily/user1/${specificDate}`)
       .then((response) => {
-        const data = response.data[0];
-        setDailyTotalCarbohydrate(data.totalCarbohydrate);
-        setDailyTotalProtein(data.totalProtein);
-        setDailyTotalFat(data.totalFat);
-        setDailyNutrition(response.data);
+        if (response.data[0] !== null) {
+          const data = response.data[0];
+          setDailyTotalCarbohydrate(data.totalCarbohydrate);
+          setDailyTotalProtein(data.totalProtein);
+          setDailyTotalFat(data.totalFat);
+          setDailyNutrition(response.data);
+        }
       })
       .catch((error) => console.log(error));
   };
 
-  const getWeeklyNutrition = (startDate, endDate) => {
-    // 초기화
+  const getWeeklyNutrition = (
+    startDate = weekStartDate,
+    endDate = formattedToday
+  ) => {
     setWeeklyTotalCarbohydrate(0);
     setWeeklyTotalProtein(0);
     setWeeklyTotalFat(0);
@@ -136,21 +147,35 @@ const DetailsComponent = () => {
     axios
       .get(`${uri}/api/nutrition/weekly/user1/${startDate}/${endDate}`)
       .then((response) => {
-        const data = response.data[0];
-        setWeeklyTotalCarbohydrate(data.totalCarbohydrate);
-        setWeeklyTotalProtein(data.totalProtein);
-        setWeeklyTotalFat(data.totalFat);
-        setWeeklyNutrition(response.data);
+        if (response.data[0] !== null) {
+          const data = response.data[0];
+          setWeeklyTotalCarbohydrate(data.totalCarbohydrate);
+          setWeeklyTotalProtein(data.totalProtein);
+          setWeeklyTotalFat(data.totalFat);
+          setWeeklyNutrition(response.data);
+        }
       })
       .catch((error) => console.log(error));
   };
 
-  const getMonthNutrition = () => {
+  const getMonthNutrition = (
+    startDate = formattedMonth,
+    endDate = formattedToday
+  ) => {
+    setMonthlyTotalCarbohydrate(0);
+    setMonthlyTotalProtein(0);
+    setMonthlyTotalFat(0);
+    setMonthlyNutrition([]);
     axios
-      .get(`${uri}/api/nutrition/monthly/user1/${formattedMonth}`)
+      .get(`${uri}/api/nutrition/monthly/user1/${startDate}/${endDate}`)
       .then((response) => {
-        setSelectedDate(formattedMonth);
-        setSelectedDateMeals(response.data);
+        if (response.data[0] !== null) {
+          const data = response.data[0];
+          setMonthlyTotalCarbohydrate(data.totalCarbohydrate);
+          setMonthlyTotalProtein(data.totalProtein);
+          setMonthlyTotalFat(data.totalFat);
+          setMonthlyNutrition(response.data);
+        }
       })
       .catch((error) => console.log(error));
   };
@@ -172,7 +197,7 @@ const DetailsComponent = () => {
     (selectedDateMeals[0]?.totalProtein / totalNutrients) * 100 || 0;
   let computedFatPercentage =
     (selectedDateMeals[0]?.totalFat / totalNutrients) * 100 || 0;
-
+  totalCarbohydrate;
   // 각각의 원에 대한 애니메이션 값 상태
   const [carbAnimationValue, setCarbAnimationValue] = useState(
     new Animated.Value(65)
@@ -244,12 +269,15 @@ const DetailsComponent = () => {
     switch (mode) {
       case "daily":
         endpoint = `${uri}/api/nutrition/daily/user1/${formattedToday}`;
+        console.log(endpoint);
         break;
       case "weekly":
-        endpoint = `${uri}/api/nutrition/weekly/user1/${weeklyStartDate}/${weeklyEndDate}`;
+        endpoint = `${uri}/api/nutrition/weekly/user1/${weekStartDate}/${formattedToday}`;
+        console.log(endpoint);
         break;
       case "monthly":
-        endpoint = `${uri}/api/nutrition/monthly/user1/${formattedMonth}`;
+        endpoint = `${uri}/api/nutrition/monthly/user1/${formattedMonth}/${formattedToday}`;
+        console.log(endpoint);
         break;
       default:
         break;
@@ -260,16 +288,22 @@ const DetailsComponent = () => {
       .then((response) => {
         if (mode === "daily") {
           setDailyNutrition(response.data);
+          getTodayNutrition(formattedToday);
         } else if (mode === "weekly") {
           setWeeklyNutrition(response.data);
+          getWeeklyNutrition(weekStartDate, formattedToday);
         } else if (mode === "monthly") {
           setMonthlyNutrition(response.data);
+          getMonthNutrition(formattedMonth, formattedToday);
         }
       })
       .catch((error) => console.log(error));
   };
 
   const handleDateButtonClick = (index) => {
+    if (dateButton === index) {
+      setResetDate(!resetDate); // 현재 상태를 반전시켜 변경을 감지
+    }
     setDateButton(index);
     const modes = ["daily", "weekly", "monthly"];
     fetchData(modes[index]);
@@ -294,11 +328,24 @@ const DetailsComponent = () => {
         setWeeklyStartDate(calculatedWeekStart);
         setWeeklyEndDate(formattedNewDate);
 
-        console.log(calculatedWeekStart);
         getWeeklyNutrition(calculatedWeekStart, formattedNewDate); // 날짜변경시에도 주의 시작날짜로 요청
         break;
       case "Month":
-        getMonthlyNutrition(formattedNewDate);
+        // 월의 첫날을 계산
+        let monthStartDate =
+          newDate.toISOString().split("T")[0].substring(0, 7) + "-01";
+        console.log(monthStartDate);
+
+        let monthEnd = new Date(formattedNewDate);
+        monthEnd.setMonth(monthEnd.getMonth() + 1, 0); // 월의 마지막날
+        monthEnd = monthEnd.toISOString().split("T")[0];
+        console.log(monthEnd);
+        // ex: 2023-07-31, // 2023-08-31
+
+        setMonthlyStartDate(monthStartDate);
+        setMonthlyEndDate(monthEnd);
+
+        getMonthNutrition(monthStartDate, monthEnd);
         break;
       default:
         break;
@@ -337,7 +384,11 @@ const DetailsComponent = () => {
             </DateButton>
           ))}
         </DateButtonContainer>
-        <DateCalendar mode={mode} onDateChange={handleDateChange} />
+        <DateCalendar
+          mode={mode}
+          onDateChange={handleDateChange}
+          resetDate={resetDate}
+        />
       </DateContainer>
 
       <View style={styles.dateNutritionInfo}>

@@ -10,8 +10,11 @@ import { GlobalStyles } from "../../components/UI/styles";
 import Input from "../../components/account/UI/Input";
 import Button from "../../components/account/UI/Button";
 import { useState } from "react";
+import { useAccountsContext } from "../../store/accounts_context";
 
 function AccountNutri({ navigation }) {
+  const { accountInfos, setAccountInfos } = useAccountsContext();
+
   const goToAccountInfo = () => {
     navigation.navigate("AccountInfo");
   };
@@ -37,13 +40,14 @@ function AccountNutri({ navigation }) {
     fat: "",
   });
 
-  function infoChangedHandler(infoIdentifier, enteredInfoVal) {
-    setInfoValues((curInfoVal) => {
+  function nutriChangedHandler(infoIdentifier, enteredInfoVal) {
+    console.log(enteredInfoVal);
+    setAccountInfos((curInfoVal) => {
       return { ...curInfoVal, [infoIdentifier]: enteredInfoVal };
     });
   }
 
-  console.log(infoValues);
+  console.log("여기 nutri: " + accountInfos);
 
   return (
     <TouchableNativeFeedback onPress={dismissKeyboard}>
@@ -59,11 +63,10 @@ function AccountNutri({ navigation }) {
             label="Daily Calorie Goal"
             textInputConfig={{
               keyboardType: "decimal-pad",
-              maxLength: 5,
               autoCorrect: false,
               placeholder: "kcal",
-              onChangeText: infoChangedHandler.bind(this, "calorie"),
-              value: infoValues.calorie,
+              onChangeText: nutriChangedHandler.bind(this, "calorie"),
+              value: accountInfos.calorie,
             }}
           />
         </View>
@@ -78,8 +81,8 @@ function AccountNutri({ navigation }) {
                 maxLength: 5,
                 autoCorrect: false,
                 placeholder: "g",
-                onChangeText: infoChangedHandler.bind(this, "carb"),
-                value: infoValues.carb,
+                onChangeText: nutriChangedHandler.bind(this, "carb"),
+                value: accountInfos.carb,
               }}
             />
             <Input
@@ -90,8 +93,8 @@ function AccountNutri({ navigation }) {
                 maxLength: 5,
                 autoCorrect: false,
                 placeholder: "g",
-                onChangeText: infoChangedHandler.bind(this, "protein"),
-                value: infoValues.protein,
+                onChangeText: nutriChangedHandler.bind(this, "protein"),
+                value: accountInfos.protein,
               }}
             />
             <Input
@@ -102,8 +105,8 @@ function AccountNutri({ navigation }) {
                 maxLength: 5,
                 autoCorrect: false,
                 placeholder: "g",
-                onChangeText: infoChangedHandler.bind(this, "fat"),
-                value: infoValues.fat,
+                onChangeText: nutriChangedHandler.bind(this, "fat"),
+                value: accountInfos.fat,
               }}
             />
           </View>
