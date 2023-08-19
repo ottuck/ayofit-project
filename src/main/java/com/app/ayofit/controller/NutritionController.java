@@ -29,6 +29,7 @@ public class NutritionController {
 	public ResponseEntity<List<NutritionInfo>> getDailyNutrition(@PathVariable String userId,
 			@PathVariable String date) {
 		List<NutritionInfo> info = nutritionService.getDailyNutrition(userId, date);
+		System.out.println(info);
 		return new ResponseEntity<>(info, HttpStatus.OK);
 	}
 	
