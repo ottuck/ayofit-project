@@ -42,12 +42,13 @@ function AccountNutri({ navigation }) {
 
   function nutriChangedHandler(infoIdentifier, enteredInfoVal) {
     console.log(enteredInfoVal);
-    setAccountInfos((curInfoVal) => {
-      return { ...curInfoVal, [infoIdentifier]: enteredInfoVal };
+    setAccountInfos({
+      ...accountInfos,
+      [infoIdentifier]: enteredInfoVal,
     });
   }
 
-  console.log("여기 nutri: " + accountInfos);
+  console.log("여기 nutri: " + accountInfos.calorie);
 
   return (
     <TouchableNativeFeedback onPress={dismissKeyboard}>
@@ -63,8 +64,8 @@ function AccountNutri({ navigation }) {
             label="Daily Calorie Goal"
             textInputConfig={{
               keyboardType: "decimal-pad",
-              autoCorrect: false,
               placeholder: "kcal",
+              maxLength: 5,
               onChangeText: nutriChangedHandler.bind(this, "calorie"),
               value: accountInfos.calorie,
             }}
@@ -78,7 +79,6 @@ function AccountNutri({ navigation }) {
               style={styles.input}
               textInputConfig={{
                 keyboardType: "decimal-pad",
-                maxLength: 5,
                 autoCorrect: false,
                 placeholder: "g",
                 onChangeText: nutriChangedHandler.bind(this, "carb"),
@@ -90,7 +90,6 @@ function AccountNutri({ navigation }) {
               style={styles.input}
               textInputConfig={{
                 keyboardType: "decimal-pad",
-                maxLength: 5,
                 autoCorrect: false,
                 placeholder: "g",
                 onChangeText: nutriChangedHandler.bind(this, "protein"),
@@ -102,7 +101,6 @@ function AccountNutri({ navigation }) {
               style={styles.input}
               textInputConfig={{
                 keyboardType: "decimal-pad",
-                maxLength: 5,
                 autoCorrect: false,
                 placeholder: "g",
                 onChangeText: nutriChangedHandler.bind(this, "fat"),
