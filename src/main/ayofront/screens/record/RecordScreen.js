@@ -4,9 +4,27 @@ import { BlurView } from 'expo-blur';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+//axios 관련
+import axios from "axios";
+import Constants from "expo-constants";
 
 
 function RecordScreen({ navigation }) {
+  //axios 관련
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+
+  const getAllFoodInfo = () => {
+    axios
+      .get(`${uri}/api/food`)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  getAllFoodInfo();
+
   //모달 관련 
   const [modalVisible, setModalVisible] = useState(false);
   const openModal = () => {
