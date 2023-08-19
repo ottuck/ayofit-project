@@ -6,32 +6,37 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import { GlobalStyles } from "../../components/UI/styles";
 import Input from "../../components/account/UI/Input";
 import IconButton from "../../components/account/UI/IconButton";
 import Button from "../../components/account/UI/Button";
 import { useAccountsContext } from "../../store/accounts_context";
+import axios from "axios";
+import Constants from "expo-constants";
 
 function AccountInfo({ navigation }) {
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+
+  const registerAccountInfo = () => {
+    axios
+      .post(`${uri}/api/account/user1`, accountInfos)
+      .then((response) => {
+        console.log("User info submitted successfully:", response.data);
+        navigation.navigate("AccountNutri");
+      })
+      .catch(() => {
+        Alert.alert("Error", "Failed to submit user info. Please try again.");
+      });
+  };
+
   const goToAccountNutri = () => {
     navigation.navigate("AccountNutri");
   };
 
   const { accountInfos, setAccountInfos } = useAccountsContext();
-
-  // const [infoValues, setInfoValues] = useState({
-  //   gender: "",
-  //   age: "",
-  //   height: "",
-  //   curWeight: "",
-  //   tarWeight: "",
-  //   activity: "",
-  //   calorie: "",
-  //   carb: "",
-  //   protein: "",
-  //   fat: "",
-  // });
 
   function infoChangedHandler(infoIdentifier, enteredInfoVal) {
     setAccountInfos({
@@ -40,7 +45,7 @@ function AccountInfo({ navigation }) {
     });
   }
 
-  // console.log(accountInfos);.
+  console.log(accountInfos);
 
   const calculateGoals = () => {
     let squaredHeight =
@@ -237,7 +242,7 @@ function AccountInfo({ navigation }) {
               style={styles.nextBtn}
               onPress={() => {
                 calculateGoals();
-                goToAccountNutri();
+                registerAccountInfo();
               }}
             >
               Next

@@ -27,28 +27,25 @@ function AccountNutri({ navigation }) {
     Keyboard.dismiss();
   };
 
-  const [infoValues, setInfoValues] = useState({
-    gender: "",
-    age: "",
-    height: "",
-    curWeight: "",
-    tarWeight: "",
-    activity: "",
-    calorie: "",
-    carb: "",
-    protein: "",
-    fat: "",
-  });
-
   function nutriChangedHandler(infoIdentifier, enteredInfoVal) {
-    console.log(enteredInfoVal);
     setAccountInfos({
       ...accountInfos,
       [infoIdentifier]: enteredInfoVal,
     });
   }
 
-  console.log("여기 nutri: " + accountInfos.calorie);
+  // function registerAccountInfo() {
+  //   console.log(accountInfos.gender);
+  //   console.log(accountInfos.age);
+  //   console.log(accountInfos.height);
+  //   console.log(accountInfos.curWeight);
+  //   console.log(accountInfos.tarWeight);
+  //   console.log(accountInfos.activity);
+  //   console.log(accountInfos.calorie);
+  //   console.log(accountInfos.carb);
+  //   console.log(accountInfos.protein);
+  //   console.log(accountInfos.fat);
+  // }
 
   return (
     <TouchableNativeFeedback onPress={dismissKeyboard}>
@@ -113,7 +110,13 @@ function AccountNutri({ navigation }) {
           <Button style={styles.prevBtn} onPress={goToAccountInfo}>
             Prev
           </Button>
-          <Button style={styles.confirmBtn} onPress={goToMainTabs}>
+          <Button
+            style={styles.confirmBtn}
+            onPress={() => {
+              goToMainTabs();
+              registerAccountInfo();
+            }}
+          >
             Confirm
           </Button>
         </View>

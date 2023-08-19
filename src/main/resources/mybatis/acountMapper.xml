@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.app.ayofit.mapper.AcountMapper">
+<mapper namespace="com.app.ayofit.mapper.AccountMapper">
 
-	
+	<insert id="regAccountInfos" parameterType="com.app.ayofit.model.AccountDTO">
+		insert into accounts values (#{userId}, 'a', #{age}, #{gender}, #{height}, #{curWeight}, #{activity}, sysdate)
+	</insert>
 	
 </mapper>
