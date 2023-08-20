@@ -256,3 +256,136 @@ export const DateButtonText = styled.Text`
   color: ${(props) =>
     props.isActive ? "rgba(255, 255, 255, 0.65)" : "rgba(255, 255, 255, 0.45)"};
 `;
+
+export const DetailsNutritionInfo = styled.View`
+  width: 92%;
+  height: 42%;
+  background-color: rgba(255, 255, 255, 0.45);
+  border-radius: 16px;
+  margin-top: 16px;
+  margin-horizontal: 16px;
+  padding-top: 10px;
+  align-items: center;
+`;
+
+export const DetailsCalConsumptionText = styled.Text`
+  color: #000000;
+  font-weight: 500;
+  font-size: 18px;
+`;
+
+export const DetailsCalConsumptionKcal = styled.Text`
+  color: #fb9129;
+  font-weight: 600;
+  font-size: 19px;
+`;
+
+export const DetailsFaintLine = styled.Text`
+  height: 1.2px;
+  width: 92%;
+  background-color: rgba(0, 0, 0, 0.25);
+  margin-vertical: 12.6px;
+`;
+
+export const DetailsBarAndValueContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.65);
+  width: 92%;
+  height: 56%;
+  border-radius: 16px;
+`;
+
+export const DetailsProgressBarContainer = styled.View`
+  height: 100%;
+  justify-content: space-evenly;
+  margin-top: 6px;
+  margin-left: 22px;
+`;
+
+export const DetailsProgressBarPer = styled.Text`
+  font-size: 16px;
+  font-weight: 600;
+  color: grey;
+`;
+
+export const DetailsNutrionImgContainer = styled.View`
+  justify-content: space-around;
+  height: 100%;
+  margin-top: -1.6px;
+  margin-left: 22px;
+`;
+
+export const DetailsNutritionGramContainer = styled.View`
+  flex-direction: row;
+`;
+
+export const DetailsGramContainer = styled.View`
+  justify-content: space-evenly;
+  height: 100%;
+  margin-top: 3.2px;
+  margin-left: 18px;
+`;
+
+export const DetailsGramText = styled.Text`
+  margin-top: 16px;
+  font-size: 17.6px;
+  font-weight: 600;
+`;
+
+export const DetailsGramValue = styled.Text`
+  font-size: 16.2px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.5);
+`;
+
+export const DetailsProgressBarBottomContainer = styled.View`
+  flex-direction: row;
+  width: 100%;
+  height: 28.6%;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const DetailsActivityCalorieText = styled.Text`
+  margin-vertical: 4px;
+  color: rgba(0, 0, 0, 0.7);
+`;
+
+export const DetailsResetButtonContainer = styled.View`
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+`;
+
+export const DetailsResetGoalButton = styled.TouchableOpacity`
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 42px;
+  background-color: #e46c0a;
+  border-radius: 18px;
+`;
+
+export const DetailsResetButtonText = styled.Text`
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+`;
+
+export const DetailsCircleContainer = styled.View`
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.45);
+  width: 92%;
+  height: 180px;
+  border-radius: 16px;
+  margin-top: 20px;
+  margin-horizontal: 16px;
+`;
+
+export const DetailsCircleRow = styled.View`
+  flex-direction: row;
+  margin-top: -8px;
+  margin-left: -10px;
+`;

@@ -40,6 +40,13 @@ const MyRecordsComponent = () => {
   const [dailyNutrition, setDailyNutrition] = useState([]);
   const [monthlyNutrition, setMonthlyNutrition] = useState([]);
 
+  const [userWeightData, setUserWeightData] = useState([
+    { date: "2023-08-15", weight: 58.2 },
+    { date: "2023-08-16", weight: 58.2 },
+    { date: "2023-08-17", weight: 58.0 },
+    // ... add below data
+  ]);
+
   let totalCarbohydrate = 0;
   let totalProtein = 0;
   let totalFat = 0;
@@ -55,50 +62,21 @@ const MyRecordsComponent = () => {
   const todayInTokyo = new Date();
   todayInTokyo.setHours(todayInTokyo.getHours() + 9); // 도쿄 시간대에 맞게 시간을 조정.
   const formattedToday = todayInTokyo.toISOString().split("T")[0]; // ISO 형식을 사용하여 날짜만 가져오기.
-  let formattedMonth = formattedToday.substring(0, 7) + "-01"; // 월의 시작 날짜를 설정.
-  // formattedMonth += "01"; 위에서 "-01"을 붙이지 않을 경우 두줄로 이렇게도 작성할수있음.
-  // console.log(formattedMonth); 2023-08-01
 
-  const getTodayNutrition = () => {
+  const getNutritionData = (date) => {
     axios
-      .get(`${uri}/api/nutrition/daily/user1/${formattedToday}`)
+      .get(`${uri}/api/nutrition/daily/user1/${date}`)
       .then((response) => {
-        // console.log(response.data);
-        setSelectedDate(formattedToday);
+        console.log(response.data);
+        setDailyNutrition(response.data);
+        setSelectedDate(date);
         setSelectedDateMeals(response.data);
       })
       .catch((error) => console.log(error));
   };
 
-  // const getMonthNutrition = () => {
-  //   axios
-  //     .get(`${uri}/api/nutrition/monthly/user1/${formattedMonth}`)
-  //     .then((response) => {
-  //       // console.log(response.data);
-  //       setSelectedDate(formattedMonth);
-  //       setSelectedDateMeals(response.data);
-  //     })
-  //     .catch((error) => console.log(error));
-  // };
-
   useEffect(() => {
-    axios
-      .get(`${uri}/api/nutrition/daily/user1/${formattedToday}`)
-      .then((response) => {
-        console.log(response.data);
-        setDailyNutrition(response.data);
-      })
-      .catch((error) => console.log(error));
-    getTodayNutrition();
-
-    // axios
-    //   .get(`${uri}/api/nutrition/monthly/user1/${formattedMonth}`)
-    //   .then((response) => {
-    //     console.log(response.data);
-    //     setMonthlyNutrition(response.data);
-    //   })
-    //   .catch((error) => console.log(error));
-    // getMonthNutrition();
+    getNutritionData(formattedToday);
   }, []);
 
   let totalNutrients =
@@ -112,6 +90,7 @@ const MyRecordsComponent = () => {
     (selectedDateMeals[0]?.totalProtein / totalNutrients) * 100 || 0;
   let fatPercentage =
     (selectedDateMeals[0]?.totalFat / totalNutrients) * 100 || 0;
+
   return (
     <MyRecordsDailyNutritionContainer>
       <DailyConsumptionContainer>
@@ -181,7 +160,7 @@ const MyRecordsComponent = () => {
         <FaintLine></FaintLine>
         <LineChart
           data={{
-            labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            labels: ["Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon"],
             datasets: [
               {
                 data: [58.2, 58.2, 58, 58.5, 58.2, 58.5, 58.3], // 여기에 몸무게 데이터
@@ -191,7 +170,7 @@ const MyRecordsComponent = () => {
             ],
           }}
           width={Dimensions.get("window").width - 58} // 차트 넓이 조절
-          height={182} // 차트 높이 조절
+          height={186} // 차트 높이 조절
           yAxisSuffix="kg"
           yAxisInterval={7}
           chartConfig={{
