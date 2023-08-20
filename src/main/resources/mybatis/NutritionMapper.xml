@@ -3,31 +3,19 @@
 
 <mapper namespace="com.app.ayofit.mapper.NutritionMapper">
 	
-	<select id="getDailyNutrition" resultType="com.app.ayofit.model.NutritionInfo">
+	<select id="getDailyNutrition" resultType="com.app.ayofit.model.NutritionDTO">
 	    SELECT SUM(r_carbohydrate) as totalCarbohydrate, SUM(r_protein) as totalProtein, SUM(r_fat) as totalFat
 	    FROM record_meal
 	    WHERE r_id = #{userId} AND r_meal_date = #{date}
 	</select>
 	
-    <!--<select id="getWeeklyNutrition" resultType="com.app.ayofit.model.NutritionInfo">
-        SELECT SUM(r_carbohydrate) as totalCarbohydrate, SUM(r_protein) as totalProtein, SUM(r_fat) as totalFat
-        FROM record_meal
-        WHERE r_id = #{userId} AND r_meal_date BETWEEN #{endDate} AND sysdate
-    </select>-->
-    
-    <select id="getWeeklyNutrition" resultType="com.app.ayofit.model.NutritionInfo">
+    <select id="getWeeklyNutrition" resultType="com.app.ayofit.model.NutritionDTO">
 	    SELECT SUM(r_carbohydrate) as totalCarbohydrate, SUM(r_protein) as totalProtein, SUM(r_fat) as totalFat
 	    FROM record_meal
 	    WHERE r_id = #{userId} AND r_meal_date BETWEEN #{startDate} AND #{endDate}
 	</select>
 
-    <!--<select id="getMonthlyNutrition" resultType="com.app.ayofit.model.NutritionInfo">
-        SELECT SUM(r_carbohydrate) as totalCarbohydrate, SUM(r_protein) as totalProtein, SUM(r_fat) as totalFat
-        FROM record_meal
-        WHERE r_id = #{userId} AND r_meal_date BETWEEN #{month} AND sysdate
-    </select>-->
-    
-    <select id="getMonthlyNutrition" resultType="com.app.ayofit.model.NutritionInfo">
+    <select id="getMonthlyNutrition" resultType="com.app.ayofit.model.NutritionDTO">
 	    SELECT SUM(r_carbohydrate) as totalCarbohydrate, SUM(r_protein) as totalProtein, SUM(r_fat) as totalFat
 	    FROM record_meal
 	    WHERE r_id = #{userId} AND r_meal_date BETWEEN #{startDate} AND #{endDate}
