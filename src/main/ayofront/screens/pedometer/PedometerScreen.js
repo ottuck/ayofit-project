@@ -25,6 +25,7 @@ const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 function PedometerScreen() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  console.log(uri);
 
   const [steps, setSteps] = useState(0);
   const [isWalking, setIsWalking] = useState(false);
@@ -43,99 +44,52 @@ function PedometerScreen() {
     false,
   ]);
 
-  const [weeklyAchievements, setWeeklyAchievements] = useState([]);
-
-  useEffect(() => {
-    // API 호출을 통해 주간 달성 기록 가져오기
+  const fetchPedometerDataForWeek = () => {
     axios
-      .get(`${uri}/api/pedometer/weeklyachievements`)
+      .get(`${uri}/api/pedometer/week_data`)
       .then((response) => {
-        setWeeklyAchievements(response.data);
+        const weekData = response.data;
+        const updatedDaysAchieved = [...daysAchieved]; // Create a copy of the current array
+        console.log(updatedDaysAchieved);
+        console.log(weekData);
+        weekData.forEach((data) => {
+          const dayIndex = (new Date(data.pDate).getDay() + 6) % 7; // 0 (Monday) to 6 (Sunday)
+          const stepCnt = parseInt(data.pStepCnt);
+          const stepGoal = parseInt(data.pStepGoal);
+          console.log(stepCnt);
+          console.log(stepGoal);
+
+          if (!isNaN(stepCnt) && !isNaN(stepGoal) && dayIndex !== -1) {
+            updatedDaysAchieved[dayIndex] = stepCnt >= stepGoal;
+          }
+        });
+
+        setDaysAchieved(updatedDaysAchieved);
       })
       .catch((error) => {
-        console.error("Error fetching weekly achievements:", error);
+        console.error("Error fetching weekly pedometer data:", error);
       });
+  };
+
+  useEffect(() => {
+    fetchPedometerDataForWeek();
   }, []);
 
-  const updateAchievements = (dailySteps, dailyGoal) => {
-    const newAchievements = daysOfWeek.map((_, index) => {
-      return calculateAchievements(dailySteps[index], dailyGoal);
-    });
-    setDaysAchieved(newAchievements);
-  };
+  // 빈 배열을 전달하여 컴포넌트 마운트 시에만 실행되도록 함
 
-  // 서버에 매일 자정에 달성 정보를 보내는 함수
-  const sendDailyAchievement = async () => {
-    try {
-      // 당일 자정의 시간을 계산
-      const now = new Date();
-      const timeUntilMidnight =
-        new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate() + 1,
-          0,
-          0,
-          0
-        ) - now;
+  // const fetchAllPedometerData = () => {
+  //   axios
+  //     .get(`${uri}/api/pedometer/test`)
+  //     .then((response) => {
+  //       console.log(uri);
+  //       console.log(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching pedometer data:", error);
+  //     });
+  // };
 
-      // 타이머 설정 (매일 자정에 실행)
-      setTimeout(() => {
-        // 일일 달성 정보를 서버에 전송하는 코드 (API 호출 등)
-        axios
-          .post(`${uri}/api/pedometer/dailyrecord`, {
-            day: daysOfWeek[new Date().getDay()],
-            isAchieved: true,
-            dailyGoal: newGoal,
-            dailySteps: steps,
-          })
-          .then((response) => {
-            // 전송 성공 시 처리
-          })
-          .catch((error) => {
-            console.log("Error sending daily achievement:", error);
-          });
-      }, timeUntilMidnight);
-    } catch (error) {
-      console.error("Error sending daily achievement:", error);
-    }
-  };
-
-  useEffect(() => {
-    // 컴포넌트가 마운트될 때, 매일 자정에 달성 정보를 보내는 함수 호출
-    sendDailyAchievement();
-
-    // 다음 날 자정까지의 시간 계산
-    const now = new Date();
-    const timeUntilMidnight =
-      new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0) -
-      now;
-
-    // 다음 날 자정에 다시 함수 호출
-    const timer = setInterval(() => {
-      sendDailyAchievement();
-      updateAchievements(steps, goal);
-    }, timeUntilMidnight);
-
-    // 컴포넌트 언마운트 시 타이머 클리어
-    return () => {
-      clearInterval(timer);
-    };
-  }, []); // 빈 배열을 전달하여 컴포넌트 마운트 시에만 실행되도록 함
-
-  const fetchAllPedometerData = () => {
-    axios
-      .get(`${uri}/api/pedometer/test`)
-      .then((response) => {
-        console.log(uri);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching pedometer data:", error);
-      });
-  };
-
-  fetchAllPedometerData();
+  // fetchAllPedometerData();
 
   useEffect(() => {
     const accelerometerSubscription = Accelerometer.addListener(
@@ -225,9 +179,7 @@ function PedometerScreen() {
                 <PedometerDailyCircles
                   key={index}
                   day={day}
-                  isAchieved={daysAchieved[index]}
-                  daysOfWeek={daysOfWeek}
-                  weeklyAchievements={weeklyAchievements}
+                  isAchieved={daysAchieved[index]} // 여기서 daysAchieved 배열의 값 사용
                 />
               ))}
             </View>

@@ -4,16 +4,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.app.ayofit.model.PedometerDTO;
 
 @Mapper
 public interface PedometerMapper {
 	
-    void addPedometerData(PedometerDTO pedometerDTO);
-
-    List<PedometerDTO> getAllPedometerData();
-    
-    List<PedometerDTO> getAchievementsBetweenDates(Date startDate, Date endDate);
-
+	 List<PedometerDTO> getWeeklyPedometerData(@Param("startOfWeek") Date startOfWeek, @Param("endOfWeek") Date endOfWeek);
 }
