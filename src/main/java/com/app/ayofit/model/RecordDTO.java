@@ -1,6 +1,6 @@
 package com.app.ayofit.model;
 
-public class FoodDTO {
+public class RecordDTO {
 	
 	private int n_no;
 	private String n_food_name;
@@ -11,7 +11,7 @@ public class FoodDTO {
 	private double n_protein;
 	private double n_fat;
 	
-	public FoodDTO(int n_no, String n_food_name, String n_maker_name, double n_size, double n_kcal,
+	public RecordDTO(int n_no, String n_food_name, String n_maker_name, double n_size, double n_kcal,
 			double n_carbohydrate, double n_protein, double n_fat) {
 		super();
 		this.n_no = n_no;
