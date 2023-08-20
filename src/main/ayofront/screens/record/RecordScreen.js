@@ -14,7 +14,7 @@ function RecordScreen({ navigation }) {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
-  const getAllFoodInfo = () => {
+  const getFoodInfoById = () => {
     axios
       .get(`${uri}/api/food`)
       .then((response) => {
@@ -23,7 +23,7 @@ function RecordScreen({ navigation }) {
       .catch((error) => console.log(error));
   };
 
-  getAllFoodInfo();
+  getFoodInfoById();
 
   //모달 관련 
   const [modalVisible, setModalVisible] = useState(false);
