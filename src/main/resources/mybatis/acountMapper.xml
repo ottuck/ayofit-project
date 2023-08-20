@@ -3,8 +3,12 @@
 
 <mapper namespace="com.app.ayofit.mapper.AccountMapper">
 
-	<insert id="regAccountInfos" parameterType="com.app.ayofit.model.AccountDTO">
-		insert into accounts values (#{userId}, 'a', #{age}, #{gender}, #{height}, #{curWeight}, #{activity}, sysdate)
+	<insert id="regAccountInfos">
+		insert into accounts values (#{userId}, 'a', #{aDTO.age}, #{aDTO.gender}, #{aDTO.height}, #{aDTO.curWeight}, #{aDTO.activity}, sysdate)
+	</insert>
+	
+	<insert id="regAccountGoal">
+		insert into goal values (goal_seq.nextval, #{userId}, #{gDTO.calorie}, #{gDTO.tarWeight}, #{gDTO.carb}, #{gDTO.protein}, #{gDTO.fat}, sysdate)
 	</insert>
 	
 </mapper>

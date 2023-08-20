@@ -11,8 +11,25 @@ import Input from "../../components/account/UI/Input";
 import Button from "../../components/account/UI/Button";
 import { useState } from "react";
 import { useAccountsContext } from "../../store/accounts_context";
+import axios from "axios";
+import Constants from "expo-constants";
 
 function AccountNutri({ navigation }) {
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+
+  const registerAccountGoal = () => {
+    axios
+      .post(`${uri}/api/account/user1/goal`, accountInfos)
+      .then((response) => {
+        console.log("User info submitted successfully:", response.data);
+        navigation.navigate("MainTabs");
+      })
+      .catch(() => {
+        Alert.alert("Error", "Failed to submit user info. Please try again.");
+      });
+  };
+
   const { accountInfos, setAccountInfos } = useAccountsContext();
 
   const goToAccountInfo = () => {
@@ -33,19 +50,6 @@ function AccountNutri({ navigation }) {
       [infoIdentifier]: enteredInfoVal,
     });
   }
-
-  // function registerAccountInfo() {
-  //   console.log(accountInfos.gender);
-  //   console.log(accountInfos.age);
-  //   console.log(accountInfos.height);
-  //   console.log(accountInfos.curWeight);
-  //   console.log(accountInfos.tarWeight);
-  //   console.log(accountInfos.activity);
-  //   console.log(accountInfos.calorie);
-  //   console.log(accountInfos.carb);
-  //   console.log(accountInfos.protein);
-  //   console.log(accountInfos.fat);
-  // }
 
   return (
     <TouchableNativeFeedback onPress={dismissKeyboard}>
@@ -113,8 +117,7 @@ function AccountNutri({ navigation }) {
           <Button
             style={styles.confirmBtn}
             onPress={() => {
-              goToMainTabs();
-              registerAccountInfo();
+              registerAccountGoal();
             }}
           >
             Confirm

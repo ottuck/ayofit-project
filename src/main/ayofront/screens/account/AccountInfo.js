@@ -32,10 +32,6 @@ function AccountInfo({ navigation }) {
       });
   };
 
-  const goToAccountNutri = () => {
-    navigation.navigate("AccountNutri");
-  };
-
   const { accountInfos, setAccountInfos } = useAccountsContext();
 
   function infoChangedHandler(infoIdentifier, enteredInfoVal) {
@@ -65,8 +61,6 @@ function AccountInfo({ navigation }) {
     } else {
       calculatedCalories = standardWeight * 40;
     }
-
-    // console.log(calculatedCalories.toFixed(1));
 
     const roundedCalculatedCalories = calculatedCalories.toFixed(1);
 
