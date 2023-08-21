@@ -28,6 +28,14 @@ public class AccountDAO {
 			return false;
 		}
 	}
+
+	public boolean regAccountWeight(String userId, AccountDTO aDTO) {
+		if (aMapper.regAccountWeight(userId, aDTO) == 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	
 	

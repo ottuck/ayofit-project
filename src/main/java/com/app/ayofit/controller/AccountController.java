@@ -25,8 +25,12 @@ public class AccountController {
 	
 	@PostMapping("/{userId}/goal")
 	public void regAccountGoal(@PathVariable String userId, @RequestBody GoalDTO gDTO) {
-		System.out.println(gDTO);
 		aDAO.regAccountGoal(userId, gDTO);
 	}
 	
+	@PostMapping("/{userId}/weight")
+	public void regAccountWeight(@PathVariable String userId, @RequestBody AccountDTO aDTO) {
+		aDAO.regAccountWeight(userId,aDTO);
+	}	
+
 }

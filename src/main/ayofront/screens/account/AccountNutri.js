@@ -20,7 +20,7 @@ function AccountNutri({ navigation }) {
 
   const registerAccountGoal = () => {
     axios
-      .post(`${uri}/api/account/user1/goal`, accountInfos)
+      .post(`${uri}/api/account/user2/goal`, accountInfos)
       .then((response) => {
         console.log("User info submitted successfully:", response.data);
         navigation.navigate("MainTabs");

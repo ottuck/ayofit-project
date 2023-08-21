@@ -11,4 +11,8 @@
 		insert into goal values (goal_seq.nextval, #{userId}, #{gDTO.calorie}, #{gDTO.tarWeight}, #{gDTO.carb}, #{gDTO.protein}, #{gDTO.fat}, sysdate)
 	</insert>
 	
+	<insert id="regAccountWeight">
+		insert into record_weight values (record_weight_seq.nextval, #{userId}, #{aDTO.curWeight},sysdate)
+	</insert>
+	
 </mapper>

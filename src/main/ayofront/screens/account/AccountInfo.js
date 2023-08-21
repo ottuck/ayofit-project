@@ -22,13 +22,24 @@ function AccountInfo({ navigation }) {
 
   const registerAccountInfo = () => {
     axios
-      .post(`${uri}/api/account/user1`, accountInfos)
+      .post(`${uri}/api/account/user2`, accountInfos)
       .then((response) => {
         console.log("User info submitted successfully:", response.data);
         navigation.navigate("AccountNutri");
       })
       .catch(() => {
         Alert.alert("Error", "Failed to submit user info. Please try again.");
+      });
+  };
+
+  const registerAccountcurWeight = () => {
+    axios
+      .post(`${uri}/api/account/user2/weight`, accountInfos)
+      .then((response) => {
+        console.log("User weight submitted successfully:", response.data);
+      })
+      .catch(() => {
+        Alert.alert("Error", "Failed to submit user weight. Please try again.");
       });
   };
 
@@ -42,6 +53,7 @@ function AccountInfo({ navigation }) {
   }
 
   console.log(accountInfos);
+  console.log(accountInfos.curWeight);
 
   const calculateGoals = () => {
     let squaredHeight =
@@ -236,6 +248,7 @@ function AccountInfo({ navigation }) {
               style={styles.nextBtn}
               onPress={() => {
                 calculateGoals();
+                registerAccountcurWeight();
                 registerAccountInfo();
               }}
             >
