@@ -73,8 +73,8 @@ function NutriDetailScreen() {
 
   // 유저에게 오늘 날짜 안내 예시
   const today = new Date();
-  const tomorrow = addDays(today, 1);
-  const formattedToday = formatDate(tomorrow); // ex)) "Mon, August 21" 형식
+  today.setHours(today.getHours() + 9);
+  const formattedToday = formatDate(today); // ex)) "Mon, August 21" 형식
   console.log(formattedToday);
 
   return (

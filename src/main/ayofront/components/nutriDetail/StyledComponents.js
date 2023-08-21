@@ -389,3 +389,115 @@ export const DetailsCircleRow = styled.View`
   margin-top: -8px;
   margin-left: -10px;
 `;
+
+export const RecordsWeightButtonContainer = styled.View`
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+`;
+
+export const RecordsWeightButton = styled.TouchableOpacity`
+  align-items: center;
+  justify-content: center;
+  width: 176px;
+  height: 48px;
+  background-color: #e46c0a;
+  border-radius: 18px;
+  margin-top: 22px;
+`;
+
+export const RecordsWeightButtonText = styled.Text`
+  font-size: 18px;
+  font-weight: 600;
+  color: "rgba(0, 0, 0, 0.8)";
+`;
+
+export const RecordsWeightModalView = styled.View`
+  height: 226px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  background-color: #fff4ec;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  padding: 18.6px;
+  align-items: center;
+  justify-content: center;
+  elevation: 5;
+`;
+
+export const RecordsWeightModalInput = styled.TextInput`
+  height: 46px;
+  width: 60%;
+  border-radius: 12px;
+  margin-vertical: 28px;
+  background-color: #ffdfc7;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 800;
+`;
+
+export const RecordsModalWeightCloseContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
+export const RecordsModalWeightInfoText = styled.Text`
+  font-size: 22px;
+  font-weight: 800;
+  color: "rgba(0, 0, 0, 0.83)";
+`;
+
+export const RecordsModalWeightCloseButton = styled.TouchableOpacity`
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 40px;
+  border-radius: 15px;
+`;
+
+export const RecordsModalWeightCloseButtonText = styled.Text`
+  font-size: 25px;
+  font-weight: 500;
+  color: "rgba(0, 0, 0, 0.85)";
+  margin-right: -22px;
+`;
+
+export const RecordsModalWeightButton = styled.TouchableOpacity`
+  align-items: center;
+  justify-content: center;
+  width: 76%;
+  height: 46px;
+  background-color: #e46c0a;
+  border-radius: 18px;
+`;
+
+export const RecordsModalWeightButtonText = styled.Text`
+  font-size: 18px;
+  font-weight: 800;
+  color: "rgba(0, 0, 0, 0.85)";
+`;
+
+export const RecordsModalButtonsContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
+`;
+
+export const RecordsModalFixAndDeleteButton = styled.TouchableOpacity`
+  align-items: center;
+  justify-content: center;
+  width: 48%;
+  height: 46px;
+  background-color: #e46c0a;
+  border-radius: 18px;
+`;
+
+export const RecordsModalFixAndDeleteButtonText = styled.Text`
+  font-size: 18px;
+  font-weight: 800;
+  color: "rgba(0, 0, 0, 0.85)";
+`;

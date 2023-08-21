@@ -6,6 +6,9 @@ import {
   SafeAreaView,
   Animated,
   Image,
+  TextInput,
+  Button,
+  Modal,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ScrollView } from "react-native";
@@ -30,22 +33,33 @@ import {
   TodaysWeightTextContainer,
   TodaysWeightText,
   TodaysWeightKg,
+  RecordsWeightButtonContainer,
+  RecordsWeightButton,
+  RecordsWeightButtonText,
+  RecordsModalWeightButton,
+  RecordsModalWeightButtonText,
+  RecordsModalWeightCloseButton,
+  RecordsModalWeightCloseButtonText,
+  RecordsModalWeightCloseContainer,
+  RecordsModalWeightInfoText,
+  RecordsWeightModalView,
+  RecordsWeightModalInput,
+  RecordsModalButtonsContainer,
+  RecordsModalFixAndDeleteButton,
+  RecordsModalFixAndDeleteButtonText,
 } from "../../components/nutriDetail/StyledComponents";
 
 const MyRecordsComponent = () => {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState("");
   const [selectedDateMeals, setSelectedDateMeals] = useState([]);
   const [dailyNutrition, setDailyNutrition] = useState([]);
   const [monthlyNutrition, setMonthlyNutrition] = useState([]);
-
-  const [userWeightData, setUserWeightData] = useState([
-    { date: "2023-08-15", weight: 58.2 },
-    { date: "2023-08-16", weight: 58.2 },
-    { date: "2023-08-17", weight: 58.0 },
-    // ... add below data
-  ]);
+  const [weight, setWeight] = useState(0); // 기록된 체중 없을때 체중 기록 저장
+  const [modalVisible, setModalVisible] = useState(false);
+  const [hasRecorded, setHasRecorded] = useState(false); // 체중 기록 유무 확인
+  const [recordedWeight, setRecordedWeight] = useState(0); // 기록된 체중
 
   let totalCarbohydrate = 0;
   let totalProtein = 0;
@@ -75,10 +89,6 @@ const MyRecordsComponent = () => {
       .catch((error) => console.log(error));
   };
 
-  useEffect(() => {
-    getNutritionData(formattedToday);
-  }, []);
-
   let totalNutrients =
     (selectedDateMeals[0]?.totalCarbohydrate || 0) +
     (selectedDateMeals[0]?.totalProtein || 0) +
@@ -90,6 +100,100 @@ const MyRecordsComponent = () => {
     (selectedDateMeals[0]?.totalProtein / totalNutrients) * 100 || 0;
   let fatPercentage =
     (selectedDateMeals[0]?.totalFat / totalNutrients) * 100 || 0;
+
+  const isValidWeight = (weight) => {
+    const weightNumber = parseFloat(weight);
+    if (isNaN(weightNumber)) {
+      return false;
+    }
+    return weightNumber >= 0.1 && weightNumber <= 200;
+  };
+
+  const fetchWeightByDateAndId = (rId, rWeightDate) => {
+    axios
+      .get(`${uri}/api/weights/${rId}/${rWeightDate}`)
+      .then((response) => {
+        console.log(response.data);
+        if (response.data) {
+          setHasRecorded(true);
+          setRecordedWeight(response.data.rWeight);
+        } else {
+          setHasRecorded(false);
+          setRecordedWeight(0);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const addOrModifyWeight = () => {
+    if (!isValidWeight(weight)) {
+      alert("0.1에서 200 사이의 숫자를 입력해주세요.");
+      return;
+    }
+    let rToday = new Date();
+    rToday.setHours(rToday.getHours() + 9);
+    let formattedRecordToday = rToday.toISOString().split("T")[0];
+    const record = {
+      rId: "user3",
+      rWeight: parseFloat(weight),
+      rWeightDate: formattedRecordToday,
+    };
+
+    if (hasRecorded) {
+      // 이미 체중이 기록되어 있으면 수정
+      updateWeight();
+    } else {
+      // 체중 기록이 없으면 추가
+      axios
+        .post(`${uri}/api/weights`, record)
+        .then((response) => {
+          console.log(response.data);
+          setHasRecorded(true);
+          setRecordedWeight(weight);
+        })
+        .catch((error) => console.log(error));
+    }
+  };
+
+  const deleteWeight = () => {
+    axios
+      .delete(`${uri}/api/weights/delete/user3`)
+      .then((response) => {
+        console.log(response.data);
+        setHasRecorded(false);
+        setRecordedWeight(0);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const updateWeight = () => {
+    if (!isValidWeight(weight)) {
+      alert("0.1에서 200 사이의 숫자를 입력해주세요.");
+      return;
+    }
+    let rToday = new Date();
+    rToday.setHours(rToday.getHours() + 9);
+    let formattedRecordToday = rToday.toISOString().split("T")[0];
+    const record = {
+      rId: "user3",
+      rWeight: parseFloat(weight),
+      rWeightDate: formattedRecordToday,
+    };
+
+    axios
+      .put(`${uri}/api/weights/update`, record)
+      .then((response) => {
+        console.log(response.data);
+        setHasRecorded(true);
+        setRecordedWeight(weight);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    getNutritionData(formattedToday);
+    fetchWeightByDateAndId("user3", formattedToday);
+  }, []);
 
   return (
     <MyRecordsDailyNutritionContainer>
@@ -204,6 +308,64 @@ const MyRecordsComponent = () => {
             borderRadius: 16,
           }}
         />
+        <RecordsWeightButtonContainer>
+          <RecordsWeightButton onPress={() => setModalVisible(true)}>
+            <RecordsWeightButtonText>
+              {hasRecorded ? "체중 수정하기" : "체중 기록하기"}
+            </RecordsWeightButtonText>
+          </RecordsWeightButton>
+        </RecordsWeightButtonContainer>
+
+        <Modal animationType="slide" transparent={true} visible={modalVisible}>
+          <RecordsWeightModalView>
+            <RecordsModalWeightCloseContainer>
+              <RecordsModalWeightInfoText>
+                {hasRecorded ? "체중 수정" : "체중 입력"}
+              </RecordsModalWeightInfoText>
+              <RecordsModalWeightCloseButton
+                onPress={() => setModalVisible(false)}
+              >
+                <RecordsModalWeightCloseButtonText>
+                  X
+                </RecordsModalWeightCloseButtonText>
+              </RecordsModalWeightCloseButton>
+            </RecordsModalWeightCloseContainer>
+
+            <RecordsWeightModalInput
+              placeholder={hasRecorded ? `${recordedWeight} kg` : "00.0 kg"}
+              keyboardType="numeric"
+              onChangeText={(text) => setWeight(text)}
+              defaultValue={recordedWeight ? recordedWeight.toString() : ""}
+            />
+            {hasRecorded ? (
+              <>
+                <RecordsModalButtonsContainer>
+                  <RecordsModalFixAndDeleteButton onPress={updateWeight}>
+                    <RecordsModalFixAndDeleteButtonText>
+                      수정하기
+                    </RecordsModalFixAndDeleteButtonText>
+                  </RecordsModalFixAndDeleteButton>
+                  <RecordsModalFixAndDeleteButton onPress={deleteWeight}>
+                    <RecordsModalFixAndDeleteButtonText>
+                      삭제하기
+                    </RecordsModalFixAndDeleteButtonText>
+                  </RecordsModalFixAndDeleteButton>
+                </RecordsModalButtonsContainer>
+              </>
+            ) : (
+              <RecordsModalWeightButton
+                onPress={() => {
+                  addWeight();
+                  setModalVisible(false);
+                }}
+              >
+                <RecordsModalWeightButtonText>
+                  기록완료
+                </RecordsModalWeightButtonText>
+              </RecordsModalWeightButton>
+            )}
+          </RecordsWeightModalView>
+        </Modal>
       </MyRecordsTodaysWeightContainer>
     </MyRecordsDailyNutritionContainer>
   );
