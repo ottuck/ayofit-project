@@ -36,10 +36,6 @@ function AccountNutri({ navigation }) {
     navigation.navigate("AccountInfo");
   };
 
-  const goToMainTabs = () => {
-    navigation.navigate("MainTabs");
-  };
-
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
