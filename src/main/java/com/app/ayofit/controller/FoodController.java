@@ -31,6 +31,8 @@ public class FoodController {
 	
 	 @GetMapping("/search/{n_food_name}")
 	    public List<FoodDTO> searchFood(@PathVariable String n_food_name) {
-		 	return foodDAO.searchFoodByName(n_food_name);
+		 
+		System.out.println(n_food_name);
+		return foodDAO.searchFoodByName(n_food_name);
 	}
 }

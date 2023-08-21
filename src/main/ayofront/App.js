@@ -97,6 +97,7 @@ export default function App() {
           />
           <NavigationContainer style={styles.navigationContainer}>
             <Stack.Navigator>
+              {/* 인증해야되서 주석 처리 해둠
               <Stack.Screen
                 name="AccountInfo"
                 component={AccountInfo}
@@ -106,7 +107,7 @@ export default function App() {
                 name="AccountNutri"
                 component={AccountNutri}
                 options={{ headerShown: false }}
-              />
+              /> */}
               <Stack.Screen
                 name="MainTabs"
                 component={MainTabsScreen}
