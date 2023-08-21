@@ -22,7 +22,7 @@ function AccountInfo({ navigation }) {
 
   const registerAccountInfo = () => {
     axios
-      .post(`${uri}/api/account/user2`, accountInfos)
+      .post(`${uri}/api/account/user3`, accountInfos)
       .then((response) => {
         console.log("User info submitted successfully:", response.data);
         navigation.navigate("AccountNutri");
@@ -34,7 +34,7 @@ function AccountInfo({ navigation }) {
 
   const registerAccountcurWeight = () => {
     axios
-      .post(`${uri}/api/account/user2/weight`, accountInfos)
+      .post(`${uri}/api/account/user3/weight`, accountInfos)
       .then((response) => {
         console.log("User weight submitted successfully:", response.data);
       })
@@ -52,8 +52,20 @@ function AccountInfo({ navigation }) {
     });
   }
 
-  console.log(accountInfos);
-  console.log(accountInfos.curWeight);
+  const ageIsValid = accountInfos.age > 0;
+  const heightIsValid = accountInfos.height > 100;
+  const curWeightIsValid = accountInfos.curWeight > 0;
+  const tarWeightIsValid = accountInfos.tarWeight > 0;
+  const genderIsValid = accountInfos.gender !== "";
+  const activityIsValid = accountInfos.activity !== "";
+
+  const validCheck =
+    !genderIsValid ||
+    !ageIsValid ||
+    !heightIsValid ||
+    !curWeightIsValid ||
+    !tarWeightIsValid ||
+    !activityIsValid;
 
   const calculateGoals = () => {
     let squaredHeight =
@@ -247,9 +259,16 @@ function AccountInfo({ navigation }) {
             <Button
               style={styles.nextBtn}
               onPress={() => {
-                calculateGoals();
-                registerAccountcurWeight();
-                registerAccountInfo();
+                if (validCheck) {
+                  Alert.alert(
+                    "Invalid Information",
+                    "Please check your information"
+                  );
+                } else {
+                  calculateGoals();
+                  registerAccountcurWeight();
+                  registerAccountInfo();
+                }
               }}
             >
               Next

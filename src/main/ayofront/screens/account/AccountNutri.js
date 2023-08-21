@@ -1,4 +1,5 @@
 import {
+  Alert,
   Keyboard,
   StyleSheet,
   Text,
@@ -46,6 +47,14 @@ function AccountNutri({ navigation }) {
       [infoIdentifier]: enteredInfoVal,
     });
   }
+
+  const calorieIsValid = accountInfos.calorie > 0;
+  const carbIsValid = accountInfos.carb > 0;
+  const proteinIsValid = accountInfos.protein > 0;
+  const fatIsValid = accountInfos.fat > 0;
+
+  const validCheck =
+    !calorieIsValid || !carbIsValid || !proteinIsValid || !fatIsValid;
 
   return (
     <TouchableNativeFeedback onPress={dismissKeyboard}>
@@ -113,7 +122,14 @@ function AccountNutri({ navigation }) {
           <Button
             style={styles.confirmBtn}
             onPress={() => {
-              registerAccountGoal();
+              if (validCheck) {
+                Alert.alert(
+                  "Invalid Information",
+                  "Please check your information"
+                );
+              } else {
+                registerAccountGoal();
+              }
             }}
           >
             Confirm
