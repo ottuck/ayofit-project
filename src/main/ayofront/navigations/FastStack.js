@@ -12,7 +12,7 @@ import {MethodContainer, MethodTitle, MethodCTouch, MethodCText, MethodCEndTouch
     ,PlanEndView,PlanEndText,PlanConfirmV,PlanConfirmB,PlanConfirmT,ConfirmScroll,ConfirmContainer,ConfirmTitle,ConfirmTime,ConfirmBtn,ConfirmText
     ,TimerContainer,TimerTitle,TimerHomeBtn,TimerHomeBT,EndTimeText,MethodCTextS,ConfirmMessage,ConfirmMView,ConfirmStart,ConfrimSText,ConfirmEnd
     ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView,FirstMainPage,MainBtn,MainText,FastMainImage
-    ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM,MethodLeftContent,MethodRightContent,MethodCText2,MethodCTextS2
+    ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM,MethodLeftContent,MethodRightContent,MethodCText2,MethodCTextS2,TimerScrollView
 } from '../components/fast/FastingStyled';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -92,11 +92,11 @@ const FastMethod = ({ navigation }) => {
             endHour -= 24;
             nextDate.setDate(nextDate.getDate() + 1);
             setSelectedDate(`${nextDate.getFullYear()}/${currentMonth}/${DateNumber(nextDate.getDate())}`);
-            }
+        }
         
-            let endTime = `${nextDate.getFullYear()}/${MonthNumber(nextDate.getMonth() + 1)}/${DateNumber(nextDate.getDate())} : ${TimeNumber(endHour)}:${TimeNumber(endMinute)}`;
-        
-            setEndTime(endTime);
+        let endTime = `${nextDate.getFullYear()}/${MonthNumber(nextDate.getMonth() + 1)}/${DateNumber(nextDate.getDate())} : ${TimeNumber(endHour)}:${TimeNumber(endMinute)}`;
+
+        setEndTime(endTime);
 
         const stringFormat = `${seletedValue} - ${24 - seletedValue}`;   
         navigation.navigate("FastPlan",{
@@ -109,6 +109,8 @@ const FastMethod = ({ navigation }) => {
             endTime: endTime, 
         });
     };
+
+
     return(
 
 
@@ -188,9 +190,9 @@ const FastMethod = ({ navigation }) => {
 const FastPlan = ({ navigation }) => {
     const[seletedDate, setSelectedDate] = useState('');
     const[selectedTime,setSelectedTime] = useState('');
+
     
     const selectsecond = (seletedValue) => {
-
 
         const stringFormat = `${seletedValue} - ${24 - seletedValue}`;
 
@@ -199,14 +201,37 @@ const FastPlan = ({ navigation }) => {
                     number: seletedValue,
                     string: stringFormat,
                 },
-                seletedDate: seletedDate,
-                selectedTime: selectedTime,
-
+                seletedDate: seletedDate || currnetDate,
+                selectedTime: selectedTime || currentTime,
+                totalDateTime : totalDateTime||currnetDateTime,
             });
     };
 const route = useRoute();
 const selectMethod = route.params.seletedValue;
+const currnetDate = route.params.seletedDate;
+const currentTime = route.params.selectedTime;
+const currnetDateTime = route.params.endTime;
 
+console.log(currnetDateTime)
+
+const [selectYear,selectMonth,selectDay] = seletedDate.split('/');
+const [selectHour,selectMinute] = selectedTime.split(':');
+
+let totalHour = parseInt(selectMethod.number) + parseInt(selectHour) || '';
+let totalHourParse = parseInt(totalHour);
+let plusSelectDay = parseInt(selectDay);
+
+if(totalHourParse > 23) {
+    totalHourParse -=24;
+    plusSelectDay += 1;
+}
+
+let totalDateTime;
+if(!selectHour == '') {
+totalDateTime = `${selectYear}`+'/' +`${selectMonth}`+'/'+ `${MonthNumber(plusSelectDay)}`+':' + `${MonthNumber(totalHourParse)}`+':'+ `${selectMinute}`;
+}else{
+totalDateTime = null;
+}
 return(
 <PlanContainer>
 <LinearGradient colors={['#f7d7be','#e7a370']}>
@@ -233,7 +258,7 @@ return(
 <PlanEndView>
  <PlanEndText>
     It ends at  {"\n"}
-    {route.params.endTime}
+    {totalDateTime || currnetDateTime}
 </PlanEndText>
 </PlanEndView>
 <PlanConfirmV>
@@ -258,9 +283,38 @@ const FastConfirm = ({ navigation }) => {
     };
 const route = useRoute();
 const confirmTime = route.params.seletedValue;
+const ConfirmDate = route.params.seletedDate;
+const ConfirmTime2 = route.params.selectedTime;
+const totalDateTime = route.params.totalDateTime;
+const [totalDate,totalTime] = totalDateTime.split(':');
+
+console.log(totalDate);
+console.log(totalDateTime);
 
 const stringFormat = `${confirmTime.number}H`;
 const stringFormat2 =`${24 - confirmTime.number}H`
+
+
+const dateStr = ConfirmDate;
+const timeStr = ConfirmTime2;
+
+const [year, month, day] = dateStr.split('/').map(str => parseInt(str, 10));
+const [hours, minutes] = timeStr.split(':').map(str => parseInt(str, 10));
+
+const date = new Date(year, month - 1, day, hours, minutes);
+
+const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  };
+  
+  const formatter = new Intl.DateTimeFormat('en-US', options);
+  const ConfirmStartTime = formatter.format(date).replace('at', '').replace(',', ', ');
+  
 return(
 
 <ConfirmScroll>
@@ -276,12 +330,12 @@ return(
     <ConfirmTView>
     <ConfirmStart>
         <ConfrimSText>
-        Start :   August 10, 2023 AM 10:00
+        Start : {ConfirmStartTime}
         </ConfrimSText>
     </ConfirmStart>
     <ConfirmEnd>
         <ConfirmEText>
-        End :     August 10, 2023 AM 10:00
+        End : August 10, 2023 AM 10:00
         </ConfirmEText>
     </ConfirmEnd>
 </ConfirmTView>
@@ -315,8 +369,9 @@ function MyTimer({ route, navigation: {navigate} }) {
     const totalSeconds = timerTime.number * 3600;
 
     return (
+        <TimerScrollView>
+            <LinearGradient colors={['#f7d7be','#e7a370']}>
         <TimerContainer>
-            <LinearGradient colors={['#f7d7be','#e7a370']}></LinearGradient>
             <TimerHomeBtn onPress={() => navigate("FastMainPage")}>
             <TimerHomeBT>Reset     <Entypo name="trash" size={24} color="black" /></TimerHomeBT> 
             </TimerHomeBtn>
@@ -364,6 +419,8 @@ function MyTimer({ route, navigation: {navigate} }) {
     </TimerEnd>
 </TimerMView>
         </TimerContainer>
+        </LinearGradient>
+        </TimerScrollView>
     );
 }
 

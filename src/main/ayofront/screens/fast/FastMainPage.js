@@ -1,8 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet,  View,Text } from 'react-native';
-import { ThemeProvider } from '@react-navigation/native';
-import FastStack from '../../navigations/FastStack';
+import FastRoot from '../../navigations/FastRoot';
 
 
 
@@ -11,7 +10,7 @@ function FastMainPage() {
   return (
     <View style={styles.fasting}>
       <StatusBar style="auto" />
-    <FastStack />
+    <FastRoot />
     </View>
   );
 }

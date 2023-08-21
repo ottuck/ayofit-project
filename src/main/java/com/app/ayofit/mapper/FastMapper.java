@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.app.ayofit.model.RecordDTO;
 
 @Mapper
-public interface RecordMapper {
+public interface FastMapper {
 	
 	List<RecordDTO> getAllFoodInfo();
 	RecordDTO getFoodInfoById(String n_no);

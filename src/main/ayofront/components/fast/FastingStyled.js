@@ -276,12 +276,16 @@ font-weight : 500;
 white-space : pre;
 `;
 //--------------------Timer(Stack.js)----------------------//
+export const TimerScrollView = styled.ScrollView`
+flex:1;
+border : 3px solid black;
+`;
 
 export const TimerContainer = styled.View`
-flex:1;
 align-items: center;
 justify-content: center;
 background-color: #FFE9D8;
+height: 710px;
 `;
 export const TimerTitle = styled.Text`
 font-size : 20px;
@@ -341,7 +345,7 @@ white-space : pre;
 `;
 //---------------------FastDate.js---------------------//
 export const FastDateContainer = styled.View`
-flex: 1;
+
 justify-content: center;
 align-items: center;
 `;
@@ -369,6 +373,7 @@ export const FastTimeContainer= styled.View`
 flex: 1;
 justify-content: center;
 align-items: center;
+
 `;
 export const CustomTimePicker = styled.TouchableOpacity`
 align-items: center;
