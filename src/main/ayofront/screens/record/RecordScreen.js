@@ -4,28 +4,43 @@ import { BlurView } from 'expo-blur';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-//axios 관련
+//axios
 import axios from "axios";
 import Constants from "expo-constants";
 
-
 function RecordScreen({ navigation }) {
-  //axios 관련
+  //uri 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
-  const getFoodInfoById = () => {
+  //Search
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+
+  const searchFood = () => {
+    const query = searchQuery.trim(); // 앞뒤 공백 제거
+    console.log("Searching for:", query);
+    console.log("URL:", `${uri}/api/food/search/${query}`);
     axios
-      .get(`${uri}/api/food`)
+      .get(`${uri}/api/food/search/${query}`)
       .then((response) => {
         console.log(response.data);
+        response.data.forEach((food) => {
+          console.log(`Name: ${food.n_food_name}`);
+          console.log(`Maker: ${food.n_maker_name}`);
+          console.log(`Size: ${food.n_size}`);
+          console.log(`Carbohydrate: ${food.n_carbohydrate}`);
+          console.log(`Protein: ${food.n_protein}`);
+          console.log(`Fat: ${food.n_fat}`);
+          console.log(`Calorie: ${food.n_kcal}`);
+        });
+        setSearchResult(response.data);
+        // searchSubmit(searchResult); //되나?
       })
       .catch((error) => console.log(error));
   };
 
-  getFoodInfoById();
-
-  //모달 관련 
+  //Modal
   const [modalVisible, setModalVisible] = useState(false);
   const openModal = () => {
     setModalVisible(true);
@@ -34,16 +49,17 @@ function RecordScreen({ navigation }) {
     setModalVisible(false);
   };
 
-  //검색 관련
-  const [searchText, setSearchText] = useState("");
+  //검색값과 함께 이동 (사용하게 해야함)
   const searchSubmit = () => {
-    // 여기서 검색어를 처리하거나 필요한 작업을 수행합니다.
-    // 예: 검색 결과를 가져오거나 화면 전환 등
-
-    // RecordMain.js로 네비게이션을 수행합니다.
-    navigation.navigate("RecordMain");
+    navigation.navigate("RecordMain");  //naviation.push 로 변경
+    setSearchResult([]);
+    setSearchQuery("");
     closeModal();
   };
+
+  //toISOString은 "2023-08-20T14:30:00.000Z"와 같은 형식이라 "T" 나눠서 0번째 index의 날짜만 가져온다
+  const today = new Date();
+  const formattedToday = today.toISOString().split("T")[0];
 
 
   return (
@@ -53,7 +69,7 @@ function RecordScreen({ navigation }) {
 
           <View style={styles.headerContainer}>
             <Text style={styles.headerTitle}> Diet Record</Text>
-            <Text style={styles.headerDate}> 2023-08-06</Text>
+            <Text style={styles.headerDate}> {formattedToday} </Text>
           </View>
 
           <ScrollView
@@ -90,7 +106,7 @@ function RecordScreen({ navigation }) {
           </ScrollView>
 
           <Modal animationType="slide" visible={modalVisible} transparent={true} >
-            <BlurView style={{ flex: 1}}>
+            <BlurView style={{ flex: 1 }}>
               <View style={styles.modalScreen}>
                 <TouchableOpacity onPress={closeModal} >
                   <AntDesign name="close" style={styles.modalCloseButton} />
@@ -100,16 +116,21 @@ function RecordScreen({ navigation }) {
                     <FontAwesome5 name="search" style={styles.modalSearchButton} />
                   </TouchableOpacity>
                   <TextInput
-                    placeholder="Search your food"
                     style={styles.modalTextInput}
-                    value={searchText}
-                    onChangeText={(text) => setSearchText(text)}
-                    onSubmitEditing={searchSubmit}
+                    placeholder="Search your meal"
+                    value={searchQuery}
+                    onChangeText={(text) => setSearchQuery(text)}
+                    // onSubmitEditing={searchFood}  //검색어 제출
                   />
                   <TouchableOpacity>
                     <AntDesign name="closecircleo" style={styles.clearButton} />
                   </TouchableOpacity>
                 </View>
+                <ScrollView>
+                  {searchResult.map((food, index) => (
+                    <Text key={index}>{food.n_food_name}</Text> // 검색한 음식 나열 
+                  ))}
+                </ScrollView>
               </View>
             </BlurView>
           </Modal>

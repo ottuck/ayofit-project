@@ -56,8 +56,4 @@ public class FoodDTO {
 		return n_fat;
 	}
 	
-	
-	
-	
-	
 }

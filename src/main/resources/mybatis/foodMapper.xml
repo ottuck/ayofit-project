@@ -4,7 +4,7 @@
 <mapper namespace="com.app.ayofit.mapper.FoodMapper">
 
 	<select id="getAllFoodInfo" resultType="FoodDTO">
-		select * from nutrition where n_no = 1
+		select * from nutrition 
 	</select>
 
 	<select id="getFoodInfoById" resultType="FoodDTO">
