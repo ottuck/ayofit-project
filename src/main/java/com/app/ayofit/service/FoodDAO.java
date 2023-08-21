@@ -5,29 +5,29 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.app.ayofit.mapper.RecordMapper;
-import com.app.ayofit.model.RecordDTO;
+import com.app.ayofit.mapper.FoodMapper;
+import com.app.ayofit.model.FoodDTO;
 
 @Service
-public class RecordDAO {
+public class FoodDAO {
 	
 	
 	@Autowired
-	private RecordMapper foodMapper;
+	private FoodMapper foodMapper;
 	
-	public RecordDAO(RecordMapper foodMapper) {
+	public FoodDAO(FoodMapper foodMapper) {
         this.foodMapper = foodMapper;
     }
 	
-	public List<RecordDTO> getAllFoodInfo() {
+	public List<FoodDTO> getAllFoodInfo() {
         return foodMapper.getAllFoodInfo();
     }
 
-    public RecordDTO getFoodInfoById(String n_no) {
+    public FoodDTO getFoodInfoById(String n_no) {
         return foodMapper.getFoodInfoById(n_no);
     }
 	
-    public List<RecordDTO> searchFoodByName(String n_food_name) {
+    public List<FoodDTO> searchFoodByName(String n_food_name) {
         return foodMapper.searchFoodByName(n_food_name);
     }
     
