@@ -1,4 +1,5 @@
 import {
+  Alert,
   Keyboard,
   StyleSheet,
   Text,
@@ -11,43 +12,49 @@ import Input from "../../components/account/UI/Input";
 import Button from "../../components/account/UI/Button";
 import { useState } from "react";
 import { useAccountsContext } from "../../store/accounts_context";
+import axios from "axios";
+import Constants from "expo-constants";
 
 function AccountNutri({ navigation }) {
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+
+  const registerAccountGoal = () => {
+    axios
+      .post(`${uri}/api/account/user2/goal`, accountInfos)
+      .then((response) => {
+        console.log("User info submitted successfully:", response.data);
+        navigation.navigate("MainTabs");
+      })
+      .catch(() => {
+        Alert.alert("Error", "Failed to submit user info. Please try again.");
+      });
+  };
+
   const { accountInfos, setAccountInfos } = useAccountsContext();
 
   const goToAccountInfo = () => {
     navigation.navigate("AccountInfo");
   };
 
-  const goToMainTabs = () => {
-    navigation.navigate("MainTabs");
-  };
-
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
 
-  const [infoValues, setInfoValues] = useState({
-    gender: "",
-    age: "",
-    height: "",
-    curWeight: "",
-    tarWeight: "",
-    activity: "",
-    calorie: "",
-    carb: "",
-    protein: "",
-    fat: "",
-  });
-
   function nutriChangedHandler(infoIdentifier, enteredInfoVal) {
-    console.log(enteredInfoVal);
-    setAccountInfos((curInfoVal) => {
-      return { ...curInfoVal, [infoIdentifier]: enteredInfoVal };
+    setAccountInfos({
+      ...accountInfos,
+      [infoIdentifier]: enteredInfoVal,
     });
   }
 
-  console.log("여기 nutri: " + accountInfos);
+  const calorieIsValid = accountInfos.calorie > 0;
+  const carbIsValid = accountInfos.carb > 0;
+  const proteinIsValid = accountInfos.protein > 0;
+  const fatIsValid = accountInfos.fat > 0;
+
+  const validCheck =
+    !calorieIsValid || !carbIsValid || !proteinIsValid || !fatIsValid;
 
   return (
     <TouchableNativeFeedback onPress={dismissKeyboard}>
@@ -63,8 +70,8 @@ function AccountNutri({ navigation }) {
             label="Daily Calorie Goal"
             textInputConfig={{
               keyboardType: "decimal-pad",
-              autoCorrect: false,
               placeholder: "kcal",
+              maxLength: 5,
               onChangeText: nutriChangedHandler.bind(this, "calorie"),
               value: accountInfos.calorie,
             }}
@@ -78,7 +85,6 @@ function AccountNutri({ navigation }) {
               style={styles.input}
               textInputConfig={{
                 keyboardType: "decimal-pad",
-                maxLength: 5,
                 autoCorrect: false,
                 placeholder: "g",
                 onChangeText: nutriChangedHandler.bind(this, "carb"),
@@ -90,7 +96,6 @@ function AccountNutri({ navigation }) {
               style={styles.input}
               textInputConfig={{
                 keyboardType: "decimal-pad",
-                maxLength: 5,
                 autoCorrect: false,
                 placeholder: "g",
                 onChangeText: nutriChangedHandler.bind(this, "protein"),
@@ -102,7 +107,6 @@ function AccountNutri({ navigation }) {
               style={styles.input}
               textInputConfig={{
                 keyboardType: "decimal-pad",
-                maxLength: 5,
                 autoCorrect: false,
                 placeholder: "g",
                 onChangeText: nutriChangedHandler.bind(this, "fat"),
@@ -115,7 +119,19 @@ function AccountNutri({ navigation }) {
           <Button style={styles.prevBtn} onPress={goToAccountInfo}>
             Prev
           </Button>
-          <Button style={styles.confirmBtn} onPress={goToMainTabs}>
+          <Button
+            style={styles.confirmBtn}
+            onPress={() => {
+              if (validCheck) {
+                Alert.alert(
+                  "Invalid Information",
+                  "Please check your information"
+                );
+              } else {
+                registerAccountGoal();
+              }
+            }}
+          >
             Confirm
           </Button>
         </View>

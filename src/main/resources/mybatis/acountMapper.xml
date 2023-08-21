@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.app.ayofit.mapper.AcountMapper">
+<mapper namespace="com.app.ayofit.mapper.AccountMapper">
 
+	<insert id="regAccountInfos">
+		insert into accounts values (#{userId}, 'a', #{aDTO.age}, #{aDTO.gender}, #{aDTO.height}, #{aDTO.curWeight}, #{aDTO.activity}, sysdate)
+	</insert>
 	
+	<insert id="regAccountGoal">
+		insert into goal values (goal_seq.nextval, #{userId}, #{gDTO.calorie}, #{gDTO.tarWeight}, #{gDTO.carb}, #{gDTO.protein}, #{gDTO.fat}, sysdate)
+	</insert>
+	
+	<insert id="regAccountWeight">
+		insert into record_weight values (record_weight_seq.nextval, #{userId}, #{aDTO.curWeight},sysdate)
+	</insert>
 	
 </mapper>

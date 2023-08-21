@@ -6,32 +6,44 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import { GlobalStyles } from "../../components/UI/styles";
 import Input from "../../components/account/UI/Input";
 import IconButton from "../../components/account/UI/IconButton";
 import Button from "../../components/account/UI/Button";
 import { useAccountsContext } from "../../store/accounts_context";
+import axios from "axios";
+import Constants from "expo-constants";
 
 function AccountInfo({ navigation }) {
-  const goToAccountNutri = () => {
-    navigation.navigate("AccountNutri");
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+
+  const registerAccountInfo = () => {
+    axios
+      .post(`${uri}/api/account/user3`, accountInfos)
+      .then((response) => {
+        console.log("User info submitted successfully:", response.data);
+        navigation.navigate("AccountNutri");
+      })
+      .catch(() => {
+        Alert.alert("Error", "Failed to submit user info. Please try again.");
+      });
+  };
+
+  const registerAccountcurWeight = () => {
+    axios
+      .post(`${uri}/api/account/user3/weight`, accountInfos)
+      .then((response) => {
+        console.log("User weight submitted successfully:", response.data);
+      })
+      .catch(() => {
+        Alert.alert("Error", "Failed to submit user weight. Please try again.");
+      });
   };
 
   const { accountInfos, setAccountInfos } = useAccountsContext();
-
-  // const [infoValues, setInfoValues] = useState({
-  //   gender: "",
-  //   age: "",
-  //   height: "",
-  //   curWeight: "",
-  //   tarWeight: "",
-  //   activity: "",
-  //   calorie: "",
-  //   carb: "",
-  //   protein: "",
-  //   fat: "",
-  // });
 
   function infoChangedHandler(infoIdentifier, enteredInfoVal) {
     setAccountInfos({
@@ -40,7 +52,20 @@ function AccountInfo({ navigation }) {
     });
   }
 
-  // console.log(accountInfos);.
+  const ageIsValid = accountInfos.age > 0;
+  const heightIsValid = accountInfos.height > 100;
+  const curWeightIsValid = accountInfos.curWeight > 0;
+  const tarWeightIsValid = accountInfos.tarWeight > 0;
+  const genderIsValid = accountInfos.gender !== "";
+  const activityIsValid = accountInfos.activity !== "";
+
+  const validCheck =
+    !genderIsValid ||
+    !ageIsValid ||
+    !heightIsValid ||
+    !curWeightIsValid ||
+    !tarWeightIsValid ||
+    !activityIsValid;
 
   const calculateGoals = () => {
     let squaredHeight =
@@ -60,8 +85,6 @@ function AccountInfo({ navigation }) {
     } else {
       calculatedCalories = standardWeight * 40;
     }
-
-    // console.log(calculatedCalories.toFixed(1));
 
     const roundedCalculatedCalories = calculatedCalories.toFixed(1);
 
@@ -236,8 +259,16 @@ function AccountInfo({ navigation }) {
             <Button
               style={styles.nextBtn}
               onPress={() => {
-                calculateGoals();
-                goToAccountNutri();
+                if (validCheck) {
+                  Alert.alert(
+                    "Invalid Information",
+                    "Please check your information"
+                  );
+                } else {
+                  calculateGoals();
+                  registerAccountcurWeight();
+                  registerAccountInfo();
+                }
               }}
             >
               Next
@@ -255,7 +286,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: GlobalStyles.colors.primary50 },
   top: {
     flex: 1,
-    marginTop: 50,
+    marginTop: "5%",
     marginHorizontal: 20,
     paddingHorizontal: 20,
     justifyContent: "center",

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package com.app.ayofit.model;
 
 public class RecordDTO {
@@ -62,10 +61,4 @@ public class RecordDTO {
 	
 	
 }
-=======
-package com.app.ayofit.model;
 
-public class RecordDTO {
-
-}
->>>>>>> 1fedae1c4af3b3025f934a96329a7dce5fd2341a
