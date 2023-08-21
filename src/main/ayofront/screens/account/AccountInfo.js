@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: GlobalStyles.colors.primary50 },
   top: {
     flex: 1,
-    marginTop: 50,
+    marginTop: "5%",
     marginHorizontal: 20,
     paddingHorizontal: 20,
     justifyContent: "center",

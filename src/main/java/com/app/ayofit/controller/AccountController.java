@@ -5,7 +5,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.app.ayofit.model.AccountDTO;
 import com.app.ayofit.model.GoalDTO;
@@ -32,5 +35,12 @@ public class AccountController {
 	public void regAccountWeight(@PathVariable String userId, @RequestBody AccountDTO aDTO) {
 		aDAO.regAccountWeight(userId,aDTO);
 	}	
+	
+	@PostMapping("/uploadtest")
+	public void regimgtest(@RequestPart("image") MultipartFile file) {
+		aDAO.regimg(file);
+	}	
+	
+	
 
 }
