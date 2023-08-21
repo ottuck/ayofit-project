@@ -22,7 +22,7 @@ function AccountInfo({ navigation }) {
 
   const registerAccountInfo = () => {
     axios
-      .post(`${uri}/api/account/user3`, accountInfos)
+      .post(`${uri}/api/account/user10`, accountInfos)
       .then((response) => {
         console.log("User info submitted successfully:", response.data);
         navigation.navigate("AccountNutri");
@@ -34,7 +34,7 @@ function AccountInfo({ navigation }) {
 
   const registerAccountcurWeight = () => {
     axios
-      .post(`${uri}/api/account/user3/weight`, accountInfos)
+      .post(`${uri}/api/account/user10/weight`, accountInfos)
       .then((response) => {
         console.log("User weight submitted successfully:", response.data);
       })
@@ -287,8 +287,8 @@ const styles = StyleSheet.create({
   top: {
     flex: 1,
     marginTop: "5%",
-    marginHorizontal: 20,
-    paddingHorizontal: 20,
+    marginHorizontal: "5%",
+    paddingHorizontal: "5%",
     justifyContent: "center",
     alignItems: "flex-start",
   },
@@ -299,12 +299,12 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: "600",
-    marginBottom: 10,
+    marginBottom: "5%",
   },
   genderContainer: {
     flex: 0.7,
-    marginHorizontal: 20,
-    paddingHorizontal: 20,
+    marginHorizontal: "5%",
+    paddingHorizontal: "5%",
   },
   genderIconContainer: {
     flex: 0.9,
@@ -317,8 +317,8 @@ const styles = StyleSheet.create({
   },
   ageHeightContainer: {
     flex: 0.7,
-    marginHorizontal: 20,
-    paddingHorizontal: 20,
+    marginHorizontal: "5%",
+    paddingHorizontal: "5%",
     justifyContent: "flex-start",
   },
   label: {
@@ -330,28 +330,28 @@ const styles = StyleSheet.create({
   },
   weightContainer: {
     flex: 0.7,
-    marginHorizontal: 20,
-    paddingHorizontal: 20,
+    marginHorizontal: "5%",
+    paddingHorizontal: "5%",
     justifyContent: "flex-start",
   },
   activityContainer: {
     flex: 1,
-    marginHorizontal: 20,
-    paddingHorizontal: 20,
+    marginHorizontal: "5%",
+    paddingHorizontal: "5%",
   },
   icons: {
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: "5%",
   },
   high: { color: "#CE4257", fontWeight: "600" },
   moderate: { color: "#FF7F51", fontWeight: "600" },
   low: { color: "#FF9B54", fontWeight: "600" },
   next: {
     flex: 1,
-    marginHorizontal: 20,
-    paddingHorizontal: 20,
+    marginHorizontal: "5%",
+    paddingHorizontal: "5%",
     alignSelf: "center",
   },
   nextBtn: { width: 300, height: 50 },

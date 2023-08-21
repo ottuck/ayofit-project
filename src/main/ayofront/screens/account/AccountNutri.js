@@ -21,7 +21,7 @@ function AccountNutri({ navigation }) {
 
   const registerAccountGoal = () => {
     axios
-      .post(`${uri}/api/account/user2/goal`, accountInfos)
+      .post(`${uri}/api/account/user10/goal`, accountInfos)
       .then((response) => {
         console.log("User info submitted successfully:", response.data);
         navigation.navigate("MainTabs");
@@ -149,9 +149,9 @@ const styles = StyleSheet.create({
   },
   top: {
     flex: 1,
-    marginTop: 60,
-    marginHorizontal: 20,
-    paddingHorizontal: 20,
+    marginTop: "10%",
+    marginHorizontal: "5%",
+    paddingHorizontal: "5%",
     justifyContent: "center",
     alignItems: "flex-start",
   },
@@ -162,36 +162,37 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: "600",
-    marginBottom: 10,
   },
   calorieContainer: {
     flex: 1,
-    marginHorizontal: 20,
-    paddingHorizontal: 20,
+    marginHorizontal: "5%",
+    paddingHorizontal: "5%",
     justifyContent: "flex-start",
   },
   label: {
     fontWeight: "600",
   },
   calorieInput: {
-    marginVertical: 10,
+    marginVertical: "2%",
   },
   nutrientContainer: {
     flex: 1.5,
-    marginHorizontal: 20,
-    paddingHorizontal: 20,
+    marginHorizontal: "5%",
+    paddingHorizontal: "5%",
+    marginTop: "5%",
   },
   nutriInputContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
   },
   input: {
     width: 80,
   },
   btnContainer: {
     flex: 3,
-    marginHorizontal: 20,
-    paddingHorizontal: 20,
+    marginTop: "10%",
+    marginHorizontal: "5%",
+    paddingHorizontal: "5%",
     justifyContent: "flex-start",
     alignSelf: "center",
   },
