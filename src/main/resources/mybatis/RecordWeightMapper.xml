@@ -22,8 +22,8 @@
         UPDATE RECORD_WEIGHT SET R_WEIGHT = #{rWeight} WHERE R_W_ID = #{rId} AND R_WEIGHT_DATE = #{rWeightDate}
     </update>
     
-    <delete id="deleteByRNo">
-	    DELETE FROM RECORD_WEIGHT WHERE R_W_NO = #{rNo}
+    <delete id="delete">
+	    DELETE FROM RECORD_WEIGHT WHERE R_W_ID = #{rId} AND R_WEIGHT_DATE = #{rWeightDate}
 	</delete>
 
 </mapper>

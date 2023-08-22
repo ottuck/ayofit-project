@@ -32,7 +32,7 @@ public class RecordWeightController {
     
     @GetMapping("/{rId}/{rWeightDate}")
     public RecordWeightDTO getWeightByDateAndId(@PathVariable String rId, @PathVariable String rWeightDate) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // 날짜 형식에 맞게 조정해야 합니다.
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
         Date date;
         try {
             date = sdf.parse(rWeightDate);
@@ -52,9 +52,18 @@ public class RecordWeightController {
         recordWeightDao.updateWeight(record);
     }
 
-    @DeleteMapping("/delete/{rId}")
-    public void deleteLatestWeight(@PathVariable String rId) {
-        recordWeightDao.deleteLatestWeight(rId);
+    @DeleteMapping("/{rId}/{rWeightDate}")
+    public void delete(@PathVariable String rId, @PathVariable String rWeightDate) {
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+        Date date;
+        try {
+            date = sdf.parse(rWeightDate);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Invalid Date Format");
+        }
+        System.out.println(date);
+        System.out.println(rId);
+    	recordWeightDao.delete(rId, date);
     }
     
 }

@@ -102,10 +102,20 @@ const MyRecordsComponent = () => {
     (selectedDateMeals[0]?.totalFat / totalNutrients) * 100 || 0;
 
   const isValidWeight = (weight) => {
+    if (!weight || weight.trim() === "") {
+      return false;
+    }
+
     const weightNumber = parseFloat(weight);
     if (isNaN(weightNumber)) {
       return false;
     }
+
+    // 소수점 두 번째 자리 이후의 값이 있는지 체크
+    if (Math.floor(weightNumber * 10) !== weightNumber * 10) {
+      return false;
+    }
+
     return weightNumber >= 0.1 && weightNumber <= 200;
   };
 
@@ -127,7 +137,7 @@ const MyRecordsComponent = () => {
 
   const addOrModifyWeight = () => {
     if (!isValidWeight(weight)) {
-      alert("0.1에서 200 사이의 숫자를 입력해주세요.");
+      alert("Please enter a number from 0.1 to 200.");
       return;
     }
     let rToday = new Date();
@@ -155,9 +165,9 @@ const MyRecordsComponent = () => {
     }
   };
 
-  const deleteWeight = () => {
+  const deleteWeight = (rId, rWeightDate) => {
     axios
-      .delete(`${uri}/api/weights/delete/user3`)
+      .delete(`${uri}/api/weights/${rId}/${rWeightDate}`)
       .then((response) => {
         console.log(response.data);
         setHasRecorded(false);
@@ -168,7 +178,7 @@ const MyRecordsComponent = () => {
 
   const updateWeight = () => {
     if (!isValidWeight(weight)) {
-      alert("0.1에서 200 사이의 숫자를 입력해주세요.");
+      alert("Please enter a number from 0.1 to 200.");
       return;
     }
     let rToday = new Date();
@@ -259,7 +269,9 @@ const MyRecordsComponent = () => {
       <MyRecordsTodaysWeightContainer>
         <TodaysWeightTextContainer>
           <TodaysWeightText>Today's Weight : </TodaysWeightText>
-          <TodaysWeightKg>72.3 Kg</TodaysWeightKg>
+          <TodaysWeightKg>
+            {recordedWeight ? parseFloat(recordedWeight).toFixed(1) : "00.0"} Kg
+          </TodaysWeightKg>
         </TodaysWeightTextContainer>
         <FaintLine></FaintLine>
         <LineChart
@@ -311,7 +323,7 @@ const MyRecordsComponent = () => {
         <RecordsWeightButtonContainer>
           <RecordsWeightButton onPress={() => setModalVisible(true)}>
             <RecordsWeightButtonText>
-              {hasRecorded ? "체중 수정하기" : "체중 기록하기"}
+              {hasRecorded ? "Modifying Weight" : "Recording Weight"}
             </RecordsWeightButtonText>
           </RecordsWeightButton>
         </RecordsWeightButtonContainer>
@@ -320,7 +332,7 @@ const MyRecordsComponent = () => {
           <RecordsWeightModalView>
             <RecordsModalWeightCloseContainer>
               <RecordsModalWeightInfoText>
-                {hasRecorded ? "체중 수정" : "체중 입력"}
+                {hasRecorded ? "Modifying Weight" : "Recording Weight"}
               </RecordsModalWeightInfoText>
               <RecordsModalWeightCloseButton
                 onPress={() => setModalVisible(false)}
@@ -340,14 +352,24 @@ const MyRecordsComponent = () => {
             {hasRecorded ? (
               <>
                 <RecordsModalButtonsContainer>
-                  <RecordsModalFixAndDeleteButton onPress={updateWeight}>
+                  <RecordsModalFixAndDeleteButton
+                    onPress={() => {
+                      updateWeight();
+                      setModalVisible(false);
+                    }}
+                  >
                     <RecordsModalFixAndDeleteButtonText>
-                      수정하기
+                      Modify
                     </RecordsModalFixAndDeleteButtonText>
                   </RecordsModalFixAndDeleteButton>
-                  <RecordsModalFixAndDeleteButton onPress={deleteWeight}>
+                  <RecordsModalFixAndDeleteButton
+                    onPress={() => {
+                      deleteWeight("user3", formattedToday);
+                      setModalVisible(false);
+                    }}
+                  >
                     <RecordsModalFixAndDeleteButtonText>
-                      삭제하기
+                      Delete
                     </RecordsModalFixAndDeleteButtonText>
                   </RecordsModalFixAndDeleteButton>
                 </RecordsModalButtonsContainer>
@@ -355,12 +377,12 @@ const MyRecordsComponent = () => {
             ) : (
               <RecordsModalWeightButton
                 onPress={() => {
-                  addWeight();
+                  addOrModifyWeight();
                   setModalVisible(false);
                 }}
               >
                 <RecordsModalWeightButtonText>
-                  기록완료
+                  Finish Record
                 </RecordsModalWeightButtonText>
               </RecordsModalWeightButton>
             )}

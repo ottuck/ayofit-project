@@ -31,11 +31,9 @@ public class RecordWeightDAO {
         mapper.update(record);
     }
 
-    public void deleteLatestWeight(String rId) {
-        RecordWeightDTO latestRecord = mapper.findLatestByRId(rId);
-        if (latestRecord != null) {
-            mapper.deleteByRNo(latestRecord.getrNo());
-        }
+    public void delete(String rId, Date rWeightDate) {
+        mapper.delete(rId, rWeightDate);
     }
+    
 }
 
