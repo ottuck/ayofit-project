@@ -343,7 +343,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
-    marginTop: "5%",
   },
   high: { color: "#CE4257", fontWeight: "600" },
   moderate: { color: "#FF7F51", fontWeight: "600" },
