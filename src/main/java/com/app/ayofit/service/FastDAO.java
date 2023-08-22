@@ -5,30 +5,27 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.app.ayofit.mapper.FoodMapper;
-import com.app.ayofit.model.FoodDTO;
+import com.app.ayofit.mapper.FastMapper;
+import com.app.ayofit.model.FastDTO;
+
 
 @Service
-public class FoodDAO {
+public class FastDAO {
 	
 	
 	@Autowired
-	private FoodMapper foodMapper;
+	private FastMapper fastMapper;
 	
-	public FoodDAO(FoodMapper foodMapper) {
-        this.foodMapper = foodMapper;
-    }
-	
-	public List<FoodDTO> getAllFoodInfo() {
-        return foodMapper.getAllFoodInfo();
+	public List<FastDTO> getAllFoodInfo() {
+        return fastMapper.getAllFoodInfo();
     }
 
-    public FoodDTO getFoodInfoById(String n_no) {
-        return foodMapper.getFoodInfoById(n_no);
+    public FastDTO getFoodInfoById(String n_no) {
+        return fastMapper.getFoodInfoById(n_no);
     }
 	
-    public List<FoodDTO> searchFoodByName(String n_food_name) {
-        return foodMapper.searchFoodByName(n_food_name);
+    public List<FastDTO> searchFoodByName(String n_food_name) {
+        return fastMapper.searchFoodByName(n_food_name);
     }
     
 }

@@ -1,20 +1,57 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { LinearGradient } from "expo-linear-gradient";
 import { View, Text } from "react-native";
+import {FastRecordView,RecordTouch,PlanContainer,PlanTitle,PlanMethodText,PlanMethodCView,PlanMethodC
+    ,PlanEndView,PlanEndText,PlanConfirmV,PlanConfirmB,PlanConfirmT} from '../components/fast/FastingStyled';
 
-const FastRecord = () => (
-
-        <View>
+const FastRecord = ({navigation : { navigate } }) => (
+    <LinearGradient colors={['#f7d7be','#e7a370']}>
+        <FastRecordView>
+            <RecordTouch onPress={() => navigate("FastRecordSet")}>
             <Text>FastRecord1</Text>
-        </View>
-
+            </RecordTouch>
+        </FastRecordView>
+    </LinearGradient>
         );
         
-const FastSetRecord = () => (
 
-        <View>
-            <Text>FastRecord1</Text>
-        </View>
-                );
+
+const FastSetRecord = () => {
+    return(
+<PlanContainer>
+<LinearGradient colors={['#f7d7be','#e7a370']}>
+<PlanTitle>{"\n"}
+</PlanTitle>
+<PlanMethodText>
+Starting Date
+</PlanMethodText>
+<PlanMethodCView>
+</PlanMethodCView>
+<PlanMethodText>
+Starting Time
+</PlanMethodText>
+<PlanMethodCView>
+</PlanMethodCView>
+<PlanMethodText>
+Fasting Duration
+</PlanMethodText>
+<PlanMethodCView>
+
+</PlanMethodCView>
+<PlanEndView>
+ <PlanEndText>
+    It ends at 
+</PlanEndText>
+</PlanEndView>
+<PlanConfirmV>
+<PlanConfirmB>
+    <PlanConfirmT>Confirm</PlanConfirmT>
+</PlanConfirmB>
+</PlanConfirmV>
+</LinearGradient>
+</PlanContainer>
+);
+};
 
 
 const RecordStack = createNativeStackNavigator();

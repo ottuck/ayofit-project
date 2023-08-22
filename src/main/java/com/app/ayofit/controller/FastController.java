@@ -17,20 +17,21 @@ import com.app.ayofit.service.FastDAO;
 public class FastController {
 	
 	@Autowired
-	private FastDAO foodDAO;
+	private FastDAO fastDAO;
 	
 	@GetMapping("")
 	public List<FastDTO> getAllFoodInfo() {
-	    	return FastDAO.getAllFoodInfo();
+	    	return fastDAO.getAllFoodInfo();
 	}
 	
 	@GetMapping("{n_no}")
     public FastDTO getMethodName(@PathVariable("n_no") String n_no) {
-			return FastDAO.getFoodInfoById(n_no);
+		
+			return fastDAO.getFoodInfoById(n_no);
     }
 	
 	 @GetMapping("/search/{n_food_name}")
-	    public List<FoodDTO> searchFood(@PathVariable String n_food_name) {
-		 	return foodDAO.searchFoodByName(n_food_name);
+	    public List<FastDTO> searchFood(@PathVariable String n_food_name) {
+		 	return fastDAO.searchFoodByName(n_food_name);
 	}
 }

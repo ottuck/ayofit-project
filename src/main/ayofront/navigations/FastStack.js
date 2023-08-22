@@ -1,5 +1,5 @@
 import React, { useState,} from "react";
-import { StyleSheet, TouchableOpacity,Text,Image } from 'react-native';
+import { StyleSheet, TouchableOpacity,Text, Alert } from 'react-native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -12,7 +12,8 @@ import {MethodContainer, MethodTitle, MethodCTouch, MethodCText, MethodCEndTouch
     ,PlanEndView,PlanEndText,PlanConfirmV,PlanConfirmB,PlanConfirmT,ConfirmScroll,ConfirmContainer,ConfirmTitle,ConfirmTime,ConfirmBtn,ConfirmText
     ,TimerContainer,TimerTitle,TimerHomeBtn,TimerHomeBT,EndTimeText,MethodCTextS,ConfirmMessage,ConfirmMView,ConfirmStart,ConfrimSText,ConfirmEnd
     ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView,FirstMainPage,MainBtn,MainText,FastMainImage
-    ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM,MethodLeftContent,MethodRightContent,MethodCText2,MethodCTextS2,TimerScrollView
+    ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM,MethodLeftContent,MethodRightContent,
+    MethodCText2,MethodCTextS2,TimerScrollView,TimerStop
 } from '../components/fast/FastingStyled';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -203,7 +204,8 @@ const FastPlan = ({ navigation }) => {
                 },
                 seletedDate: seletedDate || currnetDate,
                 selectedTime: selectedTime || currentTime,
-                totalDateTime : totalDateTime||currnetDateTime,
+                totalDateTime : totalDateTime,
+                currnetDateTime : currnetDateTime,
             });
     };
 const route = useRoute();
@@ -211,8 +213,6 @@ const selectMethod = route.params.seletedValue;
 const currnetDate = route.params.seletedDate;
 const currentTime = route.params.selectedTime;
 const currnetDateTime = route.params.endTime;
-
-console.log(currnetDateTime)
 
 const [selectYear,selectMonth,selectDay] = seletedDate.split('/');
 const [selectHour,selectMinute] = selectedTime.split(':');
@@ -228,10 +228,12 @@ if(totalHourParse > 23) {
 
 let totalDateTime;
 if(!selectHour == '') {
-totalDateTime = `${selectYear}`+'/' +`${selectMonth}`+'/'+ `${MonthNumber(plusSelectDay)}`+':' + `${MonthNumber(totalHourParse)}`+':'+ `${selectMinute}`;
+    totalDateTime = `${selectYear}`+'/' +`${selectMonth}`+'/'+ `${MonthNumber(plusSelectDay)}`+':' + `${MonthNumber(totalHourParse)}`+':'+ `${selectMinute}`;
 }else{
-totalDateTime = null;
+    totalDateTime = null;
 }
+// const currentEndTime = currnetDateTime.substring(13);
+const currentEndTime = currnetDateTime.split(' : ')[1]; // " : "로 분리하고 두 번째 요소 추출
 return(
 <PlanContainer>
 <LinearGradient colors={['#f7d7be','#e7a370']}>
@@ -274,34 +276,52 @@ return(
 const FastConfirm = ({ navigation }) => {
     const selectTimer = (seletedValue) => {
         const stringFormat = `${seletedValue} - ${24 - seletedValue}`;  
-            navigation.navigate("Timer", {
+            navigation.navigate("MyTimer", {
                 seletedValue: {
                     number: seletedValue,
                     string: stringFormat,
-                }},
-            );
+                },
+                ConfirmStartTime : ConfirmStartTime,
+                ConfirmEndTime : ConfirmEndTime,
+            });
     };
 const route = useRoute();
 const confirmTime = route.params.seletedValue;
 const ConfirmDate = route.params.seletedDate;
 const ConfirmTime2 = route.params.selectedTime;
 const totalDateTime = route.params.totalDateTime;
-const [totalDate,totalTime] = totalDateTime.split(':');
+const currnetDateTime = route.params.currnetDateTime;
 
-console.log(totalDate);
-console.log(totalDateTime);
+const [currentFastDate,currentFastTime] =currnetDateTime.split(':');
+const currentEndTime = currnetDateTime.substring(13);
+
+const [totalDate,totalTime] = totalDateTime.split(':');
+const totalTime2 = totalDateTime.substring(11);
 
 const stringFormat = `${confirmTime.number}H`;
 const stringFormat2 =`${24 - confirmTime.number}H`
 
-
 const dateStr = ConfirmDate;
 const timeStr = ConfirmTime2;
+
+const currentDateStr = totalDate;
+const currentTimeStr = totalTime2;
+
+const currentDateEnd = currentFastDate;
+const currentTimeEnd = currentEndTime;
 
 const [year, month, day] = dateStr.split('/').map(str => parseInt(str, 10));
 const [hours, minutes] = timeStr.split(':').map(str => parseInt(str, 10));
 
+const [year2, month2, day2] = currentDateStr.split('/').map(str => parseInt(str, 10));
+const [hours2, minutes2] = currentTimeStr.split(':').map(str => parseInt(str, 10));
+
+const [year3, month3, day3] = currentDateEnd.split('/').map(str => parseInt(str, 10));
+const [hours3, minutes3] = currentTimeEnd.split(':').map(str => parseInt(str, 10));
+
 const date = new Date(year, month - 1, day, hours, minutes);
+const date2 = new Date(year2, month2 - 1, day2, hours2, minutes2);
+const date3 = new Date(year3, month3 - 1, day3, hours3, minutes3);
 
 const options = {
     year: 'numeric',
@@ -313,7 +333,12 @@ const options = {
   };
   
   const formatter = new Intl.DateTimeFormat('en-US', options);
+  // 시작 날짜 (현재 or 셀렉)
   const ConfirmStartTime = formatter.format(date).replace('at', '').replace(',', ', ');
+  // 종료 시간 (현재 or 셀렉)
+  const ConfirmEndTime = formatter.format(date2).replace('at', '').replace(',', ', ');
+  // 현재 날짜 (현재 종료)
+  const ConfirmTimeEnd = formatter.format(date3).replace('at', '').replace(',', ', ');
   
 return(
 
@@ -335,7 +360,7 @@ return(
     </ConfirmStart>
     <ConfirmEnd>
         <ConfirmEText>
-        End : August 10, 2023 AM 10:00
+        End : {ConfirmEndTime||ConfirmTimeEnd}
         </ConfirmEText>
     </ConfirmEnd>
 </ConfirmTView>
@@ -351,6 +376,7 @@ return(
 );
 }
 
+
 function formatNumber(number) {
     return number < 10 ? `0${number}` : `${number}`;
 }
@@ -362,12 +388,37 @@ function secondsToHMS(seconds) {
     return { hours, minutes, seconds: remainingSeconds };
 }
 
-function MyTimer({ route, navigation: {navigate} }) {
+function MyTimer({ navigation: {navigate} }) {
     
+    const route = useRoute();
+    const ConfirmStartTime = route.params.ConfirmStartTime;
+    const ConfirmEndTime = route.params.ConfirmEndTime;
     const timerTime = route.params?.seletedValue;
-    const [isPlaying, setIsPlaying] = React.useState(true);
-    const totalSeconds = timerTime.number * 3600;
+    const [isPlaying, setIsPlaying] = useState(true);
+    const [elapsedTime, setElapsedTime] = useState(0);
+    const [remainingTime, setRemainingTime] = useState();
 
+    const handleStopTimer = () => {
+        Alert.alert(
+            'Stop Timer',
+            'Are you sure?',
+            [
+                {
+                    text: 'cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Stop',
+                    onPress: () => {
+                        setIsPlaying(false); // 타이머 멈추기
+                        setElapsedTime(totalSeconds - remainingTime); // 사용된 시간 계산 및 저장
+                    },
+                },
+            ],
+        );
+    };
+    console.log('1:' + elapsedTime)
+    const totalSeconds = timerTime.number * 3600;
     return (
         <TimerScrollView>
             <LinearGradient colors={['#f7d7be','#e7a370']}>
@@ -376,47 +427,54 @@ function MyTimer({ route, navigation: {navigate} }) {
             <TimerHomeBT>Reset     <Entypo name="trash" size={24} color="black" /></TimerHomeBT> 
             </TimerHomeBtn>
             <TouchableOpacity activeOpacity={0} onPress={() => setIsPlaying(prev => !prev)}>
-                <CountdownCircleTimer
-                    isPlaying={isPlaying}
-                    duration={totalSeconds}
-                    colors={["#F3A36F", "#F7B801", "#A30000", "#A30000"]}
-                    colorsTime={[totalSeconds, (totalSeconds * 0.7), (totalSeconds * 0.3), 0]}
-                    onComplete={() => ({ shouldRepeat: true, delay: 2 })}
-                    updateInterval={1}
-                    strokeWidth={30}
-                    size={300}
-                >
-                    {({ remainingTime, color }) => {
-                        const { hours, minutes, seconds } = secondsToHMS(remainingTime);
-                        return (
-                            <>
-                             <Text style={{ color:"#505050", fontSize: 18 }}>
-                               Elapsed Time
-                                </Text>
-                                <Text style={{ color, fontSize: 40 }}>
-                                {`${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}`}
-                                </Text>
-                                {isPlaying && remainingTime === 0 && (
-                                    <EndTimeText style={{ fontSize: 20, textAlign: 'center' }}>
-                                        Time over!
-                                    </EndTimeText>
-                                )}
-                            </>
-                        );
-                    }}
-                </CountdownCircleTimer>
+            <CountdownCircleTimer
+    isPlaying={isPlaying}
+    duration={totalSeconds}
+    colors={["#F3A36F", "#F7B801", "#A30000", "#A30000"]}
+    colorsTime={[totalSeconds, (totalSeconds * 0.7), (totalSeconds * 0.3), 0]}
+    onComplete={() => ({ shouldRepeat: true, delay: 2 })}
+    updateInterval={1}
+    strokeWidth={30}
+    size={300}
+>
+    {({ remainingTime, color }) => {
+        const { hours, minutes, seconds } = secondsToHMS(remainingTime);
+        setRemainingTime(remainingTime); // remainingTime 상태 업데이트
+        return (
+            <>
+                <Text style={{ color:"#505050", fontSize: 18 }}>
+                    Elapsed Time
+                </Text>
+                <Text style={{ color, fontSize: 40 }}>
+                    {`${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}`}
+                </Text>
+                {isPlaying && remainingTime === 0 && (
+                    <EndTimeText style={{ fontSize: 20, textAlign: 'center' }}>
+                        Time over!
+                    </EndTimeText>
+                )}
+            </>
+            );
+    }}
+</CountdownCircleTimer>
+
             </TouchableOpacity>
 <TimerMView>
     <TimerStart>
         <TimerSText>
-            Start : August 10, 2023 AM 10:00
+            Start : {ConfirmStartTime}
         </TimerSText>
     </TimerStart>
     <TimerEnd>
         <TimerEText>
-        End  :  August 10, 2023 AM 10:00
+        End  :  {ConfirmEndTime}
         </TimerEText>
     </TimerEnd>
+    <TimerStop>
+        <TimerEText onPress={handleStopTimer}>
+        STOP
+        </TimerEText>
+    </TimerStop>
 </TimerMView>
         </TimerContainer>
         </LinearGradient>
@@ -440,7 +498,7 @@ const FastStack = () => (
     <NativeStack.Screen name="FastingMethod" component={FastMethod} />
     <NativeStack.Screen name="ConfirmFastPlan" component={FastConfirm} />
     <NativeStack.Screen name="FastPlan" component={FastPlan} />
-    <NativeStack.Screen name="Timer" component={MyTimer} />
+    <NativeStack.Screen name="MyTimer" component={MyTimer} />
     
 </NativeStack.Navigator>
 );

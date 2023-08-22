@@ -341,7 +341,15 @@ justify-content: center;
 export const TimerEText = styled.Text`
 font-size: 18px;
 font-weight : 500;
-white-space : pre;
+`;
+export const TimerStop = styled.TouchableOpacity`
+margin-top : 20px;
+width: 100px;
+height: 50px;
+background-color : #723b0e33;
+border-radius: 20px;
+align-items: center;
+justify-content: center;
 `;
 //---------------------FastDate.js---------------------//
 export const FastDateContainer = styled.View`
@@ -393,4 +401,26 @@ border-radius: 10px;
 justify-content: center;
 align-items: center;
 `;
+//-----------------------FastRoot-----------------------//
+export const HeaderView = styled.View`
+height: 70px;
+flex-direction: row; /* 가로로 정렬 */
+`;
+export const HeaderTouch = styled.TouchableOpacity`
 
+`;
+export const HeaderText = styled.Text`
+font-size : 20px;
+margin-top : 30px;
+margin-left : 10px;
+`;
+//----------------------RecordPage-------------------//
+export const FastRecordView = styled.View`
+width: 100%;
+height: 100%;
+justify-content : center;
+align-items : center;
+`;
+export const RecordTouch = styled.TouchableOpacity`
+
+`;
