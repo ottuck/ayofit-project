@@ -27,8 +27,8 @@ const GoalInput = ({ newGoal, onGoalChange, onUpdateGoal }) => {
 
 const styles = StyleSheet.create({
   inputContainer: {
-    borderWidth: 2,
-    borderColor: "tomato",
+    // borderWidth: 2,
+    // borderColor: "tomato",
     alignItems: "center",
   },
   input: {

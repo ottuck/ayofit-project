@@ -2,12 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.app.ayofit.mapper.PedometerMapper">
-<select id="getWeeklyPedometerData" resultType="com.app.ayofit.model.PedometerDTO">
-    SELECT *
-    FROM pedometer
-    WHERE p_date BETWEEN #{startOfWeek, jdbcType=DATE} AND #{endOfWeek, jdbcType=DATE}
-</select>
-
-    
+  <select id="getWeeklyAchievement" resultType="com.app.ayofit.model.PedometerDTO">
+        SELECT * FROM pedometer
+        WHERE p_id = #{userId}
+        AND p_date BETWEEN #{startDate,jdbcType=DATE} AND #{endDate,jdbcType=DATE}
+        AND p_stepcnt >= p_stepgoal
+    </select>
   
 </mapper>

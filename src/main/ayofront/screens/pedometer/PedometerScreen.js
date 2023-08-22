@@ -44,35 +44,47 @@ function PedometerScreen() {
     false,
   ]);
 
-  const fetchPedometerDataForWeek = () => {
-    axios
-      .get(`${uri}/api/pedometer/week_data`)
-      .then((response) => {
-        const weekData = response.data;
-        const updatedDaysAchieved = [...daysAchieved]; // Create a copy of the current array
-        console.log(updatedDaysAchieved);
-        console.log(weekData);
-        weekData.forEach((data) => {
-          const dayIndex = (new Date(data.pDate).getDay() + 6) % 7; // 0 (Monday) to 6 (Sunday)
-          const stepCnt = parseInt(data.pStepCnt);
-          const stepGoal = parseInt(data.pStepGoal);
-          console.log(stepCnt);
-          console.log(stepGoal);
+  useEffect(() => {
+    const userId = "user4"; // Set the user ID here
+    const currentDate = new Date();
 
-          if (!isNaN(stepCnt) && !isNaN(stepGoal) && dayIndex !== -1) {
-            updatedDaysAchieved[dayIndex] = stepCnt >= stepGoal;
+    const formattedDate = `${currentDate.getFullYear()}-${(
+      currentDate.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${currentDate.getDate().toString().padStart(2, "0")}`;
+
+    axios
+      .get(`${uri}/api/pedometer/weekly-achievement`, {
+        params: {
+          userId: userId,
+          date: formattedDate,
+        },
+      })
+      .then((response) => {
+        const weeklyAchievement = response.data;
+        console.log(response.data);
+        const updatedDaysAchieved = daysOfWeek.map((day, index) => {
+          const dailyData = weeklyAchievement.find((item) => {
+            const pDate = new Date(item.pDate);
+            const pDayOfWeek = pDate.getDay(); // 0 (일요일) ~ 6 (토요일)
+
+            // daysOfWeek 배열의 첫 번째 값이 월요일이므로, index 값에 1을 더하여 비교합니다.
+            return pDayOfWeek === (index + 1) % 7;
+          });
+
+          if (dailyData) {
+            return dailyData.pStepCnt >= dailyData.pStepGoal;
+          } else {
+            return false;
           }
         });
 
         setDaysAchieved(updatedDaysAchieved);
       })
       .catch((error) => {
-        console.error("Error fetching weekly pedometer data:", error);
+        console.error("Failed to fetch weekly achievement data:", error);
       });
-  };
-
-  useEffect(() => {
-    fetchPedometerDataForWeek();
   }, []);
 
   // 빈 배열을 전달하여 컴포넌트 마운트 시에만 실행되도록 함
@@ -236,8 +248,8 @@ const styles = StyleSheet.create({
   },
   bottomTextContainer: {
     flexDirection: "row",
-    borderWidth: 2,
-    borderColor: "tomato",
+    // borderWidth: 2,
+    // borderColor: "tomato",
   },
 });
 
