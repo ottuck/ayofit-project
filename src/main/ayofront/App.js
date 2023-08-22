@@ -1,11 +1,6 @@
-import {
-  StyleSheet,
-  Image,
-  Dimensions,
-  SafeAreaView,
-  StatusBar,
-} from "react-native";
+import { StyleSheet, Image, Dimensions, StatusBar } from "react-native";
 import "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -29,43 +24,41 @@ const Stack = createStackNavigator();
 
 function MainTabsScreen() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
 
-            if (route.name === "HOME") {
-              iconName = focused ? "home" : "home-outline";
-            } else if (route.name === "DIET RECORD") {
-              iconName = focused ? "fast-food" : "fast-food-outline";
-            } else if (route.name === "CHALLENGE") {
-              iconName = focused ? "trophy" : "trophy-outline";
-            } else if (route.name === "STEP COUNTER") {
-              iconName = focused ? "walk" : "walk-outline";
-            } else if (route.name === "MY PAGE") {
-              iconName = focused ? "person" : "person-outline";
-            }
+          if (route.name === "HOME") {
+            iconName = focused ? "home" : "home-outline";
+          } else if (route.name === "DIET RECORD") {
+            iconName = focused ? "fast-food" : "fast-food-outline";
+          } else if (route.name === "CHALLENGE") {
+            iconName = focused ? "trophy" : "trophy-outline";
+          } else if (route.name === "STEP COUNTER") {
+            iconName = focused ? "walk" : "walk-outline";
+          } else if (route.name === "MY PAGE") {
+            iconName = focused ? "person" : "person-outline";
+          }
 
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: GlobalStyles.colors.primary500,
-          tabBarInactiveTintColor: GlobalStyles.colors.blackOpacity50,
-          tabBarStyle: {
-            backgroundColor: GlobalStyles.colors.primary50,
-            borderRadius: 16,
-            height: 65,
-          },
-          headerShown: false,
-        })}
-      >
-        <Tab.Screen name="HOME" component={NutriDetailScreen} />
-        <Tab.Screen name="DIET RECORD" component={RecordScreen} />
-        <Tab.Screen name="CHALLENGE" component={FastMainPage} />
-        <Tab.Screen name="STEP COUNTER" component={PedometerScreen} />
-        <Tab.Screen name="MY PAGE" component={AccountScreen} />
-      </Tab.Navigator>
-    </SafeAreaView>
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: GlobalStyles.colors.primary500,
+        tabBarInactiveTintColor: GlobalStyles.colors.blackOpacity50,
+        tabBarStyle: {
+          backgroundColor: GlobalStyles.colors.primary50,
+          borderRadius: 16,
+          height: 65,
+        },
+        headerShown: false,
+      })}
+    >
+      <Tab.Screen name="HOME" component={NutriDetailScreen} />
+      <Tab.Screen name="DIET RECORD" component={RecordScreen} />
+      <Tab.Screen name="CHALLENGE" component={FastMainPage} />
+      <Tab.Screen name="STEP COUNTER" component={PedometerScreen} />
+      <Tab.Screen name="MY PAGE" component={AccountScreen} />
+    </Tab.Navigator>
   );
 }
 
