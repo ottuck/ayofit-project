@@ -1,10 +1,9 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.app.ayofit.mapper.FoodMapper">
 
-	<select id="getAllFoodInfo" resultType="FoodDTO">
+	<!--<select id="getAllFoodInfo" resultType="FoodDTO">
 		select * from nutrition where n_no = 1
 	</select>
 
@@ -14,16 +13,7 @@
 	
 	<select id="searchFoodByName" resultType="FoodDTO">
     	select * from nutrition where N_FOOD_NAME like '%' || #{n_food_name} || '%'
-	</select>
+	</select>-->
 
 	
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-
-<mapper namespace="com.app.ayofit.mapper.RecordMapper">
-
-	
-	
->>>>>>> 1fedae1c4af3b3025f934a96329a7dce5fd2341a
 </mapper>

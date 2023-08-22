@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+
 import { Accelerometer } from "expo-sensors";
 
 import { GlobalStyles } from "../../components/UI/styles";
@@ -19,8 +20,31 @@ import DistanceCaloriesBox from "../../components/pedometer/DistanceCaloriesBox"
 import GoalInput from "../../components/pedometer/GoalInput";
 import axios from "axios";
 import Constants from "expo-constants";
+import * as TaskManager from "expo-task-manager";
 
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const PEDOMETER_TASK_NAME = "pedometerTask";
+TaskManager.defineTask(PEDOMETER_TASK_NAME, ({ data, error }) => {
+  if (error) {
+    console.error("Background task error:", error);
+    return;
+  }
+  console.log(data);
+  if (data) {
+    console.log(data + ">>>>>>>>>>>>>>>>>>");
+    // 여기서 센서 데이터를 처리하거나 업데이트합니다.
+    // 백그라운드 작업이 지속적으로 실행됩니다.
+    const accelerationMagnitude = Math.sqrt(
+      data.accelerometerData.x ** 2 +
+        data.accelerometerData.y ** 2 +
+        data.accelerometerData.z ** 2
+    );
+
+    if (accelerationMagnitude > 1.2) {
+      console.log("background");
+    }
+  }
+});
 
 function PedometerScreen() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -43,6 +67,42 @@ function PedometerScreen() {
     false,
     false,
   ]);
+  // 컴포넌트가 마운트될 때 TaskManager에 백그라운드 작업 등록
+  useEffect(() => {
+    TaskManager.getRegisteredTasksAsync().then((registeredTasks) => {
+      const isTaskDefined = registeredTasks.some(
+        (task) => task.taskName === PEDOMETER_TASK_NAME
+      );
+
+      if (!isTaskDefined) {
+        TaskManager.defineTask(PEDOMETER_TASK_NAME, async ({ data, error }) => {
+          if (error) {
+            console.error("Background task error:", error);
+            return;
+          }
+
+          if (data) {
+            const accelerationMagnitude = Math.sqrt(
+              data.accelerometerData.x ** 2 +
+                data.accelerometerData.y ** 2 +
+                data.accelerometerData.z ** 2
+            );
+
+            if (accelerationMagnitude > 1.2) {
+              console.log("Background: Accelerometer data received");
+              // 여기서 만보기와 관련된 작업을 수행하면 됩니다.
+            }
+          }
+        });
+      }
+
+      TaskManager.startTaskAsync(PEDOMETER_TASK_NAME);
+
+      return () => {
+        TaskManager.stopTaskAsync(PEDOMETER_TASK_NAME);
+      };
+    });
+  }, []);
 
   useEffect(() => {
     const userId = "user4"; // Set the user ID here
@@ -111,7 +171,7 @@ function PedometerScreen() {
             accelerometerData.y ** 2 +
             accelerometerData.z ** 2
         );
-
+        console.log("test");
         if (accelerationMagnitude > 1.2) {
           setIsWalking(true);
         } else if (accelerationMagnitude < 0.8) {
