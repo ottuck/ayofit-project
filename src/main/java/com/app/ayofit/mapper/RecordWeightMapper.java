@@ -11,7 +11,7 @@ import com.app.ayofit.model.RecordWeightDTO;
 
 @Mapper
 public interface RecordWeightMapper {
-    List<RecordWeightDTO> findAll();
+	List<RecordWeightDTO> findAllByUserId(String rId);
 
     RecordWeightDTO findByDateAndId(@Param("rWeightDate") Date rWeightDate, @Param("rId") String rId);
 

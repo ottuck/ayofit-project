@@ -15,8 +15,8 @@ public class RecordWeightDAO {
     @Autowired
     private RecordWeightMapper mapper;
 
-    public List<RecordWeightDTO> getAllWeights() {
-        return mapper.findAll();
+    public List<RecordWeightDTO> getWeightsByUserId(String rId) {
+        return mapper.findAllByUserId(rId);
     }
 
     public RecordWeightDTO getWeightByDateAndId(Date rWeightDate, String rId) {

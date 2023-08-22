@@ -25,9 +25,9 @@ public class RecordWeightController {
     @Autowired
     private RecordWeightDAO recordWeightDao; 
 
-    @GetMapping
-    public List<RecordWeightDTO> getAllWeights() {
-        return recordWeightDao.getAllWeights();
+    @GetMapping("/user/{rId}")
+    public List<RecordWeightDTO> getWeightsByUserId(@PathVariable String rId) {
+        return recordWeightDao.getWeightsByUserId(rId);
     }
     
     @GetMapping("/{rId}/{rWeightDate}")

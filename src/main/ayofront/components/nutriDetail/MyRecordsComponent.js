@@ -60,6 +60,9 @@ const MyRecordsComponent = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [hasRecorded, setHasRecorded] = useState(false); // 체중 기록 유무 확인
   const [recordedWeight, setRecordedWeight] = useState(0); // 기록된 체중
+  const [weightData, setWeightData] = useState([]); // 차트에 몸무게 여러개담는 데이터
+
+  console.log(weightData);
 
   let totalCarbohydrate = 0;
   let totalProtein = 0;
@@ -117,6 +120,20 @@ const MyRecordsComponent = () => {
     }
 
     return weightNumber >= 0.1 && weightNumber <= 200;
+  };
+
+  const fetchAllWeightsByUserId = (rId) => {
+    axios
+      .get(`${uri}/api/weights/user/${rId}`)
+      .then((response) => {
+        console.log(response.data);
+        const sortedData = response.data.sort(
+          (a, b) => new Date(a.rWeightDate) - new Date(b.rWeightDate) // 날짜를 오름차순으로 정렬
+        );
+        const recentData = sortedData.slice(0, 7); // 최근 7일의 데이터만 가져오기
+        setWeightData(recentData);
+      })
+      .catch((error) => console.log(error));
   };
 
   const fetchWeightByDateAndId = (rId, rWeightDate) => {
@@ -200,10 +217,28 @@ const MyRecordsComponent = () => {
       .catch((error) => console.log(error));
   };
 
+  const chartData = {
+    labels:
+      weightData.length > 0
+        ? weightData.map((item) =>
+            item.rWeightDate.substring(3).replace("-", "/")
+          )
+        : ["데이터 없음"],
+    datasets: [
+      {
+        data:
+          weightData.length > 0 ? weightData.map((item) => item.rWeight) : [0],
+      },
+    ],
+  };
+
   useEffect(() => {
     getNutritionData(formattedToday);
     fetchWeightByDateAndId("user3", formattedToday);
+    fetchAllWeightsByUserId("user3");
   }, []);
+
+  console.log(weightData);
 
   return (
     <MyRecordsDailyNutritionContainer>
@@ -275,20 +310,12 @@ const MyRecordsComponent = () => {
         </TodaysWeightTextContainer>
         <FaintLine></FaintLine>
         <LineChart
-          data={{
-            labels: ["Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon"],
-            datasets: [
-              {
-                data: [58.2, 58.2, 58, 58.5, 58.2, 58.5, 58.3], // 여기에 몸무게 데이터
-                color: () => "#E46C0A", // 라인 색상 지정
-                strokeWidth: 3,
-              },
-            ],
-          }}
-          width={Dimensions.get("window").width - 58} // 차트 넓이 조절
-          height={186} // 차트 높이 조절
+          data={chartData}
+          width={Dimensions.get("window").width - 56}
+          height={186}
           yAxisSuffix="kg"
           yAxisInterval={7}
+          yAxisLabel=""
           chartConfig={{
             backgroundColor: "#FFF4EC",
             backgroundGradientFrom: "#FFF4EC",
@@ -296,28 +323,12 @@ const MyRecordsComponent = () => {
             decimalPlaces: 1,
             color: (opacity = 1) => "#E46C0A",
             labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-            propsForDots: {
-              r: "3",
-              strokeWidth: "2",
-            },
-            propsForBackgroundLines: {
-              // 이 속성으로 그리드 라인을 숨김
-              strokeWidth: 0,
-            },
-            propsForVerticalLabels: {
-              // 이 속성으로 세로 라벨을 숨김
-              opacity: 1,
-            },
           }}
-          bezier // 선을 부드럽게 만드는 속성
+          bezier
           style={{
-            marginVertical: 8,
-            marginLeft: 16, // 왼쪽 마진 추가
-            marginRight: 16, // 오른쪽 마진 추가
-            borderRadius: 16,
+            marginVertical: 12,
+            marginLeft: 2, // 왼쪽 마진
+            marginRight: 12, // 오른쪽 마진
           }}
         />
         <RecordsWeightButtonContainer>

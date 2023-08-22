@@ -3,9 +3,11 @@
 
 <mapper namespace="com.app.ayofit.mapper.RecordWeightMapper">
     
-    <select id="findAll" resultType="com.app.ayofit.model.RecordWeightDTO">
+    <select id="findAllByUserId" parameterType="string" resultType="com.app.ayofit.model.RecordWeightDTO">
 	    SELECT R_W_NO as rNo, R_W_ID as rId, R_WEIGHT as rWeight, R_WEIGHT_DATE as rWeightDate 
 	    FROM RECORD_WEIGHT
+	    WHERE R_W_ID = #{rId}
+	    ORDER BY R_WEIGHT_DATE ASC
 	</select>
 
 	<select id="findByDateAndId" resultType="com.app.ayofit.model.RecordWeightDTO">
