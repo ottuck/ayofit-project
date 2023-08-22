@@ -1,11 +1,47 @@
-import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  Pressable,
+  Alert,
+} from "react-native";
 import { GlobalStyles } from "../../components/UI/styles";
 import IconButton from "../../components/account/UI/IconButton";
 import { Fontisto } from "@expo/vector-icons";
+import axios from "axios";
+import Constants from "expo-constants";
+import { useEffect, useState } from "react";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-function MyPage() {
+function MyPage({ navigation }) {
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+
+  const [goals, setGoals] = useState({});
+
+  const getAccountGoals = () => {
+    axios
+      .get(`${uri}/api/account/user1/goal`)
+      .then((response) => {
+        console.log(response.data);
+        setGoals(response.data);
+      })
+      .catch(() => {
+        Alert.alert("Error", "Failed.");
+      });
+  };
+
+  useEffect(() => {
+    getAccountGoals();
+  }, []);
+
+  const goToAccountInfo = () => {
+    navigation.navigate("AccUpdateInfo");
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -26,17 +62,19 @@ function MyPage() {
       </View>
       <View style={styles.myGoalsContainer}>
         <View style={styles.myGoals}>
-          <View>
-            <Text
-              style={{
-                color: GlobalStyles.colors.primary500,
-                fontSize: 18,
-                fontWeight: "600",
-              }}
-            >
-              My Goals
-            </Text>
-          </View>
+          <Pressable onPress={goToAccountInfo}>
+            <View>
+              <Text
+                style={{
+                  color: GlobalStyles.colors.primary500,
+                  fontSize: 18,
+                  fontWeight: "700",
+                }}
+              >
+                My Goals
+              </Text>
+            </View>
+          </Pressable>
           <View>
             <Fontisto
               name="angle-right"
@@ -47,15 +85,17 @@ function MyPage() {
         </View>
         <View style={styles.myGoalsItem}>
           <Text style={styles.text}>Weight</Text>
-          <Text style={styles.text}>-- kg</Text>
+          <Text style={styles.text}>{goals.tarWeight} kg</Text>
         </View>
         <View style={styles.myGoalsItem}>
           <Text style={styles.text}>Calorie</Text>
-          <Text style={styles.text}>-- kcal</Text>
+          <Text style={styles.text}>{goals.calorie} kcal</Text>
         </View>
         <View style={styles.myGoalsItem}>
           <Text style={styles.text}>Nutrients</Text>
-          <Text style={styles.text}>50:30:20 </Text>
+          <Text style={styles.text}>
+            {goals.carb} : {goals.protein} : {goals.fat}
+          </Text>
         </View>
       </View>
       <View style={styles.favoritesContainer}>
@@ -68,9 +108,10 @@ function MyPage() {
           <View>
             <Text
               style={{
+                paddingLeft: "2%",
                 color: GlobalStyles.colors.primary500,
                 fontSize: 18,
-                fontWeight: "600",
+                fontWeight: "700",
               }}
             >
               Favorites

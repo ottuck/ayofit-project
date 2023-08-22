@@ -15,4 +15,15 @@ public interface AccountMapper {
 
 	int regAccountWeight(@Param("userId")String userId, @Param("aDTO")AccountDTO aDTO);
 
+	GoalDTO getAccountGoals(String userId);
+
+	AccountDTO getAccountInfos(String userId);
+
+	double getAccountTarWeight(String userId);
+
+	int updateAccountInfos(@Param("userId")String userId, @Param("aDTO")AccountDTO aDTO);
+
+	int updateAccountGoal(@Param("userId")String userId, @Param("gDTO")GoalDTO gDTO);
+
+
 }

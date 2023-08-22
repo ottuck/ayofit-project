@@ -17,12 +17,12 @@ import NutriDetailScreen from "./screens/nutriDetail/nutriDetail_test";
 import RecordScreen from "./screens/record/RecordNavigator";
 import FastMainPage from "./screens/fast/FastMainPage";
 import PedometerScreen from "./screens/pedometer/PedometerScreen";
-import MyPage from "./screens/account/MyPage";
 import AccountInfo from "./screens/account/AccountInfo";
 import AccountNutri from "./screens/account/AccountNutri";
 import { GlobalStyles } from "./components/UI/styles";
 import FontProvider from "./components/FontProvider";
 import AccountsContextProvider from "./store/accounts_context";
+import AccountMain from "./navigations/AccountStack";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -62,7 +62,7 @@ function MainTabsScreen() {
       <Tab.Screen name="DIET RECORD" component={RecordScreen} />
       <Tab.Screen name="CHALLENGE" component={FastMainPage} />
       <Tab.Screen name="STEP COUNTER" component={PedometerScreen} />
-      <Tab.Screen name="MY PAGE" component={MyPage} />
+      <Tab.Screen name="MY PAGE" component={AccountMain} />
     </Tab.Navigator>
   );
 }
