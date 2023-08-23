@@ -15,16 +15,16 @@ import { useAccountsContext } from "../../store/accounts_context";
 import axios from "axios";
 import Constants from "expo-constants";
 
-function AccountNutri({ navigation }) {
+function AccUpdateNutri({ navigation }) {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
-  const registerAccountGoal = () => {
+  const updateAccGoal = () => {
     axios
-      .post(`${uri}/api/account/user1/goal`, accountInfos)
+      .put(`${uri}/api/account/user1/goal`, accountInfos)
       .then((response) => {
         console.log("User info submitted successfully:", response.data);
-        navigation.navigate("MainTabs");
+        navigation.navigate("MyPage");
       })
       .catch(() => {
         Alert.alert("Error", "Failed to submit user info. Please try again.");
@@ -33,8 +33,8 @@ function AccountNutri({ navigation }) {
 
   const { accountInfos, setAccountInfos } = useAccountsContext();
 
-  const goToAccountInfo = () => {
-    navigation.navigate("AccountInfo");
+  const goToAccUpdateInfo = () => {
+    navigation.navigate("AccUpdateInfo");
   };
 
   const dismissKeyboard = () => {
@@ -116,7 +116,7 @@ function AccountNutri({ navigation }) {
           </View>
         </View>
         <View style={styles.btnContainer}>
-          <Button style={styles.prevBtn} onPress={goToAccountInfo}>
+          <Button style={styles.prevBtn} onPress={goToAccUpdateInfo}>
             Prev
           </Button>
           <Button
@@ -128,7 +128,7 @@ function AccountNutri({ navigation }) {
                   "Please check your information"
                 );
               } else {
-                registerAccountGoal();
+                updateAccGoal();
               }
             }}
           >
@@ -140,7 +140,7 @@ function AccountNutri({ navigation }) {
   );
 }
 
-export default AccountNutri;
+export default AccUpdateNutri;
 
 const styles = StyleSheet.create({
   container: {

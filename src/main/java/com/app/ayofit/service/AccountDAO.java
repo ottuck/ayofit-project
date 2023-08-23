@@ -2,8 +2,6 @@ package com.app.ayofit.service;
 
 import java.io.File;
 
-import javax.servlet.ServletContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -65,6 +63,34 @@ public class AccountDAO {
 			return 1;
 		}
 		return 0;
+	}
+
+	public GoalDTO getAccountGoals(String userId) {
+		return aMapper.getAccountGoals(userId);
+	}
+
+	public AccountDTO getAccountInfos(String userId) {
+		return aMapper.getAccountInfos(userId);
+	}
+
+	public double getAccountTarWeight(String userId) {
+		return aMapper.getAccountTarWeight(userId);
+	}
+
+	public boolean updateAccountInfos(String userId, AccountDTO aDTO) {
+		if(aMapper.updateAccountInfos(userId, aDTO) == 1) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+
+	public boolean updateAccountGoal(String userId, GoalDTO gDTO) {
+		if(aMapper.updateAccountGoal(userId, gDTO) == 1) {
+			return true;
+		}else {
+			return false; 
+		}
 	}
 	
 	
