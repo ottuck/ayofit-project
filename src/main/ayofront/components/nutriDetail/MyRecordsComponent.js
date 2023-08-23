@@ -62,7 +62,7 @@ const MyRecordsComponent = () => {
   const [recordedWeight, setRecordedWeight] = useState(0); // 기록된 체중
   const [weightData, setWeightData] = useState([]); // 차트에 몸무게 여러개담는 데이터
 
-  console.log(weightData);
+  // console.log(weightData);
 
   let totalCarbohydrate = 0;
   let totalProtein = 0;
@@ -126,7 +126,7 @@ const MyRecordsComponent = () => {
     axios
       .get(`${uri}/api/weights/user/${rId}`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         const sortedData = response.data.sort(
           (a, b) => new Date(a.rWeightDate) - new Date(b.rWeightDate) // 날짜를 오름차순으로 정렬
         );
