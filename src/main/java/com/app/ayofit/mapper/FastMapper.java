@@ -9,8 +9,6 @@ import com.app.ayofit.model.FastDTO;
 
 @Mapper
 public interface FastMapper {
-	
-	List<FastDTO> getAllFoodInfo();
-	FastDTO getFoodInfoById(String n_no);
-	List<FastDTO> searchFoodByName(String n_food_name);
+    void insertFastData(FastDTO fastDTO);
+    
 }

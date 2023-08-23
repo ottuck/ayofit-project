@@ -16,6 +16,8 @@ import {MethodContainer, MethodTitle, MethodCTouch, MethodCText, MethodCEndTouch
     MethodCText2,MethodCTextS2,TimerScrollView,TimerStop
 } from '../components/fast/FastingStyled';
 import { LinearGradient } from 'expo-linear-gradient';
+import axios from "axios";
+import { Constants } from "expo-camera";
 
 
 
@@ -389,14 +391,21 @@ function secondsToHMS(seconds) {
 }
 
 function MyTimer({ navigation: {navigate} }) {
-    
+
+    const { debuggerHost } = Constants.manifest2.extra.expoGo;
+    const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+
     const route = useRoute();
     const ConfirmStartTime = route.params.ConfirmStartTime;
     const ConfirmEndTime = route.params.ConfirmEndTime;
     const timerTime = route.params?.seletedValue;
+    const timerMethod = route.params.seletedValue.number;
+    const timerMethod2 = route.params.seletedValue.string;
     const [isPlaying, setIsPlaying] = useState(true);
     const [elapsedTime, setElapsedTime] = useState(0);
     const [remainingTime, setRemainingTime] = useState();
+
+    const [fastDateSend,setFastDateSend] = useState(false);
 
     const handleStopTimer = () => {
         Alert.alert(
@@ -412,12 +421,34 @@ function MyTimer({ navigation: {navigate} }) {
                     onPress: () => {
                         setIsPlaying(false); // 타이머 멈추기
                         setElapsedTime(totalSeconds - remainingTime); // 사용된 시간 계산 및 저장
+
+                        const dataToSend = {
+                            ConfirmStartTime : ConfirmStartTime,
+                            ConfirmEndTime : ConfirmEndTime,
+                            timerMethod : timerMethod,
+                        };
+
+                        axios
+                            .post(`${uri}`,dataToSend)
+                            .then(response => {
+                                setFastDateSend(true);
+                            })
+                            .catch(error => {
+                                console.error('Error sending data:', error)
+                            })
                     },
                 },
             ],
-        );
-    };
-    const totalSeconds = timerTime.number * 3600;
+            );
+        };
+        const totalSeconds = timerTime.number * 3600;
+        console.log('시작 시간 : ' + ConfirmStartTime);
+        console.log('종료 시간 : ' + ConfirmEndTime);
+        console.log('단식 방법 : ' + timerMethod);
+        console.log('단식 방법 초 : ' + totalSeconds);
+        console.log('단식 방법 초 : ' + timerMethod2);
+        console.log('남은 시간 : ' + remainingTime);
+        console.log('사용 시간 : ' + elapsedTime);
     return (
         <TimerScrollView>
             <LinearGradient colors={['#f7d7be','#e7a370']}>
