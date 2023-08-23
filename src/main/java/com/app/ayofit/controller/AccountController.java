@@ -1,14 +1,13 @@
 package com.app.ayofit.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.app.ayofit.model.AccountDTO;
 import com.app.ayofit.model.GoalDTO;
@@ -36,11 +35,37 @@ public class AccountController {
 		aDAO.regAccountWeight(userId,aDTO);
 	}	
 	
-	@PostMapping("/uploadtest")
-	public void regimgtest(@RequestPart("image") MultipartFile file) {
-		aDAO.regimg(file);
-	}	
+//	@PostMapping("/uploadtest")
+//	public void regimgtest(@RequestPart("image") MultipartFile file) {
+//		aDAO.regimg(file);
+//	}	
 	
+	@GetMapping("/{userId}/goal")
+	public GoalDTO getAccountGoals(@PathVariable String userId) {
+		System.out.println(userId);
+		return aDAO.getAccountGoals(userId);
+	}
 	
+	@GetMapping("/{userId}")
+	public AccountDTO getAccountInfos(@PathVariable String userId) {
+		return aDAO.getAccountInfos(userId);
+	}
+	
+	@GetMapping("/{userId}/weight")
+	public double getAccountTarWeight(@PathVariable String userId) {
+		return aDAO.getAccountTarWeight(userId);
+	}
 
+	@PutMapping("/{userId}")
+	public boolean updateAccountInfos(@PathVariable String userId,  @RequestBody AccountDTO aDTO) {
+		return aDAO.updateAccountInfos(userId,aDTO);
+	}
+	
+	@PutMapping("/{userId}/goal")
+	public boolean updateAccountGoal(@PathVariable String userId, @RequestBody GoalDTO gDTO) {
+		return	aDAO.updateAccountGoal(userId, gDTO);
+	}
+	
+	
+	
 }

@@ -20,7 +20,7 @@ export default Button;
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 4,
+    borderRadius: 16,
     padding: 8,
     backgroundColor: GlobalStyles.colors.primary500,
   },
@@ -29,8 +29,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 20,
     fontWeight: "700",
-  },
-  pressed: {
-    opacity: 0.5,
   },
 });

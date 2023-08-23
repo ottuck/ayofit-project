@@ -17,38 +17,53 @@ import axios from "axios";
 import Constants from "expo-constants";
 import { useEffect } from "react";
 
-function AccountInfo({ navigation }) {
+function AccUpdateInfo({ navigation }) {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
-  const registerAccountInfo = () => {
+  const getAccountInfos = () => {
     axios
-      .post(`${uri}/api/account/user1`, accountInfos)
+      .get(`${uri}/api/account/user1`)
+      .then((response) => {
+        console.log(response.data);
+        setAccountInfos(response.data);
+      })
+      .catch(() => {
+        Alert.alert("Error", "Failed.");
+      });
+  };
+
+  const getAccountTarWeight = () => {
+    axios
+      .get(`${uri}/api/account/user1/weight`)
+      .then((response) => {
+        console.log(response.data);
+        setAccountInfos({
+          ...accountInfos,
+          tarWeight: response.data,
+        });
+      })
+      .catch(() => {
+        Alert.alert("Error", "Failed.");
+      });
+  };
+
+  const updateAccInfos = () => {
+    axios
+      .put(`${uri}/api/account/user1`, accountInfos)
       .then((response) => {
         console.log("User info submitted successfully:", response.data);
-        navigation.navigate("AccountNutri");
+        navigation.navigate("AccUpdateNutri");
       })
       .catch(() => {
-        Alert.alert("Error", "Failed to submit user info. Please try again.");
+        Alert.alert("Error", "Failed to update user info. Please try again.");
       });
   };
 
-  const registerAccountcurWeight = () => {
-    axios
-      .post(`${uri}/api/account/user1/weight`, accountInfos)
-      .then((response) => {
-        console.log("User weight submitted successfully:", response.data);
-      })
-      .catch(() => {
-        Alert.alert("Error", "Failed to submit user weight. Please try again.");
-      });
-  };
-
-  // useEffect(() => {
-  //   console.log(accountInfos.age);
-  //   getAccountInfos();
-  //   getAccountTarWeight();
-  // }, []);
+  useEffect(() => {
+    getAccountInfos();
+    getAccountTarWeight();
+  }, []);
 
   const { accountInfos, setAccountInfos } = useAccountsContext();
 
@@ -179,7 +194,7 @@ function AccountInfo({ navigation }) {
                     keyboardType: "decimal-pad",
                     autoCorrect: false,
                     onChangeText: infoChangedHandler.bind(this, "age"),
-                    value: accountInfos.age,
+                    value: accountInfos.age.toString(),
                   }}
                 />
               </View>
@@ -193,7 +208,7 @@ function AccountInfo({ navigation }) {
                     autoCorrect: false,
                     placeholder: "cm",
                     onChangeText: infoChangedHandler.bind(this, "height"),
-                    value: accountInfos.height,
+                    value: accountInfos.height.toString(),
                   }}
                 />
               </View>
@@ -210,7 +225,7 @@ function AccountInfo({ navigation }) {
                     autoCorrect: false,
                     placeholder: "kg",
                     onChangeText: infoChangedHandler.bind(this, "curWeight"),
-                    value: accountInfos.curWeight,
+                    value: accountInfos.curWeight.toString(),
                   }}
                 />
               </View>
@@ -223,7 +238,7 @@ function AccountInfo({ navigation }) {
                     autoCorrect: false,
                     placeholder: "kg",
                     onChangeText: infoChangedHandler.bind(this, "tarWeight"),
-                    value: accountInfos.tarWeight,
+                    value: accountInfos.tarWeight.toString(),
                   }}
                 />
               </View>
@@ -273,8 +288,7 @@ function AccountInfo({ navigation }) {
                   );
                 } else {
                   calculateGoals();
-                  registerAccountcurWeight();
-                  registerAccountInfo();
+                  updateAccInfos();
                 }
               }}
             >
@@ -287,7 +301,7 @@ function AccountInfo({ navigation }) {
   );
 }
 
-export default AccountInfo;
+export default AccUpdateInfo;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: GlobalStyles.colors.primary50 },
