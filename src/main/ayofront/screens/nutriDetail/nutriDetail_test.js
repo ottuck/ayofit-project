@@ -90,13 +90,21 @@ function NutriDetailScreen() {
           </View>
           <View>
             <Image
-              source={require("../../assets/femaleUser.png")}
+              source={require("../../assets/femaleAvatar.png")}
               style={{
                 height: 56,
                 width: 56,
                 right: -20,
               }}
             />
+            {/* <Image
+              source={require("../../assets/femaleUser.png")}
+              style={{
+                height: 56,
+                width: 56,
+                right: -20,
+              }}
+            /> */}
           </View>
         </HomeUserContainer>
         <StepProgressContainer>

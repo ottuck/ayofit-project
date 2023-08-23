@@ -2,9 +2,8 @@ import styled from "styled-components/native";
 import * as Progress from "react-native-progress";
 
 export const HomeSafeAreaView = styled.SafeAreaView`
-  height: 1020px;
+  height: 1250px;
   background-color: #ffe9d8;
-  padding-top: 28px;
 `;
 
 export const HomeUserContainer = styled.View`
@@ -39,7 +38,7 @@ export const StepProgressContainer = styled.View`
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-top: 16px;
+  margin-top: 6px;
 `;
 
 export const StepProgressBar = styled(Progress.Bar).attrs({
@@ -185,7 +184,7 @@ export const FaintLine = styled.View`
 export const MyRecordsTodaysWeightContainer = styled.View`
   background-color: rgba(255, 255, 255, 0.5);
   width: 100%;
-  height: 286px;
+  height: 300px;
   margin-vertical: 48px;
   border-radius: 20px;
 `;
@@ -204,6 +203,13 @@ export const TodaysWeightText = styled.Text`
   color: #000000;
   font-size: 18.5px;
   font-weight: 500;
+`;
+
+export const WeightChartText = styled.Text`
+  color: #000000;
+  font-size: 17.8px;
+  font-weight: 500;
+  margin-left: 21.2px;
 `;
 
 export const TodaysWeightKg = styled.Text`
@@ -271,7 +277,7 @@ export const DetailsNutritionInfo = styled.View`
 export const DetailsCalConsumptionText = styled.Text`
   color: #000000;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 18.2px;
 `;
 
 export const DetailsCalConsumptionKcal = styled.Text`
@@ -348,8 +354,9 @@ export const DetailsProgressBarBottomContainer = styled.View`
 `;
 
 export const DetailsActivityCalorieText = styled.Text`
+  font-size: 15.2px;
   margin-vertical: 4px;
-  color: rgba(0, 0, 0, 0.7);
+  color: rgba(0, 0, 0, 0.72);
 `;
 
 export const DetailsResetButtonContainer = styled.View`
@@ -390,24 +397,70 @@ export const DetailsCircleRow = styled.View`
   margin-left: -10px;
 `;
 
+export const RecordsWeightContainer = styled.View`
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 100%;
+  height: 346px;
+  margin-vertical: 30px;
+  border-radius: 20px;
+`;
+
 export const RecordsWeightButtonContainer = styled.View`
   align-items: center;
   justify-content: center;
-  margin-top: 16px;
+  margin-top: 12px;
+`;
+
+export const RecordsMyWeightImgContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 220px;
+  margin-vertical: 22px;
+`;
+
+export const RecordsMyWeightText = styled.Text`
+  font-size: 22px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.8);
+  text-align: center;
+`;
+
+export const RecordsKgText = styled.Text`
+  font-size: 28px;
+  font-weight: 800;
+  color: #e46c0a;
+  text-align: center;
+  margin-vertical: 3px;
+`;
+
+export const RecordsGoalWeightContainer = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: -6px;
+`;
+
+export const RecordsGoalWeightText = styled.Text`
+  font-size: 20px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.8);
 `;
 
 export const RecordsWeightButton = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
-  width: 200px;
-  height: 48px;
+  width: 250px;
+  height: 50px;
   background-color: #e46c0a;
   border-radius: 22px;
-  margin-top: 22px;
+  margin-top: 3px;
 `;
 
 export const RecordsWeightButtonText = styled.Text`
-  font-size: 18px;
+  font-size: 21px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.85);
 `;
