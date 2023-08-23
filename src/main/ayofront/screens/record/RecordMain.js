@@ -7,7 +7,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 
 const RecordMain = ({ navigation }) => {
-  //모달 관련 
+  //Modal
   const [modalVisible, setModalVisible] = useState(false);
   const openModal = () => {
     setModalVisible(true);
@@ -47,6 +47,7 @@ const RecordMain = ({ navigation }) => {
               <TouchableOpacity>
                 <AntDesign name="closecircle" style={styles.photoDeleteButton} />
               </TouchableOpacity>
+              {/* 사진 입력 부분 작업중 */}
               <TouchableOpacity onPress={() => { navigation.navigate("ImagePickerExample") }}>
                 <Feather name="plus-circle" style={styles.plusIcon} />
               </TouchableOpacity>
