@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ImageBackground, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput, FlatList } from 'react-native';
 import React, { useState } from 'react';
 import { BlurView } from 'expo-blur';
 import { Feather } from '@expo/vector-icons';
@@ -27,16 +27,16 @@ function RecordScreen({ navigation }) {
       .get(`${uri}/api/food/search/${query}`)
       .then((response) => {
         response.data.forEach((food) => {
-          console.log(`Name: ${food.nFoodName}`);
-          console.log(`Maker: ${food.nMakerName}`);
-          console.log(`Size: ${food.nSize}`);
-          console.log(`Carbohydrate: ${food.nCarbohydrate}`);
-          console.log(`Protein: ${food.nProtein}`);
-          console.log(`Fat: ${food.nFat}`);
-          console.log(`Calorie: ${food.nKcal}`);
+          // console.log(`Name: ${food.nFoodName}`);
+          // console.log(`Maker: ${food.nMakerName}`);
+          // console.log(`Size: ${food.nSize}`);
+          // console.log(`Carbohydrate: ${food.nCarbohydrate}`);
+          // console.log(`Protein: ${food.nProtein}`);
+          // console.log(`Fat: ${food.nFat}`);
+          // console.log(`Calorie: ${food.nKcal}`);
         });
         setSearchResult(response.data);
-        // searchSubmit(searchResult); //되나?
+        searchSubmit(searchResult); //수정 필요
       })
       .catch((error) => console.log(error));
   };
@@ -121,15 +121,16 @@ function RecordScreen({ navigation }) {
                     placeholder="Search your meal"
                     value={searchQuery}
                     onChangeText={(text) => setSearchQuery(text)}
-                    onSubmitEditing={searchFood}  
+                    onSubmitEditing={searchFood}
                   />
                   <TouchableOpacity>
                     <AntDesign name="closecircleo" style={styles.clearButton} />
                   </TouchableOpacity>
                 </View>
                 <ScrollView>
+                  <Text>ㅎㅇ</Text>
                   {searchResult.map((food, index) => (
-                    <Text key={index}>{food.n_food_name}</Text> // 검색한 음식 나열 
+                    <Text key={index}>{food.n_food_name}</Text>
                   ))}
                 </ScrollView>
               </View>

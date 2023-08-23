@@ -47,7 +47,7 @@ const RecordMain = ({ navigation }) => {
               <TouchableOpacity>
                 <AntDesign name="closecircle" style={styles.photoDeleteButton} />
               </TouchableOpacity>
-              {/* 사진 입력 부분 작업중 */}
+              {/* imagePiker 사진 입력 부분 작업중 */}
               <TouchableOpacity onPress={() => { navigation.navigate("ImagePickerExample") }}>
                 <Feather name="plus-circle" style={styles.plusIcon} />
               </TouchableOpacity>
