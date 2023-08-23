@@ -417,7 +417,6 @@ function MyTimer({ navigation: {navigate} }) {
             ],
         );
     };
-    console.log('1:' + elapsedTime)
     const totalSeconds = timerTime.number * 3600;
     return (
         <TimerScrollView>
