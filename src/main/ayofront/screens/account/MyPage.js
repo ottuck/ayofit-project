@@ -42,6 +42,10 @@ function MyPage({ navigation }) {
     navigation.navigate("AccUpdateInfo");
   };
 
+  const goToSettings = () => {
+    navigation.navigate("Settings");
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -51,7 +55,9 @@ function MyPage({ navigation }) {
         />
       </View>
       <View style={styles.settings}>
-        <IconButton icon="player-settings" size={30} color="white" />
+        <Pressable onPress={goToSettings}>
+          <IconButton icon="player-settings" size={30} color="white" />
+        </Pressable>
       </View>
       <View style={styles.userIdContainer}>
         <Text style={styles.userId}>Ayo</Text>
