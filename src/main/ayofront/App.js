@@ -1,11 +1,6 @@
-import {
-  StyleSheet,
-  Image,
-  Dimensions,
-  SafeAreaView,
-  StatusBar,
-} from "react-native";
+import { StyleSheet, Image, Dimensions, StatusBar } from "react-native";
 import "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -70,6 +65,7 @@ function MainTabsScreen() {
 
 export default function App() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
+
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [completedOnboarding, setCompletedOnboarding] = useState(false);
@@ -98,7 +94,8 @@ export default function App() {
           />
           <NavigationContainer style={styles.navigationContainer}>
             <Stack.Navigator>
-              {/* <Stack.Screen
+              {/* 인증해야되서 주석 처리 해둠
+              <Stack.Screen
                 name="AccountInfo"
                 component={AccountInfo}
                 options={{ headerShown: false }}

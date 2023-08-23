@@ -8,7 +8,10 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  Notification,
+  AccelerometerData,
 } from "react-native";
+
 import { Accelerometer } from "expo-sensors";
 
 import { GlobalStyles } from "../../components/UI/styles";
@@ -19,12 +22,37 @@ import DistanceCaloriesBox from "../../components/pedometer/DistanceCaloriesBox"
 import GoalInput from "../../components/pedometer/GoalInput";
 import axios from "axios";
 import Constants from "expo-constants";
+import * as TaskManager from "expo-task-manager";
 
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+const PEDOMETER_TASK_NAME = "accelerometerTask";
+TaskManager.defineTask(PEDOMETER_TASK_NAME, ({ data, error }) => {
+  if (error) {
+    console.error("Background task error:", error);
+    return;
+  }
+  console.log(data);
+  if (data) {
+    console.log(data + ">>>>>>>>>>>>>>>>>>");
+    // 여기서 센서 데이터를 처리하거나 업데이트합니다.
+    // 백그라운드 작업이 지속적으로 실행됩니다.
+    const accelerationMagnitude = Math.sqrt(
+      data.accelerometerData.x ** 2 +
+        data.accelerometerData.y ** 2 +
+        data.accelerometerData.z ** 2
+    );
+
+    if (accelerationMagnitude > 1.2) {
+      console.log("background");
+    }
+  }
+});
 
 function PedometerScreen() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  console.log(uri);
 
   const [steps, setSteps] = useState(0);
   const [isWalking, setIsWalking] = useState(false);
@@ -43,99 +71,76 @@ function PedometerScreen() {
     false,
   ]);
 
-  const [weeklyAchievements, setWeeklyAchievements] = useState([]);
+  // 컴포넌트가 마운트될 때 TaskManager에 백그라운드 작업 등록
+  useEffect(() => {
+    const startBackgroundTask = async () => {
+      try {
+        await TaskManager.executeTask(PEDOMETER_TASK_NAME);
+        console.log("Background task started");
+      } catch (error) {
+        console.error("Error starting background task:", error);
+      }
+    };
+  }, []);
 
   useEffect(() => {
-    // API 호출을 통해 주간 달성 기록 가져오기
+    const userId = "user4"; // Set the user ID here
+    const currentDate = new Date();
+
+    const formattedDate = `${currentDate.getFullYear()}-${(
+      currentDate.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${currentDate.getDate().toString().padStart(2, "0")}`;
+
     axios
-      .get(`${uri}/api/pedometer/weeklyachievements`)
+      .get(`${uri}/api/pedometer/weekly-achievement`, {
+        params: {
+          userId: userId,
+          date: formattedDate,
+        },
+      })
       .then((response) => {
-        setWeeklyAchievements(response.data);
+        const weeklyAchievement = response.data;
+        console.log(response.data);
+        const updatedDaysAchieved = daysOfWeek.map((day, index) => {
+          const dailyData = weeklyAchievement.find((item) => {
+            const pDate = new Date(item.pDate);
+            const pDayOfWeek = pDate.getDay(); // 0 (일요일) ~ 6 (토요일)
+
+            // daysOfWeek 배열의 첫 번째 값이 월요일이므로, index 값에 1을 더하여 비교합니다.
+            return pDayOfWeek === (index + 1) % 7;
+          });
+
+          if (dailyData) {
+            return dailyData.pStepCnt >= dailyData.pStepGoal;
+          } else {
+            return false;
+          }
+        });
+
+        setDaysAchieved(updatedDaysAchieved);
       })
       .catch((error) => {
-        console.error("Error fetching weekly achievements:", error);
+        console.error("Failed to fetch weekly achievement data:", error);
       });
   }, []);
 
-  const updateAchievements = (dailySteps, dailyGoal) => {
-    const newAchievements = daysOfWeek.map((_, index) => {
-      return calculateAchievements(dailySteps[index], dailyGoal);
-    });
-    setDaysAchieved(newAchievements);
-  };
+  // 빈 배열을 전달하여 컴포넌트 마운트 시에만 실행되도록 함
 
-  // 서버에 매일 자정에 달성 정보를 보내는 함수
-  const sendDailyAchievement = async () => {
-    try {
-      // 당일 자정의 시간을 계산
-      const now = new Date();
-      const timeUntilMidnight =
-        new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate() + 1,
-          0,
-          0,
-          0
-        ) - now;
+  // const fetchAllPedometerData = () => {
+  //   axios
+  //     .get(`${uri}/api/pedometer/test`)
+  //     .then((response) => {
+  //       console.log(uri);
+  //       console.log(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching pedometer data:", error);
+  //     });
+  // };
 
-      // 타이머 설정 (매일 자정에 실행)
-      setTimeout(() => {
-        // 일일 달성 정보를 서버에 전송하는 코드 (API 호출 등)
-        axios
-          .post(`${uri}/api/pedometer/dailyrecord`, {
-            day: daysOfWeek[new Date().getDay()],
-            isAchieved: true,
-            dailyGoal: newGoal,
-            dailySteps: steps,
-          })
-          .then((response) => {
-            // 전송 성공 시 처리
-          })
-          .catch((error) => {
-            console.log("Error sending daily achievement:", error);
-          });
-      }, timeUntilMidnight);
-    } catch (error) {
-      console.error("Error sending daily achievement:", error);
-    }
-  };
-
-  useEffect(() => {
-    // 컴포넌트가 마운트될 때, 매일 자정에 달성 정보를 보내는 함수 호출
-    sendDailyAchievement();
-
-    // 다음 날 자정까지의 시간 계산
-    const now = new Date();
-    const timeUntilMidnight =
-      new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0) -
-      now;
-
-    // 다음 날 자정에 다시 함수 호출
-    const timer = setInterval(() => {
-      sendDailyAchievement();
-      updateAchievements(steps, goal);
-    }, timeUntilMidnight);
-
-    // 컴포넌트 언마운트 시 타이머 클리어
-    return () => {
-      clearInterval(timer);
-    };
-  }, []); // 빈 배열을 전달하여 컴포넌트 마운트 시에만 실행되도록 함
-
-  const fetchAllPedometerData = () => {
-    axios
-      .get(`${uri}/api/pedometer/test`)
-      .then((response) => {
-        console.log(uri);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching pedometer data:", error);
-      });
-  };
-
-  fetchAllPedometerData();
+  // fetchAllPedometerData();
 
   useEffect(() => {
     const accelerometerSubscription = Accelerometer.addListener(
@@ -145,7 +150,6 @@ function PedometerScreen() {
             accelerometerData.y ** 2 +
             accelerometerData.z ** 2
         );
-
         if (accelerationMagnitude > 1.2) {
           setIsWalking(true);
         } else if (accelerationMagnitude < 0.8) {
@@ -225,9 +229,7 @@ function PedometerScreen() {
                 <PedometerDailyCircles
                   key={index}
                   day={day}
-                  isAchieved={daysAchieved[index]}
-                  daysOfWeek={daysOfWeek}
-                  weeklyAchievements={weeklyAchievements}
+                  isAchieved={daysAchieved[index]} // 여기서 daysAchieved 배열의 값 사용
                 />
               ))}
             </View>
@@ -284,8 +286,8 @@ const styles = StyleSheet.create({
   },
   bottomTextContainer: {
     flexDirection: "row",
-    borderWidth: 2,
-    borderColor: "tomato",
+    // borderWidth: 2,
+    // borderColor: "tomato",
   },
 });
 
