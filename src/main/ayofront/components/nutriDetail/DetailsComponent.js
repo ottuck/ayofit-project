@@ -26,6 +26,25 @@ import {
   DateButtonContainer,
   DateButton,
   DateButtonText,
+  DetailsNutritionInfo,
+  DetailsCalConsumptionText,
+  DetailsCalConsumptionKcal,
+  DetailsFaintLine,
+  DetailsBarAndValueContainer,
+  DetailsProgressBarContainer,
+  DetailsProgressBarPer,
+  DetailsNutrionImgContainer,
+  DetailsNutritionGramContainer,
+  DetailsGramContainer,
+  DetailsGramText,
+  DetailsGramValue,
+  DetailsProgressBarBottomContainer,
+  DetailsActivityCalorieText,
+  DetailsResetButtonContainer,
+  DetailsResetGoalButton,
+  DetailsResetButtonText,
+  DetailsCircleContainer,
+  DetailsCircleRow,
 } from "../../components/nutriDetail/StyledComponents";
 import DateCalendar from "./DateCalendar";
 
@@ -63,6 +82,9 @@ const DetailsComponent = () => {
   const [carbPercentage, setCarbPercentage] = useState(0);
   const [proteinPercentage, setProteinPercentage] = useState(0);
   const [fatPercentage, setFatPercentage] = useState(0);
+
+  const [isWeeklyConsumption, setIsWeeklyConsumption] = useState(false);
+  const [isMonthlyConsumption, setIsMonthlyConsumption] = useState(false);
 
   let todayInTokyo = new Date();
   todayInTokyo.setHours(todayInTokyo.getHours() + 9); // 도쿄 시간대에 맞게 시간을 조정.
@@ -198,6 +220,7 @@ const DetailsComponent = () => {
   let computedFatPercentage =
     (selectedDateMeals[0]?.totalFat / totalNutrients) * 100 || 0;
   totalCarbohydrate;
+
   // 각각의 원에 대한 애니메이션 값 상태
   const [carbAnimationValue, setCarbAnimationValue] = useState(
     new Animated.Value(65)
@@ -307,6 +330,18 @@ const DetailsComponent = () => {
     setDateButton(index);
     const modes = ["daily", "weekly", "monthly"];
     fetchData(modes[index]);
+
+    // 주간 버튼과 월간 버튼을 눌렀을 때 Text 변경
+    if (index === 1) {
+      setIsWeeklyConsumption(true);
+      setIsMonthlyConsumption(false);
+    } else if (index === 2) {
+      setIsWeeklyConsumption(false);
+      setIsMonthlyConsumption(true);
+    } else {
+      setIsWeeklyConsumption(false);
+      setIsMonthlyConsumption(false);
+    }
   };
 
   const handleDateChange = (newDate) => {
@@ -391,16 +426,22 @@ const DetailsComponent = () => {
         />
       </DateContainer>
 
-      <View style={styles.dateNutritionInfo}>
-        <Text style={{ color: "#000000", fontWeight: "500", fontSize: 18 }}>
-          Daily Calorie Consumption :{" "}
-          <Text style={{ color: "#FB9129", fontWeight: "600", fontSize: 19 }}>
+      <DetailsNutritionInfo>
+        <DetailsCalConsumptionText>
+          {isWeeklyConsumption
+            ? "Weekly"
+            : isMonthlyConsumption
+            ? "Monthly"
+            : "Daily"}{" "}
+          Calorie Consumption :{" "}
+          <DetailsCalConsumptionKcal>
             {Math.round(totalCalories)} kcal
-          </Text>
-        </Text>
-        <View style={styles.faintLine} />
-        <View style={styles.mainNutritionDetailsContainer}>
-          <View style={styles.progressBarContainer}>
+          </DetailsCalConsumptionKcal>
+        </DetailsCalConsumptionText>
+
+        <DetailsFaintLine />
+        <DetailsBarAndValueContainer>
+          <DetailsProgressBarContainer>
             <Progress.Bar
               progress={carbPercentage / 100}
               width={172}
@@ -409,9 +450,9 @@ const DetailsComponent = () => {
               backgroundColor={"rgba(0, 0, 0, 0.2)"}
               borderWidth={0}
             />
-            <Text style={styles.progressBarPer}>
+            <DetailsProgressBarPer>
               {carbPercentage.toFixed(2)}% / 100
-            </Text>
+            </DetailsProgressBarPer>
             <Progress.Bar
               progress={proteinPercentage / 100}
               width={172}
@@ -420,9 +461,9 @@ const DetailsComponent = () => {
               backgroundColor={"rgba(0, 0, 0, 0.2)"}
               borderWidth={0}
             />
-            <Text style={styles.progressBarPer}>
+            <DetailsProgressBarPer>
               {proteinPercentage.toFixed(2)}% / 100
-            </Text>
+            </DetailsProgressBarPer>
             <Progress.Bar
               progress={fatPercentage / 100}
               width={172}
@@ -431,12 +472,12 @@ const DetailsComponent = () => {
               backgroundColor={"rgba(0, 0, 0, 0.2)"}
               borderWidth={0}
             />
-            <Text style={styles.progressBarPer}>
+            <DetailsProgressBarPer>
               {fatPercentage.toFixed(2)}% / 100
-            </Text>
-          </View>
-          <View style={styles.progressBarValueContainer}>
-            <View style={styles.rectangleContainer}>
+            </DetailsProgressBarPer>
+          </DetailsProgressBarContainer>
+          <DetailsNutritionGramContainer>
+            <DetailsNutrionImgContainer>
               <Image
                 source={require("../../assets/rectangleCarb.png")}
                 style={{
@@ -458,19 +499,19 @@ const DetailsComponent = () => {
                   width: 18,
                 }}
               />
-            </View>
-            <View style={styles.nutritionValueContainer}>
-              <Text style={styles.nutritionValueText}>Carb</Text>
-              <Text style={styles.nutritionValue}>{totalCarbohydrate} g</Text>
-              <Text style={styles.nutritionValueText}>Protein</Text>
-              <Text style={styles.nutritionValue}>{totalProtein} g</Text>
-              <Text style={styles.nutritionValueText}>Fat</Text>
-              <Text style={styles.nutritionValue}>{totalFat} g</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.progressBarBottomContainer}>
-          <View style={styles.calorieFireContainer}>
+            </DetailsNutrionImgContainer>
+            <DetailsGramContainer>
+              <DetailsGramText>Carb</DetailsGramText>
+              <DetailsGramValue>{totalCarbohydrate} g</DetailsGramValue>
+              <DetailsGramText>Protein</DetailsGramText>
+              <DetailsGramValue>{totalProtein} g</DetailsGramValue>
+              <DetailsGramText>Fat</DetailsGramText>
+              <DetailsGramValue>{totalFat} g</DetailsGramValue>
+            </DetailsGramContainer>
+          </DetailsNutritionGramContainer>
+        </DetailsBarAndValueContainer>
+        <DetailsProgressBarBottomContainer>
+          <View>
             <Image
               source={require("../../assets/calorieFire.png")}
               style={{
@@ -480,24 +521,22 @@ const DetailsComponent = () => {
               }}
             />
           </View>
-          <View style={styles.activityCalorieContainer}>
-            <Text style={styles.activityCalorieText}>
+          <View>
+            <DetailsActivityCalorieText>
               Daily Activity Level : Active
-            </Text>
-            <Text style={styles.activityCalorieText}>
+            </DetailsActivityCalorieText>
+            <DetailsActivityCalorieText>
               Calorie Needs Per Day : 2,400 kcal
-            </Text>
+            </DetailsActivityCalorieText>
           </View>
-        </View>
-      </View>
-      <View style={styles.resetNutritionContainer}>
-        <TouchableOpacity style={styles.resetGoalButton}>
-          <Text style={{ color: "#FFFFFF", fontSize: 16, fontWeight: "600" }}>
-            Reset your goal
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.diamondContainer}>
+        </DetailsProgressBarBottomContainer>
+      </DetailsNutritionInfo>
+      <DetailsResetButtonContainer>
+        <DetailsResetGoalButton>
+          <DetailsResetButtonText>Reset your goal</DetailsResetButtonText>
+        </DetailsResetGoalButton>
+      </DetailsResetButtonContainer>
+      <DetailsCircleContainer>
         {/* 첫 번째 원 */}
         <Animated.View
           style={[
@@ -519,7 +558,7 @@ const DetailsComponent = () => {
         </Animated.View>
 
         {/* 두 번째 원 */}
-        <View style={styles.circleRow}>
+        <DetailsCircleRow>
           <Animated.View
             style={[
               styles.circle,
@@ -557,19 +596,8 @@ const DetailsComponent = () => {
               }}
             >{`${proteinPercentage.toFixed(2)}%`}</Text>
           </Animated.View>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            width: "100%",
-            justifyContent: "space-around",
-          }}
-        >
-          <Text>Carb</Text>
-          <Text>Protein</Text>
-          <Text>Fat</Text>
-        </View>
-      </View>
+        </DetailsCircleRow>
+      </DetailsCircleContainer>
     </View>
   );
 };
@@ -577,21 +605,6 @@ const DetailsComponent = () => {
 export default DetailsComponent;
 
 const styles = StyleSheet.create({
-  diamondContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.45)",
-    width: "92%",
-    height: 180,
-    borderRadius: 16,
-    marginTop: 20,
-    marginHorizontal: 16,
-  },
-  circleRow: {
-    flexDirection: "row",
-    marginTop: -8,
-    marginLeft: -10,
-  },
   circle: {
     width: 60,
     height: 60,
@@ -599,90 +612,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 1,
-  },
-  dateNutritionInfo: {
-    width: "92%",
-    height: "42%",
-    backgroundColor: "rgba(255, 255, 255, 0.45)",
-    borderRadius: 16,
-    marginTop: 16,
-    marginHorizontal: 16,
-    paddingTop: 10,
-    alignItems: "center",
-    // justifyContent: "center",
-  },
-  faintLine: {
-    height: 1.2,
-    width: "92%",
-    backgroundColor: "rgba(0, 0, 0, 0.25)",
-    marginVertical: 12.6,
-  },
-  mainNutritionDetailsContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.65)",
-    width: "92%",
-    height: "56%",
-    borderRadius: 16,
-  },
-  progressBarContainer: {
-    height: "100%",
-    justifyContent: "space-evenly",
-    marginTop: 6,
-    marginLeft: 22,
-  },
-  progressBarPer: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "grey",
-  },
-  rectangleContainer: {
-    justifyContent: "space-around",
-    height: "100%",
-    marginTop: -1.6,
-    marginLeft: 22,
-  },
-  progressBarValueContainer: {
-    flexDirection: "row",
-  },
-  nutritionValueContainer: {
-    justifyContent: "space-evenly",
-    height: "100%",
-    marginTop: 3.2,
-    marginLeft: 18,
-  },
-  nutritionValueText: {
-    marginTop: 16,
-    fontSize: 17.6,
-    fontWeight: "600",
-  },
-  nutritionValue: {
-    fontSize: 16.2,
-    fontWeight: "600",
-    color: "rgba(0, 0, 0, 0.5)",
-  },
-  progressBarBottomContainer: {
-    flexDirection: "row",
-    width: "100%",
-    height: "28.6%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  activityCalorieText: {
-    marginVertical: 4,
-    color: "rgba(0, 0, 0, 0.7)",
-  },
-  resetNutritionContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 16,
-  },
-  resetGoalButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: 160,
-    height: 42,
-    backgroundColor: "#E46C0A",
-    borderRadius: 18,
   },
 });
