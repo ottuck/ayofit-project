@@ -8,30 +8,29 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.app.ayofit.model.FastDTO;
-import com.app.ayofit.service.FastDAO;
+import com.app.ayofit.model.FoodDTO;
+import com.app.ayofit.service.FoodDAO;
 
 
 @RestController
 @RequestMapping("api/food")
-public class FastController {
+public class FoodController {
 	
 	@Autowired
-	private FastDAO fastDAO;
+	private FoodDAO foodDAO;
 	
 	@GetMapping("")
-	public List<FastDTO> getAllFoodInfo() {
-	    	return fastDAO.getAllFoodInfo();
+	public List<FoodDTO> getAllFoodInfo() {
+	    	return foodDAO.getAllFoodInfo();
 	}
 	
 	@GetMapping("{n_no}")
-    public FastDTO getMethodName(@PathVariable("n_no") String n_no) {
-		
-			return fastDAO.getFoodInfoById(n_no);
+    public FoodDTO getMethodName(@PathVariable("n_no") String n_no) {
+			return foodDAO.getFoodInfoById(n_no);
     }
 	
 	 @GetMapping("/search/{n_food_name}")
-	    public List<FastDTO> searchFood(@PathVariable String n_food_name) {
-		 	return fastDAO.searchFoodByName(n_food_name);
+	    public List<FoodDTO> searchFood(@PathVariable String n_food_name) {
+		 	return foodDAO.searchFoodByName(n_food_name);
 	}
 }

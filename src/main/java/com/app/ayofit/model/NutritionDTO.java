@@ -1,16 +1,16 @@
 package com.app.ayofit.model;
 
-public class NutritionInfo {
+public class NutritionDTO {
 	
 	private double totalCarbohydrate;
     private double totalProtein;
     private double totalFat;
     
-    public NutritionInfo() {
+    public NutritionDTO() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public NutritionInfo(double totalCarbohydrate, double totalProtein, double totalFat) {
+	public NutritionDTO(double totalCarbohydrate, double totalProtein, double totalFat) {
 		super();
 		this.totalCarbohydrate = totalCarbohydrate;
 		this.totalProtein = totalProtein;
