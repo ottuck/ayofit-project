@@ -36,7 +36,7 @@ function RecordScreen({ navigation }) {
           // console.log(`Calorie: ${food.nKcal}`);
         });
         setSearchResult(response.data);
-        searchSubmit(searchResult); //수정 필요
+        searchSubmit(searchResult)
       })
       .catch((error) => console.log(error));
   };
@@ -50,13 +50,14 @@ function RecordScreen({ navigation }) {
     setModalVisible(false);
   };
 
-  //검색값과 함께 이동 (사용하게 해야함)
+  //검색어 제출
   const searchSubmit = () => {
     navigation.navigate("RecordMain");  //naviation.push 로 변경
     setSearchResult([]);
     setSearchQuery("");
     closeModal();
   };
+
 
   //toISOString은 "2023-08-20T14:30:00.000Z"와 같은 형식이라 "T" 나눠서 0번째 index의 날짜만 가져온다
   const today = new Date();
