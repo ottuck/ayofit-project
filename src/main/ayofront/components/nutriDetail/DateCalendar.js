@@ -4,7 +4,8 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 const DateCalendar = ({ mode, onDateChange, resetDate }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const today = new Date();
-  today.setDate(today.getDate()); // 도쿄,서울 날짜와 맞추기위해 + 1
+  today.setHours(today.getHours() + 9); // 도쿄,서울 날짜와 맞추기위해
+  today.setDate(today.getDate());
   today.setHours(0, 0, 0, 0);
 
   useEffect(() => {

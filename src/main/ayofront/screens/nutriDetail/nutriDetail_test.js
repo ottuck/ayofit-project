@@ -41,6 +41,42 @@ function NutriDetailScreen() {
 
   const [selectedHomeNavButton, setSelectedHomeNavButton] = useState(0);
 
+  const addDays = (date, days) => {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  };
+
+  const formatDate = (date) => {
+    const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    const dayOfWeek = daysOfWeek[date.getDay()];
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+
+    return `${dayOfWeek}, ${month} ${day}`;
+  };
+
+  // 유저에게 오늘 날짜 안내 예시
+  const today = new Date();
+  today.setHours(today.getHours() + 9);
+  const formattedToday = formatDate(today); // ex)) "Mon, August 21" 형식
+  console.log(formattedToday);
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <HomeSafeAreaView>
@@ -50,7 +86,7 @@ function NutriDetailScreen() {
             <HomeHelloText>
               Hello, <HomeAyoText> Ayo!</HomeAyoText>
             </HomeHelloText>
-            <HomeDateText>Friday, August 6</HomeDateText>
+            <HomeDateText>{formattedToday}</HomeDateText>
           </View>
           <View>
             <Image
