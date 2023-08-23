@@ -2,14 +2,7 @@ import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { GlobalStyles } from "../../components/UI/styles";
 
-const PedometerDailyCircles = ({
-  day,
-  isAchieved,
-  daysOfWeek,
-  weeklyAchievements,
-}) => {
-  const dayIndex = daysOfWeek.indexOf(day); // 일주일 중 해당 날짜의 인덱스
-  const isDayAchieved = weeklyAchievements[dayIndex]?.isAchieved || false;
+const PedometerDailyCircles = ({ day, isAchieved }) => {
   return (
     <View style={styles.dayContainer}>
       <Text style={styles.dayText}>{day}</Text>
@@ -20,8 +13,8 @@ const PedometerDailyCircles = ({
             style={styles.checkMark}
           />
         ) : (
-          // <Text style={styles.xMark}>✕</Text>
-          <Text style={styles.xMark}></Text>
+          <Text style={styles.xMark}>✕</Text>
+          // <Text style={styles.xMark}></Text>
         )}
       </View>
     </View>
