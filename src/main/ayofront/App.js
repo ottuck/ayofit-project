@@ -94,7 +94,8 @@ export default function App() {
           />
           <NavigationContainer style={styles.navigationContainer}>
             <Stack.Navigator>
-              {/* <Stack.Screen
+              {/* 인증해야되서 주석 처리 해둠
+              <Stack.Screen
                 name="AccountInfo"
                 component={AccountInfo}
                 options={{ headerShown: false }}

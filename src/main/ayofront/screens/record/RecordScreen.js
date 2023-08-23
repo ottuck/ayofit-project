@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ImageBackground, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput, FlatList } from 'react-native';
 import React, { useState } from 'react';
 import { BlurView } from 'expo-blur';
 import { Feather } from '@expo/vector-icons';
@@ -21,21 +21,22 @@ function RecordScreen({ navigation }) {
     const query = searchQuery.trim(); // 앞뒤 공백 제거
     console.log("Searching for:", query);
     console.log("URL:", `${uri}/api/food/search/${query}`);
+    console.log(query);
+
     axios
       .get(`${uri}/api/food/search/${query}`)
       .then((response) => {
-        console.log(response.data);
         response.data.forEach((food) => {
-          console.log(`Name: ${food.n_food_name}`);
-          console.log(`Maker: ${food.n_maker_name}`);
-          console.log(`Size: ${food.n_size}`);
-          console.log(`Carbohydrate: ${food.n_carbohydrate}`);
-          console.log(`Protein: ${food.n_protein}`);
-          console.log(`Fat: ${food.n_fat}`);
-          console.log(`Calorie: ${food.n_kcal}`);
+          // console.log(`Name: ${food.nFoodName}`);
+          // console.log(`Maker: ${food.nMakerName}`);
+          // console.log(`Size: ${food.nSize}`);
+          // console.log(`Carbohydrate: ${food.nCarbohydrate}`);
+          // console.log(`Protein: ${food.nProtein}`);
+          // console.log(`Fat: ${food.nFat}`);
+          // console.log(`Calorie: ${food.nKcal}`);
         });
         setSearchResult(response.data);
-        // searchSubmit(searchResult); //되나?
+        searchSubmit(searchResult); //수정 필요
       })
       .catch((error) => console.log(error));
   };
@@ -120,15 +121,16 @@ function RecordScreen({ navigation }) {
                     placeholder="Search your meal"
                     value={searchQuery}
                     onChangeText={(text) => setSearchQuery(text)}
-                    // onSubmitEditing={searchFood}  //검색어 제출
+                    onSubmitEditing={searchFood}
                   />
                   <TouchableOpacity>
                     <AntDesign name="closecircleo" style={styles.clearButton} />
                   </TouchableOpacity>
                 </View>
                 <ScrollView>
+                  <Text>ㅎㅇ</Text>
                   {searchResult.map((food, index) => (
-                    <Text key={index}>{food.n_food_name}</Text> // 검색한 음식 나열 
+                    <Text key={index}>{food.n_food_name}</Text>
                   ))}
                 </ScrollView>
               </View>
