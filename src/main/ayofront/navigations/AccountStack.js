@@ -1,7 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MyPage from "../screens/account/MyPage";
 import AccUpdateInfo from "../screens/account/AccUpdateInfo";
-import AccountNutri from "../screens/account/AccountNutri";
 import AccUpdateNutri from "../screens/account/AccUpdateNutri";
 import Settings from "../screens/account/Settings";
 
