@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Modal,
   Dimensions,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
 import DatePicker from "react-native-modern-datepicker";
@@ -17,6 +18,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
+import { usePhotoContext } from "../../store/image_context";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
@@ -35,6 +37,10 @@ const RecordMain = ({ navigation }) => {
   const [imgModalVisible, setImgModalVisible] = useState(false);
   const toggleImgModal = () => {
     setImgModalVisible(!imgModalVisible);
+  };
+  const { photoUri, setPhotoUri } = usePhotoContext();
+  const deletePhoto = () => {
+    setPhotoUri(null);
   };
 
   //DateTime Picker
@@ -66,17 +72,27 @@ const RecordMain = ({ navigation }) => {
           </TouchableOpacity>
 
           <View style={styles.cardContainer}>
+            {/* imagePiker 사진 입력 부분 작업중 */}
             <View style={styles.cardImageContainer}>
-              <TouchableOpacity>
-                <AntDesign
-                  name="closecircle"
-                  style={styles.photoDeleteButton}
+              {photoUri ? (
+                <TouchableOpacity onPress={deletePhoto} style={{ zIndex: 10 }}>
+                  <AntDesign
+                    name="closecircle"
+                    style={styles.photoDeleteButton}
+                  />
+                </TouchableOpacity>
+              ) : null}
+              {photoUri ? (
+                <Image
+                  source={{ uri: photoUri }}
+                  style={{ width: 280, height: 230, borderRadius: 10 }}
                 />
-              </TouchableOpacity>
-              {/* imagePiker 사진 입력 부분 작업중 */}
-              <TouchableOpacity onPress={toggleImgModal}>
-                <Feather name="plus-circle" style={styles.plusIcon} />
-              </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={toggleImgModal}>
+                  <Feather name="plus-circle" style={styles.plusIcon} />
+                </TouchableOpacity>
+              )}
+
               {/* imgModal창 작업중 */}
               <Modal
                 animationType="fade"
@@ -93,7 +109,7 @@ const RecordMain = ({ navigation }) => {
                       />
                     </TouchableOpacity>
                   </View>
-                  <CameraPicker>
+                  <CameraPicker onClose={toggleImgModal}>
                     <View
                       style={{
                         flexDirection: "row",
@@ -111,7 +127,7 @@ const RecordMain = ({ navigation }) => {
                       <Text>Take a photo</Text>
                     </View>
                   </CameraPicker>
-                  <ImagePicker>
+                  <ImagePicker onClose={toggleImgModal}>
                     <View
                       style={{
                         flexDirection: "row",
@@ -275,11 +291,11 @@ const styles = StyleSheet.create({
     color: "rgba(0, 0, 0, 0.10)",
   },
   photoDeleteButton: {
-    fontSize: 25,
-    color: "rgba(0, 0, 0, 0.3)",
+    fontSize: 30,
+    color: "rgba(0, 0, 0, 0.5)",
     position: "absolute",
-    left: 130,
-    bottom: 80,
+    left: 120,
+    bottom: -15,
   },
   modalContainer: {
     marginTop: SCREEN_HEIGHT * 0.2,

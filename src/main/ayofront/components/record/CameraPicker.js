@@ -4,8 +4,10 @@ import {
   useCameraPermissions,
 } from "expo-image-picker";
 import { Alert, TouchableOpacity } from "react-native";
+import { usePhotoContext } from "../../store/image_context";
 
-function CameraPicker({ children }) {
+function CameraPicker({ children, onClose }) {
+  const { setPhotoUri } = usePhotoContext();
   const [cameraPermissionInformation, requestPermission] =
     useCameraPermissions();
 
@@ -40,7 +42,12 @@ function CameraPicker({ children }) {
       quality: 1,
     });
 
-    // console.log(image.assets[0].uri);
+    if (!image.canceled) {
+      console.log(image.assets[0].uri);
+      setPhotoUri(image.assets[0].uri);
+    }
+
+    onClose();
   }
   return (
     <TouchableOpacity onPress={takeImageHandler}>{children}</TouchableOpacity>

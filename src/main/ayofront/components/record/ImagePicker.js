@@ -4,8 +4,10 @@ import {
   PermissionStatus,
 } from "expo-image-picker";
 import { TouchableOpacity } from "react-native";
+import { usePhotoContext } from "../../store/image_context";
 
-function ImagePicker({ children }) {
+function ImagePicker({ children, onClose }) {
+  const { setPhotoUri } = usePhotoContext();
   const [libraryPermissionInformation, requestLibraryPermission] =
     useMediaLibraryPermissions();
 
@@ -39,7 +41,12 @@ function ImagePicker({ children }) {
       quality: 0.5,
     });
 
-    // console.log(image.assets[0].uri);
+    if (!image.canceled) {
+      console.log(image.assets[0].uri);
+      setPhotoUri(image.assets[0].uri);
+    }
+
+    onClose();
   }
 
   return (
