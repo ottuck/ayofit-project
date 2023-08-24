@@ -15,7 +15,7 @@ import com.app.ayofit.service.FastDAO;
 
 
 @RestController
-@RequestMapping("api/food")
+@RequestMapping("api/fast")
 public class FastController {
 	
 	@Autowired
@@ -23,14 +23,17 @@ public class FastController {
 	
     @PostMapping("")
     public void receiveDataFromApp(@RequestBody FastDTO dataFromApp) {
+    	System.out.println(dataFromApp);
         // dataFromApp 객체를 이용하여 받은 데이터 처리
-        String confirmStartTime = dataFromApp.getConfirmStartTime();
-        String confirmEndTime = dataFromApp.getConfirmEndTime();
-        String timerMethod = dataFromApp.getTimerMethod();
-        
-        dataFromApp.setConfirmEndTime(confirmEndTime);
-        dataFromApp.setConfirmStartTime(confirmStartTime);
-        dataFromApp.setTimerMethod(timerMethod);
+		/*
+		 * String confirmStartTime = dataFromApp.getConfirmStartTime(); String
+		 * confirmEndTime = dataFromApp.getConfirmEndTime(); String timerMethod =
+		 * dataFromApp.getTimerMethod();
+		 * 
+		 * dataFromApp.setConfirmEndTime(confirmEndTime);
+		 * dataFromApp.setConfirmStartTime(confirmStartTime);
+		 * dataFromApp.setTimerMethod(timerMethod);
+		 */
         
         // 이후 필요한 로직 수행 
         fastDAO.insertFastData(dataFromApp);
