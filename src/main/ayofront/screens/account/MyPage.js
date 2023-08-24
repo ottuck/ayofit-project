@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   settings: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    marginTop: "-45%",
+    marginTop: "-40%",
   },
   userIdContainer: {
     flexDirection: "row",
