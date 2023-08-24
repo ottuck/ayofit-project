@@ -1,51 +1,54 @@
 package com.app.ayofit.model;
 
+import java.util.Date;
+
 public class FastDTO {
 	
-    private String ConfirmStartTime;
-    private String ConfirmEndTime;
-    private String timerMethod;
+   private String ConfirmStartTime;
+   private String ConfirmEndTime;
+   private int TimerMethod;
+   
+   public FastDTO() {
+	// TODO Auto-generated constructor stub
+}
 
-    public FastDTO() {
-		// TODO Auto-generated constructor stub
-	}
+public FastDTO(String confirmStartTime, String confirmEndTime, int timerMethod) {
+	super();
+	ConfirmStartTime = confirmStartTime;
+	ConfirmEndTime = confirmEndTime;
+	TimerMethod = timerMethod;
+}
 
-	public FastDTO(String confirmStartTime, String confirmEndTime, String timerMethod) {
-		super();
-		ConfirmStartTime = confirmStartTime;
-		ConfirmEndTime = confirmEndTime;
-		this.timerMethod = timerMethod;
-	}
+public String getConfirmStartTime() {
+	return ConfirmStartTime;
+}
 
-	public String getConfirmStartTime() {
-		return ConfirmStartTime;
-	}
+public void setConfirmStartTime(String confirmStartTime) {
+	ConfirmStartTime = confirmStartTime;
+}
 
-	public void setConfirmStartTime(String confirmStartTime) {
-		ConfirmStartTime = confirmStartTime;
-	}
+public String getConfirmEndTime() {
+	return ConfirmEndTime;
+}
 
-	public String getConfirmEndTime() {
-		return ConfirmEndTime;
-	}
+public void setConfirmEndTime(String confirmEndTime) {
+	ConfirmEndTime = confirmEndTime;
+}
 
-	public void setConfirmEndTime(String confirmEndTime) {
-		ConfirmEndTime = confirmEndTime;
-	}
+public int getTimerMethod() {
+	return TimerMethod;
+}
 
-	public String getTimerMethod() {
-		return timerMethod;
-	}
+public void setTimerMethod(int timerMethod) {
+	TimerMethod = timerMethod;
+}
 
-	public void setTimerMethod(String timerMethod) {
-		this.timerMethod = timerMethod;
-	}
+@Override
+public String toString() {
+	return "FastDTO [ConfirmStartTime=" + ConfirmStartTime + ", ConfirmEndTime=" + ConfirmEndTime + ", TimerMethod="
+			+ TimerMethod + "]";
+}
 
-	@Override
-	public String toString() {
-		return "FastDTO [ConfirmStartTime=" + ConfirmStartTime + ", ConfirmEndTime=" + ConfirmEndTime + ", timerMethod="
-				+ timerMethod + "]";
-	}
-    
+
     
 }

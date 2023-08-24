@@ -1,5 +1,6 @@
 package com.app.ayofit.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +24,17 @@ public class FastController {
 	
     @PostMapping("")
     public void receiveDataFromApp(@RequestBody FastDTO dataFromApp) {
-    	System.out.println(dataFromApp);
-        // dataFromApp 객체를 이용하여 받은 데이터 처리
-		/*
-		 * String confirmStartTime = dataFromApp.getConfirmStartTime(); String
-		 * confirmEndTime = dataFromApp.getConfirmEndTime(); String timerMethod =
-		 * dataFromApp.getTimerMethod();
-		 * 
-		 * dataFromApp.setConfirmEndTime(confirmEndTime);
-		 * dataFromApp.setConfirmStartTime(confirmStartTime);
-		 * dataFromApp.setTimerMethod(timerMethod);
-		 */
+    		System.out.println(dataFromApp);
+          //dataFromApp 객체를 이용하여 받은 데이터 처리
+		
+		  String confirmStartTime = dataFromApp.getConfirmStartTime();
+		  String confirmEndTime = dataFromApp.getConfirmEndTime();
+		  int timerMethod = dataFromApp.getTimerMethod();
+		  
+		  dataFromApp.setConfirmEndTime(confirmEndTime);
+		  dataFromApp.setConfirmStartTime(confirmStartTime);
+		  dataFromApp.setTimerMethod(timerMethod);
+		 
         
         // 이후 필요한 로직 수행 
         fastDAO.insertFastData(dataFromApp);

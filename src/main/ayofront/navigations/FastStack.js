@@ -13,7 +13,7 @@ import {MethodContainer, MethodTitle, MethodCTouch, MethodCText, MethodCEndTouch
     ,TimerContainer,TimerTitle,TimerHomeBtn,TimerHomeBT,EndTimeText,MethodCTextS,ConfirmMessage,ConfirmMView,ConfirmStart,ConfrimSText,ConfirmEnd
     ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView,FirstMainPage,MainBtn,MainText,FastMainImage
     ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM,MethodLeftContent,MethodRightContent,
-    MethodCText2,MethodCTextS2,TimerScrollView,TimerStop
+    MethodCText2,MethodCTextS2,TimerScrollView,TimerStop, StartDate
 } from '../components/fast/FastingStyled';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from "axios";
@@ -296,6 +296,8 @@ const FastConfirm = ({ navigation }) => {
                 },
                 ConfirmStartTime : ConfirmStartTime,
                 ConfirmEndTime : ConfirmEndTime,
+                StartDate1 : date,
+                EndDate1 : date2,
             });
     };
 const route = useRoute();
@@ -305,8 +307,7 @@ const ConfirmTime2 = route.params.selectedTime;
 const totalDateTime = route.params.totalDateTime;
 const currnetDateTime = route.params.currnetDateTime;
 
-// console.log('시작시간 시간 : ' + totalSTime)
-// console.log('끝나는 시간 :' + totalDateTime);
+//  console.log('끝나는 시간 :' + totalDateTime);
 
 
 const [currentFastDate,currentFastTime] =currnetDateTime.split(':');
@@ -410,6 +411,8 @@ function MyTimer({ navigation: {navigate} }) {
     const uri = `http://${debuggerHost.split(":").shift()}:8080/api/fast`;
 
     const route = useRoute();
+    const StartDate1 = route.params.StartDate1;
+    const EndDate1 = route.params.EndDate1;
     const ConfirmStartTime = route.params.ConfirmStartTime;
     const ConfirmEndTime = route.params.ConfirmEndTime;
     const timerTime = route.params?.seletedValue;
@@ -420,6 +423,22 @@ function MyTimer({ navigation: {navigate} }) {
     const [remainingTime, setRemainingTime] = useState();
 
     const [fastDateSend,setFastDateSend] = useState(false);
+
+    function formatOracleDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+    
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+    const parsedStartTime = new Date(StartDate1);
+    const parsedStartTime2 = new Date(EndDate1);
+    const formattedStartTime = formatOracleDate(parsedStartTime);
+    const formattedEndTime = formatOracleDate(parsedStartTime2);
+
 
     const handleStopTimer = () => {
         Alert.alert(
@@ -437,8 +456,8 @@ function MyTimer({ navigation: {navigate} }) {
                         setElapsedTime(totalSeconds - remainingTime); // 사용된 시간 계산 및 저장
 
                         const dataToSend = {
-                            ConfirmStartTime : ConfirmStartTime,
-                            ConfirmEndTime : ConfirmEndTime,
+                            confirmStartTime : formattedStartTime,
+                            confirmEndTime : formattedEndTime,
                             timerMethod : timerMethod,
                         };
 
@@ -456,63 +475,18 @@ function MyTimer({ navigation: {navigate} }) {
             );
         };
         const totalSeconds = timerTime.number * 3600;
-        console.log('시작 시간 :'+ConfirmStartTime);
-        console.log('종료 시간 :'+ConfirmEndTime);
-        console.log('단식 방법 : ' + timerMethod);
-        console.log('단식 방법 초 : ' + totalSeconds);
-        console.log('단식 방법 초 : ' + timerMethod2);
-        console.log('남은 시간 : ' + remainingTime);
-        console.log('사용 시간 : ' + elapsedTime);
 
-        
-        function formatToUTC(ConfirmStartTime) {
-            const months = [
-                "January", "February", "March", "April", "May", "June", 
-                "July", "August", "September", "October", "November", "December"
-            ];
-        
-            const [monthStr, dayStr, yearStr, timeStr, ampm] = ConfirmStartTime.split(" ");
-            const month = months.indexOf(monthStr);
-            
-            // Check if month is valid, otherwise set to 0
-            const validMonth = month >= 0 ? month : 0;
-            
-            const day = parseInt(dayStr.replace(",", ""));
-            const year = parseInt(yearStr);
-            const [hourStr, minuteStr] = timeStr.split(":");
-            const hour = parseInt(hourStr) + (ampm.toUpperCase() === "PM" ? 12 : 0);
-            const minute = parseInt(minuteStr);
-        
-            // Check if all necessary parts are valid, otherwise return a default ISO string
-            if (!isNaN(year) && !isNaN(validMonth) && !isNaN(day) && !isNaN(hour) && !isNaN(minute)) {
-                const utcDate = new Date(Date.UTC(year, validMonth, day, hour, minute));
-                return utcDate.toISOString();
-            } else {
-                return new Date().toISOString(); // Return default ISO string if invalid data
-            }
-        }
-        
-        const formattedUTC = formatToUTC(ConfirmStartTime);
-        console.log('포맷 결과: ' + formattedUTC);
-        
-        
-        
-
+        // console.log('시작 시간 :'+ConfirmStartTime);
+        // console.log('종료 시간 :'+ConfirmEndTime);
+        // console.log('단식 방법 : ' + timerMethod);
+        // console.log('단식 방법 초 : ' + totalSeconds);
+        // console.log('단식 방법 초 : ' + timerMethod2);
+        // console.log('남은 시간 : ' + remainingTime);
+        // console.log('사용 시간 : ' + elapsedTime);
 
         //w : JS-> Oracle
-        function formatOracleDate(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            const seconds = String(date.getSeconds()).padStart(2, '0');
+
         
-            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        }
-        const parsedStartTime = new Date(formattedUTC);
-        const formattedStartTime = formatOracleDate(parsedStartTime);
-        console.log('포맷팅 됨? : ' + formattedStartTime );
     return (
         <TimerScrollView>
             <LinearGradient colors={['#f7d7be','#e7a370']}>
