@@ -25,6 +25,7 @@ import Constants from "expo-constants";
 import * as TaskManager from "expo-task-manager";
 
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const formattedDate = new Date().toISOString().split("T")[0];
 
 const PEDOMETER_TASK_NAME = "accelerometerTask";
 TaskManager.defineTask(PEDOMETER_TASK_NAME, ({ data, error }) => {
@@ -35,8 +36,7 @@ TaskManager.defineTask(PEDOMETER_TASK_NAME, ({ data, error }) => {
   console.log(data);
   if (data) {
     console.log(data + ">>>>>>>>>>>>>>>>>>");
-    // 여기서 센서 데이터를 처리하거나 업데이트합니다.
-    // 백그라운드 작업이 지속적으로 실행됩니다.
+    // Continue background tasks
     const accelerationMagnitude = Math.sqrt(
       data.accelerometerData.x ** 2 +
         data.accelerometerData.y ** 2 +
@@ -52,7 +52,7 @@ TaskManager.defineTask(PEDOMETER_TASK_NAME, ({ data, error }) => {
 function PedometerScreen() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-  console.log(uri);
+  // console.log(uri);
 
   const [steps, setSteps] = useState(0);
   const [isWalking, setIsWalking] = useState(false);
@@ -71,7 +71,7 @@ function PedometerScreen() {
     false,
   ]);
 
-  // 컴포넌트가 마운트될 때 TaskManager에 백그라운드 작업 등록
+  // Register background tasks in the TaskManager when the component is mounted.
   useEffect(() => {
     const startBackgroundTask = async () => {
       try {
@@ -125,22 +125,6 @@ function PedometerScreen() {
         console.error("Failed to fetch weekly achievement data:", error);
       });
   }, []);
-
-  // 빈 배열을 전달하여 컴포넌트 마운트 시에만 실행되도록 함
-
-  // const fetchAllPedometerData = () => {
-  //   axios
-  //     .get(`${uri}/api/pedometer/test`)
-  //     .then((response) => {
-  //       console.log(uri);
-  //       console.log(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching pedometer data:", error);
-  //     });
-  // };
-
-  // fetchAllPedometerData();
 
   useEffect(() => {
     const accelerometerSubscription = Accelerometer.addListener(
@@ -196,9 +180,13 @@ function PedometerScreen() {
     return kilometers.toFixed(2);
   };
 
-  const updateGoal = () => {
-    setGoal(parseInt(newGoal) || 0);
-    setNewGoal("");
+  // const updateGoal = () => {
+  //   setGoal(parseInt(newGoal) || 0);
+  //   setNewGoal("");
+  // };
+
+  const handleGoalUpdate = (updatedGoal) => {
+    setGoal(updatedGoal); // 업데이트된 목표 값을 설정
   };
 
   const showCongratulations = () => {
@@ -253,10 +241,17 @@ function PedometerScreen() {
           </View>
 
           {/* User Input Area */}
-          <GoalInput
+          {/* <GoalInput
             newGoal={newGoal}
             onGoalChange={setNewGoal}
             onUpdateGoal={updateGoal}
+          /> */}
+
+          <GoalInput
+            initialGoal={goal}
+            onGoalChange={handleGoalUpdate}
+            apiEndpoint={uri}
+            today={formattedDate}
           />
 
           {/* Congratulations Message */}

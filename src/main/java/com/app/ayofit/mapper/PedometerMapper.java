@@ -18,5 +18,6 @@ public interface PedometerMapper {
 		        @Param("startDate") LocalDate startDate,
 		        @Param("endDate") LocalDate endDate
 		    );
+	 void updateStepGoal(PedometerDTO pedometerDTO);
 	
 }

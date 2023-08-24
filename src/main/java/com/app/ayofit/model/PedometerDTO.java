@@ -61,7 +61,14 @@ public class PedometerDTO {
 	public void setpStepGoal(int pStepGoal) {
 		this.pStepGoal = pStepGoal;
 	}
+
+	@Override
+	public String toString() {
+		return "PedometerDTO [pNo=" + pNo + ", pId=" + pId + ", pDate=" + pDate + ", pStepCnt=" + pStepCnt
+				+ ", pStepGoal=" + pStepGoal + "]";
+	}
 	 
+	
 	 
 	 
 

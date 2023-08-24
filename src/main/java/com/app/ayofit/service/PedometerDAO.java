@@ -23,4 +23,9 @@ public class PedometerDAO {
 
 	        return weeklyAchievement;
 	    }
+	   
+	   public void updateStepGoal(PedometerDTO pedometerDTO) {
+	        pedometerMapper.updateStepGoal(pedometerDTO);
+	    }
+	   
 }
