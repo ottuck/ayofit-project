@@ -83,8 +83,6 @@ const DetailsComponent = () => {
   const [hasRecorded, setHasRecorded] = useState(false); // 체중 기록 유무 확인
   const [recordedWeight, setRecordedWeight] = useState(0); // 기록된 체중
   const [weightData, setWeightData] = useState([]); // 차트에 몸무게 여러개담는 데이터
-  // const [baseDate, setBaseDate] = useState(LocalDate.now()); // 현재 날짜로 초기화
-  // const [weeklyWeightData, setWeeklyWeightData] = useState([]);
 
   let todayInTokyo = new Date();
   todayInTokyo.setHours(todayInTokyo.getHours() + 9); // 도쿄 시간대에 맞게 시간을 조정.
@@ -100,7 +98,7 @@ const DetailsComponent = () => {
     axios
       .get(`${uri}/api/weights/weekly-averages/${rId}/${formattedToday}`)
       .then((response) => {
-        // console.log(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.log("Error: ", error);
@@ -112,6 +110,7 @@ const DetailsComponent = () => {
   };
 
   fetchWeeklyAveragesByUserId("user3", formattedToday);
+  // fetchWeeklyAveragesByUserId("user3", "2023-07-28");
 
   const getLast7Days = () => {
     const dates = [];

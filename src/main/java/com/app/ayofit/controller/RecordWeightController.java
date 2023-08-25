@@ -45,9 +45,8 @@ public class RecordWeightController {
     }
 
     @GetMapping("/weekly-averages/{rId}/{formattedToday}")
-    public List<Map<String, Object>> getWeeklyAveragesForUser(@PathVariable String rId,@PathVariable String formattedToday) {
-    	System.out.println(formattedToday);
-        return recordWeightDao.getWeeklyAveragesForUser(rId);
+    public List<Map<String, Object>> getWeeklyAveragesForUser(@PathVariable String rId, @PathVariable String formattedToday) {
+        return recordWeightDao.getWeeklyAveragesForUser(rId, formattedToday);
     }
     
     @PostMapping

@@ -31,12 +31,11 @@ public class RecordWeightDAO {
         return mapper.findByDateAndId(rWeightDate, rId);
     }
     
-    public List<Map<String, Object>> getWeeklyAveragesForUser(String rId) {
-    	List<RecordWeightDTO> weights = mapper.findAllWeightsByUserId(rId);
-    	
-        LocalDate today = LocalDate.now();
-        LocalDate weekEnd = today; // 주의 끝: 오늘
-        LocalDate weekStart = today.minusDays(6); // 주의 시작: 오늘로부터 6일 전
+    public List<Map<String, Object>> getWeeklyAveragesForUser(String rId, String formattedToday) {
+        List<RecordWeightDTO> weights = mapper.findAllWeightsByUserId(rId);
+        
+        LocalDate weekEnd = LocalDate.parse(formattedToday); // 주의 끝: 입력된 날짜
+        LocalDate weekStart = weekEnd.minusDays(6); // 주의 시작: 입력된 날짜로부터 6일 전
 
         List<Map<String, Object>> weekAverages = new ArrayList<>();
 
@@ -44,7 +43,7 @@ public class RecordWeightDAO {
             double weeklySum = 0;
             int count = 0;
 
-            for (RecordWeightDTO weight : weights) {
+            for (RecordWeightDTO weight: weights) {
                 Date date = weight.getrWeightDate();
                 LocalDate weightDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 
