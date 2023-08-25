@@ -18,24 +18,24 @@ const FastRecord = ({navigation : { navigate } }) => {
         axios
         .get(`${uri}`)
           .then(response => {
-            console.log('Data from server:', response.data[0]);
+            // console.log('Data from server:', response.data[0]);
             setFastData(response.data);
           })
           .catch(error => {
             console.error('Error fetching data:', error);
           });
       }, []);
-      console.log(fastData)
+    //   console.log(fastData)
 
     return(
     <LinearGradient colors={['#f7d7be','#e7a370']}>
         <FastRecordView>
-            {/* <Text>Data from server:</Text>
+            <Text>Data from server:</Text>
             {fastData.map((data, index) => (
         <Text key={index}>
           F_NO: {data.F_NO}, F_ID: {data.F_ID}, F_HOWTO: {data.F_HOWTO}
         </Text>
-        ))} */}
+        ))}
         </FastRecordView>
     </LinearGradient>
         )};
