@@ -1,4 +1,12 @@
-import { StyleSheet, Text, View, Animated, Image, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Animated,
+  Image,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Constants from "expo-constants";
@@ -30,6 +38,8 @@ import {
   DetailsResetButtonText,
   DetailsCircleContainer,
   DetailsCircleRow,
+  WeightCalendarButton,
+  WeightCalendarButtonText,
 } from "../../components/nutriDetail/StyledComponents";
 import DateCalendar from "./DateCalendar";
 
@@ -73,7 +83,8 @@ const DetailsComponent = () => {
   const [hasRecorded, setHasRecorded] = useState(false); // 체중 기록 유무 확인
   const [recordedWeight, setRecordedWeight] = useState(0); // 기록된 체중
   const [weightData, setWeightData] = useState([]); // 차트에 몸무게 여러개담는 데이터
-  const [weeklyAverages, setWeeklyAverages] = useState([]);
+  // const [baseDate, setBaseDate] = useState(LocalDate.now()); // 현재 날짜로 초기화
+  // const [weeklyWeightData, setWeeklyWeightData] = useState([]);
 
   let todayInTokyo = new Date();
   todayInTokyo.setHours(todayInTokyo.getHours() + 9); // 도쿄 시간대에 맞게 시간을 조정.
@@ -84,6 +95,23 @@ const DetailsComponent = () => {
   weekStartDate = weekStartDate.toISOString().split("T")[0];
   // formattedMonth += "01"; 위에서 "-01"을 붙이지 않을 경우 두줄로 이렇게도 작성할수있음.
   // console.log(formattedMonth); 2023-08-01
+
+  const fetchWeeklyAveragesByUserId = (rId, formattedToday) => {
+    axios
+      .get(`${uri}/api/weights/weekly-averages/${rId}/${formattedToday}`)
+      .then((response) => {
+        // console.log(response.data);
+      })
+      .catch((error) => {
+        console.log("Error: ", error);
+        if (error.response) {
+          console.log("Response Data: ", error.response.data);
+          console.log("Response Status: ", error.response.status);
+        }
+      });
+  };
+
+  fetchWeeklyAveragesByUserId("user3", formattedToday);
 
   const getLast7Days = () => {
     const dates = [];
@@ -187,122 +215,9 @@ const DetailsComponent = () => {
     return { lineData, barDataWithLabels };
   };
 
-  const createWeeklyChartData = (weeklyData) => {
-    if (!weeklyData || weeklyData.length === 0)
-      return { lineData: [], barDataWithLabels: [] };
+  const { lineData, barDataWithLabels } = createChartData();
 
-    let lineData = [];
-    let barDataWithLabels = [];
-
-    for (let data of weeklyData) {
-      const adjustedValue =
-        data.average === 0 ? data.average + 10 : data.average;
-      const dataPointTextString = data.average.toString();
-      const labelString = `${data.dateRange.start.replace(
-        "-",
-        "."
-      )} ~ ${data.dateRange.end.replace("-", ".")}`;
-
-      lineData.push({
-        value: adjustedValue,
-        dataPointText: dataPointTextString,
-      });
-      barDataWithLabels.push({
-        value: data.average,
-        topLabelComponent: () => (
-          <Text
-            style={{
-              color: "#d88b4b",
-              fontSize: 16.5,
-              fontWeight: 600,
-              width: 42,
-              height: 23,
-              textAlign: "center",
-            }}
-          >
-            {data.average}
-          </Text>
-        ),
-        label: labelString,
-        labelWidth: 24,
-        frontColor: "#f5d0b1",
-      });
-    }
-    return { lineData, barDataWithLabels };
-  };
-
-  // const { lineData, barDataWithLabels } = createChartData();
-
-  const { lineData, barDataWithLabels } = createWeeklyChartData(weeklyAverages);
-
-  // 지정된 날짜로부터 4주간의 주별 날짜 범위를 생성
-  const generateWeeklyDateRanges = (baseDate) => {
-    const format = (date) => {
-      let day = date.getDate().toString().padStart(2, "0");
-      let month = (date.getMonth() + 1).toString().padStart(2, "0");
-      return `${date.getFullYear()}-${month}-${day}`; // YYYY-MM-DD 형식
-    };
-
-    let end = new Date(baseDate);
-    let start = new Date(baseDate);
-    start.setDate(start.getDate() - 6);
-    const dateRanges = [{ start: format(start), end: format(end) }];
-
-    for (let i = 0; i < 3; i++) {
-      end.setDate(end.getDate() - 7);
-      start.setDate(start.getDate() - 7);
-      dateRanges.unshift({ start: format(start), end: format(end) });
-    }
-    return dateRanges;
-  };
-
-  // 지정된 범위 내에서의 평균 체중 계산
-  const calculateWeeklyAverage = (weightData, dateRanges) => {
-    return dateRanges.map((range) => {
-      const filteredData = weightData.filter((data) => {
-        const yearPrefix = "20"; // 년도 앞에 붙일 문자열
-        const formattedDate = yearPrefix + data.rWeightDate;
-        const dataDate = new Date(formattedDate);
-        const startDate = new Date(range.start);
-        const endDate = new Date(range.end);
-        endDate.setHours(23, 59, 59, 999); // 마지막 날의 23:59:59.999까지 포함
-        return (
-          dataDate >= startDate &&
-          dataDate <= endDate &&
-          data.rWeight &&
-          data.rWeight > 0
-        );
-      });
-
-      const sum = filteredData.reduce((acc, data) => acc + data.rWeight, 0);
-      const average = filteredData.length ? sum / filteredData.length : 0;
-
-      return {
-        average: Math.round(average * 10) / 10,
-        dateRange: range,
-      };
-    });
-  };
-
-  // 데이터를 받아와서 주별 평균 체중을 계산하고 출력
-  const fetchAndCalculateWeeklyAverages = (rId, baseDate) => {
-    axios
-      .get(`${uri}/api/weights/user/${rId}`)
-      .then((response) => {
-        const sortedData = response.data.sort(
-          (a, b) => new Date(a.rWeightDate) - new Date(b.rWeightDate)
-        );
-        const dateRanges = generateWeeklyDateRanges(baseDate);
-        const calculatedWeeklyAverages = calculateWeeklyAverage(
-          sortedData,
-          dateRanges
-        );
-        setWeeklyAverages(calculatedWeeklyAverages);
-      })
-      .catch((error) => console.log(error));
-  };
-
-  fetchAndCalculateWeeklyAverages("user3", formattedToday);
+  // const { lineData, barDataWithLabels } = createWeeklyChartData(weeklyAverages);
 
   const computeNutritionForMode = () => {
     let carbs, proteins, fats;
@@ -749,81 +664,50 @@ const DetailsComponent = () => {
 
       <View style={styles.DetailsWeightChart}>
         <View style={styles.testtt}>
-          <Button title="이전" />
-          <Button title="다음" />
+          <WeightCalendarButton>
+            <WeightCalendarButtonText>Daily</WeightCalendarButtonText>
+          </WeightCalendarButton>
+          <WeightCalendarButton>
+            <WeightCalendarButtonText>Weekly</WeightCalendarButtonText>
+          </WeightCalendarButton>
+          <WeightCalendarButton>
+            <WeightCalendarButtonText>Monthly</WeightCalendarButtonText>
+          </WeightCalendarButton>
         </View>
         <View style={styles.LineChartContainer}>
-          {lineData.length === 4 ? (
-            <LineChart
-              initialSpacing={19.6}
-              maxValue={130}
-              data={lineData}
-              spacing={48.2}
-              textColor1="#e17319"
-              textShiftY={-13.8}
-              textShiftX={-16.2}
-              textFontSize={17.5}
-              thickness={5.2}
-              hideAxesAndRules
-              hideVerticalLines
-              yAxisColor="rgba(228, 108, 10, 0.85)"
-              xAxisColor="rgba(228, 108, 10, 0.85)"
-              color="rgba(228, 108, 10, 0.65)"
-              height={152}
-            />
-          ) : (
-            <LineChart
-              initialSpacing={19.6}
-              maxValue={130}
-              data={lineData}
-              spacing={48.2}
-              textColor1="#e17319"
-              textShiftY={-13.8}
-              textShiftX={-16.2}
-              textFontSize={17.5}
-              thickness={5.2}
-              hideAxesAndRules
-              hideVerticalLines
-              yAxisColor="rgba(228, 108, 10, 0.85)"
-              xAxisColor="rgba(228, 108, 10, 0.85)"
-              color="rgba(228, 108, 10, 0.65)"
-              height={152}
-            />
-          )}
+          <LineChart
+            initialSpacing={19.8}
+            maxValue={130}
+            data={lineData}
+            spacing={48.6}
+            textColor1="#e17319"
+            textShiftY={-13.8}
+            textShiftX={-16.2}
+            textFontSize={17.5}
+            thickness={5.2}
+            hideAxesAndRules
+            hideVerticalLines
+            yAxisColor="rgba(228, 108, 10, 0.85)"
+            xAxisColor="rgba(228, 108, 10, 0.85)"
+            color="rgba(228, 108, 10, 0.65)"
+            height={152}
+          />
         </View>
-
         <View style={styles.BarChartContainer}>
-          {barDataWithLabels.length === 4 ? (
-            <BarChart
-              data={barDataWithLabels}
-              barWidth={25}
-              maxValue={90}
-              initialSpacing={18}
-              spacing={28.4}
-              barBorderRadius={4}
-              hideAxesAndRules
-              noOfSections={3}
-              yAxisThickness={0}
-              xAxisThickness={0}
-              height={168}
-              width={Dimensions.get("window").width - 16}
-            />
-          ) : (
-            <BarChart
-              data={barDataWithLabels}
-              barWidth={20.8}
-              maxValue={90}
-              initialSpacing={18}
-              spacing={28.4}
-              barBorderRadius={4}
-              hideAxesAndRules
-              noOfSections={3}
-              yAxisThickness={0}
-              xAxisThickness={0}
-              height={168}
-              width={Dimensions.get("window").width - 16}
-            />
-          )}
+          <BarChart
+            data={barDataWithLabels}
+            barWidth={20.8}
+            maxValue={90}
+            initialSpacing={18}
+            spacing={28.4}
+            barBorderRadius={4}
+            hideAxesAndRules
+            noOfSections={3}
+            yAxisThickness={0}
+            xAxisThickness={0}
+            height={168}
+            width={Dimensions.get("window").width - 16}
+          />
         </View>
       </View>
     </View>
@@ -853,21 +737,22 @@ const styles = StyleSheet.create({
   },
   LineChartContainer: {
     width: "100%",
-    top: 50,
+    top: 22,
     alignItems: "center",
     justifyContent: "center",
   },
 
   BarChartContainer: {
-    bottom: 2,
+    bottom: 30,
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
   testtt: {
-    width: "80%",
+    width: "85%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
+    marginTop: 26,
   },
 });

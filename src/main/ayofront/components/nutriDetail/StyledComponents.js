@@ -555,3 +555,18 @@ export const RecordsModalFixAndDeleteButtonText = styled.Text`
   font-weight: 700;
   color: "rgba(0, 0, 0, 0.85)";
 `;
+
+export const WeightCalendarButton = styled.TouchableOpacity`
+  align-items: center;
+  justify-content: center;
+  width: 91.6px;
+  height: 36.2px;
+  background-color: #e46c0a;
+  border-radius: 16.2px;
+`;
+
+export const WeightCalendarButtonText = styled.Text`
+  font-size: 18.5px;
+  font-weight: 500;
+  color: "rgba(255, 255, 255, 0.85)";
+`;
