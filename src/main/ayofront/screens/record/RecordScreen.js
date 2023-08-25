@@ -1,10 +1,9 @@
-import { View, Text, StyleSheet, ImageBackground, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput, FlatList} from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput, FlatList } from 'react-native';
 import React, { useState } from 'react';
 import { BlurView } from 'expo-blur';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-
 //axios
 import axios from "axios";
 import Constants from "expo-constants";
@@ -26,7 +25,26 @@ function RecordScreen({ navigation }) {
     }
   };
 
-  //Search
+  //검색어 입력할때마다 axios 요청(검색어 지원 기능)
+  const getRealTimeFoodSearch = () => {
+    const query = searchQuery.trim(); // 앞뒤 공백 제거
+    console.log("Searching for:", query);
+    console.log("URL:", `${uri}/api/food/search/${query}`);
+
+    axios
+      .get(`${uri}/api/food/search/${query}`)
+      .then((response) => {
+        console.log(response.data[0]);
+        setSearchResult(response.data);
+
+        if (validateInput()) {
+          submitSearchResult();
+        }
+      })
+      .catch((error) => console.log(error));
+  }
+
+  //제출 검색어로 axios 요청
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
 
@@ -50,8 +68,8 @@ function RecordScreen({ navigation }) {
 
   //검색어 제출
   const submitSearchResult = (navigation) => {
-    navigation.navigate("RecordMain", {searchResult});  //naviation.push 로 변경
-    console.log('검색어 제출', {searchResult}); 
+    console.log('검색어 제출', { searchResult });
+    navigation.navigate("RecordMain", { searchResult });  //naviation.push 로 변경
     closeModal();
   };
 
@@ -67,11 +85,6 @@ function RecordScreen({ navigation }) {
   //toISOString은 "2023-08-20T14:30:00.000Z"와 같은 형식이라 "T" 나눠서 0번째 index의 날짜만 가져온다
   const today = new Date();
   const formattedToday = today.toISOString().split("T")[0];
-
-  //FlatList item
-  const flatListItem = () => {
-    <Text>ㅇㅇ</Text>
-  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -131,6 +144,7 @@ function RecordScreen({ navigation }) {
                     placeholder="Search your meal"
                     value={searchQuery}
                     onChangeText={(text) => setSearchQuery(text)}
+                    onChange={getRealTimeFoodSearch}
                     onBlur={validateInput}
                     onSubmitEditing={searchFood}
                   />
@@ -139,19 +153,36 @@ function RecordScreen({ navigation }) {
                   </TouchableOpacity>
                 </View>
                 {/* 검색어 리스트 */}
-                <View>
+                <FlatList
+                  data={searchResult}
+                  renderItem={({ item }) =>
+                    <Text style={styles.searchScrollViewText}>
+                      {item.nFoodName}
+                    </Text>
+                  }
+                  keyExtractor={item => item.nId}
+                  showsVerticalScrollIndicator={false}
+                  style={styles.searchScrollView}
+                />
+                {/* <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  style={styles.searchScrollView}
+                >
                   {error ? <Text style={{ color: 'red' }}> {error} </Text> : null}
+
                   {searchResult.map((food, index) => (
-                    <Text data={food} key={index}></Text>
+                    <Text key={index} style={styles.searchScrollViewText}>
+                      {food.nFoodName}
+                    </Text>
                   ))}
-                </View>
+                </ScrollView> */}
               </View>
             </BlurView>
           </Modal>
 
         </ImageBackground>
-      </View>
-    </SafeAreaView>
+      </View >
+    </SafeAreaView >
   );
 }
 export default RecordScreen;
@@ -284,5 +315,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: '32%',
     bottom: 12,
-  }
+  },
+  //검색창
+  searchScrollView: {
+    height: '80%', marginTop: '10%', marginLeft: '10%'
+  },
+  searchScrollViewText: {
+    fontSize: 18,
+  },
 });
