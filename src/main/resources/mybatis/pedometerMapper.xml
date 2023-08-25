@@ -15,5 +15,12 @@
     	WHERE p_id = #{pId}
       	AND TRUNC(p_date) = TRUNC(#{pDate})
     </update>
+    
+    <update id="updateDailyStep" parameterType="com.app.ayofit.model.PedometerDTO">
+    UPDATE pedometer
+    SET p_stepcnt = #{pStepCnt}
+    WHERE p_id = #{pId}
+    AND TRUNC(p_date) = TRUNC(#{pDate})
+</update>
   
 </mapper>
