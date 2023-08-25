@@ -413,12 +413,43 @@ margin-top : 30px;
 margin-left : 10px;
 `;
 //----------------------RecordPage-------------------//
+export const RecordScrollView = styled.ScrollView`
+`;
 export const FastRecordView = styled.View`
 width: 100%;
 height: 100%;
 justify-content : center;
 align-items : center;
+padding-top: 100px;
+padding-bottom: 100px;
 `;
-export const RecordTouch = styled.TouchableOpacity`
+export const RecordUpC = styled.View`
+width: 100%;
+`;
+export const RecordUnderC = styled.View`
+width: 100%;
+height: 100%;
+justify-content : center;
+align-items : center;
+`;
+export const RecordOneView = styled.View`
+  width: 85%;
+  height: 15%;
+  border: 1px solid black;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.5);
+  margin-top: 20px;
+`;
 
+export const RecordUseTime = styled.Text`
+margin-top : 10px;
+margin-left : 10px;
+`;
+export const RecordSTime = styled.Text`
+margin-top : 10px;
+margin-left : 10px;
+`;
+export const RecordETime = styled.Text`
+margin-top : 10px;
+margin-left : 10px;
 `;

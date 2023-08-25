@@ -477,12 +477,12 @@ function MyTimer({ navigation: {navigate} }) {
         };
         const totalSeconds = timerTime.number * 3600;
 
-        console.log('시작 시간 :'+ConfirmStartTime);
-        console.log('종료 시간 :'+ConfirmEndTime);
-        console.log('단식 방법 : ' + timerMethod);
-        console.log('단식 방법 초 : ' + totalSeconds);
-        console.log('단식 방법 초 : ' + timerMethod2);
-        console.log('남은 시간 : ' + remainingTime);
+        // console.log('시작 시간 :'+ConfirmStartTime);
+        // console.log('종료 시간 :'+ConfirmEndTime);
+        // console.log('단식 방법 : ' + timerMethod);
+        // console.log('단식 방법 초 : ' + totalSeconds);
+        // console.log('단식 방법 초 : ' + timerMethod2);
+        // console.log('남은 시간 : ' + remainingTime);
 
         //w : JS-> Oracle
 
