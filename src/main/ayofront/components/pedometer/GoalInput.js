@@ -11,14 +11,14 @@ import { GlobalStyles } from "../UI/styles";
 
 const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
   const [newGoal, setNewGoal] = useState("");
-  // const [showWarning, setShowWarning] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
   const updateGoal = () => {
-    // if (newGoal.trim() === "") {
-    //   console.log("Goal cannot be empty");
-    //   setShowWarning(true);
-    //   return;
-    // }
+    if (newGoal.trim() === "") {
+      console.log("Goal cannot be empty");
+      setShowWarning(true);
+      return;
+    }
     axios
       .put(`${apiEndpoint}/api/pedometer/update-step-goal`, {
         pId: "user4",
@@ -29,7 +29,7 @@ const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
         console.log(response.data); // "Step goal updated successfully"
         onGoalChange(parseInt(newGoal));
         setNewGoal(""); // Empty input field
-        // setShowWarning(false); // Hide the warning
+        setShowWarning(false); // Hide the warning
       })
       .catch((error) => {
         console.error("Update Failed:", error);
@@ -43,11 +43,13 @@ const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
         placeholder="Enter your goal"
         value={newGoal}
         onChangeText={setNewGoal}
+        inputMode="numeric"
         keyboardType="numeric"
+        maxLength={10}
       />
-      {/* {showWarning && (
-        <Text style={styles.warningText}>Goal cannot be empty</Text>
-      )} */}
+      {showWarning && (
+        <Text style={styles.warningText}>Set your step target here</Text>
+      )}
       <TouchableOpacity style={styles.button} onPress={updateGoal}>
         <Text style={styles.buttonText}>Update</Text>
       </TouchableOpacity>

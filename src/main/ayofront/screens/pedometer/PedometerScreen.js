@@ -35,53 +35,55 @@ function PedometerScreen() {
   } = useContext(PedometerContext);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
+    <View style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
-          <View style={styles.dayContainerWrapper}>
-            <View style={styles.daysContainer}>
-              {daysOfWeek.map((day, index) => (
-                <PedometerDailyCircles
-                  key={index}
-                  day={day}
-                  isAchieved={daysAchieved[index]} // 여기서 daysAchieved 배열의 값 사용
-                />
-              ))}
+        <KeyboardAwareScrollView
+          extraScrollHeight={Platform.select({ ios: 100, android: 200 })}
+          enableOnAndroid={true}
+        >
+          <View>
+            <View style={styles.dayContainerWrapper}>
+              <View style={styles.daysContainer}>
+                {daysOfWeek.map((day, index) => (
+                  <PedometerDailyCircles
+                    key={index}
+                    day={day}
+                    isAchieved={daysAchieved[index]} // 여기서 daysAchieved 배열의 값 사용
+                  />
+                ))}
+              </View>
             </View>
-          </View>
 
-          {/* progress ring */}
-          <PedometerProgressRing steps={steps} goal={goal} />
+            {/* progress ring */}
+            <PedometerProgressRing steps={steps} goal={goal} />
 
-          <View style={styles.bottomTextContainer}>
-            <DistanceCaloriesBox
-              iconSource={require("../../assets/distance-icon.png")}
-              title="Distance"
-              value={`${stepsToKilometers(steps)} km`}
+            <View style={styles.bottomTextContainer}>
+              <DistanceCaloriesBox
+                iconSource={require("../../assets/distance-icon.png")}
+                title="Distance"
+                value={`${stepsToKilometers(steps)} km`}
+              />
+
+              <DistanceCaloriesBox
+                iconSource={require("../../assets/calories-burned-icon.png")}
+                title="Calories Burned"
+                value={`${calculateCaloriesBurned()} kcal`}
+              />
+            </View>
+
+            <GoalInput
+              goal={goal}
+              onGoalChange={handleGoalUpdate}
+              apiEndpoint={uri}
+              today={formattedDate}
             />
 
-            <DistanceCaloriesBox
-              iconSource={require("../../assets/calories-burned-icon.png")}
-              title="Calories Burned"
-              value={`${calculateCaloriesBurned()} kcal`}
-            />
+            {/* Congratulations Message */}
+            <CongratulationsMessage isVisible={congratulationsVisible} />
           </View>
-
-          <GoalInput
-            goal={goal}
-            onGoalChange={handleGoalUpdate}
-            apiEndpoint={uri}
-            today={formattedDate}
-          />
-
-          {/* Congratulations Message */}
-          <CongratulationsMessage isVisible={congratulationsVisible} />
-        </View>
+        </KeyboardAwareScrollView>
       </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -91,6 +93,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: GlobalStyles.colors.primary50,
+    paddingTop: "20%",
   },
   dayContainerWrapper: {
     flexDirection: "row",

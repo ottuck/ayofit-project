@@ -44,6 +44,7 @@ function MainTabsScreen() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
+        tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: GlobalStyles.colors.primary500,
         tabBarInactiveTintColor: GlobalStyles.colors.blackOpacity50,
         headerShown: false,
