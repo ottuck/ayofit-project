@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   TextInput,
@@ -6,19 +6,51 @@ import {
   Text,
   StyleSheet,
 } from "react-native";
-import { GlobalStyles } from "../../components/UI/styles";
+import axios from "axios";
+import { GlobalStyles } from "../UI/styles";
 
-const GoalInput = ({ newGoal, onGoalChange, onUpdateGoal }) => {
+const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
+  const [newGoal, setNewGoal] = useState("");
+  const [showWarning, setShowWarning] = useState(false);
+
+  const updateGoal = () => {
+    if (newGoal.trim() === "") {
+      console.log("Goal cannot be empty");
+      setShowWarning(true);
+      return;
+    }
+    axios
+      .put(`${apiEndpoint}/api/pedometer/update-step-goal`, {
+        pId: "user4",
+        pDate: new Date(today),
+        pStepGoal: parseInt(newGoal),
+      })
+      .then((response) => {
+        console.log(response.data); // "Step goal updated successfully"
+        onGoalChange(parseInt(newGoal));
+        setNewGoal(""); // Empty input field
+        setShowWarning(false); // Hide the warning
+      })
+      .catch((error) => {
+        console.error("Update Failed:", error);
+      });
+  };
+
   return (
     <View style={styles.inputContainer}>
       <TextInput
         style={styles.input}
         placeholder="Enter your goal"
         value={newGoal}
-        onChangeText={onGoalChange}
+        onChangeText={setNewGoal}
+        inputMode="numeric"
         keyboardType="numeric"
+        maxLength={10}
       />
-      <TouchableOpacity style={styles.button} onPress={onUpdateGoal}>
+      {showWarning && (
+        <Text style={styles.warningText}>Set your step target here</Text>
+      )}
+      <TouchableOpacity style={styles.button} onPress={updateGoal}>
         <Text style={styles.buttonText}>Update</Text>
       </TouchableOpacity>
     </View>
@@ -27,8 +59,6 @@ const GoalInput = ({ newGoal, onGoalChange, onUpdateGoal }) => {
 
 const styles = StyleSheet.create({
   inputContainer: {
-    // borderWidth: 2,
-    // borderColor: "tomato",
     alignItems: "center",
   },
   input: {
@@ -50,6 +80,10 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  warningText: {
+    color: "red",
+    marginTop: 5,
   },
 });
 
