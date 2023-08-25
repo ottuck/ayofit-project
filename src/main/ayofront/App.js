@@ -18,6 +18,7 @@ import { GlobalStyles } from "./components/UI/styles";
 import FontProvider from "./components/FontProvider";
 import AccountsContextProvider from "./store/accounts_context";
 import AccountMain from "./navigations/AccountStack";
+import { PhotoProvider } from "./store/image_context";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -88,13 +89,14 @@ export default function App() {
     <AccountsContextProvider>
       <SafeAreaView style={{ flex: 1 }}>
         <FontProvider>
-          <StatusBar
-            backgroundColor={GlobalStyles.colors.primary500}
-            barStyle="default"
-          />
-          <NavigationContainer style={styles.navigationContainer}>
-            <Stack.Navigator>
-              {/* 인증해야되서 주석 처리 해둠
+          <PhotoProvider>
+            <StatusBar
+              backgroundColor={GlobalStyles.colors.primary500}
+              barStyle="default"
+            />
+            <NavigationContainer style={styles.navigationContainer}>
+              <Stack.Navigator>
+                {/* 인증해야되서 주석 처리 해둠
               <Stack.Screen
                 name="AccountInfo"
                 component={AccountInfo}
@@ -105,13 +107,14 @@ export default function App() {
                 component={AccountNutri}
                 options={{ headerShown: false }}
               /> */}
-              <Stack.Screen
-                name="MainTabs"
-                component={MainTabsScreen}
-                options={{ headerShown: false }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
+                <Stack.Screen
+                  name="MainTabs"
+                  component={MainTabsScreen}
+                  options={{ headerShown: false }}
+                />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </PhotoProvider>
         </FontProvider>
       </SafeAreaView>
     </AccountsContextProvider>

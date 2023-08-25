@@ -35,11 +35,6 @@ public class AccountController {
 		aDAO.regAccountWeight(userId,aDTO);
 	}	
 	
-//	@PostMapping("/uploadtest")
-//	public void regimgtest(@RequestPart("image") MultipartFile file) {
-//		aDAO.regimg(file);
-//	}	
-	
 	@GetMapping("/{userId}/goal")
 	public GoalDTO getAccountGoals(@PathVariable String userId) {
 		System.out.println(userId);
