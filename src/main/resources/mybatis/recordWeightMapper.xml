@@ -15,6 +15,13 @@
 		FROM RECORD_WEIGHT WHERE R_WEIGHT_DATE=#{rWeightDate} AND R_W_ID=#{rId}
 	</select>
 
+	<select id="findAllWeightsByUserId" resultType="com.app.ayofit.model.RecordWeightDTO">
+	    SELECT R_W_NO as rNo, R_W_ID as rId, R_WEIGHT as rWeight, R_WEIGHT_DATE as rWeightDate
+	    FROM RECORD_WEIGHT
+	    WHERE R_W_ID = #{rId} 
+	    ORDER BY R_WEIGHT_DATE ASC
+	</select>
+
     <insert id="insert">
         INSERT INTO RECORD_WEIGHT (R_W_NO, R_W_ID, R_WEIGHT, R_WEIGHT_DATE) 
         VALUES (RECORD_WEIGHT_SEQ.NEXTVAL, #{rId}, #{rWeight}, #{rWeightDate})

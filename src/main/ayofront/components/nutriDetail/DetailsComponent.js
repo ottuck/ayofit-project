@@ -2,26 +2,19 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
-  SafeAreaView,
   Animated,
   Image,
   Button,
+  TouchableOpacity,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Constants from "expo-constants";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { Dimensions } from "react-native";
-import { LineChart } from "react-native-chart-kit";
+import { LineChart } from "react-native-gifted-charts";
+import { BarChart } from "react-native-gifted-charts";
 import * as Progress from "react-native-progress";
 import {
-  FaintLine,
-  MyRecordsTodaysWeightContainer,
-  TodaysWeightTextContainer,
-  TodaysWeightText,
-  TodaysWeightKg,
   DateContainer,
   DateButtonContainer,
   DateButton,
@@ -45,6 +38,8 @@ import {
   DetailsResetButtonText,
   DetailsCircleContainer,
   DetailsCircleRow,
+  WeightCalendarButton,
+  WeightCalendarButtonText,
 } from "../../components/nutriDetail/StyledComponents";
 import DateCalendar from "./DateCalendar";
 
@@ -52,7 +47,6 @@ const DetailsComponent = () => {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
-  const [selectedDate, setSelectedDate] = useState(formattedToday);
   const [selectedDateMeals, setSelectedDateMeals] = useState([]);
   const [resetDate, setResetDate] = useState(false);
   const [dailyNutrition, setDailyNutrition] = useState([]);
@@ -86,6 +80,12 @@ const DetailsComponent = () => {
   const [isWeeklyConsumption, setIsWeeklyConsumption] = useState(false);
   const [isMonthlyConsumption, setIsMonthlyConsumption] = useState(false);
 
+  const [hasRecorded, setHasRecorded] = useState(false); // 체중 기록 유무 확인
+  const [recordedWeight, setRecordedWeight] = useState(0); // 기록된 체중
+  const [weightData, setWeightData] = useState([]); // 차트에 몸무게 여러개담는 데이터
+  // const [baseDate, setBaseDate] = useState(LocalDate.now()); // 현재 날짜로 초기화
+  // const [weeklyWeightData, setWeeklyWeightData] = useState([]);
+
   let todayInTokyo = new Date();
   todayInTokyo.setHours(todayInTokyo.getHours() + 9); // 도쿄 시간대에 맞게 시간을 조정.
   let formattedToday = todayInTokyo.toISOString().split("T")[0]; // ISO 형식을 사용하여 날짜만 가져오기.
@@ -95,6 +95,129 @@ const DetailsComponent = () => {
   weekStartDate = weekStartDate.toISOString().split("T")[0];
   // formattedMonth += "01"; 위에서 "-01"을 붙이지 않을 경우 두줄로 이렇게도 작성할수있음.
   // console.log(formattedMonth); 2023-08-01
+
+  const fetchWeeklyAveragesByUserId = (rId, formattedToday) => {
+    axios
+      .get(`${uri}/api/weights/weekly-averages/${rId}/${formattedToday}`)
+      .then((response) => {
+        // console.log(response.data);
+      })
+      .catch((error) => {
+        console.log("Error: ", error);
+        if (error.response) {
+          console.log("Response Data: ", error.response.data);
+          console.log("Response Status: ", error.response.status);
+        }
+      });
+  };
+
+  fetchWeeklyAveragesByUserId("user3", formattedToday);
+
+  const getLast7Days = () => {
+    const dates = [];
+    for (let i = 0; i <= 6; i++) {
+      // i의 시작값을 5에서 시작하도록 수정
+      const d = new Date();
+      d.setHours(d.getHours() + 9);
+      d.setDate(d.getDate() - i);
+      const formatted = `${String(d.getFullYear()).substr(2)}-${String(
+        d.getMonth() + 1
+      ).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      dates.push(formatted);
+    }
+    return dates;
+  };
+
+  const fillMissingDates = (data) => {
+    const last7Days = getLast7Days();
+    const filledData = last7Days.map((date) => {
+      const found = data.find((item) => item.rWeightDate === date);
+      if (found) return found;
+      return {
+        rId: "0",
+        rNo: 0,
+        rWeight: 0,
+        rWeightDate: date,
+      };
+    });
+    return filledData;
+  };
+
+  const fetchAllWeightsByUserId = (rId) => {
+    axios
+      .get(`${uri}/api/weights/user/${rId}`)
+      .then((response) => {
+        // console.log(response.data);
+        const sortedData = fillMissingDates(response.data).sort(
+          (a, b) => new Date(a.rWeightDate) - new Date(b.rWeightDate) // 날짜를 오름차순으로 정렬
+        );
+        setWeightData(sortedData);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const fetchWeightByDateAndId = (rId, rWeightDate) => {
+    axios
+      .get(`${uri}/api/weights/${rId}/${rWeightDate}`)
+      .then((response) => {
+        // console.log(response.data);
+        if (response.data) {
+          setHasRecorded(true);
+          setRecordedWeight(response.data.rWeight);
+        } else {
+          setHasRecorded(false);
+          setRecordedWeight(0);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const createChartData = () => {
+    if (weightData.length === 0) return { lineData: [], barDataWithLabels: [] };
+
+    let lineData = [];
+    let barDataWithLabels = [];
+    for (let i = 0; i < 7; i++) {
+      const data = weightData[i];
+      const adjustedValue =
+        data.rWeight === 0 ? data.rWeight + 10 : data.rWeight;
+      const dataPointTextString =
+        data.rWeight === 0
+          ? "   " + data.rWeight.toString()
+          : data.rWeight.toString();
+
+      lineData.push({
+        value: adjustedValue,
+        dataPointText: dataPointTextString,
+      });
+      barDataWithLabels.push({
+        value: data.rWeight,
+        topLabelComponent: () => (
+          <Text
+            style={{
+              color: "#d88b4b",
+              fontSize: 16.5, // 세미콜론을 쉼표로 수정
+              fontWeight: 600, // 세미콜론을 쉼표로 수정
+              width: 42,
+              height: 23,
+              textAlign: "center",
+            }}
+          >
+            {data.rWeight}
+          </Text>
+        ),
+        label:
+          i === 6 ? "Today" : data.rWeightDate.substring(3).replace("-", "/"),
+        labelWidth: 24,
+        frontColor: "#f5d0b1",
+      });
+    }
+    return { lineData, barDataWithLabels };
+  };
+
+  const { lineData, barDataWithLabels } = createChartData();
+
+  // const { lineData, barDataWithLabels } = createWeeklyChartData(weeklyAverages);
 
   const computeNutritionForMode = () => {
     let carbs, proteins, fats;
@@ -206,6 +329,8 @@ const DetailsComponent = () => {
     getTodayNutrition();
     getWeeklyNutrition();
     getMonthNutrition();
+    fetchWeightByDateAndId("user3", formattedToday);
+    fetchAllWeightsByUserId("user3");
   }, []);
 
   let totalNutrients =
@@ -536,68 +661,55 @@ const DetailsComponent = () => {
           <DetailsResetButtonText>Reset your goal</DetailsResetButtonText>
         </DetailsResetGoalButton>
       </DetailsResetButtonContainer>
-      <DetailsCircleContainer>
-        {/* 첫 번째 원 */}
-        <Animated.View
-          style={[
-            styles.circle,
-            {
-              backgroundColor: "#FFD6D1",
-              width: fatAnimationValue,
-              height: fatAnimationValue,
-            },
-          ]}
-        >
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: "600",
-              color: "rgba(0, 0, 0, 0.8)",
-            }}
-          >{`${fatPercentage.toFixed(2)}%`}</Text>
-        </Animated.View>
 
-        {/* 두 번째 원 */}
-        <DetailsCircleRow>
-          <Animated.View
-            style={[
-              styles.circle,
-              {
-                backgroundColor: "#E2F0B5",
-                width: carbAnimationValue,
-                height: carbAnimationValue,
-              },
-            ]}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "600",
-                color: "rgba(0, 0, 0, 0.8)",
-              }}
-            >{`${carbPercentage.toFixed(2)}%`}</Text>
-          </Animated.View>
-          {/* 세 번째 원 */}
-          <Animated.View
-            style={[
-              styles.circle,
-              {
-                backgroundColor: "#FFEC99",
-                width: proteinAnimationValue,
-                height: proteinAnimationValue,
-              },
-            ]}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "600",
-                color: "rgba(0, 0, 0, 0.8)",
-              }}
-            >{`${proteinPercentage.toFixed(2)}%`}</Text>
-          </Animated.View>
-        </DetailsCircleRow>
-      </DetailsCircleContainer>
+      <View style={styles.DetailsWeightChart}>
+        <View style={styles.testtt}>
+          <WeightCalendarButton>
+            <WeightCalendarButtonText>Daily</WeightCalendarButtonText>
+          </WeightCalendarButton>
+          <WeightCalendarButton>
+            <WeightCalendarButtonText>Weekly</WeightCalendarButtonText>
+          </WeightCalendarButton>
+          <WeightCalendarButton>
+            <WeightCalendarButtonText>Monthly</WeightCalendarButtonText>
+          </WeightCalendarButton>
+        </View>
+        <View style={styles.LineChartContainer}>
+          <LineChart
+            initialSpacing={19.8}
+            maxValue={130}
+            data={lineData}
+            spacing={48.6}
+            textColor1="#e17319"
+            textShiftY={-13.8}
+            textShiftX={-16.2}
+            textFontSize={17.5}
+            thickness={5.2}
+            hideAxesAndRules
+            hideVerticalLines
+            yAxisColor="rgba(228, 108, 10, 0.85)"
+            xAxisColor="rgba(228, 108, 10, 0.85)"
+            color="rgba(228, 108, 10, 0.65)"
+            height={152}
+          />
+        </View>
+        <View style={styles.BarChartContainer}>
+          <BarChart
+            data={barDataWithLabels}
+            barWidth={20.8}
+            maxValue={90}
+            initialSpacing={18}
+            spacing={28.4}
+            barBorderRadius={4}
+            hideAxesAndRules
+            noOfSections={3}
+            yAxisThickness={0}
+            xAxisThickness={0}
+            height={168}
+            width={Dimensions.get("window").width - 16}
+          />
+        </View>
+      </View>
     </View>
   );
 };
@@ -612,5 +724,35 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 1,
+  },
+  DetailsWeightChart: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "92%",
+    height: 460,
+    borderRadius: 16,
+    marginTop: 22,
+    marginHorizontal: 18,
+    backgroundColor: "#FFF4EC",
+  },
+  LineChartContainer: {
+    width: "100%",
+    top: 22,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  BarChartContainer: {
+    bottom: 30,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  testtt: {
+    width: "85%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    marginTop: 26,
   },
 });

@@ -1,8 +1,10 @@
 package com.app.ayofit.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.text.ParseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,12 @@ public class RecordWeightController {
         return recordWeightDao.getWeightByDateAndId(date, rId);
     }
 
+    @GetMapping("/weekly-averages/{rId}/{formattedToday}")
+    public List<Map<String, Object>> getWeeklyAveragesForUser(@PathVariable String rId,@PathVariable String formattedToday) {
+    	System.out.println(formattedToday);
+        return recordWeightDao.getWeeklyAveragesForUser(rId);
+    }
+    
     @PostMapping
     public void addWeight(@RequestBody RecordWeightDTO record) {
     	recordWeightDao.addWeight(record);
