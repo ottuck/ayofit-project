@@ -1,21 +1,8 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  SafeAreaView,
-  Animated,
-  Image,
-  TextInput,
-  Button,
-  Modal,
-} from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View, Image, Modal } from "react-native";
 import { ScrollView } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Constants from "expo-constants";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { Dimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";

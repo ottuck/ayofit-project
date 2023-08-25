@@ -89,10 +89,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    marginTop: 16,
+    marginTop: 20,
   },
   dateText: {
-    fontSize: 20,
+    fontSize: 21,
     fontWeight: "400",
     marginHorizontal: 10,
   },
