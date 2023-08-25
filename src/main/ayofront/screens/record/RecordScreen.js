@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ImageBackground, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput, FlatList } from 'react-native';
 import React, { useState } from 'react';
 import { BlurView } from 'expo-blur';
 import { Feather } from '@expo/vector-icons';
@@ -13,6 +13,18 @@ function RecordScreen({ navigation }) {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
+  //Validation
+  const [error, setError] = useState('');
+  const validateInput = () => {
+    if (searchQuery.trim() === '') {
+      setError('음식 이름을 입력해주세요. ex) 닭');
+      return false;
+    } else {
+      setError('');
+      return true;
+    }
+  };
+
   //Search
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -21,23 +33,25 @@ function RecordScreen({ navigation }) {
     const query = searchQuery.trim(); // 앞뒤 공백 제거
     console.log("Searching for:", query);
     console.log("URL:", `${uri}/api/food/search/${query}`);
+    console.log(query);
+
     axios
       .get(`${uri}/api/food/search/${query}`)
       .then((response) => {
-        console.log(response.data);
-        response.data.forEach((food) => {
-          console.log(`Name: ${food.n_food_name}`);
-          console.log(`Maker: ${food.n_maker_name}`);
-          console.log(`Size: ${food.n_size}`);
-          console.log(`Carbohydrate: ${food.n_carbohydrate}`);
-          console.log(`Protein: ${food.n_protein}`);
-          console.log(`Fat: ${food.n_fat}`);
-          console.log(`Calorie: ${food.n_kcal}`);
-        });
-        setSearchResult(response.data);
-        // searchSubmit(searchResult); //되나?
+        console.log(response.data)
+        if (validateInput()) {
+          submitSearchResult();
+        }
       })
       .catch((error) => console.log(error));
+  };
+
+  //검색어 제출
+  const submitSearchResult = () => {
+    navigation.navigate("RecordMain");  //naviation.push 로 변경
+    setSearchResult([]);
+    setSearchQuery("");
+    closeModal();
   };
 
   //Modal
@@ -47,14 +61,6 @@ function RecordScreen({ navigation }) {
   };
   const closeModal = () => {
     setModalVisible(false);
-  };
-
-  //검색값과 함께 이동 (사용하게 해야함)
-  const searchSubmit = () => {
-    navigation.navigate("RecordMain");  //naviation.push 로 변경
-    setSearchResult([]);
-    setSearchQuery("");
-    closeModal();
   };
 
   //toISOString은 "2023-08-20T14:30:00.000Z"와 같은 형식이라 "T" 나눠서 0번째 index의 날짜만 가져온다
@@ -120,15 +126,18 @@ function RecordScreen({ navigation }) {
                     placeholder="Search your meal"
                     value={searchQuery}
                     onChangeText={(text) => setSearchQuery(text)}
-                    // onSubmitEditing={searchFood}  //검색어 제출
+                    onBlur={validateInput}
+                    onSubmitEditing={searchFood}
                   />
                   <TouchableOpacity>
                     <AntDesign name="closecircleo" style={styles.clearButton} />
                   </TouchableOpacity>
                 </View>
+                {/* 유효성 검사 결과 알림 */}
                 <ScrollView>
+                  {error ? <Text style={{ color: 'red' }}> {error} </Text> : null}
                   {searchResult.map((food, index) => (
-                    <Text key={index}>{food.n_food_name}</Text> // 검색한 음식 나열 
+                    <Text key={index}>{food.n_food_name}</Text>
                   ))}
                 </ScrollView>
               </View>

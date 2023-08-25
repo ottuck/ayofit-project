@@ -19,6 +19,7 @@ import FontProvider from "./components/FontProvider";
 import AccountsContextProvider from "./store/accounts_context";
 import AccountMain from "./navigations/AccountStack";
 import { PedometerProvider } from "./store/PedometerContext";
+import { PhotoProvider } from "./store/image_context";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -89,14 +90,16 @@ export default function App() {
     <AccountsContextProvider>
       <SafeAreaView style={{ flex: 1 }}>
         <FontProvider>
-          <StatusBar
-            backgroundColor={GlobalStyles.colors.primary500}
-            barStyle="default"
-          />
-          <NavigationContainer style={styles.navigationContainer}>
-            <PedometerProvider>
-              <Stack.Navigator>
-                {/* <Stack.Screen
+          <PhotoProvider>
+            <StatusBar
+              backgroundColor={GlobalStyles.colors.primary500}
+              barStyle="default"
+            />
+            <NavigationContainer style={styles.navigationContainer}>
+              <PedometerProvider>
+                <Stack.Navigator>
+                  {/* /* 인증해야되서 주석 처리 해둠
+              <Stack.Screen
                 name="AccountInfo"
                 component={AccountInfo}
                 options={{ headerShown: false }}
@@ -106,14 +109,15 @@ export default function App() {
                 component={AccountNutri}
                 options={{ headerShown: false }}
               /> */}
-                <Stack.Screen
-                  name="MainTabs"
-                  component={MainTabsScreen}
-                  options={{ headerShown: false }}
-                />
-              </Stack.Navigator>
-            </PedometerProvider>
-          </NavigationContainer>
+                  <Stack.Screen
+                    name="MainTabs"
+                    component={MainTabsScreen}
+                    options={{ headerShown: false }}
+                  />
+                </Stack.Navigator>
+              </PedometerProvider>
+            </NavigationContainer>
+          </PhotoProvider>
         </FontProvider>
       </SafeAreaView>
     </AccountsContextProvider>

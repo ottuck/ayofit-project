@@ -273,7 +273,6 @@ justify-content: center;
 export const ConfirmEText = styled.Text`
 font-size: 18px;
 font-weight : 500;
-white-space : pre;
 `;
 //--------------------Timer(Stack.js)----------------------//
 export const TimerScrollView = styled.ScrollView`
@@ -367,7 +366,6 @@ height: 80px;
 export const StartDate = styled.Text`
 font-size: 20px;
 color: #505050;
-white-space: pre;
 `;
 export const ModalContent = styled.View`
 background-color: white;
