@@ -6,17 +6,17 @@ public class FastDTO {
 	
    private String ConfirmStartTime;
    private String ConfirmEndTime;
-   private int TimerMethod;
+   private int elapsedTime;
    
    public FastDTO() {
 	// TODO Auto-generated constructor stub
 }
 
-public FastDTO(String confirmStartTime, String confirmEndTime, int timerMethod) {
+public FastDTO(String confirmStartTime, String confirmEndTime, int elapsedTime) {
 	super();
 	ConfirmStartTime = confirmStartTime;
 	ConfirmEndTime = confirmEndTime;
-	TimerMethod = timerMethod;
+	this.elapsedTime = elapsedTime;
 }
 
 public String getConfirmStartTime() {
@@ -35,20 +35,18 @@ public void setConfirmEndTime(String confirmEndTime) {
 	ConfirmEndTime = confirmEndTime;
 }
 
-public int getTimerMethod() {
-	return TimerMethod;
+public int getElapsedTime() {
+	return elapsedTime;
 }
 
-public void setTimerMethod(int timerMethod) {
-	TimerMethod = timerMethod;
+public void setElapsedTime(int elapsedTime) {
+	this.elapsedTime = elapsedTime;
 }
 
 @Override
 public String toString() {
-	return "FastDTO [ConfirmStartTime=" + ConfirmStartTime + ", ConfirmEndTime=" + ConfirmEndTime + ", TimerMethod="
-			+ TimerMethod + "]";
+	return "FastDTO [ConfirmStartTime=" + ConfirmStartTime + ", ConfirmEndTime=" + ConfirmEndTime + ", elapsedTime="
+			+ elapsedTime + "]";
 }
 
-
-    
 }

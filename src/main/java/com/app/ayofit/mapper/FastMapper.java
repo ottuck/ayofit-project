@@ -10,5 +10,5 @@ import com.app.ayofit.model.FastDTO;
 @Mapper
 public interface FastMapper {
     void insertFastData(FastDTO fastDTO);
-    
+    List<FastDTO> getAllFastRecord();
 }

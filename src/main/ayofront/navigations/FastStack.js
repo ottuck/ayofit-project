@@ -454,11 +454,12 @@ function MyTimer({ navigation: {navigate} }) {
                     onPress: () => {
                         setIsPlaying(false); // 타이머 멈추기
                         setElapsedTime(totalSeconds - remainingTime); // 사용된 시간 계산 및 저장
+                        console.log('사용 시간 : ' + elapsedTime);
 
                         const dataToSend = {
                             confirmStartTime : formattedStartTime,
                             confirmEndTime : formattedEndTime,
-                            timerMethod : timerMethod,
+                            elapsedTime : elapsedTime,
                         };
 
                         axios
@@ -476,13 +477,12 @@ function MyTimer({ navigation: {navigate} }) {
         };
         const totalSeconds = timerTime.number * 3600;
 
-        // console.log('시작 시간 :'+ConfirmStartTime);
-        // console.log('종료 시간 :'+ConfirmEndTime);
-        // console.log('단식 방법 : ' + timerMethod);
-        // console.log('단식 방법 초 : ' + totalSeconds);
-        // console.log('단식 방법 초 : ' + timerMethod2);
-        // console.log('남은 시간 : ' + remainingTime);
-        // console.log('사용 시간 : ' + elapsedTime);
+        console.log('시작 시간 :'+ConfirmStartTime);
+        console.log('종료 시간 :'+ConfirmEndTime);
+        console.log('단식 방법 : ' + timerMethod);
+        console.log('단식 방법 초 : ' + totalSeconds);
+        console.log('단식 방법 초 : ' + timerMethod2);
+        console.log('남은 시간 : ' + remainingTime);
 
         //w : JS-> Oracle
 

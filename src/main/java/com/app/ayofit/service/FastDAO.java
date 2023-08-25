@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.app.ayofit.mapper.FastMapper;
 import com.app.ayofit.model.FastDTO;
+import com.app.ayofit.model.FoodDTO;
 
 
 @Service
@@ -16,10 +17,14 @@ public class FastDAO {
     private FastMapper fastMapper;
     
     public void insertFastData(FastDTO fastDTO) {
-        fastMapper.insertFastData(fastDTO); // FastMapper를 이용하여 데이터베이스에 데이터 삽입
+        fastMapper.insertFastData(fastDTO); 
     }
     
-    // 기타 다른 메소드들도 추가 가능
+	public List<FastDTO> getAllFastRecord() {
+        return fastMapper.getAllFastRecord();
+    }
+
+   
 }
 
     

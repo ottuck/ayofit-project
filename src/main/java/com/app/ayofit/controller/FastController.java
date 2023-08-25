@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.ayofit.model.FastDTO;
+import com.app.ayofit.model.UserDTO;
 import com.app.ayofit.service.FastDAO;
 
 
@@ -24,19 +25,23 @@ public class FastController {
 	
     @PostMapping("")
     public void receiveDataFromApp(@RequestBody FastDTO dataFromApp) {
-    		System.out.println(dataFromApp);
+    	  System.out.println(dataFromApp);
           //dataFromApp 객체를 이용하여 받은 데이터 처리
 		
 		  String confirmStartTime = dataFromApp.getConfirmStartTime();
 		  String confirmEndTime = dataFromApp.getConfirmEndTime();
-		  int timerMethod = dataFromApp.getTimerMethod();
+		  int elapsedTime = dataFromApp.getElapsedTime();
 		  
 		  dataFromApp.setConfirmEndTime(confirmEndTime);
 		  dataFromApp.setConfirmStartTime(confirmStartTime);
-		  dataFromApp.setTimerMethod(timerMethod);
-		 
-        
-        // 이후 필요한 로직 수행 
+		  dataFromApp.setElapsedTime(elapsedTime);
+		   
         fastDAO.insertFastData(dataFromApp);
     }
+    
+	  @GetMapping("")
+	  public List<FastDTO> getAllFastRecord() {
+	  return fastDAO.getAllFastRecord();
+}
+	  
 }
