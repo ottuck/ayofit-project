@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   TextInput,
@@ -9,21 +9,27 @@ import {
 import axios from "axios";
 import { GlobalStyles } from "../UI/styles";
 
-const GoalInput = ({ initialGoal, onGoalChange, apiEndpoint, today }) => {
-  // const [newGoal, setNewGoal] = useState(initialGoal.toString());
-  const [newGoal, setNewGoal] = useState();
+const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
+  const [newGoal, setNewGoal] = useState("");
+  // const [showWarning, setShowWarning] = useState(false);
 
   const updateGoal = () => {
+    // if (newGoal.trim() === "") {
+    //   console.log("Goal cannot be empty");
+    //   setShowWarning(true);
+    //   return;
+    // }
     axios
       .put(`${apiEndpoint}/api/pedometer/update-step-goal`, {
-        pId: "user4", // 사용자 ID 설정
-        pDate: new Date(today), // 오늘 날짜
+        pId: "user4",
+        pDate: new Date(today),
         pStepGoal: parseInt(newGoal),
       })
       .then((response) => {
         console.log(response.data); // "Step goal updated successfully"
-        onGoalChange(parseInt(newGoal)); // 업데이트된 목표 값을 부모 컴포넌트로 전달
-        setNewGoal(""); // 입력 필드 비우기
+        onGoalChange(parseInt(newGoal));
+        setNewGoal(""); // Empty input field
+        // setShowWarning(false); // Hide the warning
       })
       .catch((error) => {
         console.error("Update Failed:", error);
@@ -39,6 +45,9 @@ const GoalInput = ({ initialGoal, onGoalChange, apiEndpoint, today }) => {
         onChangeText={setNewGoal}
         keyboardType="numeric"
       />
+      {/* {showWarning && (
+        <Text style={styles.warningText}>Goal cannot be empty</Text>
+      )} */}
       <TouchableOpacity style={styles.button} onPress={updateGoal}>
         <Text style={styles.buttonText}>Update</Text>
       </TouchableOpacity>
@@ -69,6 +78,10 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  warningText: {
+    color: "red",
+    marginTop: 5,
   },
 });
 

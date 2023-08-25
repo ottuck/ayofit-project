@@ -6,7 +6,7 @@
         SELECT * FROM pedometer
         WHERE p_id = #{userId}
         AND p_date BETWEEN #{startDate,jdbcType=DATE} AND #{endDate,jdbcType=DATE}
-        AND p_stepcnt >= p_stepgoal
+      <!--  AND p_stepcnt >= p_stepgoal-->
     </select>
     
     <update id="updateStepGoal" parameterType="com.app.ayofit.model.PedometerDTO">

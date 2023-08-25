@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Dimensions, StatusBar } from "react-native";
+import { StyleSheet, Dimensions, StatusBar } from "react-native";
 import "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
@@ -18,6 +18,7 @@ import { GlobalStyles } from "./components/UI/styles";
 import FontProvider from "./components/FontProvider";
 import AccountsContextProvider from "./store/accounts_context";
 import AccountMain from "./navigations/AccountStack";
+import { PedometerProvider } from "./store/PedometerContext";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -65,7 +66,6 @@ function MainTabsScreen() {
 
 export default function App() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
-
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [completedOnboarding, setCompletedOnboarding] = useState(false);
@@ -93,8 +93,9 @@ export default function App() {
             barStyle="default"
           />
           <NavigationContainer style={styles.navigationContainer}>
-            <Stack.Navigator>
-              {/* <Stack.Screen
+            <PedometerProvider>
+              <Stack.Navigator>
+                {/* <Stack.Screen
                 name="AccountInfo"
                 component={AccountInfo}
                 options={{ headerShown: false }}
@@ -104,12 +105,13 @@ export default function App() {
                 component={AccountNutri}
                 options={{ headerShown: false }}
               /> */}
-              <Stack.Screen
-                name="MainTabs"
-                component={MainTabsScreen}
-                options={{ headerShown: false }}
-              />
-            </Stack.Navigator>
+                <Stack.Screen
+                  name="MainTabs"
+                  component={MainTabsScreen}
+                  options={{ headerShown: false }}
+                />
+              </Stack.Navigator>
+            </PedometerProvider>
           </NavigationContainer>
         </FontProvider>
       </SafeAreaView>
