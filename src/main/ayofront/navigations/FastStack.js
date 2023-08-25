@@ -13,9 +13,12 @@ import {MethodContainer, MethodTitle, MethodCTouch, MethodCText, MethodCEndTouch
     ,TimerContainer,TimerTitle,TimerHomeBtn,TimerHomeBT,EndTimeText,MethodCTextS,ConfirmMessage,ConfirmMView,ConfirmStart,ConfrimSText,ConfirmEnd
     ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView,FirstMainPage,MainBtn,MainText,FastMainImage
     ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM,MethodLeftContent,MethodRightContent,
-    MethodCText2,MethodCTextS2,TimerScrollView,TimerStop
+    MethodCText2,MethodCTextS2,TimerScrollView,TimerStop, StartDate
 } from '../components/fast/FastingStyled';
 import { LinearGradient } from 'expo-linear-gradient';
+import axios from "axios";
+import Constants from "expo-constants";
+
 
 
 
@@ -217,6 +220,15 @@ const currnetDateTime = route.params.endTime;
 const [selectYear,selectMonth,selectDay] = seletedDate.split('/');
 const [selectHour,selectMinute] = selectedTime.split(':');
 
+// const year = parseInt(selectYear);
+// const month = parseInt(selectMonth) - 1;
+// const day = parseInt(selectDay);
+// const hour = parseInt(selectHour);
+// const minute = parseInt(selectMinute);
+
+// const jsDate = new Date(year, month, day, hour, minute);
+// console.log(jsDate)
+
 let totalHour = parseInt(selectMethod.number) + parseInt(selectHour) || '';
 let totalHourParse = parseInt(totalHour);
 let plusSelectDay = parseInt(selectDay);
@@ -234,6 +246,7 @@ if(!selectHour == '') {
 }
 // const currentEndTime = currnetDateTime.substring(13);
 const currentEndTime = currnetDateTime.split(' : ')[1]; // " : "로 분리하고 두 번째 요소 추출
+
 return(
 <PlanContainer>
 <LinearGradient colors={['#f7d7be','#e7a370']}>
@@ -283,6 +296,8 @@ const FastConfirm = ({ navigation }) => {
                 },
                 ConfirmStartTime : ConfirmStartTime,
                 ConfirmEndTime : ConfirmEndTime,
+                StartDate1 : date,
+                EndDate1 : date2,
             });
     };
 const route = useRoute();
@@ -291,6 +306,9 @@ const ConfirmDate = route.params.seletedDate;
 const ConfirmTime2 = route.params.selectedTime;
 const totalDateTime = route.params.totalDateTime;
 const currnetDateTime = route.params.currnetDateTime;
+
+//  console.log('끝나는 시간 :' + totalDateTime);
+
 
 const [currentFastDate,currentFastTime] =currnetDateTime.split(':');
 const currentEndTime = currnetDateTime.substring(13);
@@ -331,7 +349,6 @@ const options = {
     minute: 'numeric',
     hour12: true,
   };
-  
   const formatter = new Intl.DateTimeFormat('en-US', options);
   // 시작 날짜 (현재 or 셀렉)
   const ConfirmStartTime = formatter.format(date).replace('at', '').replace(',', ', ');
@@ -389,14 +406,39 @@ function secondsToHMS(seconds) {
 }
 
 function MyTimer({ navigation: {navigate} }) {
-    
+
+    const { debuggerHost } = Constants.manifest2.extra.expoGo;
+    const uri = `http://${debuggerHost.split(":").shift()}:8080/api/fast`;
+
     const route = useRoute();
+    const StartDate1 = route.params.StartDate1;
+    const EndDate1 = route.params.EndDate1;
     const ConfirmStartTime = route.params.ConfirmStartTime;
     const ConfirmEndTime = route.params.ConfirmEndTime;
     const timerTime = route.params?.seletedValue;
+    const timerMethod = route.params.seletedValue.number;
+    const timerMethod2 = route.params.seletedValue.string;
     const [isPlaying, setIsPlaying] = useState(true);
     const [elapsedTime, setElapsedTime] = useState(0);
     const [remainingTime, setRemainingTime] = useState();
+
+    const [fastDateSend,setFastDateSend] = useState(false);
+
+    function formatOracleDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+    
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+    const parsedStartTime = new Date(StartDate1);
+    const parsedStartTime2 = new Date(EndDate1);
+    const formattedStartTime = formatOracleDate(parsedStartTime);
+    const formattedEndTime = formatOracleDate(parsedStartTime2);
+
 
     const handleStopTimer = () => {
         Alert.alert(
@@ -412,12 +454,39 @@ function MyTimer({ navigation: {navigate} }) {
                     onPress: () => {
                         setIsPlaying(false); // 타이머 멈추기
                         setElapsedTime(totalSeconds - remainingTime); // 사용된 시간 계산 및 저장
+                        console.log('사용 시간 : ' + elapsedTime);
+
+                        const dataToSend = {
+                            confirmStartTime : formattedStartTime,
+                            confirmEndTime : formattedEndTime,
+                            elapsedTime : elapsedTime,
+                        };
+
+                        axios
+                            .post(`${uri}`,dataToSend)
+                            .then(response => {
+                                setFastDateSend(true);
+                            })
+                            .catch(error => {
+                                console.error('Error sending data:', error)
+                            })
                     },
                 },
             ],
-        );
-    };
-    const totalSeconds = timerTime.number * 3600;
+            );
+        };
+        const totalSeconds = timerTime.number * 3600;
+
+        console.log('시작 시간 :'+ConfirmStartTime);
+        console.log('종료 시간 :'+ConfirmEndTime);
+        console.log('단식 방법 : ' + timerMethod);
+        console.log('단식 방법 초 : ' + totalSeconds);
+        console.log('단식 방법 초 : ' + timerMethod2);
+        console.log('남은 시간 : ' + remainingTime);
+
+        //w : JS-> Oracle
+
+        
     return (
         <TimerScrollView>
             <LinearGradient colors={['#f7d7be','#e7a370']}>
