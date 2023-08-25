@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,5 +40,16 @@ public class PedometerController {
 	     
 	     return ResponseEntity.ok("Step goal updated successfully");
 	 }
+	 
+	 @PutMapping("/update-daily-step")
+	 public ResponseEntity<String> updateDailyStep(@RequestBody PedometerDTO pedometerDTO) {
+	     try {
+	         pedometerDAO.updateDailyStep(pedometerDTO);
+	         return ResponseEntity.ok("Daily step updated successfully");
+	     } catch (Exception e) {
+	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating daily step");
+	     }
+	 }
+	 
 	    
 }

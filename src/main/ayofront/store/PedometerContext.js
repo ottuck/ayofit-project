@@ -34,6 +34,8 @@ export const PedometerProvider = ({ children }) => {
     .toString()
     .padStart(2, "0")}-${currentDate.getDate().toString().padStart(2, "0")}`;
 
+  const formattedDateRef = useRef(formattedDate);
+
   const [congratulationsOpacity] = useState(new Animated.Value(0)); // Initialize Animated.Value
 
   const stepsToKilometers = (steps) => {
@@ -59,7 +61,65 @@ export const PedometerProvider = ({ children }) => {
     }, 3000); //
   };
 
+  //
+  const resetStepsOnNewDay = async () => {
+    const currentDate = new Date();
+    const formattedDate = `${currentDate.getFullYear()}-${(
+      currentDate.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${currentDate.getDate().toString().padStart(2, "0")}`;
+
+    if (formattedDate !== formattedDateRef.current) {
+      setSteps(0);
+      formattedDateRef.current = formattedDate;
+    }
+  };
+
+  const updateDailyStep = () => {
+    const userId = "user4"; // 사용자 ID
+    const currentDate = new Date();
+
+    const formattedDate = `${currentDate.getFullYear()}-${(
+      currentDate.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${currentDate.getDate().toString().padStart(2, "0")}`;
+
+    // 현재의 steps 값을 서버로 업데이트
+    axios
+      .put(`${uri}/api/pedometer/update-daily-step`, {
+        pId: userId,
+        pDate: formattedDate,
+        pStepCnt: steps, // 현재의 steps 값을 보냅니다.
+      })
+      .then(() => {
+        // 업데이트 성공 시 로그 출력
+        console.log("Daily step count updated successfully.");
+      })
+      .catch((error) => {
+        console.error("Failed to update daily step count:", error);
+      });
+  };
+
   // ---------- useEffects ----------
+
+  useEffect(() => {
+    loadSavedSteps();
+    resetStepsOnNewDay();
+  }, []);
+
+  useEffect(() => {
+    saveSteps(steps);
+    resetStepsOnNewDay();
+  }, [steps]);
+
+  useEffect(() => {
+    if (steps !== 0) {
+      // 데일리 스텝 카운트가 0이 아니라면 업데이트 수행
+      updateDailyStep(steps);
+    }
+  }, [steps]); // steps 값이 변할 때마다 업데이트 수행
 
   useEffect(() => {
     const userId = "user4"; // Set the user ID here
@@ -132,14 +192,6 @@ export const PedometerProvider = ({ children }) => {
           setIsWalking(false);
         }
 
-        // if (isWalking && accelerationMagnitude < 1.2) {
-        //   setSteps((prevSteps) => prevSteps + 1);
-        //   setIsWalking(false);
-
-        //   if (steps + 1 === goal) {
-        //     showCongratulations();
-        //   }
-        // }
         if (isWalking && accelerationMagnitude < 1.2) {
           setSteps((prevSteps) => {
             const newSteps = prevSteps + 1;
@@ -199,6 +251,7 @@ export const PedometerProvider = ({ children }) => {
         stepsToKilometers,
         calculateCaloriesBurned,
         handleGoalUpdate,
+        updateDailyStep,
       }}
     >
       {children}
