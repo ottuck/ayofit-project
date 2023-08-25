@@ -45,26 +45,6 @@ public class AccountDAO {
 		}
 	}
 
-	public int regimg(MultipartFile file) {
-		try {
-		Resource path = resourceLoader.getResource("classpath:filetest/");
-		System.out.println(path);
-		 File file2 = path.getFile();
-		System.out.println(file2);
-		
-		
-		String saveFileName = file.getOriginalFilename();
-		System.out.println(saveFileName);
-		
-		file.transferTo(new File(file2 + "/" +saveFileName));
-		System.out.println("성공");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return 1;
-		}
-		return 0;
-	}
-
 	public GoalDTO getAccountGoals(String userId) {
 		return aMapper.getAccountGoals(userId);
 	}

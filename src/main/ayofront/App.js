@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Dimensions, StatusBar } from "react-native";
+import { StyleSheet, Dimensions, StatusBar } from "react-native";
 import "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
@@ -18,6 +18,8 @@ import { GlobalStyles } from "./components/UI/styles";
 import FontProvider from "./components/FontProvider";
 import AccountsContextProvider from "./store/accounts_context";
 import AccountMain from "./navigations/AccountStack";
+import { PedometerProvider } from "./store/PedometerContext";
+import { PhotoProvider } from "./store/image_context";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -43,6 +45,7 @@ function MainTabsScreen() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
+        tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: GlobalStyles.colors.primary500,
         tabBarInactiveTintColor: GlobalStyles.colors.blackOpacity50,
         headerShown: false,
@@ -65,7 +68,6 @@ function MainTabsScreen() {
 
 export default function App() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
-
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [completedOnboarding, setCompletedOnboarding] = useState(false);
@@ -88,13 +90,16 @@ export default function App() {
     <AccountsContextProvider>
       <SafeAreaView style={{ flex: 1 }}>
         <FontProvider>
-          <StatusBar
-            backgroundColor={GlobalStyles.colors.primary500}
-            barStyle="default"
-          />
-          <NavigationContainer style={styles.navigationContainer}>
-            <Stack.Navigator>
-              {/* <Stack.Screen
+          <PhotoProvider>
+            <StatusBar
+              backgroundColor={GlobalStyles.colors.primary500}
+              barStyle="default"
+            />
+            <NavigationContainer style={styles.navigationContainer}>
+              <PedometerProvider>
+                <Stack.Navigator>
+                  {/* /* 인증해야되서 주석 처리 해둠
+              <Stack.Screen
                 name="AccountInfo"
                 component={AccountInfo}
                 options={{ headerShown: false }}
@@ -104,13 +109,15 @@ export default function App() {
                 component={AccountNutri}
                 options={{ headerShown: false }}
               /> */}
-              <Stack.Screen
-                name="MainTabs"
-                component={MainTabsScreen}
-                options={{ headerShown: false }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
+                  <Stack.Screen
+                    name="MainTabs"
+                    component={MainTabsScreen}
+                    options={{ headerShown: false }}
+                  />
+                </Stack.Navigator>
+              </PedometerProvider>
+            </NavigationContainer>
+          </PhotoProvider>
         </FontProvider>
       </SafeAreaView>
     </AccountsContextProvider>

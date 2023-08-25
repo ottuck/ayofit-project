@@ -55,9 +55,12 @@ function MyPage({ navigation }) {
         />
       </View>
       <View style={styles.settings}>
-        <Pressable onPress={goToSettings}>
-          <IconButton icon="player-settings" size={30} color="white" />
-        </Pressable>
+        <IconButton
+          onPress={goToSettings}
+          icon="player-settings"
+          size={30}
+          color="white"
+        />
       </View>
       <View style={styles.userIdContainer}>
         <Text style={styles.userId}>Ayo</Text>
@@ -140,7 +143,8 @@ const styles = StyleSheet.create({
   settings: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    marginTop: "-45%",
+    marginTop: "-38%",
+    marginRight: "5%",
   },
   userIdContainer: {
     flexDirection: "row",
@@ -158,9 +162,9 @@ const styles = StyleSheet.create({
   },
   profileImg: {
     marginTop: "2%",
-    width: 130,
-    height: 130,
-    borderRadius: 65,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     borderColor: "rgba(255,255,255,0.8)",
     borderWidth: 8,
   },

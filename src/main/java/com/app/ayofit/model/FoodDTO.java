@@ -2,58 +2,102 @@ package com.app.ayofit.model;
 
 public class FoodDTO {
 	
-	private int n_no;
-	private String n_food_name;
-	private String n_maker_name;
-	private double n_size;
-	private double n_kcal;
-	private double n_carbohydrate;
-	private double n_protein;
-	private double n_fat;
+	private int nNO;
+	private String nFoodName;
+	private String nMakerName;
+	private String nSize;
+	private String nKcal;
+	private String nCarbohydrate;
+	private String nProtein;
+	private String nFat;
 	
-	public FoodDTO(int n_no, String n_food_name, String n_maker_name, double n_size, double n_kcal,
-			double n_carbohydrate, double n_protein, double n_fat) {
+	public FoodDTO() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public FoodDTO(int nNO, String nFoodName, String nMakerName, String nSize, String nKcal, String nCarbohydrate,
+			String nProtein, String nFat) {
 		super();
-		this.n_no = n_no;
-		this.n_food_name = n_food_name;
-		this.n_maker_name = n_maker_name;
-		this.n_size = n_size;
-		this.n_kcal = n_kcal;
-		this.n_carbohydrate = n_carbohydrate;
-		this.n_protein = n_protein;
-		this.n_fat = n_fat;
+		this.nNO = nNO;
+		this.nFoodName = nFoodName;
+		this.nMakerName = nMakerName;
+		this.nSize = nSize;
+		this.nKcal = nKcal;
+		this.nCarbohydrate = nCarbohydrate;
+		this.nProtein = nProtein;
+		this.nFat = nFat;
 	}
 
-	public int getN_no() {
-		return n_no;
+	public int getnNO() {
+		return nNO;
 	}
 
-	public String getN_food_name() {
-		return n_food_name;
+	public void setnNO(int nNO) {
+		this.nNO = nNO;
 	}
 
-	public String getN_maker_name() {
-		return n_maker_name;
+	public String getnFoodName() {
+		return nFoodName;
 	}
 
-	public double getN_size() {
-		return n_size;
+	public void setnFoodName(String nFoodName) {
+		this.nFoodName = nFoodName;
 	}
 
-	public double getN_kcal() {
-		return n_kcal;
+	public String getnMakerName() {
+		return nMakerName;
 	}
 
-	public double getN_carbohydrate() {
-		return n_carbohydrate;
+	public void setnMakerName(String nMakerName) {
+		this.nMakerName = nMakerName;
 	}
 
-	public double getN_protein() {
-		return n_protein;
+	public String getnSize() {
+		return nSize;
 	}
 
-	public double getN_fat() {
-		return n_fat;
+	public void setnSize(String nSize) {
+		this.nSize = nSize;
 	}
+
+	public String getnKcal() {
+		return nKcal;
+	}
+
+	public void setnKcal(String nKcal) {
+		this.nKcal = nKcal;
+	}
+
+	public String getnCarbohydrate() {
+		return nCarbohydrate;
+	}
+
+	public void setnCarbohydrate(String nCarbohydrate) {
+		this.nCarbohydrate = nCarbohydrate;
+	}
+
+	public String getnProtein() {
+		return nProtein;
+	}
+
+	public void setnProtein(String nProtein) {
+		this.nProtein = nProtein;
+	}
+
+	public String getnFat() {
+		return nFat;
+	}
+
+	public void setnFat(String nFat) {
+		this.nFat = nFat;
+	}
+
+	@Override
+	public String toString() {
+		return "FoodDTO [nNO=" + nNO + ", nFoodName=" + nFoodName + ", nMakerName=" + nMakerName + ", nSize=" + nSize
+				+ ", nKcal=" + nKcal + ", nCarbohydrate=" + nCarbohydrate + ", nProtein=" + nProtein + ", nFat=" + nFat
+				+ "]";
+	}
+	
 	
 }
