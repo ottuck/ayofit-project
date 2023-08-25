@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ScrollView } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Constants from "expo-constants";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -34,6 +34,8 @@ import {
   HomeNavButton,
   HomeNavButtonText,
 } from "../../components/nutriDetail/StyledComponents";
+import { GlobalStyles } from "../../components/UI/styles";
+import HomePedometerProgressBar from "../../components/pedometer/HomePedometerProgressBar";
 
 function NutriDetailScreen() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -77,6 +79,9 @@ function NutriDetailScreen() {
   const formattedToday = formatDate(today); // ex)) "Mon, August 21" 형식
   console.log(formattedToday);
 
+  // // PedometerContext 가져오기
+  // const { steps, goal, calculateCaloriesBurned } = useContext(PedometerContext);
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <HomeSafeAreaView>
@@ -99,24 +104,10 @@ function NutriDetailScreen() {
             />
           </View>
         </HomeUserContainer>
-        <StepProgressContainer>
-          <Image
-            source={require("../../assets/personOnBar.png")}
-            style={{
-              height: 38,
-              width: 38,
-              right: -38,
-            }}
-          />
-          <StepProgressBar progress={65 / 100} width={326} height={6.2} />
-          <StepProgressText>
-            <StepKcalText>215 kcal</StepKcalText>
-            <Text>
-              <StepsHighlightText>5,600</StepsHighlightText>
-              <StepsText> / 8000 Steps</StepsText>
-            </Text>
-          </StepProgressText>
-        </StepProgressContainer>
+
+        {/* Pedometer Progress Bar Area */}
+        <HomePedometerProgressBar />
+
         <HomeNavButtonContainer>
           {["My Records", "Details"].map((buttonText, index) => (
             <HomeNavButton

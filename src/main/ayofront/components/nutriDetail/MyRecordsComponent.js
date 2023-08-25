@@ -238,7 +238,7 @@ const MyRecordsComponent = () => {
     fetchAllWeightsByUserId("user3");
   }, []);
 
-  console.log(weightData);
+  // console.log(weightData);
 
   return (
     <MyRecordsDailyNutritionContainer>
