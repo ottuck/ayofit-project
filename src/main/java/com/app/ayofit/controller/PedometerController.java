@@ -44,6 +44,7 @@ public class PedometerController {
 	 @PutMapping("/update-daily-step")
 	 public ResponseEntity<String> updateDailyStep(@RequestBody PedometerDTO pedometerDTO) {
 	     try {
+	    	 System.out.println(pedometerDTO);
 	         pedometerDAO.updateDailyStep(pedometerDTO);
 	         return ResponseEntity.ok("Daily step updated successfully");
 	     } catch (Exception e) {

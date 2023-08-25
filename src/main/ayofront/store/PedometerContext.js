@@ -9,6 +9,7 @@ import axios from "axios";
 import Constants from "expo-constants";
 import { Accelerometer } from "expo-sensors";
 import { Animated, Easing, AppState } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PedometerContext = createContext();
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -41,6 +42,9 @@ export const PedometerProvider = ({ children }) => {
     .padStart(2, "0")}-${currentDate.getDate().toString().padStart(2, "0")}`;
 
   const formattedDateRef = useRef(formattedDate);
+  const appState = useRef(AppState.currentState);
+  const [lastUpdateTimestamp, setLastUpdateTimestamp] = useState(Date.now());
+  const UPDATE_INTERVAL = 300000;
 
   const [congratulationsOpacity] = useState(new Animated.Value(0)); // Initialize Animated.Value
 
@@ -67,23 +71,9 @@ export const PedometerProvider = ({ children }) => {
     }, 3000); //
   };
 
-  const handleAppStateChange = async (nextAppState) => {
-    if (
-      appState.current.match(/inactive|background/) &&
-      nextAppState === "active"
-    ) {
-      // 앱이 백그라운드에서 포그라운드로 돌아왔을 때 실행되는 로직
-      // 저장 로직을 여기에 추가
-      await updateOnExit();
-    }
-
-    appState.current = nextAppState;
-  };
-
-  const updateOnExit = async () => {
-    if (steps !== 0) {
-      // 데일리 스텝 카운트가 0이 아니라면 업데이트 수행
-      const userId = "user4"; // 사용자 ID
+  const updateStepsOnServer = async (updatedSteps) => {
+    if (updatedSteps !== 0) {
+      const userId = "user4";
       const currentDate = new Date();
 
       const formattedDate = `${currentDate.getFullYear()}-${(
@@ -95,50 +85,24 @@ export const PedometerProvider = ({ children }) => {
         .toString()
         .padStart(2, "0")}`;
 
-      // 현재의 steps 값을 서버로 업데이트
-      axios
-        .put(`${uri}/api/pedometer/update-daily-step`, {
+      try {
+        await axios.put(`${uri}/api/pedometer/update-daily-step`, {
           pId: userId,
           pDate: formattedDate,
-          pStepCnt: steps, // 현재의 steps 값을 보냅니다.
-        })
-        .then(() => {
-          // 업데이트 성공 시 로그 출력
-          console.log("Daily step count updated successfully.");
-        })
-        .catch((error) => {
-          console.error("Failed to update daily step count:", error);
+          pStepCnt: updatedSteps,
         });
-      setSteps(0); // 업데이트 후 스텝 초기화
+        console.log("Daily step count updated successfully.");
+        setSteps(updatedSteps);
+        await AsyncStorage.setItem("steps", updatedSteps.toString());
+      } catch (error) {
+        console.error("Failed to update daily step count:", error);
+      }
     }
   };
 
-  useEffect(() => {
-    resetStepsOnNewDay();
-
-    AppState.addEventListener("change", handleAppStateChange); // AppState 리스너 추가
-
-    return () => {
-      AppState.removeEventListener("change", handleAppStateChange); // AppState 리스너 제거
-
-      // 앱이 종료될 때 업데이트 로직 수행
-      updateOnExit();
-    };
-  }, []);
-
-  //
-  const resetStepsOnNewDay = async () => {
-    const currentDate = new Date();
-    const formattedDate = `${currentDate.getFullYear()}-${(
-      currentDate.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, "0")}-${currentDate.getDate().toString().padStart(2, "0")}`;
-
-    if (formattedDate !== formattedDateRef.current) {
-      setSteps(0);
-      formattedDateRef.current = formattedDate;
-    }
+  const handleStepsUpdate = async (updatedSteps) => {
+    setSteps(updatedSteps);
+    await updateStepsOnServer(updatedSteps);
   };
 
   // const updateDailyStep = () => {
@@ -170,14 +134,6 @@ export const PedometerProvider = ({ children }) => {
   // ---------- useEffects ----------
 
   useEffect(() => {
-    resetStepsOnNewDay();
-  }, []);
-
-  useEffect(() => {
-    resetStepsOnNewDay();
-  }, [steps]);
-
-  useEffect(() => {
     const userId = "user4"; // Set the user ID here
     const currentDate = new Date();
 
@@ -206,8 +162,10 @@ export const PedometerProvider = ({ children }) => {
 
         if (todayData) {
           const todayStepGoal = todayData.pStepGoal;
+          const todayCurrentStep = todayData.pStepCnt;
           console.log(`${userId}'s daily initial goal:`, todayStepGoal);
           setGoal(todayStepGoal);
+          setSteps(todayCurrentStep);
         } else {
           console.log("Today's data not found, using existing goal.");
         }
@@ -307,6 +265,7 @@ export const PedometerProvider = ({ children }) => {
         stepsToKilometers,
         calculateCaloriesBurned,
         handleGoalUpdate,
+        updateStepsOnServer,
       }}
     >
       {children}
