@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet, ImageBackground, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput, FlatList} from 'react-native';
 import React, { useState } from 'react';
 import { BlurView } from 'expo-blur';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+
 //axios
 import axios from "axios";
 import Constants from "expo-constants";
@@ -33,12 +34,13 @@ function RecordScreen({ navigation }) {
     const query = searchQuery.trim(); // 앞뒤 공백 제거
     console.log("Searching for:", query);
     console.log("URL:", `${uri}/api/food/search/${query}`);
-    console.log(query);
 
     axios
       .get(`${uri}/api/food/search/${query}`)
       .then((response) => {
-        console.log(response.data)
+        // console.log(response.data);
+        setSearchResult(response.data);
+
         if (validateInput()) {
           submitSearchResult();
         }
@@ -47,10 +49,9 @@ function RecordScreen({ navigation }) {
   };
 
   //검색어 제출
-  const submitSearchResult = () => {
-    navigation.navigate("RecordMain");  //naviation.push 로 변경
-    setSearchResult([]);
-    setSearchQuery("");
+  const submitSearchResult = (navigation) => {
+    navigation.navigate("RecordMain", {searchResult});  //naviation.push 로 변경
+    console.log('검색어 제출', {searchResult}); 
     closeModal();
   };
 
@@ -67,6 +68,10 @@ function RecordScreen({ navigation }) {
   const today = new Date();
   const formattedToday = today.toISOString().split("T")[0];
 
+  //FlatList item
+  const flatListItem = () => {
+    <Text>ㅇㅇ</Text>
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -133,13 +138,13 @@ function RecordScreen({ navigation }) {
                     <AntDesign name="closecircleo" style={styles.clearButton} />
                   </TouchableOpacity>
                 </View>
-                {/* 유효성 검사 결과 알림 */}
-                <ScrollView>
+                {/* 검색어 리스트 */}
+                <View>
                   {error ? <Text style={{ color: 'red' }}> {error} </Text> : null}
                   {searchResult.map((food, index) => (
-                    <Text key={index}>{food.n_food_name}</Text>
+                    <Text data={food} key={index}></Text>
                   ))}
-                </ScrollView>
+                </View>
               </View>
             </BlurView>
           </Modal>
