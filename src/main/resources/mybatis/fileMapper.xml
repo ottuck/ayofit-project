@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.app.ayofit.mapper.FileMapper">
+
+	<insert id="uploadImg">
+		insert into record_img values (record_img_seq.nextval, #{fDTO.fId}, #{fDTO.fImg}, sysdate)
+	</insert>
+	
+</mapper>

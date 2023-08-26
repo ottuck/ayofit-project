@@ -9,13 +9,22 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.app.ayofit.mapper.FileMapper;
+import com.app.ayofit.model.FileDTO;
+
 @Service
 public class FileDAO {
 	
 	@Autowired
 	private ResourceLoader resourceLoader;
 	
-	public int uploadImg(MultipartFile file) {
+	private FileMapper fMapper;
+	
+	public FileDAO(FileMapper fMapper) {
+		this.fMapper = fMapper;
+	}
+	
+	public int uploadImg(MultipartFile file, String userId) {
 		try {
 			Resource path = resourceLoader.getResource("classpath:filetest/");
 			System.out.println(path);
@@ -31,7 +40,17 @@ public class FileDAO {
 			System.out.println(saveFileName);
 			
 			file.transferTo(new File(uploadDirectory+ "/" + newFileName));
+			System.out.println(uploadDirectory+ "/" + newFileName);
 			System.out.println("성공");
+			
+			FileDTO fDTO = new FileDTO();
+			fDTO.setfId(userId);
+			fDTO.setfImg(uploadDirectory+ "/" + newFileName);
+			
+			if (fMapper.uploadImg(fDTO) == 1) {
+				System.out.println("DB 등록 성공");
+			}
+			
 			} catch (Exception e) {
 				e.printStackTrace();
 				return 1;

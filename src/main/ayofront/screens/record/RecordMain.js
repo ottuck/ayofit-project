@@ -16,6 +16,7 @@ import DatePicker from "react-native-modern-datepicker";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
 import { usePhotoContext } from "../../store/image_context";
@@ -40,6 +41,7 @@ const RecordMain = ({ navigation }) => {
   };
   const { photoUri, setPhotoUri } = usePhotoContext();
   const deletePhoto = () => {
+    console.log(photoUri);
     setPhotoUri(null);
   };
 
@@ -84,7 +86,7 @@ const RecordMain = ({ navigation }) => {
               ) : null}
               {photoUri ? (
                 <Image
-                  source={{ uri: photoUri }}
+                  source={{ uri: { photoUri } }}
                   style={{ width: 280, height: 230, borderRadius: 10 }}
                 />
               ) : (

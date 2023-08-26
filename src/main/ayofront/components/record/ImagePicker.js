@@ -49,17 +49,19 @@ function ImagePicker({ children, onClose }) {
       console.log(image.assets[0].uri);
       setPhotoUri(image.assets[0].uri);
       onClose();
-      uploadImage(image.assets[0].uri);
+      uploadImage(image.assets[0].uri, "user1");
     }
   }
 
-  const uploadImage = async (imageUri) => {
+  const uploadImage = async (imageUri, userId) => {
     const formData = new FormData();
     formData.append("image", {
       uri: imageUri,
       name: "image.jpg",
       type: "image/jpeg",
     });
+
+    formData.append("userId", userId);
 
     try {
       const response = await fetch(uri + "/api/file/upload-image", {
