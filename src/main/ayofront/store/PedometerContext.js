@@ -20,6 +20,8 @@ export const PedometerProvider = ({ children }) => {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
+  const [todayData, setTodayData] = useState(null);
+
   const [steps, setSteps] = useState(0);
   const [isWalking, setIsWalking] = useState(false);
   const [goal, setGoal] = useState(100);
@@ -166,8 +168,10 @@ export const PedometerProvider = ({ children }) => {
           console.log(`${userId}'s daily initial goal:`, todayStepGoal);
           setGoal(todayStepGoal);
           setSteps(todayCurrentStep);
+          setTodayData(true);
         } else {
           console.log("Today's data not found, using existing goal.");
+          setTodayData(false);
         }
 
         const updatedDaysAchieved = daysOfWeek.map((day, index) => {
@@ -190,7 +194,7 @@ export const PedometerProvider = ({ children }) => {
       .catch((error) => {
         console.error("Failed to fetch weekly achievement data:", error);
       });
-  }, []);
+  }, [todayData]);
 
   useEffect(() => {
     const accelerometerSubscription = Accelerometer.addListener(
@@ -266,6 +270,9 @@ export const PedometerProvider = ({ children }) => {
         calculateCaloriesBurned,
         handleGoalUpdate,
         updateStepsOnServer,
+        formattedDateRef,
+        todayData,
+        setTodayData,
       }}
     >
       {children}

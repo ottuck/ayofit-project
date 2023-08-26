@@ -43,7 +43,7 @@ function PedometerScreen() {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await updateStepsOnServer(steps); // 업데이트할 현재 걸음수를 전달
+    await updateStepsOnServer(steps);
     setRefreshing(false);
   };
 
@@ -52,13 +52,9 @@ function PedometerScreen() {
   useEffect(() => {
     if (!isFocused) {
       console.log("Steps when leaving PedometerScreen:", steps);
-      // axios 요청
-      // 현재 사용자 ID를 가져오는 로직이 필요하다면 여기에 추가
 
-      // 현재 걸음수와 사용자 ID를 서버로 업데이트
       async function updateStepsOnServer() {
         try {
-          // 현재 사용자 ID와 날짜, 걸음수를 서버로 보냄
           const userId = "user4"; // 현재 사용자 ID
           console.log(userId);
           console.log(steps);
@@ -78,11 +74,9 @@ function PedometerScreen() {
       updateStepsOnServer();
     }
   }, [isFocused]);
+
   return (
     <View style={styles.container}>
-      <Text>Swipe Down to Record Daily Steps!</Text>
-      <SimpleLineIcons name="arrow-down" size={24} color="black" />
-
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAwareScrollView
           extraScrollHeight={Platform.select({ ios: 100, android: 200 })}
@@ -92,6 +86,10 @@ function PedometerScreen() {
           }
         >
           <View>
+            <View style={{ alignItems: "center" }}>
+              <Text>Swipe Down to Record Daily Steps!</Text>
+              <SimpleLineIcons name="arrow-down" size={24} color="black" />
+            </View>
             <View style={styles.dayContainerWrapper}>
               <View style={styles.daysContainer}>
                 {daysOfWeek.map((day, index) => (
