@@ -5,7 +5,7 @@
 
 <insert id="insertFastData">
     INSERT INTO FAST (F_NO, F_ID, F_HOWTO, F_START, F_END)
-    VALUES (7, 8, #{elapsedTime}, TO_DATE(#{confirmStartTime}, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#{confirmEndTime}, 'YYYY-MM-DD HH24:MI:SS'))
+    VALUES (8, 89, #{elapsedTime}, TO_DATE(#{confirmStartTime}, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#{confirmEndTime}, 'YYYY-MM-DD HH24:MI:SS'))
 </insert>
 
 <select id="getAllFastRecord" resultType="FastDTO">

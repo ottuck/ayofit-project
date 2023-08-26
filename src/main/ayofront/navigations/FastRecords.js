@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LinearGradient } from "expo-linear-gradient";
-import { View, Text } from "react-native";
 import {FastRecordView,RecordTouch,PlanContainer,PlanTitle,PlanMethodText,PlanMethodCView,PlanMethodC
     ,PlanEndView,PlanEndText,PlanConfirmV,PlanConfirmB,PlanConfirmT,RecordOneView,RecordUseTime,RecordSTime,RecordETime,
     RecordScrollView,RecordUnderC,RecordUpC
@@ -27,6 +26,31 @@ const FastRecord = ({navigation : { navigate } }) => {
             console.error('Error fetching data:', error);
           });
       }, []);
+      // const remainf = fastData[0].elapsedTime;
+      // console.log(remainf);
+      // const remainTimeF = (fastData[0].elapsedTime);
+      // console.log('이거 봐',remainTimeF)
+      
+      // const formattedTime = formatTimeFromSeconds(remainTimeF);
+      // console.log('예상 출력?',formattedTime);  // 예상 출력: "00:03:00"
+      
+      const formattedFastData = fastData.map(item => ({
+        formattedTime: formatTimeFromSeconds(item.elapsedTime)
+      }));
+      
+      console.log('Formatted Fast Data:', formattedFastData);
+      
+
+      function formatTimeFromSeconds(remainTimeF) {
+        const hours = Math.floor(remainTimeF / 3600);
+        const minutes = Math.floor((remainTimeF % 3600) / 60);
+        const remainingSeconds = remainTimeF % 60;
+      
+        const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        
+        return formattedTime;
+      }
+      
 
     return(
         <LinearGradient colors={['#f7d7be', '#e7a370']} style={{ flex: 1 }}>
@@ -38,7 +62,7 @@ const FastRecord = ({navigation : { navigate } }) => {
             <RecordUnderC>
           {fastData.map((data, index) => (
             <RecordOneView key={index}>
-              <RecordUseTime>Using Time : {data.elapsedTime}</RecordUseTime>
+              <RecordUseTime>Using Time : {formatTimeFromSeconds(data.elapsedTime)}</RecordUseTime>
               <RecordSTime>Start : {data.confirmStartTime}</RecordSTime>
               <RecordETime>End   : {data.confirmEndTime}</RecordETime>
             </RecordOneView>

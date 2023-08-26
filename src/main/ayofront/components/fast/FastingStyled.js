@@ -444,6 +444,7 @@ export const RecordOneView = styled.View`
 export const RecordUseTime = styled.Text`
 margin-top : 10px;
 margin-left : 10px;
+font-size : 18px;
 `;
 export const RecordSTime = styled.Text`
 margin-top : 10px;
