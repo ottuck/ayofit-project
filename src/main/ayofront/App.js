@@ -53,6 +53,8 @@ function MainTabsScreen() {
           backgroundColor: GlobalStyles.colors.primary50,
           borderRadius: 16,
           height: 65,
+          overflow: "hidden",
+          position: "absolute",
         },
         headerShown: false,
       })}
