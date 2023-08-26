@@ -13,6 +13,9 @@ import com.app.ayofit.model.PedometerDTO;
 
 @Mapper
 public interface PedometerMapper {
+	
+	void insertGoal(PedometerDTO pedometerDTO);
+	
 	 List<PedometerDTO> getWeeklyAchievement(
 		        @Param("userId") String userId,
 		        @Param("startDate") LocalDate startDate,

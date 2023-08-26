@@ -13,6 +13,8 @@ import {
 import Constants from "expo-constants";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SimpleLineIcons } from "@expo/vector-icons";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
+import axios from "axios";
 
 import { PedometerContext, daysOfWeek } from "../../store/PedometerContext";
 import { GlobalStyles } from "../../components/UI/styles";
@@ -21,8 +23,8 @@ import PedometerDailyCircles from "../../components/pedometer/PedometerDailyChec
 import CongratulationsMessage from "../../components/pedometer/CongratulationsMessage";
 import DistanceCaloriesBox from "../../components/pedometer/DistanceCaloriesBox";
 import GoalInput from "../../components/pedometer/GoalInput";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
-import axios from "axios"; // axios 모듈을 import
+import DailyGoalInputScreen from "./DailyGoalInputScreen";
+
 function PedometerScreen() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
@@ -37,6 +39,7 @@ function PedometerScreen() {
     handleGoalUpdate,
     congratulationsVisible,
     updateStepsOnServer,
+    todayData,
   } = useContext(PedometerContext);
 
   const [refreshing, setRefreshing] = useState(false);
@@ -75,7 +78,9 @@ function PedometerScreen() {
     }
   }, [isFocused]);
 
-  return (
+  return todayData ? (
+    <DailyGoalInputScreen />
+  ) : (
     <View style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAwareScrollView

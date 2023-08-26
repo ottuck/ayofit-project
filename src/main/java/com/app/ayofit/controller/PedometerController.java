@@ -23,6 +23,11 @@ import com.app.ayofit.service.PedometerDAO;
 public class PedometerController {
 	 @Autowired
 	    private PedometerDAO pedometerDAO;
+	 
+	 @PostMapping("/add-goal")
+	    public void addGoal(@RequestBody PedometerDTO pedometerDTO) {
+	        pedometerDAO.addGoal(pedometerDTO);
+	    }
 
 	 @GetMapping("/weekly-achievement")
 	    public ResponseEntity<List<PedometerDTO>> getWeeklyAchievement(

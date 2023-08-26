@@ -15,7 +15,12 @@ import com.app.ayofit.model.PedometerDTO;
 public class PedometerDAO {
 	 @Autowired
 	    private PedometerMapper pedometerMapper;
-
+	 	
+	   public void addGoal(PedometerDTO pedometerDTO) {
+	        Date currentDate = new Date();
+	        pedometerDTO.setpDate(currentDate);
+	    }
+	 
 	   public List<PedometerDTO> getWeeklyAchievement(String userId, LocalDate date) {
 	        LocalDate monday = date.with(DayOfWeek.MONDAY);
 	        LocalDate sunday = date.with(DayOfWeek.SUNDAY);

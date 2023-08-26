@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Constants from "expo-constants";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import OnboardingScreen from "./screens/Onboarding";
 import NutriDetailScreen from "./screens/nutriDetail/nutriDetail_test";
 import RecordScreen from "./screens/record/RecordNavigator";
