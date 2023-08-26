@@ -1,4 +1,15 @@
-import { View, Text, StyleSheet, ImageBackground, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+  FlatList
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { BlurView } from 'expo-blur';
 import { Feather } from '@expo/vector-icons';
@@ -8,7 +19,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import axios from "axios";
 import Constants from "expo-constants";
 
-function RecordScreen({navigation}) {
+function RecordScreen({ navigation }) {
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
@@ -16,12 +27,12 @@ function RecordScreen({navigation}) {
   //Debounce를 적용한 SearchAPI 호출
   const [keyword, setKeyword] = useState('');   //검색 키워드
   const [list, setList] = useState([]);   //검색어가 포함된 데이터 리스트
-  
+
 
   useEffect(() => {
     const getList = () => {
       const query = keyword.trim();
-      console.log("URL:", `${uri}/api/food/search/${query}`);
+      // console.log("URL:", `${uri}/api/food/search/${query}`);
 
       axios
         .get(`${uri}/api/food/search/${query}`)
@@ -40,9 +51,9 @@ function RecordScreen({navigation}) {
     };
   }, [keyword]);
 
-  //검색어 제출
+  //최종 검색어 제출
+  // console.log(list);
   const submitSearchResult = () => {
-    console.log(list);  //최종 검색어
     navigation.push('RecordMain', { food: list });  //list객체를 'food'로 넘김
     closeModal();
   };
@@ -71,6 +82,7 @@ function RecordScreen({navigation}) {
   //toISOString은 "2023-08-20T14:30:00.000Z"와 같은 형식이라 "T" 나눠서 0번째 index의 날짜만 가져온다
   const today = new Date();
   const formattedToday = today.toISOString().split("T")[0];
+
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -125,15 +137,17 @@ function RecordScreen({navigation}) {
                   <TouchableOpacity>
                     <FontAwesome5 name="search" style={styles.modalSearchButton} />
                   </TouchableOpacity>
-                  <TextInput
-                    style={styles.modalTextInput}
-                    placeholder="Search your meal"
-                    onChangeText={setKeyword}
-                    value={keyword}
-                    onSubmitEditing={submitSearchResult}
-                    returnKeyType="search" onBlur={validateInput}
-                  />
-                  <TouchableOpacity>
+                  <View style={styles.modalTextInputBox}>
+                    <TextInput
+                      style={styles.modalTextInput}
+                      placeholder="Search your meal"
+                      onChangeText={setKeyword}
+                      value={keyword}
+                      onSubmitEditing={submitSearchResult}
+                      returnKeyType="search" onBlur={validateInput}
+                    />
+                  </View>
+                  <TouchableOpacity onPress={() => setKeyword('')}>
                     <AntDesign name="closecircleo" style={styles.clearButton} />
                   </TouchableOpacity>
                 </View>
@@ -141,14 +155,14 @@ function RecordScreen({navigation}) {
                   data={list}
                   showsVerticalScrollIndicator={false}
                   style={styles.searchScrollView}
-                  keyExtractor={item => item.nId}
+                  keyExtractor={(item, index) => item.nNo || String(index)}
+                  //FlatList Rendering
                   renderItem={({ item }) =>
                     <TouchableOpacity
-                      key={item.nId}
-                      style={styles.searchScrollViewItem}
-                      onPress={() => { setKeyword(item.nFoodName) }}  //클릭한 메뉴를 다시 검색창에 띄우기
+                      style={{ marginVertical: '3%', fontSize: 18  }}
+                      onPress={() => { setKeyword(item.nFoodName) }}
                     >
-                      <Text style={styles.searchScrollViewText}>
+                      <Text style={{ fontSize: 18 }}>
                         {item.nFoodName}
                       </Text>
                     </TouchableOpacity>
@@ -269,13 +283,17 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'relative',
   },
-  modalTextInput: {
+  modalTextInputBox: {
     width: '80%',
     height: 45,
     borderColor: 'rgba(0, 0, 0, 0.3)',
     borderWidth: 1,
     borderRadius: 10,
     paddingLeft: 50,
+  },
+  modalTextInput: {
+    width: '80%',
+    height: 45,
     fontSize: 16,
   },
   modalSearchButton: {
@@ -293,14 +311,8 @@ const styles = StyleSheet.create({
     left: '32%',
     bottom: 12,
   },
-  //검색
+  //FlatList
   searchScrollView: {
     height: '80%', marginTop: '5%', marginLeft: '10%'
-  },
-  searchScrollViewItem: {
-    marginVertical: '3%',
-  },
-  searchScrollViewText: {
-    fontSize: 18,
   },
 });
