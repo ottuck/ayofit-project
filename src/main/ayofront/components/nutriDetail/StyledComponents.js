@@ -2,7 +2,7 @@ import styled from "styled-components/native";
 import * as Progress from "react-native-progress";
 
 export const HomeSafeAreaView = styled.SafeAreaView`
-  height: 1630px;
+  height: 1750px;
   background-color: #ffe9d8;
 `;
 
@@ -12,7 +12,7 @@ export const HomeUserContainer = styled.View`
   align-items: center;
   background-color: #ffe9d8;
   width: 100%;
-  height: 12%;
+  height: 11.2%;
 `;
 
 export const HomeHelloText = styled.Text`
@@ -38,7 +38,7 @@ export const StepProgressContainer = styled.View`
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-top: -16px;
+  margin-top: -20px;
 `;
 
 export const StepProgressBar = styled(Progress.Bar).attrs({
@@ -179,6 +179,31 @@ export const FaintLine = styled.View`
   background-color: "rgba(0, 0, 0, 0.25)";
   margin-horizontal: 12px;
   margin-vertical: 10px;
+`;
+
+export const WeightFaintLine = styled.View`
+  height: 4.5px;
+  width: 82%;
+  border-radius: 36px;
+  background-color: "rgba(228, 108, 10, 0.75)";
+  margin-horizontal: 4.2px;
+`;
+
+export const LittleFaintLine = styled.View`
+  height: 3.8px;
+  width: 9%;
+  background-color: "rgba(228, 108, 10, 0.75)";
+  border-radius: 36px;
+`;
+
+export const FaintLineContainer = styled.View`
+  width: 100%;
+  height: 12px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 28px;
+  margin-bottom: -9px;
 `;
 
 export const MyRecordsTodaysWeightContainer = styled.View`
@@ -556,17 +581,28 @@ export const RecordsModalFixAndDeleteButtonText = styled.Text`
   color: "rgba(0, 0, 0, 0.85)";
 `;
 
-export const WeightCalendarButton = styled.TouchableOpacity`
+export const LatestWeightView = styled.View`
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: center;
-  width: 91.6px;
-  height: 36.2px;
-  background-color: #e46c0a;
-  border-radius: 16.2px;
+  width: 88.2%;
+  height: 38px;
+  padding-horizontal: 8.6px;
+  margin-left: 18.5px;
+  margin-vertical: -12px;
+  border-width: 2px;
+  border-radius: 20px;
+  border-color: #e46c0a;
 `;
 
-export const WeightCalendarButtonText = styled.Text`
-  font-size: 18.5px;
+export const LatestWeightText = styled.Text`
+  color: #000000;
+  font-size: 19.6px;
   font-weight: 500;
-  color: "rgba(255, 255, 255, 0.85)";
+`;
+
+export const LatestWeightKg = styled.Text`
+  color: #fb9129;
+  font-size: 18.6px;
+  font-weight: 600;
 `;

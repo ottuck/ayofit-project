@@ -100,6 +100,7 @@ const MyRecordsComponent = () => {
     const dates = [];
     for (let i = 0; i < 7; i++) {
       const d = new Date();
+      d.setHours(d.getHours() + 9);
       d.setDate(d.getDate() - i);
       const formatted = `${String(d.getFullYear()).substr(2)}-${String(
         d.getMonth() + 1
@@ -196,6 +197,7 @@ const MyRecordsComponent = () => {
           console.log(response.data);
           setHasRecorded(true);
           setRecordedWeight(weight);
+          fetchAllWeightsByUserId("user3");
         })
         .catch((error) => console.log(error));
     }
@@ -208,6 +210,7 @@ const MyRecordsComponent = () => {
         console.log(response.data);
         setHasRecorded(false);
         setRecordedWeight(0);
+        fetchAllWeightsByUserId("user3");
       })
       .catch((error) => console.log(error));
   };
@@ -232,6 +235,7 @@ const MyRecordsComponent = () => {
         console.log(response.data);
         setHasRecorded(true);
         setRecordedWeight(weight);
+        fetchAllWeightsByUserId("user3");
       })
       .catch((error) => console.log(error));
   };
