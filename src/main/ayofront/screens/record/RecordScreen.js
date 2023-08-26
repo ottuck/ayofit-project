@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ImageBackground, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput, FlatList } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BlurView } from 'expo-blur';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -8,69 +8,55 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import axios from "axios";
 import Constants from "expo-constants";
 
-function RecordScreen({ navigation }) {
-  //uri 수정
+function RecordScreen({navigation}) {
+  //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+
+  //Debounce를 적용한 SearchAPI 호출
+  const [keyword, setKeyword] = useState('');   //검색 키워드
+  const [list, setList] = useState([]);   //검색어가 포함된 데이터 리스트
+  
+
+  useEffect(() => {
+    const getList = () => {
+      const query = keyword.trim();
+      console.log("URL:", `${uri}/api/food/search/${query}`);
+
+      axios
+        .get(`${uri}/api/food/search/${query}`)
+        .then((response) => {
+          setList(response.data);
+        })
+        .catch((error) => console.log(error));
+    };
+
+    const debounce = setTimeout(() => {
+      getList();
+    }, 200);  //keyword가 입력되고 0.x초 후 실행되게 지연시킴
+
+    return () => {
+      clearTimeout(debounce);
+    };
+  }, [keyword]);
+
+  //검색어 제출
+  const submitSearchResult = () => {
+    console.log(list);  //최종 검색어
+    navigation.push('RecordMain', { food: list });  //list객체를 'food'로 넘김
+    closeModal();
+  };
 
   //Validation
   const [error, setError] = useState('');
   const validateInput = () => {
-    if (searchQuery.trim() === '') {
+    if (keyword.trim() === '') {
       setError('음식 이름을 입력해주세요. ex) 닭');
       return false;
     } else {
       setError('');
       return true;
     }
-  };
-
-  //검색어 입력할때마다 axios 요청(검색어 지원 기능)
-  const getRealTimeFoodSearch = () => {
-    const query = searchQuery.trim(); // 앞뒤 공백 제거
-    console.log("Searching for:", query);
-    console.log("URL:", `${uri}/api/food/search/${query}`);
-
-    axios
-      .get(`${uri}/api/food/search/${query}`)
-      .then((response) => {
-        console.log(response.data[0]);
-        setSearchResult(response.data);
-
-        if (validateInput()) {
-          submitSearchResult();
-        }
-      })
-      .catch((error) => console.log(error));
-  }
-
-  //제출 검색어로 axios 요청
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResult, setSearchResult] = useState([]);
-
-  const searchFood = () => {
-    const query = searchQuery.trim(); // 앞뒤 공백 제거
-    console.log("Searching for:", query);
-    console.log("URL:", `${uri}/api/food/search/${query}`);
-
-    axios
-      .get(`${uri}/api/food/search/${query}`)
-      .then((response) => {
-        // console.log(response.data);
-        setSearchResult(response.data);
-
-        if (validateInput()) {
-          submitSearchResult();
-        }
-      })
-      .catch((error) => console.log(error));
-  };
-
-  //검색어 제출
-  const submitSearchResult = (navigation) => {
-    console.log('검색어 제출', { searchResult });
-    navigation.navigate("RecordMain", { searchResult });  //naviation.push 로 변경
-    closeModal();
   };
 
   //Modal
@@ -142,40 +128,32 @@ function RecordScreen({ navigation }) {
                   <TextInput
                     style={styles.modalTextInput}
                     placeholder="Search your meal"
-                    value={searchQuery}
-                    onChangeText={(text) => setSearchQuery(text)}
-                    onChange={getRealTimeFoodSearch}
-                    onBlur={validateInput}
-                    onSubmitEditing={searchFood}
+                    onChangeText={setKeyword}
+                    value={keyword}
+                    onSubmitEditing={submitSearchResult}
+                    returnKeyType="search" onBlur={validateInput}
                   />
                   <TouchableOpacity>
                     <AntDesign name="closecircleo" style={styles.clearButton} />
                   </TouchableOpacity>
                 </View>
-                {/* 검색어 리스트 */}
                 <FlatList
-                  data={searchResult}
-                  renderItem={({ item }) =>
-                    <Text style={styles.searchScrollViewText}>
-                      {item.nFoodName}
-                    </Text>
-                  }
+                  data={list}
+                  showsVerticalScrollIndicator={false}
+                  style={styles.searchScrollView}
                   keyExtractor={item => item.nId}
-                  showsVerticalScrollIndicator={false}
-                  style={styles.searchScrollView}
+                  renderItem={({ item }) =>
+                    <TouchableOpacity
+                      key={item.nId}
+                      style={styles.searchScrollViewItem}
+                      onPress={() => { setKeyword(item.nFoodName) }}  //클릭한 메뉴를 다시 검색창에 띄우기
+                    >
+                      <Text style={styles.searchScrollViewText}>
+                        {item.nFoodName}
+                      </Text>
+                    </TouchableOpacity>
+                  }
                 />
-                {/* <ScrollView
-                  showsVerticalScrollIndicator={false}
-                  style={styles.searchScrollView}
-                >
-                  {error ? <Text style={{ color: 'red' }}> {error} </Text> : null}
-
-                  {searchResult.map((food, index) => (
-                    <Text key={index} style={styles.searchScrollViewText}>
-                      {food.nFoodName}
-                    </Text>
-                  ))}
-                </ScrollView> */}
               </View>
             </BlurView>
           </Modal>
@@ -189,7 +167,6 @@ export default RecordScreen;
 
 const styles = StyleSheet.create({
   safeArea: {
-    // 이미지를 백그라운드 색이랑 합친걸로 교체하면 태그  SafeArea 부분 색을 쉽게 변경 가능
     backgroundColor: '#E46C0A',
   },
   container: {
@@ -233,7 +210,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 5, // Android에서 그림자를 보이게 하려면 elevation 설정
+    elevation: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -316,9 +293,12 @@ const styles = StyleSheet.create({
     left: '32%',
     bottom: 12,
   },
-  //검색창
+  //검색
   searchScrollView: {
-    height: '80%', marginTop: '10%', marginLeft: '10%'
+    height: '80%', marginTop: '5%', marginLeft: '10%'
+  },
+  searchScrollViewItem: {
+    marginVertical: '3%',
   },
   searchScrollViewText: {
     fontSize: 18,
