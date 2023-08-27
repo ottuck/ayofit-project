@@ -17,6 +17,7 @@ import { GlobalStyles } from "../../components/UI/styles";
 import { Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { PedometerContext } from "../../store/PedometerContext";
+import SwipeButton from "rn-swipe-button";
 
 function DailyGoalInputScreen() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -64,10 +65,10 @@ function DailyGoalInputScreen() {
           resizeMode="cover"
           style={styles.backgroundImage}
         >
-          <Image
+          {/* <Image
             style={styles.goalIcon}
             source={require("../../assets/goal-target-icon.png")}
-          />
+          /> */}
           <Text style={styles.goalText}>Enter your daily goal:</Text>
           <TextInput
             style={styles.input}
@@ -75,9 +76,32 @@ function DailyGoalInputScreen() {
             onChangeText={(text) => setInputGoal(text)}
             keyboardType="numeric"
           />
-          <TouchableOpacity onPress={submitGoal} style={styles.button}>
+          {/* <TouchableOpacity onPress={submitGoal} style={styles.button}>
             <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+
+          <SwipeButton
+            disabled={false}
+            //disable the button by doing true (Optional)
+            swipeSuccessThreshold={70}
+            height={45}
+            //height of the button (Optional)
+            width={240}
+            //width of the button (Optional)
+            title="Swipe to Submit"
+            //Text inside the button (Optional)
+            //thumbIconImageSource={thumbIcon}
+            //You can also set your own icon for the button (Optional)
+            onSwipeSuccess={submitGoal}
+            //After the completion of swipe (Optional)
+            railFillBackgroundColor={GlobalStyles.colors.gradientYellow} //(Optional)
+            railFillBorderColor="white" //(Optional)
+            thumbIconBackgroundColor="#ed9a73" //(Optional)
+            thumbIconBorderColor="white" //(Optional)
+            railBackgroundColor={GlobalStyles.colors.gradientGreen} //(Optional)
+            railBorderColor="transparent" //(Optional)
+            style={styles.swipeText}
+          ></SwipeButton>
         </ImageBackground>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
@@ -87,8 +111,6 @@ function DailyGoalInputScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
     backgroundColor: GlobalStyles.colors.primary100,
   },
   backgroundImage: {
@@ -127,6 +149,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  swipeText: {
+    color: "white",
+    fontSize: 18,
   },
 });
 
