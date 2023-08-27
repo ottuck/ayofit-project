@@ -2,7 +2,7 @@ import styled from "styled-components/native";
 import * as Progress from "react-native-progress";
 
 export const HomeSafeAreaView = styled.SafeAreaView`
-  height: 2000px;
+  height: 1920px;
   background-color: #ffe9d8;
 `;
 
@@ -326,12 +326,14 @@ export const DetailsBarAndValueContainer = styled.View`
   height: 60%;
   border-radius: 16px;
   margin-top: 3px;
+  padding-top: 2.2px;
+  padding-bottom: 6.3px;
 `;
 
 export const DetailsProgressBarContainer = styled.View`
   height: 100%;
-  justify-content: space-evenly;
-  margin-top: 6px;
+  justify-content: space-around;
+  margin-top: 11.3px;
   margin-left: 22px;
 `;
 
@@ -344,7 +346,7 @@ export const DetailsProgressBarPer = styled.Text`
 export const DetailsNutrionImgContainer = styled.View`
   justify-content: space-around;
   height: 100%;
-  margin-top: -3px;
+  margin-top: -1.8px;
   margin-left: 22px;
 `;
 
@@ -353,9 +355,9 @@ export const DetailsNutritionGramContainer = styled.View`
 `;
 
 export const DetailsGramContainer = styled.View`
-  justify-content: space-evenly;
+  justify-content: space-around;
   height: 100%;
-  margin-top: 6px;
+  margin-top: 6.8px;
   margin-left: 18px;
 `;
 
@@ -377,6 +379,7 @@ export const DetailsProgressBarBottomContainer = styled.View`
   height: 27.6%;
   align-items: center;
   justify-content: center;
+  top: -1.5px;
 `;
 
 export const DetailsActivityCalorieText = styled.Text`
@@ -412,11 +415,11 @@ export const DetailsCircleContainer = styled.View`
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.45);
   width: 100%;
-  height: 166px;
+  height: 160px;
   border-radius: 20px;
   margin-top: 20px;
-  margin-left: 1.2px;
-  top: 338px;
+  margin-left: 1px;
+  top: 22px;
 `;
 
 export const DetailsCircleRow = styled.View`

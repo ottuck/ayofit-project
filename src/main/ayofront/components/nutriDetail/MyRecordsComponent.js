@@ -387,6 +387,68 @@ const MyRecordsComponent = () => {
           )}
         </AnimatedCircularProgress>
       </CircularProgressContainer>
+      <DetailsCircleContainer>
+        {/* 첫 번째 원 */}
+        <Animated.View
+          style={[
+            styles.circle,
+            {
+              backgroundColor: "#FFD6D1",
+              width: fatAnimationValue,
+              height: fatAnimationValue,
+            },
+          ]}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "600",
+              color: "rgba(0, 0, 0, 0.8)",
+            }}
+          >{`${fatPercentage.toFixed(2)}%`}</Text>
+        </Animated.View>
+
+        {/* 두 번째 원 */}
+        <DetailsCircleRow>
+          <Animated.View
+            style={[
+              styles.circle,
+              {
+                backgroundColor: "#E2F0B5",
+                width: carbAnimationValue,
+                height: carbAnimationValue,
+              },
+            ]}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "600",
+                color: "rgba(0, 0, 0, 0.8)",
+              }}
+            >{`${carbPercentage.toFixed(2)}%`}</Text>
+          </Animated.View>
+          {/* 세 번째 원 */}
+          <Animated.View
+            style={[
+              styles.circle,
+              {
+                backgroundColor: "#FFEC99",
+                width: proteinAnimationValue,
+                height: proteinAnimationValue,
+              },
+            ]}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "600",
+                color: "rgba(0, 0, 0, 0.8)",
+              }}
+            >{`${proteinPercentage.toFixed(2)}%`}</Text>
+          </Animated.View>
+        </DetailsCircleRow>
+      </DetailsCircleContainer>
       <MyRecordsTodaysWeightContainer>
         <TodaysWeightTextContainer>
           <TodaysWeightText>Today's Recorded Weight : </TodaysWeightText>
@@ -518,68 +580,6 @@ const MyRecordsComponent = () => {
           </RecordsWeightModalView>
         </Modal>
       </MyRecordsTodaysWeightContainer>
-      <DetailsCircleContainer>
-        {/* 첫 번째 원 */}
-        <Animated.View
-          style={[
-            styles.circle,
-            {
-              backgroundColor: "#FFD6D1",
-              width: fatAnimationValue,
-              height: fatAnimationValue,
-            },
-          ]}
-        >
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: "600",
-              color: "rgba(0, 0, 0, 0.8)",
-            }}
-          >{`${fatPercentage.toFixed(2)}%`}</Text>
-        </Animated.View>
-
-        {/* 두 번째 원 */}
-        <DetailsCircleRow>
-          <Animated.View
-            style={[
-              styles.circle,
-              {
-                backgroundColor: "#E2F0B5",
-                width: carbAnimationValue,
-                height: carbAnimationValue,
-              },
-            ]}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "600",
-                color: "rgba(0, 0, 0, 0.8)",
-              }}
-            >{`${carbPercentage.toFixed(2)}%`}</Text>
-          </Animated.View>
-          {/* 세 번째 원 */}
-          <Animated.View
-            style={[
-              styles.circle,
-              {
-                backgroundColor: "#FFEC99",
-                width: proteinAnimationValue,
-                height: proteinAnimationValue,
-              },
-            ]}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "600",
-                color: "rgba(0, 0, 0, 0.8)",
-              }}
-            >{`${proteinPercentage.toFixed(2)}%`}</Text>
-          </Animated.View>
-        </DetailsCircleRow>
-      </DetailsCircleContainer>
     </MyRecordsDailyNutritionContainer>
   );
 };
