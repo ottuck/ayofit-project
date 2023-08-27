@@ -433,19 +433,23 @@ function MyTimer({ navigation: {navigate} }) {
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
     const currentTimerTime = new Date();
-    const timerCurrent = currentTimerTime.getTime();
-
+    
     const parsedStartTime = new Date(StartDate1);
     const parsedStartTime2 = new Date(EndDate1);
     const formattedStartTime = formatOracleDate(parsedStartTime);
     const formattedEndTime = formatOracleDate(parsedStartTime2);
     const timerStartTime = parsedStartTime.getTime();
+    const timerCurrent = currentTimerTime.getTime();
+    const StartCurrentTime = timerStartTime - timerCurrent;
+    const SCTime = parseInt(StartCurrentTime);
+    const SCTimeexample = 0;
 
-    const StartTimerTool = () => {
-        if(timerCurrent >= timerStartTime) {
-            setIsPlaying(true)
-        };
-    };
+    if (SCTime >= 0) {
+        setTimeout(() => {
+          setIsPlaying(true);
+        }, SCTime);
+      };
+      console.log(SCTime)
 
     const handleStopTimer = () => {
         setIsPlaying(false), // 타이머 멈추기
