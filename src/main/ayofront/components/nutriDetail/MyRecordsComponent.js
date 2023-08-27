@@ -448,6 +448,52 @@ const MyRecordsComponent = () => {
             >{`${proteinPercentage.toFixed(2)}%`}</Text>
           </Animated.View>
         </DetailsCircleRow>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignItems: "center",
+            width: "100%",
+            top: 12,
+          }}
+        >
+          <View>
+            <Image
+              source={require("../../assets/rectangleCarb.png")}
+              style={{
+                height: 23,
+                width: 30,
+              }}
+            />
+            <Text style={{ fontSize: 19, fontWeight: "400", color: "#84a220" }}>
+              Carb
+            </Text>
+          </View>
+          <View>
+            <Image
+              source={require("../../assets/rectangleProtein.png")}
+              style={{
+                height: 23,
+                width: 30,
+              }}
+            />
+            <Text style={{ fontSize: 19, fontWeight: "400", color: "#dfc552" }}>
+              Protein
+            </Text>
+          </View>
+          <View>
+            <Image
+              source={require("../../assets/rectangleFat.png")}
+              style={{
+                height: 23,
+                width: 30,
+              }}
+            />
+            <Text style={{ fontSize: 19, fontWeight: "400", color: "#e88174" }}>
+              Fat
+            </Text>
+          </View>
+        </View>
       </DetailsCircleContainer>
       <MyRecordsTodaysWeightContainer>
         <TodaysWeightTextContainer>

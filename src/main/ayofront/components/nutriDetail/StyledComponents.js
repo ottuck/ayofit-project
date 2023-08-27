@@ -415,7 +415,7 @@ export const DetailsCircleContainer = styled.View`
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.45);
   width: 100%;
-  height: 160px;
+  height: 226px;
   border-radius: 20px;
   margin-top: 20px;
   margin-left: 1px;
