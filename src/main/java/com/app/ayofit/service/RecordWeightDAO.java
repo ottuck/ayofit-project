@@ -52,7 +52,7 @@ public class RecordWeightDAO {
                     dailySum += weight.getrWeight();
                     count++;
                 }
-                
+              
             }
 
             double value;
@@ -114,6 +114,43 @@ public class RecordWeightDAO {
         return weekAverages;
     }
 
+    public List<Map<String, Object>> getMonthlyAveragesForUser(String rId, String formattedToday) {
+        LocalDate monthEnd = LocalDate.parse(formattedToday).withDayOfMonth(LocalDate.parse(formattedToday).lengthOfMonth()); // 해당 월의 마지막 날
+        LocalDate monthStart = monthEnd.withDayOfMonth(1); // 해당 월의 첫 날
+
+        List<Map<String, Object>> monthlyAverages = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) { // 3달 간의 데이터
+            List<RecordWeightDTO> weightsForMonth = mapper.findWeightsBetweenDates(rId, Date.from(monthStart.atStartOfDay(ZoneId.systemDefault()).toInstant()), Date.from(monthEnd.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+            double monthlySum = 0;
+            int count = weightsForMonth.size();
+
+            for (RecordWeightDTO weight: weightsForMonth) {
+                monthlySum += weight.getrWeight();
+            }
+
+            double average;
+            if (count > 0) {
+                average = Math.round((monthlySum / count) * 10) / 10.0;
+            } else {
+                average = 0; // 데이터가 없는 경우 0으로 설정
+            }
+
+            Map<String, Object> monthAvg = new HashMap<>();
+            monthAvg.put("average", average);
+            monthAvg.put("month", monthEnd.withDayOfMonth(1).toString());
+            monthlyAverages.add(monthAvg);
+
+            // 이전 월의 범위 계산
+            monthEnd = monthStart.minusDays(1);
+            monthStart = monthEnd.withDayOfMonth(1);
+        }
+
+        return monthlyAverages;
+    }
+
+    
     public void addWeight(RecordWeightDTO record) {
         mapper.insert(record);
     }

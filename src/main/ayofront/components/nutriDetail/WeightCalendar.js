@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 
-const WeightCalendar = ({ calendarMode, onDateChange }) => {
+const WeightCalendar = ({ calendarMode, onDateChange, onResetDate }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const today = new Date();
   today.setHours(today.getHours() + 9); // 도쿄,서울 날짜와 맞추기위해
   today.setDate(today.getDate());
   today.setHours(0, 0, 0, 0);
+
+  useEffect(() => {
+    if (onResetDate) {
+      setSelectedDate(today);
+    }
+  }, [onResetDate]);
 
   useEffect(() => {
     setSelectedDate(today);
@@ -36,6 +42,8 @@ const WeightCalendar = ({ calendarMode, onDateChange }) => {
         break;
       case "Monthly":
         newDate.setMonth(newDate.getMonth() + dateNum * 3);
+        formattedMonthly = newDate.toISOString().split("T")[0];
+        console.log(formattedMonthly);
         break;
     }
     setSelectedDate(newDate);

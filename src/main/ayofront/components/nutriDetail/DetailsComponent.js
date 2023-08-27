@@ -46,6 +46,9 @@ import {
   LatestWeightKg,
   WeightChartTop,
   WeightChartTopText,
+  GoalNutriRatioContainer,
+  GoalNutriRatioView,
+  GoalNutriRatioViewText,
 } from "../../components/nutriDetail/StyledComponents";
 import DateCalendar from "./DateCalendar";
 import WeightCalendar from "./WeightCalendar";
@@ -91,12 +94,14 @@ const DetailsComponent = () => {
   const [recordedWeight, setRecordedWeight] = useState(0); // 기록된 체중
   const [weightData, setWeightData] = useState([]); // 차트에 몸무게 여러개담는 데이터
   const [calendarMode, setCalendarMode] = useState("Daily");
+  const [resetWeightDate, setResetWeightDate] = useState(false);
   const [chartData, setChartData] = useState({
     lineData: [],
     barDataWithLabels: [],
   });
-  const [weeklyData, setWeeklyData] = useState([]);
   const [dailyWeightData, setDailyWeightData] = useState([]);
+  const [weeklyData, setWeeklyData] = useState([]);
+  const [monthlyData, setMonthlyData] = useState([]);
 
   let todayInTokyo = new Date();
   todayInTokyo.setHours(todayInTokyo.getHours() + 9); // 도쿄 시간대에 맞게 시간을 조정.
@@ -124,14 +129,28 @@ const DetailsComponent = () => {
       });
   };
 
-  // fetchDailyWeightsByUserId("user3", formattedToday);
-
   const fetchWeeklyAveragesByUserId = (rId, formattedToday) => {
     axios
       .get(`${uri}/api/weights/weekly-averages/${rId}/${formattedToday}`)
       .then((response) => {
         console.log(response.data);
         setWeeklyData(response.data.reverse());
+      })
+      .catch((error) => {
+        console.log("Error: ", error);
+        if (error.response) {
+          console.log("Response Data: ", error.response.data);
+          console.log("Response Status: ", error.response.status);
+        }
+      });
+  };
+
+  const fetchMonthlyAveragesByUserId = (rId, formattedToday) => {
+    axios
+      .get(`${uri}/api/weights/monthly-averages/${rId}/${formattedToday}`)
+      .then((response) => {
+        console.log(response.data);
+        setMonthlyData(response.data.reverse());
       })
       .catch((error) => {
         console.log("Error: ", error);
@@ -250,7 +269,7 @@ const DetailsComponent = () => {
           </Text>
         ),
         label: labelDate.replace(/-/g, "/"),
-        labelWidth: 32,
+        labelWidth: 26.6,
         frontColor: "#f5d0b1",
       });
 
@@ -259,6 +278,51 @@ const DetailsComponent = () => {
 
     lineData = lineData.reverse();
     barDataWithLabels = barDataWithLabels.reverse();
+
+    return { lineData, barDataWithLabels };
+  };
+
+  const createMonthlyChartData = () => {
+    let lineData = [];
+    let barDataWithLabels = [];
+
+    if (!monthlyData || !monthlyData.length)
+      return { lineData, barDataWithLabels };
+
+    for (let data of monthlyData) {
+      const adjustedValue = data.average;
+      lineData.push({
+        value: adjustedValue + 10,
+        dataPointText: adjustedValue.toString(),
+      });
+
+      const labelDateParts = data.month ? data.month.split("-") : [];
+      const labelDate =
+        labelDateParts.length > 1
+          ? `${labelDateParts[0]}/${labelDateParts[1]}`
+          : "";
+
+      barDataWithLabels.push({
+        value: adjustedValue,
+        topLabelComponent: () => (
+          <Text
+            style={{
+              color: "#d88b4b",
+              fontSize: 16.5,
+              fontWeight: "600",
+              width: 42,
+              height: 23.8,
+              textAlign: "center",
+            }}
+          >
+            {adjustedValue}
+          </Text>
+        ),
+        label: labelDate,
+        labelWidth: 21.5,
+        frontColor: "#f5d0b1",
+      });
+    }
 
     return { lineData, barDataWithLabels };
   };
@@ -276,6 +340,13 @@ const DetailsComponent = () => {
       setChartData({ lineData, barDataWithLabels });
     }
   }, [weeklyData]);
+
+  useEffect(() => {
+    if (calendarMode === "Monthly") {
+      const { lineData, barDataWithLabels } = createMonthlyChartData();
+      setChartData({ lineData, barDataWithLabels });
+    }
+  }, [monthlyData]);
 
   const getLast7Days = () => {
     const dates = [];
@@ -791,8 +862,11 @@ const DetailsComponent = () => {
         <DateButtonContainer>
           <DateButton
             onPress={() => {
-              setCalendarMode("Daily");
-              fetchDailyWeightsByUserId("user3", formattedToday);
+              if (calendarMode !== "Daily") {
+                setCalendarMode("Daily");
+                // 필요한 다른 로직 추가
+              }
+              setResetWeightDate((prev) => !prev); // 날짜 초기화 로직을 if문 밖으로 뺐습니다.
             }}
             isActive={calendarMode === "Daily"}
           >
@@ -803,9 +877,12 @@ const DetailsComponent = () => {
 
           <DateButton
             onPress={() => {
-              setCalendarMode("Weekly");
-              fetchWeeklyAveragesByUserId("user3", formattedToday);
-              createWeeklyChartData();
+              if (calendarMode !== "Weekly") {
+                setCalendarMode("Weekly");
+                fetchWeeklyAveragesByUserId("user3", formattedToday);
+                createWeeklyChartData();
+              }
+              setResetWeightDate((prev) => !prev); // 날짜 초기화
             }}
             isActive={calendarMode === "Weekly"}
           >
@@ -813,8 +890,16 @@ const DetailsComponent = () => {
               Weekly
             </DateButtonText>
           </DateButton>
+
           <DateButton
-            onPress={() => setCalendarMode("Monthly")}
+            onPress={() => {
+              if (calendarMode !== "Monthly") {
+                setCalendarMode("Monthly");
+                const formattedMonthly = new Date().toISOString().split("T")[0];
+                fetchMonthlyAveragesByUserId("user3", formattedMonthly);
+              }
+              setResetWeightDate((prev) => !prev); // 날짜 초기화
+            }}
             isActive={calendarMode === "Monthly"}
           >
             <DateButtonText isActive={calendarMode === "Monthly"}>
@@ -826,6 +911,7 @@ const DetailsComponent = () => {
 
       <WeightCalendar
         calendarMode={calendarMode}
+        onResetDate={resetWeightDate}
         onDateChange={(newDate) => {
           // 새로운 날짜가 선택될 때마다 이 callback이 호출됨.
           if (calendarMode === "Daily") {
@@ -834,6 +920,9 @@ const DetailsComponent = () => {
           } else if (calendarMode === "Weekly") {
             const formattedWeekly = newDate.toISOString().split("T")[0];
             fetchWeeklyAveragesByUserId("user3", formattedWeekly);
+          } else if (calendarMode === "Monthly") {
+            const formattedMonthly = newDate.toISOString().split("T")[0];
+            fetchMonthlyAveragesByUserId("user3", formattedMonthly);
           }
         }}
       />
@@ -866,10 +955,22 @@ const DetailsComponent = () => {
         </WeightChartTop>
         <View style={styles.LineChartContainer}>
           <LineChart
-            initialSpacing={calendarMode === "Weekly" ? 21.2 : 20}
+            initialSpacing={
+              calendarMode === "Monthly"
+                ? 28.6
+                : calendarMode === "Weekly"
+                ? 19.8
+                : 20
+            }
             maxValue={200}
             data={chartData.lineData}
-            spacing={calendarMode === "Weekly" ? 93.6 : 47.8}
+            spacing={
+              calendarMode === "Monthly"
+                ? 137.2
+                : calendarMode === "Weekly"
+                ? 92
+                : 47.8
+            }
             textColor1="#e17319"
             textShiftY={-14.2}
             textShiftX={calendarMode === "Weekly" ? -10 : -16.2}
@@ -887,10 +988,28 @@ const DetailsComponent = () => {
         <View style={styles.BarChartContainer}>
           <BarChart
             data={chartData.barDataWithLabels}
-            barWidth={calendarMode === "Weekly" ? 23.6 : 20}
+            barWidth={
+              calendarMode === "Monthly"
+                ? 48
+                : calendarMode === "Weekly"
+                ? 22.8
+                : 20
+            }
             maxValue={200}
-            initialSpacing={calendarMode === "Weekly" ? 20 : 17.5}
-            spacing={calendarMode === "Weekly" ? 68 : 28}
+            initialSpacing={
+              calendarMode === "Monthly"
+                ? 23.8
+                : calendarMode === "Weekly"
+                ? 18.2
+                : 17.5
+            }
+            spacing={
+              calendarMode === "Monthly"
+                ? 80
+                : calendarMode === "Weekly"
+                ? 68
+                : 28
+            }
             barBorderRadius={4}
             hideAxesAndRules
             noOfSections={3}
@@ -901,6 +1020,42 @@ const DetailsComponent = () => {
           />
         </View>
       </View>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginTop: 32,
+          marginBottom: -9,
+          left: -3,
+        }}
+      >
+        <GoalNutriRatioViewText>나의 목표</GoalNutriRatioViewText>
+        <Image
+          source={require("../../assets/dateRight.png")}
+          style={{
+            width: 17,
+            height: 21,
+            left: -19.6,
+            top: 2,
+            tintColor: "orange", // 이미지의 색상을 오렌지로 변경
+          }}
+        />
+      </View>
+
+      <GoalNutriRatioContainer>
+        <GoalNutriRatioView>
+          <GoalNutriRatioViewText>체중</GoalNutriRatioViewText>
+          <GoalNutriRatioViewText>65kg</GoalNutriRatioViewText>
+        </GoalNutriRatioView>
+        <GoalNutriRatioView>
+          <GoalNutriRatioViewText>칼로리</GoalNutriRatioViewText>
+          <GoalNutriRatioViewText>1953 kcal</GoalNutriRatioViewText>
+        </GoalNutriRatioView>
+        <GoalNutriRatioView>
+          <GoalNutriRatioViewText>탄단지</GoalNutriRatioViewText>
+          <GoalNutriRatioViewText>50 : 30 : 20</GoalNutriRatioViewText>
+        </GoalNutriRatioView>
+      </GoalNutriRatioContainer>
     </View>
   );
 };

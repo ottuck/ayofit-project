@@ -56,6 +56,11 @@ public class RecordWeightController {
     	return recordWeightDao.getWeeklyAveragesForUser(rId, formattedToday);
     }
     
+    @GetMapping("/monthly-averages/{rId}/{formattedToday}")
+    public List<Map<String, Object>> getMonthlyAveragesForUser(@PathVariable String rId, @PathVariable String formattedToday) {
+        return recordWeightDao.getMonthlyAveragesForUser(rId, formattedToday);
+    }
+    
     @PostMapping
     public void addWeight(@RequestBody RecordWeightDTO record) {
     	recordWeightDao.addWeight(record);

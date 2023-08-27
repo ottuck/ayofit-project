@@ -2,7 +2,7 @@ import styled from "styled-components/native";
 import * as Progress from "react-native-progress";
 
 export const HomeSafeAreaView = styled.SafeAreaView`
-  height: 1750px;
+  height: 2000px;
   background-color: #ffe9d8;
 `;
 
@@ -12,7 +12,7 @@ export const HomeUserContainer = styled.View`
   align-items: center;
   background-color: #ffe9d8;
   width: 100%;
-  height: 11.2%;
+  height: 10.3%;
 `;
 
 export const HomeHelloText = styled.Text`
@@ -38,7 +38,7 @@ export const StepProgressContainer = styled.View`
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-top: -20px;
+  margin-top: -24.6px;
 `;
 
 export const StepProgressBar = styled(Progress.Bar).attrs({
@@ -290,7 +290,7 @@ export const DateButtonText = styled.Text`
 
 export const DetailsNutritionInfo = styled.View`
   width: 92%;
-  height: 31.6%;
+  height: 25.8%;
   background-color: rgba(255, 255, 255, 0.45);
   border-radius: 16px;
   margin-top: 20px;
@@ -323,8 +323,9 @@ export const DetailsBarAndValueContainer = styled.View`
   align-items: center;
   background-color: rgba(255, 255, 255, 0.65);
   width: 92%;
-  height: 58%;
+  height: 60%;
   border-radius: 16px;
+  margin-top: 3px;
 `;
 
 export const DetailsProgressBarContainer = styled.View`
@@ -343,7 +344,7 @@ export const DetailsProgressBarPer = styled.Text`
 export const DetailsNutrionImgContainer = styled.View`
   justify-content: space-around;
   height: 100%;
-  margin-top: -1.6px;
+  margin-top: -3px;
   margin-left: 22px;
 `;
 
@@ -354,7 +355,7 @@ export const DetailsNutritionGramContainer = styled.View`
 export const DetailsGramContainer = styled.View`
   justify-content: space-evenly;
   height: 100%;
-  margin-top: 3.2px;
+  margin-top: 6px;
   margin-left: 18px;
 `;
 
@@ -373,13 +374,13 @@ export const DetailsGramValue = styled.Text`
 export const DetailsProgressBarBottomContainer = styled.View`
   flex-direction: row;
   width: 100%;
-  height: 28.6%;
+  height: 27.6%;
   align-items: center;
   justify-content: center;
 `;
 
 export const DetailsActivityCalorieText = styled.Text`
-  font-size: 16px;
+  font-size: 16.2px;
   margin-vertical: 4px;
   color: rgba(0, 0, 0, 0.72);
 `;
@@ -410,11 +411,12 @@ export const DetailsCircleContainer = styled.View`
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.45);
-  width: 92%;
-  height: 180px;
-  border-radius: 16px;
+  width: 100%;
+  height: 166px;
+  border-radius: 20px;
   margin-top: 20px;
-  margin-horizontal: 16px;
+  margin-left: 1.2px;
+  top: 338px;
 `;
 
 export const DetailsCircleRow = styled.View`
@@ -620,4 +622,31 @@ export const WeightChartTopText = styled.Text`
   color: #fb9129;
   font-size: 20.5px;
   font-weight: 600;
+`;
+
+export const GoalNutriRatioContainer = styled.View`
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 91.6%;
+  height: 152px;
+  background-color: #f3ba8d;
+  border-radius: 20px;
+  margin-top: 21.2px;
+  margin-left: 19px;
+`;
+
+export const GoalNutriRatioView = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 33.2%;
+`;
+
+export const GoalNutriRatioViewText = styled.Text`
+  color: #372d23;
+  font-size: 22px;
+  font-weight: 600;
+  margin-horizontal: 26px;
 `;

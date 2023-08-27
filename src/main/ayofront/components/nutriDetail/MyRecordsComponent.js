@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Modal } from "react-native";
+import { StyleSheet, Text, View, Image, Modal, Animated } from "react-native";
 import { ScrollView } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -41,6 +41,8 @@ import {
   RecordsModalFixAndDeleteButton,
   RecordsModalFixAndDeleteButtonText,
   WeightChartText,
+  DetailsCircleContainer,
+  DetailsCircleRow,
 } from "../../components/nutriDetail/StyledComponents";
 
 const MyRecordsComponent = () => {
@@ -261,6 +263,69 @@ const MyRecordsComponent = () => {
     fetchAllWeightsByUserId("user3");
   }, []);
 
+  // 각각의 원에 대한 애니메이션 값 상태
+  const [carbAnimationValue, setCarbAnimationValue] = useState(
+    new Animated.Value(65)
+  );
+  const [proteinAnimationValue, setProteinAnimationValue] = useState(
+    new Animated.Value(65)
+  );
+  const [fatAnimationValue, setFatAnimationValue] = useState(
+    new Animated.Value(65)
+  );
+
+  useEffect(() => {
+    // 탄수화물, 단백질, 지방 중 가장 큰 퍼센트를 찾기
+    const maxPercentage = Math.max(
+      carbPercentage,
+      proteinPercentage,
+      fatPercentage
+    );
+
+    // 해당 원만 크기를 더 크게 설정
+    if (maxPercentage === carbPercentage) {
+      Animated.timing(carbAnimationValue, {
+        toValue: 85,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      Animated.timing(carbAnimationValue, {
+        toValue: 65,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    }
+
+    if (maxPercentage === proteinPercentage) {
+      Animated.timing(proteinAnimationValue, {
+        toValue: 85,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      Animated.timing(proteinAnimationValue, {
+        toValue: 65,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    }
+
+    if (maxPercentage === fatPercentage) {
+      Animated.timing(fatAnimationValue, {
+        toValue: 85,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      Animated.timing(fatAnimationValue, {
+        toValue: 65,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [carbPercentage, proteinPercentage, fatPercentage]);
+
   return (
     <MyRecordsDailyNutritionContainer>
       <DailyConsumptionContainer>
@@ -453,10 +518,81 @@ const MyRecordsComponent = () => {
           </RecordsWeightModalView>
         </Modal>
       </MyRecordsTodaysWeightContainer>
+      <DetailsCircleContainer>
+        {/* 첫 번째 원 */}
+        <Animated.View
+          style={[
+            styles.circle,
+            {
+              backgroundColor: "#FFD6D1",
+              width: fatAnimationValue,
+              height: fatAnimationValue,
+            },
+          ]}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "600",
+              color: "rgba(0, 0, 0, 0.8)",
+            }}
+          >{`${fatPercentage.toFixed(2)}%`}</Text>
+        </Animated.View>
+
+        {/* 두 번째 원 */}
+        <DetailsCircleRow>
+          <Animated.View
+            style={[
+              styles.circle,
+              {
+                backgroundColor: "#E2F0B5",
+                width: carbAnimationValue,
+                height: carbAnimationValue,
+              },
+            ]}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "600",
+                color: "rgba(0, 0, 0, 0.8)",
+              }}
+            >{`${carbPercentage.toFixed(2)}%`}</Text>
+          </Animated.View>
+          {/* 세 번째 원 */}
+          <Animated.View
+            style={[
+              styles.circle,
+              {
+                backgroundColor: "#FFEC99",
+                width: proteinAnimationValue,
+                height: proteinAnimationValue,
+              },
+            ]}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "600",
+                color: "rgba(0, 0, 0, 0.8)",
+              }}
+            >{`${proteinPercentage.toFixed(2)}%`}</Text>
+          </Animated.View>
+        </DetailsCircleRow>
+      </DetailsCircleContainer>
     </MyRecordsDailyNutritionContainer>
   );
 };
 
 export default MyRecordsComponent;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  circle: {
+    width: 60,
+    height: 60,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 1,
+  },
+});
