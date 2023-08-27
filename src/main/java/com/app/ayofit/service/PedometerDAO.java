@@ -19,6 +19,7 @@ public class PedometerDAO {
 	   public void addGoal(PedometerDTO pedometerDTO) {
 	        Date currentDate = new Date();
 	        pedometerDTO.setpDate(currentDate);
+	        pedometerMapper.insertGoal(pedometerDTO);
 	    }
 	 
 	   public List<PedometerDTO> getWeeklyAchievement(String userId, LocalDate date) {
@@ -30,9 +31,9 @@ public class PedometerDAO {
 	        return weeklyAchievement;
 	    }
 	   
-	   public void updateStepGoal(PedometerDTO pedometerDTO) {
-	        pedometerMapper.updateStepGoal(pedometerDTO);
-	    }
+//	   public void updateStepGoal(PedometerDTO pedometerDTO) {
+//	        pedometerMapper.updateStepGoal(pedometerDTO);
+//	    }
 	   
 	   public void updateDailyStep(PedometerDTO pedometerDTO) {
 	        Date currentDate = new Date();

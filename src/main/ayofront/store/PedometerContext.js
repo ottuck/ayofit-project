@@ -8,7 +8,7 @@ import React, {
 import axios from "axios";
 import Constants from "expo-constants";
 import { Accelerometer } from "expo-sensors";
-import { Animated, Easing, AppState } from "react-native";
+import { Animated, Easing } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PedometerContext = createContext();
@@ -44,9 +44,6 @@ export const PedometerProvider = ({ children }) => {
     .padStart(2, "0")}-${currentDate.getDate().toString().padStart(2, "0")}`;
 
   const formattedDateRef = useRef(formattedDate);
-  const appState = useRef(AppState.currentState);
-  const [lastUpdateTimestamp, setLastUpdateTimestamp] = useState(Date.now());
-  const UPDATE_INTERVAL = 300000;
 
   const [congratulationsOpacity] = useState(new Animated.Value(0)); // Initialize Animated.Value
 
@@ -107,32 +104,6 @@ export const PedometerProvider = ({ children }) => {
     await updateStepsOnServer(updatedSteps);
   };
 
-  // const updateDailyStep = () => {
-  //   const userId = "user4"; // 사용자 ID
-  //   const currentDate = new Date();
-
-  //   const formattedDate = `${currentDate.getFullYear()}-${(
-  //     currentDate.getMonth() + 1
-  //   )
-  //     .toString()
-  //     .padStart(2, "0")}-${currentDate.getDate().toString().padStart(2, "0")}`;
-
-  //   // 현재의 steps 값을 서버로 업데이트
-  //   axios
-  //     .put(`${uri}/api/pedometer/update-daily-step`, {
-  //       pId: userId,
-  //       pDate: formattedDate,
-  //       pStepCnt: steps, // 현재의 steps 값을 보냅니다.
-  //     })
-  //     .then(() => {
-  //       // 업데이트 성공 시 로그 출력
-  //       console.log("Daily step count updated successfully.");
-  //     })
-  //     .catch((error) => {
-  //       console.error("Failed to update daily step count:", error);
-  //     });
-  // };
-
   // ---------- useEffects ----------
 
   useEffect(() => {
@@ -154,7 +125,7 @@ export const PedometerProvider = ({ children }) => {
       })
       .then((response) => {
         const weeklyAchievement = response.data;
-        console.log("weekly data: " + response.data);
+        console.log(response.data);
 
         // Find today's data from weekly achievement
         const todayData = weeklyAchievement.find(
@@ -194,7 +165,7 @@ export const PedometerProvider = ({ children }) => {
       .catch((error) => {
         console.error("Failed to fetch weekly achievement data:", error);
       });
-  }, [todayData]);
+  }, []);
 
   useEffect(() => {
     const accelerometerSubscription = Accelerometer.addListener(

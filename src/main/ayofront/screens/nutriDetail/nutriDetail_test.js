@@ -7,6 +7,7 @@ import {
   Animated,
   Image,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ScrollView } from "react-native";

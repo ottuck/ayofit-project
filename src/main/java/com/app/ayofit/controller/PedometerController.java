@@ -38,13 +38,12 @@ public class PedometerController {
 	        return new ResponseEntity<>(weeklyAchievement, HttpStatus.OK);
 	    }
 	 
-	 @PutMapping("/update-step-goal")
-	 public ResponseEntity<String> updateStepGoal(@RequestBody PedometerDTO pedometerDTO) {
-	     // pNo를 사용하여 해당 레코드를 찾아서 업데이트 로직 수행
-	     pedometerDAO.updateStepGoal(pedometerDTO);
-	     
-	     return ResponseEntity.ok("Step goal updated successfully");
-	 }
+//	 @PutMapping("/update-step-goal")
+//	 public ResponseEntity<String> updateStepGoal(@RequestBody PedometerDTO pedometerDTO) {
+//	     pedometerDAO.updateStepGoal(pedometerDTO);
+//	     
+//	     return ResponseEntity.ok("Step goal updated successfully");
+//	 }
 	 
 	 @PutMapping("/update-daily-step")
 	 public ResponseEntity<String> updateDailyStep(@RequestBody PedometerDTO pedometerDTO) {

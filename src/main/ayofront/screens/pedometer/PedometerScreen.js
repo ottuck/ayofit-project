@@ -24,6 +24,7 @@ import CongratulationsMessage from "../../components/pedometer/CongratulationsMe
 import DistanceCaloriesBox from "../../components/pedometer/DistanceCaloriesBox";
 import GoalInput from "../../components/pedometer/GoalInput";
 import DailyGoalInputScreen from "./DailyGoalInputScreen";
+import SwipeDownToSave from "../../components/pedometer/SwipeDownToSave";
 
 function PedometerScreen() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -42,6 +43,7 @@ function PedometerScreen() {
     todayData,
   } = useContext(PedometerContext);
 
+  // for 'swipe down to save'
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
@@ -78,7 +80,7 @@ function PedometerScreen() {
     }
   }, [isFocused]);
 
-  return todayData ? (
+  return !todayData ? (
     <DailyGoalInputScreen />
   ) : (
     <View style={styles.container}>
@@ -91,17 +93,14 @@ function PedometerScreen() {
           }
         >
           <View>
-            <View style={{ alignItems: "center" }}>
-              <Text>Swipe Down to Record Daily Steps!</Text>
-              <SimpleLineIcons name="arrow-down" size={24} color="black" />
-            </View>
+            <SwipeDownToSave />
             <View style={styles.dayContainerWrapper}>
               <View style={styles.daysContainer}>
                 {daysOfWeek.map((day, index) => (
                   <PedometerDailyCircles
                     key={index}
                     day={day}
-                    isAchieved={daysAchieved[index]} // 여기서 daysAchieved 배열의 값 사용
+                    isAchieved={daysAchieved[index]}
                   />
                 ))}
               </View>
@@ -145,7 +144,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: GlobalStyles.colors.primary50,
+    backgroundColor: GlobalStyles.colors.primary100,
     paddingTop: "5%",
   },
   dayContainerWrapper: {
