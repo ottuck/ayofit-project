@@ -33,7 +33,6 @@ function RecordScreen({ navigation }) {
     const getList = () => {
       const query = keyword.trim();
       // console.log("URL:", `${uri}/api/food/search/${query}`);
-
       axios
         .get(`${uri}/api/food/search/${query}`)
         .then((response) => {
@@ -51,23 +50,16 @@ function RecordScreen({ navigation }) {
     };
   }, [keyword]);
 
-  //최종 검색어 제출
-  // console.log(list);
-  const submitSearchResult = () => {
-    navigation.push('RecordMain', { food: list });  //list객체를 'food'로 넘김
-    closeModal();
-  };
-
-  //Validation
+  //최종 검색어 제출, Validation : keyword와 list의 값이 일치하지 않으면 제출못하게 막고 error 표시
   const [error, setError] = useState('');
-  const validateInput = () => {
-    if (keyword.trim() === '') {
-      setError('음식 이름을 입력해주세요. ex) 닭');
-      return false;
-    } else {
-      setError('');
-      return true;
-    }
+  const submitSearchResult = () => {
+    const foundItem = list.find(item => item.nFoodName.trim() === keyword.trim());
+    if (!foundItem || "") {
+      setError('리스트에서 음식을 고른 후 제출해주세요🥹');
+      return;
+    } 
+    navigation.push('RecordMain', { food: list });
+    closeModal();
   };
 
   //Modal
@@ -82,6 +74,20 @@ function RecordScreen({ navigation }) {
   //toISOString은 "2023-08-20T14:30:00.000Z"와 같은 형식이라 "T" 나눠서 0번째 index의 날짜만 가져온다
   const today = new Date();
   const formattedToday = today.toISOString().split("T")[0];
+
+  //검색어 하이라이트 색상 적용
+  const highlightKeyword = (text, keyword) => {
+    const parts = text.split(new RegExp(`(${keyword})`, 'gi')); //JS의 RegExp은 정규표현식 사용 'gi'는 옵션
+    return (
+      <Text style={{ fontSize: 18 }}>
+        {parts.map((part, i) => (
+          part.toLowerCase() === keyword.toLowerCase()
+            ? <Text key={i} style={{ color: 'red', fontWeight: 'bold' }}>{part}</Text>
+            : part
+        ))}
+      </Text>
+    );
+  };
 
 
   return (
@@ -134,18 +140,21 @@ function RecordScreen({ navigation }) {
                   <AntDesign name="close" style={styles.modalCloseButton} />
                 </TouchableOpacity>
                 <View style={styles.modalSearchContainer}>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={submitSearchResult}>
                     <FontAwesome5 name="search" style={styles.modalSearchButton} />
                   </TouchableOpacity>
                   <View style={styles.modalTextInputBox}>
                     <TextInput
                       style={styles.modalTextInput}
                       placeholder="Search your meal"
+                      returnKeyType="search"
+                      autoFocus={true}
                       onChangeText={setKeyword}
                       value={keyword}
                       onSubmitEditing={submitSearchResult}
-                      returnKeyType="search" onBlur={validateInput}
+                      onFocus={() => setError('')} 
                     />
+                    <Text style={{color:'red', fontWeight: 'bold'}}>{error}</Text>
                   </View>
                   <TouchableOpacity onPress={() => setKeyword('')}>
                     <AntDesign name="closecircleo" style={styles.clearButton} />
@@ -159,12 +168,10 @@ function RecordScreen({ navigation }) {
                   //FlatList Rendering
                   renderItem={({ item }) =>
                     <TouchableOpacity
-                      style={{ marginVertical: '3%', fontSize: 18  }}
+                      style={{ marginVertical: '3%', fontSize: 18 }}
                       onPress={() => { setKeyword(item.nFoodName) }}
                     >
-                      <Text style={{ fontSize: 18 }}>
-                        {item.nFoodName}
-                      </Text>
+                      {highlightKeyword(item.nFoodName, keyword)}
                     </TouchableOpacity>
                   }
                 />
