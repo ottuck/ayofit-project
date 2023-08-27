@@ -44,6 +44,8 @@ import {
   LatestWeightView,
   LatestWeightText,
   LatestWeightKg,
+  WeightChartTop,
+  WeightChartTopText,
 } from "../../components/nutriDetail/StyledComponents";
 import DateCalendar from "./DateCalendar";
 import WeightCalendar from "./WeightCalendar";
@@ -94,6 +96,7 @@ const DetailsComponent = () => {
     barDataWithLabels: [],
   });
   const [weeklyData, setWeeklyData] = useState([]);
+  const [dailyWeightData, setDailyWeightData] = useState([]);
 
   let todayInTokyo = new Date();
   todayInTokyo.setHours(todayInTokyo.getHours() + 9); // 도쿄 시간대에 맞게 시간을 조정.
@@ -104,6 +107,24 @@ const DetailsComponent = () => {
   weekStartDate = weekStartDate.toISOString().split("T")[0];
   // formattedMonth += "01"; 위에서 "-01"을 붙이지 않을 경우 두줄로 이렇게도 작성할수있음.
   // console.log(formattedMonth); 2023-08-01
+
+  const fetchDailyWeightsByUserId = (rId, formattedToday) => {
+    axios
+      .get(`${uri}/api/weights/daily/${rId}/${formattedToday}`)
+      .then((response) => {
+        console.log(response.data);
+        setDailyWeightData(response.data.reverse());
+      })
+      .catch((error) => {
+        console.log("Error: ", error);
+        if (error.response) {
+          console.log("Response Data: ", error.response.data);
+          console.log("Response Status: ", error.response.status);
+        }
+      });
+  };
+
+  // fetchDailyWeightsByUserId("user3", formattedToday);
 
   const fetchWeeklyAveragesByUserId = (rId, formattedToday) => {
     axios
@@ -121,54 +142,34 @@ const DetailsComponent = () => {
       });
   };
 
-  // fetchWeeklyAveragesByUserId("user3", formattedToday);
-  // fetchWeeklyAveragesByUserId("user3", "2023-07-30");
+  const createChartData = () => {
+    if (dailyWeightData.length === 0)
+      return { lineData: [], barDataWithLabels: [] };
 
-  const createWeeklyChartData = () => {
     let lineData = [];
     let barDataWithLabels = [];
 
-    // 데이터가 없을 경우 빈 배열을 반환
-    if (!weeklyData || weeklyData.length === 0) {
-      return { lineData, barDataWithLabels };
-    }
+    // 데이터의 길이에 따라서 반복 횟수를 결정
+    const loopCount = Math.min(7, dailyWeightData.length);
+    for (let i = 0; i < loopCount; i++) {
+      const data = dailyWeightData[i];
 
-    // 마지막 데이터의 end date를 기준으로 시작
-    let endDate = new Date(weeklyData[weeklyData.length - 1].dateRange.end);
+      const adjustedValue = data.weight === 0 ? data.weight + 10 : data.weight; // 'rWeight'를 'weight'로 변경
+      const dataPointTextString =
+        data.weight === 0
+          ? "   " + data.weight.toString() // 'rWeight'를 'weight'로 변경
+          : data.weight.toString(); // 'rWeight'를 'weight'로 변경
 
-    for (let i = 0; i < 4; i++) {
-      const startDate = new Date(endDate);
-      startDate.setDate(startDate.getDate() - 6);
-
-      const searchRange = {
-        start: startDate.toISOString().split("T")[0],
-        end: endDate.toISOString().split("T")[0],
-      };
-
-      // 해당 날짜 범위에 맞는 데이터를 찾음
-      let data = weeklyData.find(
-        (d) =>
-          d.dateRange.start === searchRange.start &&
-          d.dateRange.end === searchRange.end
-      );
-
-      // 데이터가 없을 경우 평균을 0으로 설정
-      if (!data) {
-        data = {
-          average: 0,
-          dateRange: searchRange,
-        };
-      }
-
-      const adjustedValue = data.average;
       lineData.push({
         value: adjustedValue,
-        dataPointText: adjustedValue.toString(),
+        dataPointText: dataPointTextString,
       });
 
-      const labelDate = `${data.dateRange.start} ~ ${data.dateRange.end}`;
+      const labelDate =
+        i === 6 ? "Today" : data.date.substring(5).replace("-", "/"); // 'rWeightDate'를 'date'로 변경
+
       barDataWithLabels.push({
-        value: adjustedValue,
+        value: data.weight, // 'rWeight'를 'weight'로 변경
         topLabelComponent: () => (
           <Text
             style={{
@@ -180,23 +181,94 @@ const DetailsComponent = () => {
               textAlign: "center",
             }}
           >
+            {data.weight}
+          </Text>
+        ),
+        label: labelDate,
+        labelWidth: 24,
+        frontColor: "#f5d0b1",
+      });
+    }
+
+    return { lineData, barDataWithLabels };
+  };
+
+  const createWeeklyChartData = () => {
+    let lineData = [];
+    let barDataWithLabels = [];
+
+    if (!weeklyData || !weeklyData.length)
+      return { lineData, barDataWithLabels };
+
+    let endDate = new Date(weeklyData[weeklyData.length - 1].dateRange.end);
+    endDate.setHours(endDate.getHours() + 9);
+
+    for (let i = 0; i < 4; i++) {
+      const startDate = new Date(endDate);
+      startDate.setDate(startDate.getDate() - 6);
+
+      const searchRange = {
+        start: startDate.toISOString().split("T")[0],
+        end: endDate.toISOString().split("T")[0],
+      };
+
+      let data = weeklyData.find(
+        (d) =>
+          d.dateRange.start === searchRange.start &&
+          d.dateRange.end === searchRange.end
+      );
+
+      if (!data) continue; // data가 없는 경우를 처리
+      const adjustedValue = data.average;
+      lineData.push({
+        value: adjustedValue + 10,
+        dataPointText: adjustedValue.toString(),
+      });
+
+      const labelDateParts = data.dateRange.start
+        .split("-")
+        .concat(data.dateRange.end.split("-"));
+      const formattedStartDate = `${labelDateParts[1]}/${labelDateParts[2]} ~`;
+      const formattedEndDate = `${labelDateParts[4]}/${labelDateParts[5]}`;
+      const labelDate = `${formattedStartDate}\n${formattedEndDate}`;
+
+      // const labelDate = `${data.dateRange.start} ~ ${data.dateRange.end}`;
+      barDataWithLabels.push({
+        value: adjustedValue,
+        topLabelComponent: () => (
+          <Text
+            style={{
+              color: "#d88b4b",
+              fontSize: 16.5,
+              fontWeight: 600,
+              width: 42,
+              height: 23.8,
+              textAlign: "center",
+            }}
+          >
             {adjustedValue}
           </Text>
         ),
         label: labelDate.replace(/-/g, "/"),
-        labelWidth: 60,
+        labelWidth: 32,
         frontColor: "#f5d0b1",
       });
 
       endDate.setDate(endDate.getDate() - 7);
     }
 
-    // 오름차순으로 정렬
     lineData = lineData.reverse();
     barDataWithLabels = barDataWithLabels.reverse();
 
     return { lineData, barDataWithLabels };
   };
+
+  useEffect(() => {
+    if (calendarMode === "Daily") {
+      const { lineData, barDataWithLabels } = createChartData();
+      setChartData({ lineData, barDataWithLabels });
+    }
+  }, [dailyWeightData]);
 
   useEffect(() => {
     if (calendarMode === "Weekly") {
@@ -262,66 +334,6 @@ const DetailsComponent = () => {
       })
       .catch((error) => console.log(error));
   };
-
-  const createChartData = () => {
-    if (weightData.length === 0) return { lineData: [], barDataWithLabels: [] };
-
-    let lineData = [];
-    let barDataWithLabels = [];
-
-    // 데이터의 길이에 따라서 반복 횟수를 결정
-    const loopCount = Math.min(7, weightData.length);
-    for (let i = 0; i < loopCount; i++) {
-      const data = weightData[i];
-      const adjustedValue =
-        data.rWeight === 0 ? data.rWeight + 10 : data.rWeight;
-      const dataPointTextString =
-        data.rWeight === 0
-          ? "   " + data.rWeight.toString()
-          : data.rWeight.toString();
-
-      lineData.push({
-        value: adjustedValue,
-        dataPointText: dataPointTextString,
-      });
-
-      const labelDate =
-        i === 6 ? "Today" : data.rWeightDate.substring(3).replace("-", "/");
-
-      barDataWithLabels.push({
-        value: data.rWeight,
-        topLabelComponent: () => (
-          <Text
-            style={{
-              color: "#d88b4b",
-              fontSize: 16.5,
-              fontWeight: 600,
-              width: 42,
-              height: 23,
-              textAlign: "center",
-            }}
-          >
-            {data.rWeight}
-          </Text>
-        ),
-        label: labelDate,
-        labelWidth: 24,
-        frontColor: "#f5d0b1",
-      });
-    }
-
-    return { lineData, barDataWithLabels };
-  };
-
-  useEffect(() => {
-    if (calendarMode === "Daily") {
-      const { lineData, barDataWithLabels } = createChartData();
-      setChartData({ lineData, barDataWithLabels });
-    }
-  }, [weightData, calendarMode]);
-
-  // const { lineData, barDataWithLabels } = createChartData();
-  // const { lineData, barDataWithLabels } = createWeeklyChartData(weeklyAverages);
 
   const computeNutritionForMode = () => {
     let carbs, proteins, fats;
@@ -780,8 +792,7 @@ const DetailsComponent = () => {
           <DateButton
             onPress={() => {
               setCalendarMode("Daily");
-              const { lineData, barDataWithLabels } = createChartData();
-              setChartData({ lineData, barDataWithLabels });
+              fetchDailyWeightsByUserId("user3", formattedToday);
             }}
             isActive={calendarMode === "Daily"}
           >
@@ -789,6 +800,7 @@ const DetailsComponent = () => {
               Daily
             </DateButtonText>
           </DateButton>
+
           <DateButton
             onPress={() => {
               setCalendarMode("Weekly");
@@ -815,10 +827,10 @@ const DetailsComponent = () => {
       <WeightCalendar
         calendarMode={calendarMode}
         onDateChange={(newDate) => {
-          // 새로운 날짜가 선택될 때마다 이 callback이 호출됩니다.
+          // 새로운 날짜가 선택될 때마다 이 callback이 호출됨.
           if (calendarMode === "Daily") {
-            const { lineData, barDataWithLabels } = createChartData();
-            setChartData({ lineData, barDataWithLabels });
+            const formattedDaily = newDate.toISOString().split("T")[0];
+            fetchDailyWeightsByUserId("user3", formattedDaily);
           } else if (calendarMode === "Weekly") {
             const formattedWeekly = newDate.toISOString().split("T")[0];
             fetchWeeklyAveragesByUserId("user3", formattedWeekly);
@@ -834,16 +846,33 @@ const DetailsComponent = () => {
       </LatestWeightView>
 
       <View style={styles.detailsWeightChart}>
+        <WeightChartTop>
+          <Image
+            source={require("../../assets/avatar.png")}
+            style={{
+              width: 72,
+              height: 72,
+            }}
+          />
+          <WeightChartTopText>My weight changes</WeightChartTopText>
+          <Image
+            source={require("../../assets/weightChart.png")}
+            style={{
+              width: 49,
+              height: 46,
+              top: 9.6,
+            }}
+          />
+        </WeightChartTop>
         <View style={styles.LineChartContainer}>
           <LineChart
-            initialSpacing={19.5}
+            initialSpacing={calendarMode === "Weekly" ? 21.2 : 20}
             maxValue={200}
-            // data={lineData}
             data={chartData.lineData}
-            spacing={48.8}
+            spacing={calendarMode === "Weekly" ? 93.6 : 47.8}
             textColor1="#e17319"
             textShiftY={-14.2}
-            textShiftX={-16.2}
+            textShiftX={calendarMode === "Weekly" ? -10 : -16.2}
             textFontSize={17.5}
             thickness={5.2}
             hideAxesAndRules
@@ -857,12 +886,11 @@ const DetailsComponent = () => {
 
         <View style={styles.BarChartContainer}>
           <BarChart
-            // data={barDataWithLabels}
             data={chartData.barDataWithLabels}
-            barWidth={20.8}
+            barWidth={calendarMode === "Weekly" ? 23.6 : 20}
             maxValue={200}
-            initialSpacing={16.8}
-            spacing={28.3}
+            initialSpacing={calendarMode === "Weekly" ? 20 : 17.5}
+            spacing={calendarMode === "Weekly" ? 68 : 28}
             barBorderRadius={4}
             hideAxesAndRules
             noOfSections={3}
@@ -892,7 +920,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: "92%",
-    height: 460,
+    height: 480,
     borderRadius: 16,
     marginTop: 28,
     marginHorizontal: 18,
@@ -900,13 +928,13 @@ const styles = StyleSheet.create({
   },
   LineChartContainer: {
     width: "100%",
-    top: -58,
+    top: -72,
     left: -0.2,
     alignItems: "center",
     justifyContent: "center",
   },
   BarChartContainer: {
-    bottom: 126,
+    bottom: 150,
     left: -0.8,
     width: "100%",
     height: "2%",

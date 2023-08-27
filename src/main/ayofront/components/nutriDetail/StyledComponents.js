@@ -606,3 +606,18 @@ export const LatestWeightKg = styled.Text`
   font-size: 18.6px;
   font-weight: 600;
 `;
+
+export const WeightChartTop = styled.View`
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  top: -108.2px;
+  padding-horizontal: 5.2px;
+`;
+
+export const WeightChartTopText = styled.Text`
+  color: #fb9129;
+  font-size: 20.5px;
+  font-weight: 600;
+`;
