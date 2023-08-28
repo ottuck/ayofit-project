@@ -13,7 +13,7 @@ import {MethodContainer, MethodTitle, MethodCTouch, MethodCText, MethodCEndTouch
     ,TimerContainer,TimerTitle,TimerHomeBtn,TimerHomeBT,EndTimeText,MethodCTextS,ConfirmMessage,ConfirmMView,ConfirmStart,ConfrimSText,ConfirmEnd
     ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView,FirstMainPage,MainBtn,MainText,FastMainImage
     ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM,MethodLeftContent,MethodRightContent,
-    MethodCText2,MethodCTextS2,TimerScrollView,TimerStop, StartDate
+    MethodCText2,MethodCTextS2,TimerScrollView,TimerStop,TimerAddView
 } from '../components/fast/FastingStyled';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from "axios";
@@ -60,7 +60,7 @@ const FastMainPage = ({navigation : { navigate } }) => (
 <LinearGradient colors={['#f7d7be','#e7a370']}>
     <FirstMainPage>
     <MainBtn onPress={() => navigate("FastingMethod")}>
-        <MainText>+ Set up your plan</MainText>
+        <MainText style={{ fontFamily: 'OpenSans_800ExtraBold_Italic', fontSize: 20 }}>+ Set up your plan</MainText>
     </MainBtn>
 </FirstMainPage>
     </LinearGradient>
@@ -119,9 +119,9 @@ const FastMethod = ({ navigation }) => {
 
 
 
+<LinearGradient colors={['#f7d7be','#e7a370']}>
 <MethodScrollView>
 <MethodContainer>  
-<LinearGradient colors={['#f7d7be','#e7a370']}>
 <MethodTitle>
     Please choose a method<Ionicons name="checkmark" size={28} color="black" />
 </MethodTitle>
@@ -184,9 +184,9 @@ const FastMethod = ({ navigation }) => {
     <MethodCText>24H</MethodCText>
     <MethodCTextS>fasting</MethodCTextS>
 </MethodCEndTouch>
-</LinearGradient>
 </MethodContainer>
 </MethodScrollView>
+</LinearGradient>
 );
 };
 
@@ -248,8 +248,8 @@ if(!selectHour == '') {
 const currentEndTime = currnetDateTime.split(' : ')[1]; // " : "로 분리하고 두 번째 요소 추출
 
 return(
-<PlanContainer>
 <LinearGradient colors={['#f7d7be','#e7a370']}>
+<PlanContainer>
 <PlanTitle>{"\n"}
 </PlanTitle>
 <PlanMethodText>
@@ -271,7 +271,7 @@ return(
  <FastTime style={styles.FastTime} onTimeChange={(newTime => setSelectedTime(newTime))}/>
 </PlanMethodCView>
 <PlanEndView>
- <PlanEndText>
+ <PlanEndText style={{ fontFamily: 'OpenSans_600SemiBold_Italic', fontSize: 20 }}>
     It ends at  {"\n"}
     {totalDateTime || currnetDateTime}
 </PlanEndText>
@@ -281,8 +281,8 @@ return(
     <PlanConfirmT>Next</PlanConfirmT>
 </PlanConfirmB>
 </PlanConfirmV>
-</LinearGradient>
 </PlanContainer>
+</LinearGradient>
 );
 };
 
@@ -357,9 +357,9 @@ const options = {
   const ConfirmTimeEnd = formatter.format(date3).replace('at', '').replace(',', ', ');
 return(
 
+<LinearGradient colors={['#f7d7be','#e7a370']}>
 <ConfirmScroll>
 <ConfirmContainer>
-<LinearGradient colors={['#f7d7be','#e7a370']}>
     <ConfirmHeader>
     <ConfirmTime>{stringFormat}</ConfirmTime>
     <ConfirmTimeText>fasting </ConfirmTimeText>
@@ -370,12 +370,12 @@ return(
     <ConfirmTView>
     <ConfirmStart>
         <ConfrimSText>
-        Start : {ConfirmStartTime}
+        Start  : {ConfirmStartTime}
         </ConfrimSText>
     </ConfirmStart>
     <ConfirmEnd>
         <ConfirmEText>
-        End : {ConfirmEndTime||ConfirmTimeEnd}
+       End    :  {ConfirmEndTime||ConfirmTimeEnd}
         </ConfirmEText>
     </ConfirmEnd>
 </ConfirmTView>
@@ -385,9 +385,9 @@ return(
     <ConfirmBtn onPress={() => selectTimer(confirmTime.number) }>
     <ConfirmText>Confirm</ConfirmText>
     </ConfirmBtn>
-    </LinearGradient>
 </ConfirmContainer>
 </ConfirmScroll>
+    </LinearGradient>
 );
 }
 
@@ -442,7 +442,6 @@ function MyTimer({ navigation: {navigate} }) {
     const timerCurrent = currentTimerTime.getTime();
     const StartCurrentTime = timerStartTime - timerCurrent;
     const SCTime = parseInt(StartCurrentTime);
-    const SCTimeexample = 0;
 
     if (SCTime >= 0) {
         setTimeout(() => {
@@ -451,7 +450,6 @@ function MyTimer({ navigation: {navigate} }) {
       };
 
     const handleStopTimer = () => {
-        setIsPlaying(false), // 타이머 멈추기
         Alert.alert(
             'Stop Timer',
             'Are you sure?',
@@ -459,13 +457,11 @@ function MyTimer({ navigation: {navigate} }) {
                 {
                     text: 'cancel',
                     style: 'cancel',
-                    onPress: () => {
-                        setIsPlaying(true); // 'cancel'을 누를 경우 타이머 다시 시작
-                    },
                 },
                 {
                     text: 'Stop',
                     onPress: () => {
+                        navigate("FastMainPage");
                         setElapsedTime(totalSeconds - remainingTime); // 사용된 시간 계산 및 저장
                         console.log('사용 시간 : ' + elapsedTime);
 
@@ -495,24 +491,24 @@ function MyTimer({ navigation: {navigate} }) {
         // console.log('단식 방법 : ' + timerMethod);
         // console.log('단식 방법 초 : ' + totalSeconds);
         // console.log('단식 방법 초 : ' + timerMethod2);
-        // console.log('남은 시간 : ' + remainingTime);
+        console.log('남은:' + remainingTime);
         //w : JS-> Oracle
         
     return (
         <TimerScrollView>
-            <LinearGradient colors={['#f7d7be','#e7a370']}>
         <TimerContainer>
             <TimerHomeBtn onPress={() => navigate("FastMainPage")}>
             <TimerHomeBT>Reset     <Entypo name="trash" size={24} color="black" /></TimerHomeBT> 
             </TimerHomeBtn>
+            <TimerAddView>
             <CountdownCircleTimer
     isPlaying={isPlaying}
     duration={totalSeconds}
-    colors={["#F3A36F", "#F7B801", "#A30000", "#A30000"]}
+    colors={["#F3A36F", "#f2a533", "#c94f03", "#A30000"]}
     colorsTime={[totalSeconds, (totalSeconds * 0.7), (totalSeconds * 0.3), 0]}
     onComplete={() => ({ shouldRepeat: false})}
     updateInterval={1}
-    strokeWidth={30}
+    strokeWidth={20}
     size={300}
 >
     {({ remainingTime, color }) => {
@@ -535,15 +531,16 @@ function MyTimer({ navigation: {navigate} }) {
             );
     }}
 </CountdownCircleTimer>
+</TimerAddView>
 <TimerMView>
     <TimerStart>
         <TimerSText>
-            Start : {ConfirmStartTime}
+            Start  : {ConfirmStartTime}
         </TimerSText>
     </TimerStart>
     <TimerEnd>
         <TimerEText>
-        End  :  {ConfirmEndTime}
+        End   :  {ConfirmEndTime}
         </TimerEText>
     </TimerEnd>
     <TimerStop>
@@ -553,7 +550,6 @@ function MyTimer({ navigation: {navigate} }) {
     </TimerStop>
 </TimerMView>
         </TimerContainer>
-        </LinearGradient>
         </TimerScrollView>
     );
 }
