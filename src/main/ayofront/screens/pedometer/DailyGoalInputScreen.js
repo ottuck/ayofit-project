@@ -18,6 +18,7 @@ import { Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { PedometerContext } from "../../store/PedometerContext";
 import SwipeButton from "rn-swipe-button";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function DailyGoalInputScreen() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -57,7 +58,7 @@ function DailyGoalInputScreen() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : ""}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
       >
         <ImageBackground
@@ -75,6 +76,7 @@ function DailyGoalInputScreen() {
             value={inputGoal}
             onChangeText={(text) => setInputGoal(text)}
             keyboardType="numeric"
+            selectionColor={GlobalStyles.colors.primary200}
           />
           {/* <TouchableOpacity onPress={submitGoal} style={styles.button}>
             <Text style={styles.buttonText}>Submit</Text>
@@ -82,25 +84,21 @@ function DailyGoalInputScreen() {
 
           <SwipeButton
             disabled={false}
-            //disable the button by doing true (Optional)
             swipeSuccessThreshold={70}
             height={45}
-            //height of the button (Optional)
-            width={240}
-            //width of the button (Optional)
-            title="Swipe to Submit"
-            //Text inside the button (Optional)
-            //thumbIconImageSource={thumbIcon}
-            //You can also set your own icon for the button (Optional)
+            width={220}
+            title="     Swipe to Submit"
+            titleStyles={styles.swipeText}
+            thumbIconComponent={() => (
+              <MaterialCommunityIcons name="rabbit" size={24} color="white" />
+            )}
             onSwipeSuccess={submitGoal}
-            //After the completion of swipe (Optional)
-            railFillBackgroundColor={GlobalStyles.colors.gradientYellow} //(Optional)
-            railFillBorderColor="white" //(Optional)
-            thumbIconBackgroundColor="#ed9a73" //(Optional)
-            thumbIconBorderColor="white" //(Optional)
-            railBackgroundColor={GlobalStyles.colors.gradientGreen} //(Optional)
-            railBorderColor="transparent" //(Optional)
-            style={styles.swipeText}
+            railFillBackgroundColor={GlobalStyles.colors.gradientYellow}
+            railFillBorderColor="white"
+            thumbIconBackgroundColor="#ed9a73"
+            thumbIconBorderColor="white"
+            railBackgroundColor={GlobalStyles.colors.gradientGreen}
+            railBorderColor="transparent"
           ></SwipeButton>
         </ImageBackground>
       </KeyboardAvoidingView>
@@ -123,36 +121,37 @@ const styles = StyleSheet.create({
     height: 80,
   },
   goalText: {
-    fontSize: 24,
+    fontSize: 22,
     color: GlobalStyles.colors.primary500,
     marginBottom: 10,
     fontWeight: "bold",
     fontFamily: "OpenSans_700Bold_Italic",
   },
   input: {
-    borderColor: "gray",
-    borderWidth: 1,
+    borderColor: GlobalStyles.colors.primary500,
+    borderWidth: 2,
     padding: 10,
     marginBottom: 20,
     width: 200,
+    borderRadius: 16,
   },
   button: {
     backgroundColor: GlobalStyles.colors.gradientGreen,
     width: 100,
     height: 50,
     borderRadius: 16,
-    justifyContent: "center",
-    alignItems: "center",
   },
   buttonText: {
     color: "white",
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
+    paddingLeft: 50,
   },
   swipeText: {
     color: "white",
     fontSize: 18,
+    fontWeight: "bold",
   },
 });
 
