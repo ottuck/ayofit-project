@@ -6,14 +6,13 @@
 	<select id="getAllFoodInfo" resultType="FoodDTO">
 		select * from nutrition 
 	</select>
-
+	
 	<select id="getFoodInfoById" resultType="FoodDTO">
 		select * from nutrition where n_no = #{n_no}
 	</select>
 	
 	<select id="searchFoodByName" resultType="FoodDTO">
-    	select * from nutrition where N_FOOD_NAME like '%' || #{n_food_name} || '%'
+    	select * from nutrition where N_FOOD_NAME like '%' || #{foodName} || '%'
 	</select>
 
-	
 </mapper>

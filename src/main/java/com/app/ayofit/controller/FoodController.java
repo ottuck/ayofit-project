@@ -21,7 +21,7 @@ public class FoodController {
 	
 	@GetMapping("")
 	public List<FoodDTO> getAllFoodInfo() {
-	    	return foodDAO.getAllFoodInfo();
+    	return foodDAO.getAllFoodInfo();
 	}
 	
 	@GetMapping("{n_no}")
@@ -29,8 +29,9 @@ public class FoodController {
 			return foodDAO.getFoodInfoById(n_no);
     }
 	
-	 @GetMapping("/search/{n_food_name}")
-	    public List<FoodDTO> searchFood(@PathVariable String n_food_name) {
-		return foodDAO.searchFoodByName(n_food_name);
+	@GetMapping("/search/{foodName}")
+	    public List<FoodDTO> searchFood(@PathVariable String foodName) {
+		return foodDAO.searchFoodByName(foodName);
 	}
+	
 }
