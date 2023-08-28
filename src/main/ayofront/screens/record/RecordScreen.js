@@ -9,7 +9,7 @@ import {
   Modal,
   TextInput,
   FlatList
-} from 'react-native';
+} from 'react-native';  
 import React, { useEffect, useState } from 'react';
 import { BlurView } from 'expo-blur';
 import { Feather } from '@expo/vector-icons';
@@ -57,7 +57,7 @@ function RecordScreen({ navigation, route }) {
       setError('리스트에서 음식을 고른 후 제출해주세요🥹');
       return;
     } 
-    navigation.push('RecordMain', { food: list }, openModal);
+    navigation.push('RecordMain', { foodInfo: list }, openModal);
     closeModal();
   };
 
