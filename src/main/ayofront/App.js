@@ -20,6 +20,7 @@ import AccountsContextProvider from "./store/accounts_context";
 import AccountMain from "./navigations/AccountStack";
 import { PedometerProvider } from "./store/PedometerContext";
 import { PhotoProvider } from "./store/image_context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -80,9 +81,27 @@ export default function App() {
   const imageWidth = width;
   const imageHeight = imageWidth / desiredImageAspectRatio;
 
+  const [userInfo, setUserInfo] = useState();
+
   const handleOnboardingComplete = () => {
     setCompletedOnboarding(true);
   };
+
+  const checkLoginCredentials = () => {
+    AsyncStorage.getItem("@user")
+      .then((result) => {
+        if (result !== null) {
+          setUserInfo(JSON.parse(result));
+        } else {
+          setUserInfo(null);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    checkLoginCredentials();
+  }, []);
 
   if (showOnboarding && !completedOnboarding) {
     return <OnboardingScreen onComplete={handleOnboardingComplete} />;
@@ -111,11 +130,19 @@ export default function App() {
                 component={AccountNutri}
                 options={{ headerShown: false }}
               /> */}
-                  <Stack.Screen
-                    name="MainTabs"
-                    component={MainTabsScreen}
-                    options={{ headerShown: false }}
-                  />
+                  {userInfo ? (
+                    <Stack.Screen
+                      name="MainTabs"
+                      component={MainTabsScreen}
+                      options={{ headerShown: false }}
+                    />
+                  ) : (
+                    <Stack.Screen
+                      name="LoginStack"
+                      component={LoginStack}
+                      options={{ headerShown: false }}
+                    />
+                  )}
                 </Stack.Navigator>
               </PedometerProvider>
             </NavigationContainer>

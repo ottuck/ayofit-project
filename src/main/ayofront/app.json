@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "ayofront",
-    "slug": "ayofront",
+    "name": "Ayofit",
+    "slug": "ayofit",
+    "scheme": "ayofit",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./images/ayofit-icon.png",
@@ -17,7 +18,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./images/ayofit-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
