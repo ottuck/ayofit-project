@@ -1,11 +1,15 @@
 package com.app.ayofit.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.text.ParseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +46,21 @@ public class RecordWeightController {
         return recordWeightDao.getWeightByDateAndId(date, rId);
     }
 
+    @GetMapping("/daily/{rId}/{formattedToday}")
+    public List<Map<String, Object>> getDailyForUser(@PathVariable String rId, @PathVariable String formattedToday) {
+        return recordWeightDao.getDailyForUser(rId, formattedToday);
+    }
+    
+    @GetMapping("/weekly-averages/{rId}/{formattedToday}")
+    public List<Map<String, Object>> getWeeklyAveragesForUser(@PathVariable String rId, @PathVariable String formattedToday) {
+    	return recordWeightDao.getWeeklyAveragesForUser(rId, formattedToday);
+    }
+    
+    @GetMapping("/monthly-averages/{rId}/{formattedToday}")
+    public List<Map<String, Object>> getMonthlyAveragesForUser(@PathVariable String rId, @PathVariable String formattedToday) {
+        return recordWeightDao.getMonthlyAveragesForUser(rId, formattedToday);
+    }
+    
     @PostMapping
     public void addWeight(@RequestBody RecordWeightDTO record) {
     	recordWeightDao.addWeight(record);

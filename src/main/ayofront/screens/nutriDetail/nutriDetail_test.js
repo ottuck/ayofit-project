@@ -7,10 +7,11 @@ import {
   Animated,
   Image,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ScrollView } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Constants from "expo-constants";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -34,10 +35,28 @@ import {
   HomeNavButton,
   HomeNavButtonText,
 } from "../../components/nutriDetail/StyledComponents";
+import { GlobalStyles } from "../../components/UI/styles";
+import HomePedometerProgressBar from "../../components/pedometer/HomePedometerProgressBar";
+import { useNavigation } from "@react-navigation/native";
+import { BlurView } from "expo-blur";
+import { PedometerContext, daysOfWeek } from "../../store/PedometerContext";
+import ProgressBarArea from "../../components/pedometer/HomePedometerArea";
+import HomePedometerArea from "../../components/pedometer/HomePedometerArea";
+import { useIsFocused } from "@react-navigation/native";
 
 function NutriDetailScreen() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const scrollViewRef = React.createRef();
+  useEffect(() => {
+    // 화면이 다시 나타날 때 스크롤을 맨 위로 이동
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: false });
+    }
+  }, [isFocused]);
 
   const [selectedHomeNavButton, setSelectedHomeNavButton] = useState(0);
 
@@ -75,10 +94,10 @@ function NutriDetailScreen() {
   const today = new Date();
   today.setHours(today.getHours() + 9);
   const formattedToday = formatDate(today); // ex)) "Mon, August 21" 형식
-  console.log(formattedToday);
+  // console.log(formattedToday);
 
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }} ref={scrollViewRef}>
       <HomeSafeAreaView>
         <StatusBar barStyle="dark-content" />
         <HomeUserContainer>
@@ -90,33 +109,27 @@ function NutriDetailScreen() {
           </View>
           <View>
             <Image
-              source={require("../../assets/femaleUser.png")}
+              source={require("../../assets/femaleAvatar.png")}
               style={{
                 height: 56,
                 width: 56,
                 right: -20,
               }}
             />
+            {/* <Image
+              source={require("../../assets/femaleUser.png")}
+              style={{
+                height: 56,
+                width: 56,
+                right: -20,
+              }}
+            /> */}
           </View>
         </HomeUserContainer>
-        <StepProgressContainer>
-          <Image
-            source={require("../../assets/personOnBar.png")}
-            style={{
-              height: 38,
-              width: 38,
-              right: -38,
-            }}
-          />
-          <StepProgressBar progress={65 / 100} width={326} height={6.2} />
-          <StepProgressText>
-            <StepKcalText>215 kcal</StepKcalText>
-            <Text>
-              <StepsHighlightText>5,600</StepsHighlightText>
-              <StepsText> / 8000 Steps</StepsText>
-            </Text>
-          </StepProgressText>
-        </StepProgressContainer>
+
+        {/* Pedometer Progress Bar Area */}
+        <HomePedometerArea />
+
         <HomeNavButtonContainer>
           {["My Records", "Details"].map((buttonText, index) => (
             <HomeNavButton
@@ -137,5 +150,22 @@ function NutriDetailScreen() {
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  blurBox: {
+    backgroundColor: "rgba(255, 255, 255, 0.3)", // 박스의 배경 색상 및 투명도 설정
+    borderRadius: 50,
+    padding: 10,
+    height: 70,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  blurText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+    textAlign: "center",
+  },
+});
 
 export default NutriDetailScreen;

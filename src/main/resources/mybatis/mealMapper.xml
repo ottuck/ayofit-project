@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.app.ayofit.mapper.MealMapper">
+
+	<select id="getAllMeal" resultType="MealDTO">
+		select * from record_meal
+	</select>
+	
+	<insert id="regMeal">
+		insert into record_meal 
+		values (
+		#{mealDTO.rNO},
+		'user1',
+		'아침', 
+		#{mealDTO.rMealDate}, 
+		#{mealDTO.rCarbohydrate},
+		#{mealDTO.rProtein},
+		#{mealDTO.rFat},
+		)
+	</insert>
+	
+	<delete id="deleteMeal">
+		delete record_meal where r_no = #{rNO}
+	</delete>
+	
+</mapper>

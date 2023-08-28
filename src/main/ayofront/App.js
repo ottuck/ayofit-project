@@ -1,12 +1,12 @@
-import { StyleSheet, Image, Dimensions, StatusBar } from "react-native";
+import { StyleSheet, Dimensions, StatusBar } from "react-native";
 import "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Constants from "expo-constants";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import OnboardingScreen from "./screens/Onboarding";
 import NutriDetailScreen from "./screens/nutriDetail/nutriDetail_test";
 import RecordScreen from "./screens/record/RecordNavigator";
@@ -18,6 +18,7 @@ import { GlobalStyles } from "./components/UI/styles";
 import FontProvider from "./components/FontProvider";
 import AccountsContextProvider from "./store/accounts_context";
 import AccountMain from "./navigations/AccountStack";
+import { PedometerProvider } from "./store/PedometerContext";
 import { PhotoProvider } from "./store/image_context";
 
 const Tab = createBottomTabNavigator();
@@ -44,6 +45,7 @@ function MainTabsScreen() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
+        tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: GlobalStyles.colors.primary500,
         tabBarInactiveTintColor: GlobalStyles.colors.blackOpacity50,
         headerShown: false,
@@ -51,6 +53,8 @@ function MainTabsScreen() {
           backgroundColor: GlobalStyles.colors.primary50,
           borderRadius: 16,
           height: 65,
+          overflow: "hidden",
+          position: "absolute",
         },
         headerShown: false,
       })}
@@ -66,7 +70,6 @@ function MainTabsScreen() {
 
 export default function App() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
-
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [completedOnboarding, setCompletedOnboarding] = useState(false);
@@ -95,8 +98,9 @@ export default function App() {
               barStyle="default"
             />
             <NavigationContainer style={styles.navigationContainer}>
-              <Stack.Navigator>
-                {/* 인증해야되서 주석 처리 해둠
+              <PedometerProvider>
+                <Stack.Navigator>
+                  {/* /* 인증해야되서 주석 처리 해둠
               <Stack.Screen
                 name="AccountInfo"
                 component={AccountInfo}
@@ -107,12 +111,13 @@ export default function App() {
                 component={AccountNutri}
                 options={{ headerShown: false }}
               /> */}
-                <Stack.Screen
-                  name="MainTabs"
-                  component={MainTabsScreen}
-                  options={{ headerShown: false }}
-                />
-              </Stack.Navigator>
+                  <Stack.Screen
+                    name="MainTabs"
+                    component={MainTabsScreen}
+                    options={{ headerShown: false }}
+                  />
+                </Stack.Navigator>
+              </PedometerProvider>
             </NavigationContainer>
           </PhotoProvider>
         </FontProvider>

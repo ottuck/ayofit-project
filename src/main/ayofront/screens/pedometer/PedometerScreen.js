@@ -1,269 +1,141 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
-  Animated,
-  Easing,
   StyleSheet,
   View,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
-  Notification,
-  AccelerometerData,
+  ScrollView,
+  RefreshControl,
+  Text,
 } from "react-native";
+import Constants from "expo-constants";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { SimpleLineIcons } from "@expo/vector-icons";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
+import axios from "axios";
 
-import { Accelerometer } from "expo-sensors";
-
+import { PedometerContext, daysOfWeek } from "../../store/PedometerContext";
 import { GlobalStyles } from "../../components/UI/styles";
 import PedometerProgressRing from "../../components/pedometer/PedometerProgressRing";
 import PedometerDailyCircles from "../../components/pedometer/PedometerDailyCheck";
 import CongratulationsMessage from "../../components/pedometer/CongratulationsMessage";
 import DistanceCaloriesBox from "../../components/pedometer/DistanceCaloriesBox";
 import GoalInput from "../../components/pedometer/GoalInput";
-import axios from "axios";
-import Constants from "expo-constants";
-import * as TaskManager from "expo-task-manager";
-
-const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-const PEDOMETER_TASK_NAME = "accelerometerTask";
-TaskManager.defineTask(PEDOMETER_TASK_NAME, ({ data, error }) => {
-  if (error) {
-    console.error("Background task error:", error);
-    return;
-  }
-  console.log(data);
-  if (data) {
-    console.log(data + ">>>>>>>>>>>>>>>>>>");
-    // 여기서 센서 데이터를 처리하거나 업데이트합니다.
-    // 백그라운드 작업이 지속적으로 실행됩니다.
-    const accelerationMagnitude = Math.sqrt(
-      data.accelerometerData.x ** 2 +
-        data.accelerometerData.y ** 2 +
-        data.accelerometerData.z ** 2
-    );
-
-    if (accelerationMagnitude > 1.2) {
-      console.log("background");
-    }
-  }
-});
+import DailyGoalInputScreen from "./DailyGoalInputScreen";
+import SwipeDownToSave from "../../components/pedometer/SwipeDownToSave";
 
 function PedometerScreen() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-  console.log(uri);
 
-  const [steps, setSteps] = useState(0);
-  const [isWalking, setIsWalking] = useState(false);
-  const [goal, setGoal] = useState(100);
-  const [newGoal, setNewGoal] = useState("");
-  const [congratulationsVisible, setCongratulationsVisible] = useState(false);
-  const congratulationsOpacity = new Animated.Value(0);
+  const {
+    steps,
+    goal,
+    daysAchieved,
+    formattedDate,
+    stepsToKilometers,
+    calculateCaloriesBurned,
+    handleGoalUpdate,
+    congratulationsVisible,
+    updateStepsOnServer,
+    todayData,
+  } = useContext(PedometerContext);
 
-  const [daysAchieved, setDaysAchieved] = useState([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ]);
+  // for 'swipe down to save'
+  const [refreshing, setRefreshing] = useState(false);
 
-  // 컴포넌트가 마운트될 때 TaskManager에 백그라운드 작업 등록
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await updateStepsOnServer(steps);
+    setRefreshing(false);
+  };
+
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
   useEffect(() => {
-    const startBackgroundTask = async () => {
-      try {
-        await TaskManager.executeTask(PEDOMETER_TASK_NAME);
-        console.log("Background task started");
-      } catch (error) {
-        console.error("Error starting background task:", error);
-      }
-    };
-  }, []);
+    if (!isFocused) {
+      console.log("Steps when leaving PedometerScreen:", steps);
 
-  useEffect(() => {
-    const userId = "user4"; // Set the user ID here
-    const currentDate = new Date();
+      async function updateStepsOnServer() {
+        try {
+          const userId = "user4"; // 현재 사용자 ID
+          console.log(userId);
+          console.log(steps);
+          console.log(formattedDate);
 
-    const formattedDate = `${currentDate.getFullYear()}-${(
-      currentDate.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, "0")}-${currentDate.getDate().toString().padStart(2, "0")}`;
-
-    axios
-      .get(`${uri}/api/pedometer/weekly-achievement`, {
-        params: {
-          userId: userId,
-          date: formattedDate,
-        },
-      })
-      .then((response) => {
-        const weeklyAchievement = response.data;
-        console.log(response.data);
-        const updatedDaysAchieved = daysOfWeek.map((day, index) => {
-          const dailyData = weeklyAchievement.find((item) => {
-            const pDate = new Date(item.pDate);
-            const pDayOfWeek = pDate.getDay(); // 0 (일요일) ~ 6 (토요일)
-
-            // daysOfWeek 배열의 첫 번째 값이 월요일이므로, index 값에 1을 더하여 비교합니다.
-            return pDayOfWeek === (index + 1) % 7;
+          await axios.put(`${uri}/api/pedometer/update-daily-step`, {
+            pId: userId,
+            pStepCnt: steps,
+            pDate: formattedDate,
           });
 
-          if (dailyData) {
-            return dailyData.pStepCnt >= dailyData.pStepGoal;
-          } else {
-            return false;
-          }
-        });
-
-        setDaysAchieved(updatedDaysAchieved);
-      })
-      .catch((error) => {
-        console.error("Failed to fetch weekly achievement data:", error);
-      });
-  }, []);
-
-  // 빈 배열을 전달하여 컴포넌트 마운트 시에만 실행되도록 함
-
-  // const fetchAllPedometerData = () => {
-  //   axios
-  //     .get(`${uri}/api/pedometer/test`)
-  //     .then((response) => {
-  //       console.log(uri);
-  //       console.log(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching pedometer data:", error);
-  //     });
-  // };
-
-  // fetchAllPedometerData();
-
-  useEffect(() => {
-    const accelerometerSubscription = Accelerometer.addListener(
-      (accelerometerData) => {
-        const accelerationMagnitude = Math.sqrt(
-          accelerometerData.x ** 2 +
-            accelerometerData.y ** 2 +
-            accelerometerData.z ** 2
-        );
-        if (accelerationMagnitude > 1.2) {
-          setIsWalking(true);
-        } else if (accelerationMagnitude < 0.8) {
-          setIsWalking(false);
-        }
-
-        if (isWalking && accelerationMagnitude < 1.2) {
-          setSteps((prevSteps) => prevSteps + 1);
-          setIsWalking(false);
-
-          if (steps + 1 === goal) {
-            showCongratulations();
-          }
+          console.log("Steps updated on the server.");
+        } catch (error) {
+          console.error("Failed to update steps on the server:", error);
         }
       }
-    );
-
-    return () => {
-      accelerometerSubscription.remove();
-    };
-  }, [isWalking, steps, goal]);
-
-  useEffect(() => {
-    if (congratulationsVisible) {
-      Animated.timing(congratulationsOpacity, {
-        toValue: 1,
-        duration: 500,
-        easing: Easing.ease,
-        useNativeDriver: false,
-      }).start();
-    } else {
-      Animated.timing(congratulationsOpacity, {
-        toValue: 0,
-        duration: 500,
-        easing: Easing.ease,
-        useNativeDriver: false,
-      }).start();
+      updateStepsOnServer();
     }
-  }, [congratulationsVisible]);
+  }, [isFocused]);
 
-  const stepsToKilometers = (steps) => {
-    const meters = steps * 0.7;
-    const kilometers = meters / 1000;
-    return kilometers.toFixed(2);
-  };
-
-  const updateGoal = () => {
-    setGoal(parseInt(newGoal) || 0);
-    setNewGoal("");
-  };
-
-  const showCongratulations = () => {
-    setCongratulationsVisible(true);
-    setTimeout(() => {
-      setCongratulationsVisible(false);
-    }, 3000); //
-  };
-
-  const calculateCaloriesBurned = () => {
-    // const weightInKg = 70; // User's Weight
-    const caloriesPerStep = 0.035;
-    const totalCaloriesBurned = steps * caloriesPerStep;
-
-    return totalCaloriesBurned.toFixed(2);
-  };
-
-  return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
+  return !todayData ? (
+    <DailyGoalInputScreen />
+  ) : (
+    <View style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View>
-          <View style={styles.dayContainerWrapper}>
-            <View style={styles.daysContainer}>
-              {daysOfWeek.map((day, index) => (
-                <PedometerDailyCircles
-                  key={index}
-                  day={day}
-                  isAchieved={daysAchieved[index]} // 여기서 daysAchieved 배열의 값 사용
-                />
-              ))}
+        <KeyboardAwareScrollView
+          extraScrollHeight={Platform.select({ ios: 100, android: 200 })}
+          enableOnAndroid={true}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <View>
+            <SwipeDownToSave />
+            <View style={styles.dayContainerWrapper}>
+              <View style={styles.daysContainer}>
+                {daysOfWeek.map((day, index) => (
+                  <PedometerDailyCircles
+                    key={index}
+                    day={day}
+                    isAchieved={daysAchieved[index]}
+                  />
+                ))}
+              </View>
             </View>
-          </View>
 
-          {/* progress ring */}
-          <PedometerProgressRing steps={steps} goal={goal} />
+            {/* progress ring */}
+            <PedometerProgressRing steps={steps} goal={goal} />
 
-          <View style={styles.bottomTextContainer}>
-            <DistanceCaloriesBox
-              iconSource={require("../../assets/distance-icon.png")}
-              title="Distance"
-              value={`${stepsToKilometers(steps)} km`}
+            <View style={styles.bottomTextContainer}>
+              <DistanceCaloriesBox
+                iconSource={require("../../assets/distance-icon.png")}
+                title="Distance"
+                value={`${stepsToKilometers(steps)} km`}
+              />
+
+              <DistanceCaloriesBox
+                iconSource={require("../../assets/calories-burned-icon.png")}
+                title="Calories Burned"
+                value={`${calculateCaloriesBurned()} kcal`}
+              />
+            </View>
+
+            <GoalInput
+              goal={goal}
+              onGoalChange={handleGoalUpdate}
+              apiEndpoint={uri}
+              today={formattedDate}
             />
 
-            <DistanceCaloriesBox
-              iconSource={require("../../assets/calories-burned-icon.png")}
-              title="Calories Burned"
-              value={`${calculateCaloriesBurned()} kcal`}
-            />
+            {/* Congratulations Message */}
+            <CongratulationsMessage isVisible={congratulationsVisible} />
           </View>
-
-          {/* User Input Area */}
-          <GoalInput
-            newGoal={newGoal}
-            onGoalChange={setNewGoal}
-            onUpdateGoal={updateGoal}
-          />
-
-          {/* Congratulations Message */}
-          <CongratulationsMessage isVisible={congratulationsVisible} />
-        </View>
+        </KeyboardAwareScrollView>
       </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -272,7 +144,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: GlobalStyles.colors.primary50,
+    backgroundColor: GlobalStyles.colors.primary100,
+    paddingTop: "5%",
   },
   dayContainerWrapper: {
     flexDirection: "row",
@@ -282,7 +155,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginVertical: 20,
-    marginHorizontal: 24,
+    marginHorizontal: 14,
   },
   bottomTextContainer: {
     flexDirection: "row",

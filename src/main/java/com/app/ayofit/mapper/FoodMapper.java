@@ -11,5 +11,5 @@ public interface FoodMapper {
 	
 	List<FoodDTO> getAllFoodInfo();
 	FoodDTO getFoodInfoById(String n_no);
-	List<FoodDTO> searchFoodByName(String n_food_name);
+	List<FoodDTO> searchFoodByName(String foodName);
 }

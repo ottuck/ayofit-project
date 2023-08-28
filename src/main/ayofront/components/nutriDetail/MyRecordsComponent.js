@@ -1,21 +1,8 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  SafeAreaView,
-  Animated,
-  Image,
-  TextInput,
-  Button,
-  Modal,
-} from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View, Image, Modal, Animated } from "react-native";
 import { ScrollView } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Constants from "expo-constants";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { Dimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";
@@ -33,6 +20,12 @@ import {
   TodaysWeightTextContainer,
   TodaysWeightText,
   TodaysWeightKg,
+  RecordsWeightContainer,
+  RecordsMyWeightImgContainer,
+  RecordsMyWeightText,
+  RecordsKgText,
+  RecordsGoalWeightContainer,
+  RecordsGoalWeightText,
   RecordsWeightButtonContainer,
   RecordsWeightButton,
   RecordsWeightButtonText,
@@ -47,22 +40,23 @@ import {
   RecordsModalButtonsContainer,
   RecordsModalFixAndDeleteButton,
   RecordsModalFixAndDeleteButtonText,
+  WeightChartText,
+  DetailsCircleContainer,
+  DetailsCircleRow,
 } from "../../components/nutriDetail/StyledComponents";
 
 const MyRecordsComponent = () => {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDateMeals, setSelectedDateMeals] = useState([]);
   const [dailyNutrition, setDailyNutrition] = useState([]);
-  const [monthlyNutrition, setMonthlyNutrition] = useState([]);
   const [weight, setWeight] = useState(0); // 기록된 체중 없을때 체중 기록 저장
   const [modalVisible, setModalVisible] = useState(false);
   const [hasRecorded, setHasRecorded] = useState(false); // 체중 기록 유무 확인
   const [recordedWeight, setRecordedWeight] = useState(0); // 기록된 체중
   const [weightData, setWeightData] = useState([]); // 차트에 몸무게 여러개담는 데이터
-
-  // console.log(weightData);
 
   let totalCarbohydrate = 0;
   let totalProtein = 0;
@@ -76,22 +70,6 @@ const MyRecordsComponent = () => {
 
   let totalCalories = totalCarbohydrate * 4 + totalProtein * 4 + totalFat * 9;
 
-  const todayInTokyo = new Date();
-  todayInTokyo.setHours(todayInTokyo.getHours() + 9); // 도쿄 시간대에 맞게 시간을 조정.
-  const formattedToday = todayInTokyo.toISOString().split("T")[0]; // ISO 형식을 사용하여 날짜만 가져오기.
-
-  const getNutritionData = (date) => {
-    axios
-      .get(`${uri}/api/nutrition/daily/user1/${date}`)
-      .then((response) => {
-        console.log(response.data);
-        setDailyNutrition(response.data);
-        setSelectedDate(date);
-        setSelectedDateMeals(response.data);
-      })
-      .catch((error) => console.log(error));
-  };
-
   let totalNutrients =
     (selectedDateMeals[0]?.totalCarbohydrate || 0) +
     (selectedDateMeals[0]?.totalProtein || 0) +
@@ -103,6 +81,51 @@ const MyRecordsComponent = () => {
     (selectedDateMeals[0]?.totalProtein / totalNutrients) * 100 || 0;
   let fatPercentage =
     (selectedDateMeals[0]?.totalFat / totalNutrients) * 100 || 0;
+
+  const todayInTokyo = new Date();
+  todayInTokyo.setHours(todayInTokyo.getHours() + 9); // 도쿄 시간대에 맞게 시간을 조정.
+  const formattedToday = todayInTokyo.toISOString().split("T")[0]; // ISO 형식을 사용하여 날짜만 가져오기.
+
+  const getNutritionData = (date) => {
+    axios
+      .get(`${uri}/api/nutrition/daily/user1/${date}`)
+      .then((response) => {
+        // console.log(response.data);
+        setDailyNutrition(response.data);
+        setSelectedDate(date);
+        setSelectedDateMeals(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const getLast7Days = () => {
+    const dates = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date();
+      d.setHours(d.getHours() + 9);
+      d.setDate(d.getDate() - i);
+      const formatted = `${String(d.getFullYear()).substr(2)}-${String(
+        d.getMonth() + 1
+      ).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      dates.unshift(formatted);
+    }
+    return dates;
+  };
+
+  const fillMissingDates = (data) => {
+    const last7Days = getLast7Days();
+    const filledData = last7Days.map((date) => {
+      const found = data.find((item) => item.rWeightDate === date);
+      if (found) return found;
+      return {
+        rId: "0",
+        rNo: 0,
+        rWeight: 0,
+        rWeightDate: date,
+      };
+    });
+    return filledData;
+  };
 
   const isValidWeight = (weight) => {
     if (!weight || weight.trim() === "") {
@@ -127,11 +150,10 @@ const MyRecordsComponent = () => {
       .get(`${uri}/api/weights/user/${rId}`)
       .then((response) => {
         // console.log(response.data);
-        const sortedData = response.data.sort(
+        const sortedData = fillMissingDates(response.data).sort(
           (a, b) => new Date(a.rWeightDate) - new Date(b.rWeightDate) // 날짜를 오름차순으로 정렬
         );
-        const recentData = sortedData.slice(0, 7); // 최근 7일의 데이터만 가져오기
-        setWeightData(recentData);
+        setWeightData(sortedData);
       })
       .catch((error) => console.log(error));
   };
@@ -177,6 +199,7 @@ const MyRecordsComponent = () => {
           console.log(response.data);
           setHasRecorded(true);
           setRecordedWeight(weight);
+          fetchAllWeightsByUserId("user3");
         })
         .catch((error) => console.log(error));
     }
@@ -189,6 +212,7 @@ const MyRecordsComponent = () => {
         console.log(response.data);
         setHasRecorded(false);
         setRecordedWeight(0);
+        fetchAllWeightsByUserId("user3");
       })
       .catch((error) => console.log(error));
   };
@@ -213,6 +237,7 @@ const MyRecordsComponent = () => {
         console.log(response.data);
         setHasRecorded(true);
         setRecordedWeight(weight);
+        fetchAllWeightsByUserId("user3");
       })
       .catch((error) => console.log(error));
   };
@@ -223,7 +248,7 @@ const MyRecordsComponent = () => {
         ? weightData.map((item) =>
             item.rWeightDate.substring(3).replace("-", "/")
           )
-        : ["데이터 없음"],
+        : ["-"],
     datasets: [
       {
         data:
@@ -238,7 +263,68 @@ const MyRecordsComponent = () => {
     fetchAllWeightsByUserId("user3");
   }, []);
 
-  console.log(weightData);
+  // 각각의 원에 대한 애니메이션 값 상태
+  const [carbAnimationValue, setCarbAnimationValue] = useState(
+    new Animated.Value(65)
+  );
+  const [proteinAnimationValue, setProteinAnimationValue] = useState(
+    new Animated.Value(65)
+  );
+  const [fatAnimationValue, setFatAnimationValue] = useState(
+    new Animated.Value(65)
+  );
+
+  useEffect(() => {
+    // 탄수화물, 단백질, 지방 중 가장 큰 퍼센트를 찾기
+    const maxPercentage = Math.max(
+      carbPercentage,
+      proteinPercentage,
+      fatPercentage
+    );
+
+    // 해당 원만 크기를 더 크게 설정
+    if (maxPercentage === carbPercentage) {
+      Animated.timing(carbAnimationValue, {
+        toValue: 85,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      Animated.timing(carbAnimationValue, {
+        toValue: 65,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    }
+
+    if (maxPercentage === proteinPercentage) {
+      Animated.timing(proteinAnimationValue, {
+        toValue: 85,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      Animated.timing(proteinAnimationValue, {
+        toValue: 65,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    }
+
+    if (maxPercentage === fatPercentage) {
+      Animated.timing(fatAnimationValue, {
+        toValue: 85,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      Animated.timing(fatAnimationValue, {
+        toValue: 65,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [carbPercentage, proteinPercentage, fatPercentage]);
 
   return (
     <MyRecordsDailyNutritionContainer>
@@ -301,14 +387,123 @@ const MyRecordsComponent = () => {
           )}
         </AnimatedCircularProgress>
       </CircularProgressContainer>
+      <DetailsCircleContainer>
+        {/* 첫 번째 원 */}
+        <Animated.View
+          style={[
+            styles.circle,
+            {
+              backgroundColor: "#FFD6D1",
+              width: fatAnimationValue,
+              height: fatAnimationValue,
+            },
+          ]}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "600",
+              color: "rgba(0, 0, 0, 0.8)",
+            }}
+          >{`${fatPercentage.toFixed(2)}%`}</Text>
+        </Animated.View>
+
+        {/* 두 번째 원 */}
+        <DetailsCircleRow>
+          <Animated.View
+            style={[
+              styles.circle,
+              {
+                backgroundColor: "#E2F0B5",
+                width: carbAnimationValue,
+                height: carbAnimationValue,
+              },
+            ]}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "600",
+                color: "rgba(0, 0, 0, 0.8)",
+              }}
+            >{`${carbPercentage.toFixed(2)}%`}</Text>
+          </Animated.View>
+          {/* 세 번째 원 */}
+          <Animated.View
+            style={[
+              styles.circle,
+              {
+                backgroundColor: "#FFEC99",
+                width: proteinAnimationValue,
+                height: proteinAnimationValue,
+              },
+            ]}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "600",
+                color: "rgba(0, 0, 0, 0.8)",
+              }}
+            >{`${proteinPercentage.toFixed(2)}%`}</Text>
+          </Animated.View>
+        </DetailsCircleRow>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignItems: "center",
+            width: "100%",
+            top: 12,
+          }}
+        >
+          <View>
+            <Image
+              source={require("../../assets/rectangleCarb.png")}
+              style={{
+                height: 23,
+                width: 30,
+              }}
+            />
+            <Text style={{ fontSize: 19, fontWeight: "400", color: "#84a220" }}>
+              Carb
+            </Text>
+          </View>
+          <View>
+            <Image
+              source={require("../../assets/rectangleProtein.png")}
+              style={{
+                height: 23,
+                width: 30,
+              }}
+            />
+            <Text style={{ fontSize: 19, fontWeight: "400", color: "#dfc552" }}>
+              Protein
+            </Text>
+          </View>
+          <View>
+            <Image
+              source={require("../../assets/rectangleFat.png")}
+              style={{
+                height: 23,
+                width: 30,
+              }}
+            />
+            <Text style={{ fontSize: 19, fontWeight: "400", color: "#e88174" }}>
+              Fat
+            </Text>
+          </View>
+        </View>
+      </DetailsCircleContainer>
       <MyRecordsTodaysWeightContainer>
         <TodaysWeightTextContainer>
-          <TodaysWeightText>Today's Weight : </TodaysWeightText>
+          <TodaysWeightText>Today's Recorded Weight : </TodaysWeightText>
           <TodaysWeightKg>
             {recordedWeight ? parseFloat(recordedWeight).toFixed(1) : "00.0"} Kg
           </TodaysWeightKg>
         </TodaysWeightTextContainer>
         <FaintLine></FaintLine>
+        <WeightChartText>Recorded Weight for the last 7 days</WeightChartText>
         <LineChart
           data={chartData}
           width={Dimensions.get("window").width - 56}
@@ -323,6 +518,9 @@ const MyRecordsComponent = () => {
             decimalPlaces: 1,
             color: (opacity = 1) => "#E46C0A",
             labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            propsForBackgroundLines: {
+              strokeWidth: 0.6,
+            },
           }}
           bezier
           style={{
@@ -331,13 +529,41 @@ const MyRecordsComponent = () => {
             marginRight: 12, // 오른쪽 마진
           }}
         />
-        <RecordsWeightButtonContainer>
-          <RecordsWeightButton onPress={() => setModalVisible(true)}>
-            <RecordsWeightButtonText>
-              {hasRecorded ? "Modifying Weight" : "Recording Weight"}
-            </RecordsWeightButtonText>
-          </RecordsWeightButton>
-        </RecordsWeightButtonContainer>
+        <RecordsWeightContainer>
+          <RecordsMyWeightImgContainer>
+            <RecordsMyWeightText>Today's My Weight?</RecordsMyWeightText>
+            <RecordsKgText>
+              {recordedWeight ? parseFloat(recordedWeight).toFixed(1) : "00.0"}{" "}
+              kg
+            </RecordsKgText>
+            <Image
+              source={require("../../assets/avatar.png")}
+              style={{
+                height: 132,
+                width: 132,
+              }}
+            />
+            <RecordsGoalWeightContainer>
+              <Image
+                source={require("../../assets/goalFlag.png")}
+                style={{
+                  height: 28,
+                  width: 22,
+                  left: -6,
+                  top: 1.6,
+                }}
+              />
+              <RecordsGoalWeightText>목표 62kg</RecordsGoalWeightText>
+            </RecordsGoalWeightContainer>
+          </RecordsMyWeightImgContainer>
+          <RecordsWeightButtonContainer>
+            <RecordsWeightButton onPress={() => setModalVisible(true)}>
+              <RecordsWeightButtonText>
+                {hasRecorded ? "Modifying Weight" : "Recording Weight"}
+              </RecordsWeightButtonText>
+            </RecordsWeightButton>
+          </RecordsWeightButtonContainer>
+        </RecordsWeightContainer>
 
         <Modal animationType="slide" transparent={true} visible={modalVisible}>
           <RecordsWeightModalView>
@@ -406,4 +632,13 @@ const MyRecordsComponent = () => {
 
 export default MyRecordsComponent;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  circle: {
+    width: 60,
+    height: 60,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 1,
+  },
+});

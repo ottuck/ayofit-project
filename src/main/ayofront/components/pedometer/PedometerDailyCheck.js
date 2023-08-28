@@ -13,8 +13,8 @@ const PedometerDailyCircles = ({ day, isAchieved }) => {
             style={styles.checkMark}
           />
         ) : (
-          <Text style={styles.xMark}>✕</Text>
-          // <Text style={styles.xMark}></Text>
+          // <Text style={styles.xMark}>✕</Text>
+          <Text style={styles.xMark}></Text>
         )}
       </View>
     </View>
