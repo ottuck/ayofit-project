@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Modal } from "react-native";
+import { StyleSheet, Text, View, Image, Modal, Animated } from "react-native";
 import { ScrollView } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -41,6 +41,8 @@ import {
   RecordsModalFixAndDeleteButton,
   RecordsModalFixAndDeleteButtonText,
   WeightChartText,
+  DetailsCircleContainer,
+  DetailsCircleRow,
 } from "../../components/nutriDetail/StyledComponents";
 
 const MyRecordsComponent = () => {
@@ -100,6 +102,7 @@ const MyRecordsComponent = () => {
     const dates = [];
     for (let i = 0; i < 7; i++) {
       const d = new Date();
+      d.setHours(d.getHours() + 9);
       d.setDate(d.getDate() - i);
       const formatted = `${String(d.getFullYear()).substr(2)}-${String(
         d.getMonth() + 1
@@ -196,6 +199,7 @@ const MyRecordsComponent = () => {
           console.log(response.data);
           setHasRecorded(true);
           setRecordedWeight(weight);
+          fetchAllWeightsByUserId("user3");
         })
         .catch((error) => console.log(error));
     }
@@ -208,6 +212,7 @@ const MyRecordsComponent = () => {
         console.log(response.data);
         setHasRecorded(false);
         setRecordedWeight(0);
+        fetchAllWeightsByUserId("user3");
       })
       .catch((error) => console.log(error));
   };
@@ -232,6 +237,7 @@ const MyRecordsComponent = () => {
         console.log(response.data);
         setHasRecorded(true);
         setRecordedWeight(weight);
+        fetchAllWeightsByUserId("user3");
       })
       .catch((error) => console.log(error));
   };
@@ -256,6 +262,69 @@ const MyRecordsComponent = () => {
     fetchWeightByDateAndId("user3", formattedToday);
     fetchAllWeightsByUserId("user3");
   }, []);
+
+  // 각각의 원에 대한 애니메이션 값 상태
+  const [carbAnimationValue, setCarbAnimationValue] = useState(
+    new Animated.Value(65)
+  );
+  const [proteinAnimationValue, setProteinAnimationValue] = useState(
+    new Animated.Value(65)
+  );
+  const [fatAnimationValue, setFatAnimationValue] = useState(
+    new Animated.Value(65)
+  );
+
+  useEffect(() => {
+    // 탄수화물, 단백질, 지방 중 가장 큰 퍼센트를 찾기
+    const maxPercentage = Math.max(
+      carbPercentage,
+      proteinPercentage,
+      fatPercentage
+    );
+
+    // 해당 원만 크기를 더 크게 설정
+    if (maxPercentage === carbPercentage) {
+      Animated.timing(carbAnimationValue, {
+        toValue: 85,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      Animated.timing(carbAnimationValue, {
+        toValue: 65,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    }
+
+    if (maxPercentage === proteinPercentage) {
+      Animated.timing(proteinAnimationValue, {
+        toValue: 85,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      Animated.timing(proteinAnimationValue, {
+        toValue: 65,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    }
+
+    if (maxPercentage === fatPercentage) {
+      Animated.timing(fatAnimationValue, {
+        toValue: 85,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      Animated.timing(fatAnimationValue, {
+        toValue: 65,
+        duration: 700,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [carbPercentage, proteinPercentage, fatPercentage]);
 
   return (
     <MyRecordsDailyNutritionContainer>
@@ -318,6 +387,114 @@ const MyRecordsComponent = () => {
           )}
         </AnimatedCircularProgress>
       </CircularProgressContainer>
+      <DetailsCircleContainer>
+        {/* 첫 번째 원 */}
+        <Animated.View
+          style={[
+            styles.circle,
+            {
+              backgroundColor: "#FFD6D1",
+              width: fatAnimationValue,
+              height: fatAnimationValue,
+            },
+          ]}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "600",
+              color: "rgba(0, 0, 0, 0.8)",
+            }}
+          >{`${fatPercentage.toFixed(2)}%`}</Text>
+        </Animated.View>
+
+        {/* 두 번째 원 */}
+        <DetailsCircleRow>
+          <Animated.View
+            style={[
+              styles.circle,
+              {
+                backgroundColor: "#E2F0B5",
+                width: carbAnimationValue,
+                height: carbAnimationValue,
+              },
+            ]}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "600",
+                color: "rgba(0, 0, 0, 0.8)",
+              }}
+            >{`${carbPercentage.toFixed(2)}%`}</Text>
+          </Animated.View>
+          {/* 세 번째 원 */}
+          <Animated.View
+            style={[
+              styles.circle,
+              {
+                backgroundColor: "#FFEC99",
+                width: proteinAnimationValue,
+                height: proteinAnimationValue,
+              },
+            ]}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "600",
+                color: "rgba(0, 0, 0, 0.8)",
+              }}
+            >{`${proteinPercentage.toFixed(2)}%`}</Text>
+          </Animated.View>
+        </DetailsCircleRow>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignItems: "center",
+            width: "100%",
+            top: 12,
+          }}
+        >
+          <View>
+            <Image
+              source={require("../../assets/rectangleCarb.png")}
+              style={{
+                height: 23,
+                width: 30,
+              }}
+            />
+            <Text style={{ fontSize: 19, fontWeight: "400", color: "#84a220" }}>
+              Carb
+            </Text>
+          </View>
+          <View>
+            <Image
+              source={require("../../assets/rectangleProtein.png")}
+              style={{
+                height: 23,
+                width: 30,
+              }}
+            />
+            <Text style={{ fontSize: 19, fontWeight: "400", color: "#dfc552" }}>
+              Protein
+            </Text>
+          </View>
+          <View>
+            <Image
+              source={require("../../assets/rectangleFat.png")}
+              style={{
+                height: 23,
+                width: 30,
+              }}
+            />
+            <Text style={{ fontSize: 19, fontWeight: "400", color: "#e88174" }}>
+              Fat
+            </Text>
+          </View>
+        </View>
+      </DetailsCircleContainer>
       <MyRecordsTodaysWeightContainer>
         <TodaysWeightTextContainer>
           <TodaysWeightText>Today's Recorded Weight : </TodaysWeightText>
@@ -455,4 +632,13 @@ const MyRecordsComponent = () => {
 
 export default MyRecordsComponent;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  circle: {
+    width: 60,
+    height: 60,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 1,
+  },
+});

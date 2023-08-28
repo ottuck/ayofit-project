@@ -16,6 +16,10 @@ public interface RecordWeightMapper {
 
     RecordWeightDTO findByDateAndId(@Param("rWeightDate") Date rWeightDate, @Param("rId") String rId);
 
+    List<RecordWeightDTO> findWeightsBetweenDates(@Param("rId") String rId,
+            @Param("startDate") Date startDate,
+            @Param("endDate") Date endDate);
+    
     List<RecordWeightDTO> findAllWeightsByUserId(String rId);
     
     int insert(RecordWeightDTO record);
