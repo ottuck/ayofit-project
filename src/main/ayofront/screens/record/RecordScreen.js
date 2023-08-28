@@ -1,5 +1,16 @@
-import { View, Text, StyleSheet, ImageBackground, SafeAreaView, ScrollView, TouchableOpacity, Modal, TextInput, FlatList } from 'react-native';
-import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+  FlatList
+} from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { BlurView } from 'expo-blur';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -8,49 +19,45 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import axios from "axios";
 import Constants from "expo-constants";
 
-function RecordScreen({ navigation }) {
-  //uri 수정
+function RecordScreen({ navigation, route }) {
+  //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
-  //Validation
+  //Debounce를 적용한 SearchAPI 호출
+  const [keyword, setKeyword] = useState('');   //검색 키워드
+  const [list, setList] = useState([]);   //검색어가 포함된 데이터 리스트
+
+  useEffect(() => {
+    const getList = () => {
+      const query = keyword.trim();
+      axios
+        .get(`${uri}/api/food/search/${query}`)
+        .then((response) => {
+          setList(response.data);
+        })
+        .catch(() => {
+        });
+    };
+
+    const debounce = setTimeout(() => {
+      getList();
+    }, 200);  //keyword가 입력되고 0.x초 후 실행되게 지연시킴
+
+    return () => {
+      clearTimeout(debounce);
+    };
+  }, [keyword]);
+
+  //최종 검색어 제출, Validation : keyword와 list의 값이 일치하지 않으면 제출못하게 막고 error 표시
   const [error, setError] = useState('');
-  const validateInput = () => {
-    if (searchQuery.trim() === '') {
-      setError('음식 이름을 입력해주세요. ex) 닭');
-      return false;
-    } else {
-      setError('');
-      return true;
-    }
-  };
-
-  //Search
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResult, setSearchResult] = useState([]);
-
-  const searchFood = () => {
-    const query = searchQuery.trim(); // 앞뒤 공백 제거
-    console.log("Searching for:", query);
-    console.log("URL:", `${uri}/api/food/search/${query}`);
-    console.log(query);
-
-    axios
-      .get(`${uri}/api/food/search/${query}`)
-      .then((response) => {
-        console.log(response.data)
-        if (validateInput()) {
-          submitSearchResult();
-        }
-      })
-      .catch((error) => console.log(error));
-  };
-
-  //검색어 제출
   const submitSearchResult = () => {
-    navigation.navigate("RecordMain");  //naviation.push 로 변경
-    setSearchResult([]);
-    setSearchQuery("");
+    const foundItem = list.find(item => item.nFoodName.trim() === keyword.trim());
+    if (!foundItem || "") {
+      setError('리스트에서 음식을 고른 후 제출해주세요🥹');
+      return;
+    } 
+    navigation.push('RecordMain', { food: list }, openModal);
     closeModal();
   };
 
@@ -63,9 +70,31 @@ function RecordScreen({ navigation }) {
     setModalVisible(false);
   };
 
+  //recordMain.js 에서 보내는 openModal 요청 받기
+  useEffect(() => {
+    if (route.params?.shouldOpenModal) {
+      openModal();
+      route.params.shouldOpenModal = false;
+    }
+  }, [route.params?.shouldOpenModal]);
+
   //toISOString은 "2023-08-20T14:30:00.000Z"와 같은 형식이라 "T" 나눠서 0번째 index의 날짜만 가져온다
   const today = new Date();
   const formattedToday = today.toISOString().split("T")[0];
+
+  //검색어 하이라이트 색상 적용
+  const highlightKeyword = (text, keyword) => {
+    const parts = text.split(new RegExp(`(${keyword})`, 'gi')); //JS의 RegExp은 정규표현식 사용 'gi'는 옵션
+    return (
+      <Text style={{ fontSize: 18 }}>
+        {parts.map((part, i) => (
+          part.toLowerCase() === keyword.toLowerCase()
+            ? <Text key={i} style={{ color: 'red', fontWeight: 'bold' }}>{part}</Text>
+            : part
+        ))}
+      </Text>
+    );
+  };
 
 
   return (
@@ -109,6 +138,58 @@ function RecordScreen({ navigation }) {
               </View>
             </View>
 
+            <View style={styles.cardContainer}>
+              <View style={styles.cardImageContainer}>
+                <TouchableOpacity onPress={openModal}>
+                  <Feather name="plus-circle" style={styles.plusIcon} />
+                </TouchableOpacity>
+              </View>
+              <View style={{ width: '90%' }}>
+                <View style={styles.textContainer}>
+                  <View>
+                    <Text style={styles.mealTime}>BreakFast : </Text>
+                    <Text style={styles.nutrientText}>Carb : </Text>
+                    <Text style={styles.nutrientText}>Protein :  </Text>
+                    <Text style={styles.nutrientText}>Fat : </Text>
+                    <Text style={styles.TotalValue}>Total calories : </Text>
+                  </View>
+                  <View>
+                    <Text style={styles.mealTime}>AM 09:44</Text>
+                    <Text style={styles.nutrientValue}>55g</Text>
+                    <Text style={styles.nutrientValue}>16.4g</Text>
+                    <Text style={styles.nutrientValue}>21.5g</Text>
+                    <Text style={styles.TotalValue}>487kcal</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.cardContainer}>
+              <View style={styles.cardImageContainer}>
+                <TouchableOpacity onPress={openModal}>
+                  <Feather name="plus-circle" style={styles.plusIcon} />
+                </TouchableOpacity>
+              </View>
+              <View style={{ width: '90%' }}>
+                <View style={styles.textContainer}>
+                  <View>
+                    <Text style={styles.mealTime}>BreakFast : </Text>
+                    <Text style={styles.nutrientText}>Carb : </Text>
+                    <Text style={styles.nutrientText}>Protein :  </Text>
+                    <Text style={styles.nutrientText}>Fat : </Text>
+                    <Text style={styles.TotalValue}>Total calories : </Text>
+                  </View>
+                  <View>
+                    <Text style={styles.mealTime}>AM 09:44</Text>
+                    <Text style={styles.nutrientValue}>55g</Text>
+                    <Text style={styles.nutrientValue}>16.4g</Text>
+                    <Text style={styles.nutrientValue}>21.5g</Text>
+                    <Text style={styles.TotalValue}>487kcal</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+
           </ScrollView>
 
           <Modal animationType="slide" visible={modalVisible} transparent={true} >
@@ -118,42 +199,54 @@ function RecordScreen({ navigation }) {
                   <AntDesign name="close" style={styles.modalCloseButton} />
                 </TouchableOpacity>
                 <View style={styles.modalSearchContainer}>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={submitSearchResult}>
                     <FontAwesome5 name="search" style={styles.modalSearchButton} />
                   </TouchableOpacity>
-                  <TextInput
-                    style={styles.modalTextInput}
-                    placeholder="Search your meal"
-                    value={searchQuery}
-                    onChangeText={(text) => setSearchQuery(text)}
-                    onBlur={validateInput}
-                    onSubmitEditing={searchFood}
-                  />
-                  <TouchableOpacity>
+                  <View style={styles.modalTextInputBox}>
+                    <TextInput
+                      style={styles.modalTextInput}
+                      placeholder="Search your meal"
+                      returnKeyType="search"
+                      autoFocus={true}
+                      onChangeText={setKeyword}
+                      value={keyword}
+                      onSubmitEditing={submitSearchResult}
+                      onFocus={() => setError('')} 
+                    />
+                    <Text style={{color:'red', fontWeight: 'bold'}}>{error}</Text>
+                  </View>
+                  <TouchableOpacity onPress={() => setKeyword('')}>
                     <AntDesign name="closecircleo" style={styles.clearButton} />
                   </TouchableOpacity>
                 </View>
-                {/* 유효성 검사 결과 알림 */}
-                <ScrollView>
-                  {error ? <Text style={{ color: 'red' }}> {error} </Text> : null}
-                  {searchResult.map((food, index) => (
-                    <Text key={index}>{food.n_food_name}</Text>
-                  ))}
-                </ScrollView>
+                <FlatList
+                  data={list}
+                  showsVerticalScrollIndicator={false}
+                  style={styles.searchScrollView}
+                  keyExtractor={(item, index) => item.nNo || String(index)}
+                  //FlatList Rendering
+                  renderItem={({ item }) =>
+                    <TouchableOpacity
+                      style={{ marginVertical: '3%', fontSize: 18 }}
+                      onPress={() => { setKeyword(item.nFoodName) }}
+                    >
+                      {highlightKeyword(item.nFoodName, keyword)}
+                    </TouchableOpacity>
+                  }
+                />
               </View>
             </BlurView>
           </Modal>
 
         </ImageBackground>
-      </View>
-    </SafeAreaView>
+      </View >
+    </SafeAreaView >
   );
 }
 export default RecordScreen;
 
 const styles = StyleSheet.create({
   safeArea: {
-    // 이미지를 백그라운드 색이랑 합친걸로 교체하면 태그  SafeArea 부분 색을 쉽게 변경 가능
     backgroundColor: '#E46C0A',
   },
   container: {
@@ -183,9 +276,7 @@ const styles = StyleSheet.create({
   },
   //카드 디자인
   cardScroll: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
+    //작업필요
   },
   cardContainer: {
     width: 300,
@@ -197,7 +288,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 5, // Android에서 그림자를 보이게 하려면 elevation 설정
+    elevation: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -256,13 +347,17 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'relative',
   },
-  modalTextInput: {
+  modalTextInputBox: {
     width: '80%',
     height: 45,
     borderColor: 'rgba(0, 0, 0, 0.3)',
     borderWidth: 1,
     borderRadius: 10,
     paddingLeft: 50,
+  },
+  modalTextInput: {
+    width: '80%',
+    height: 45,
     fontSize: 16,
   },
   modalSearchButton: {
@@ -279,5 +374,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: '32%',
     bottom: 12,
-  }
+  },
+  //FlatList
+  searchScrollView: {
+    height: '80%', marginTop: '5%', marginLeft: '10%'
+  },
 });

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -7,9 +7,14 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  RefreshControl,
+  Text,
 } from "react-native";
 import Constants from "expo-constants";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { SimpleLineIcons } from "@expo/vector-icons";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
+import axios from "axios";
 
 import { PedometerContext, daysOfWeek } from "../../store/PedometerContext";
 import { GlobalStyles } from "../../components/UI/styles";
@@ -18,6 +23,8 @@ import PedometerDailyCircles from "../../components/pedometer/PedometerDailyChec
 import CongratulationsMessage from "../../components/pedometer/CongratulationsMessage";
 import DistanceCaloriesBox from "../../components/pedometer/DistanceCaloriesBox";
 import GoalInput from "../../components/pedometer/GoalInput";
+import DailyGoalInputScreen from "./DailyGoalInputScreen";
+import SwipeDownToSave from "../../components/pedometer/SwipeDownToSave";
 
 function PedometerScreen() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -32,23 +39,68 @@ function PedometerScreen() {
     calculateCaloriesBurned,
     handleGoalUpdate,
     congratulationsVisible,
+    updateStepsOnServer,
+    todayData,
   } = useContext(PedometerContext);
 
-  return (
+  // for 'swipe down to save'
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await updateStepsOnServer(steps);
+    setRefreshing(false);
+  };
+
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (!isFocused) {
+      console.log("Steps when leaving PedometerScreen:", steps);
+
+      async function updateStepsOnServer() {
+        try {
+          const userId = "user4"; // 현재 사용자 ID
+          console.log(userId);
+          console.log(steps);
+          console.log(formattedDate);
+
+          await axios.put(`${uri}/api/pedometer/update-daily-step`, {
+            pId: userId,
+            pStepCnt: steps,
+            pDate: formattedDate,
+          });
+
+          console.log("Steps updated on the server.");
+        } catch (error) {
+          console.error("Failed to update steps on the server:", error);
+        }
+      }
+      updateStepsOnServer();
+    }
+  }, [isFocused]);
+
+  return !todayData ? (
+    <DailyGoalInputScreen />
+  ) : (
     <View style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAwareScrollView
           extraScrollHeight={Platform.select({ ios: 100, android: 200 })}
           enableOnAndroid={true}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         >
           <View>
+            <SwipeDownToSave />
             <View style={styles.dayContainerWrapper}>
               <View style={styles.daysContainer}>
                 {daysOfWeek.map((day, index) => (
                   <PedometerDailyCircles
                     key={index}
                     day={day}
-                    isAchieved={daysAchieved[index]} // 여기서 daysAchieved 배열의 값 사용
+                    isAchieved={daysAchieved[index]}
                   />
                 ))}
               </View>
@@ -92,8 +144,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: GlobalStyles.colors.primary50,
-    paddingTop: "20%",
+    backgroundColor: GlobalStyles.colors.primary100,
+    paddingTop: "5%",
   },
   dayContainerWrapper: {
     flexDirection: "row",

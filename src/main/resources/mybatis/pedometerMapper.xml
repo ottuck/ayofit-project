@@ -2,19 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.app.ayofit.mapper.PedometerMapper">
+	
+	<insert id="insertGoal" parameterType="com.app.ayofit.model.PedometerDTO">
+        INSERT INTO pedometer
+        VALUES (STEPCOUNTER_SEQ.NEXTVAL, #{pId}, #{pDate}, 0, #{pStepGoal})
+    </insert>
+
+	
   <select id="getWeeklyAchievement" resultType="com.app.ayofit.model.PedometerDTO">
         SELECT * FROM pedometer
         WHERE p_id = #{userId}
-        AND p_date BETWEEN #{startDate,jdbcType=DATE} AND #{endDate,jdbcType=DATE}
-      <!--  AND p_stepcnt >= p_stepgoal-->
+        AND p_date BETWEEN #{startDate,jdbcType=DATE} AND #{endDate,jdbcType=DATE} + 1
     </select>
     
-    <update id="updateStepGoal" parameterType="com.app.ayofit.model.PedometerDTO">
+<!--    <update id="updateStepGoal" parameterType="com.app.ayofit.model.PedometerDTO">
        	UPDATE pedometer
     	SET p_stepgoal = #{pStepGoal}
     	WHERE p_id = #{pId}
       	AND TRUNC(p_date) = TRUNC(#{pDate})
-    </update>
+    </update>-->
     
     <update id="updateDailyStep" parameterType="com.app.ayofit.model.PedometerDTO">
     UPDATE pedometer
