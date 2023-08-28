@@ -449,7 +449,6 @@ function MyTimer({ navigation: {navigate} }) {
           setIsPlaying(true);
         }, SCTime);
       };
-      console.log(SCTime)
 
     const handleStopTimer = () => {
         setIsPlaying(false), // 타이머 멈추기
