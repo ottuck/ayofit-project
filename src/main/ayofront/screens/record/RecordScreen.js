@@ -19,7 +19,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import axios from "axios";
 import Constants from "expo-constants";
 
-function RecordScreen({ navigation }) {
+function RecordScreen({ navigation, route }) {
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
@@ -28,17 +28,16 @@ function RecordScreen({ navigation }) {
   const [keyword, setKeyword] = useState('');   //검색 키워드
   const [list, setList] = useState([]);   //검색어가 포함된 데이터 리스트
 
-
   useEffect(() => {
     const getList = () => {
       const query = keyword.trim();
-      // console.log("URL:", `${uri}/api/food/search/${query}`);
       axios
         .get(`${uri}/api/food/search/${query}`)
         .then((response) => {
           setList(response.data);
         })
-        .catch((error) => console.log(error));
+        .catch(() => {
+        });
     };
 
     const debounce = setTimeout(() => {
@@ -58,7 +57,7 @@ function RecordScreen({ navigation }) {
       setError('리스트에서 음식을 고른 후 제출해주세요🥹');
       return;
     } 
-    navigation.push('RecordMain', { food: list });
+    navigation.push('RecordMain', { food: list }, openModal);
     closeModal();
   };
 
@@ -70,6 +69,14 @@ function RecordScreen({ navigation }) {
   const closeModal = () => {
     setModalVisible(false);
   };
+
+  //recordMain.js 에서 보내는 openModal 요청 받기
+  useEffect(() => {
+    if (route.params?.shouldOpenModal) {
+      openModal();
+      route.params.shouldOpenModal = false;
+    }
+  }, [route.params?.shouldOpenModal]);
 
   //toISOString은 "2023-08-20T14:30:00.000Z"와 같은 형식이라 "T" 나눠서 0번째 index의 날짜만 가져온다
   const today = new Date();
@@ -105,6 +112,58 @@ function RecordScreen({ navigation }) {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.cardScroll}
           >
+            <View style={styles.cardContainer}>
+              <View style={styles.cardImageContainer}>
+                <TouchableOpacity onPress={openModal}>
+                  <Feather name="plus-circle" style={styles.plusIcon} />
+                </TouchableOpacity>
+              </View>
+              <View style={{ width: '90%' }}>
+                <View style={styles.textContainer}>
+                  <View>
+                    <Text style={styles.mealTime}>BreakFast : </Text>
+                    <Text style={styles.nutrientText}>Carb : </Text>
+                    <Text style={styles.nutrientText}>Protein :  </Text>
+                    <Text style={styles.nutrientText}>Fat : </Text>
+                    <Text style={styles.TotalValue}>Total calories : </Text>
+                  </View>
+                  <View>
+                    <Text style={styles.mealTime}>AM 09:44</Text>
+                    <Text style={styles.nutrientValue}>55g</Text>
+                    <Text style={styles.nutrientValue}>16.4g</Text>
+                    <Text style={styles.nutrientValue}>21.5g</Text>
+                    <Text style={styles.TotalValue}>487kcal</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.cardContainer}>
+              <View style={styles.cardImageContainer}>
+                <TouchableOpacity onPress={openModal}>
+                  <Feather name="plus-circle" style={styles.plusIcon} />
+                </TouchableOpacity>
+              </View>
+              <View style={{ width: '90%' }}>
+                <View style={styles.textContainer}>
+                  <View>
+                    <Text style={styles.mealTime}>BreakFast : </Text>
+                    <Text style={styles.nutrientText}>Carb : </Text>
+                    <Text style={styles.nutrientText}>Protein :  </Text>
+                    <Text style={styles.nutrientText}>Fat : </Text>
+                    <Text style={styles.TotalValue}>Total calories : </Text>
+                  </View>
+                  <View>
+                    <Text style={styles.mealTime}>AM 09:44</Text>
+                    <Text style={styles.nutrientValue}>55g</Text>
+                    <Text style={styles.nutrientValue}>16.4g</Text>
+                    <Text style={styles.nutrientValue}>21.5g</Text>
+                    <Text style={styles.TotalValue}>487kcal</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+
             <View style={styles.cardContainer}>
               <View style={styles.cardImageContainer}>
                 <TouchableOpacity onPress={openModal}>
@@ -217,9 +276,7 @@ const styles = StyleSheet.create({
   },
   //카드 디자인
   cardScroll: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
+    //작업필요
   },
   cardContainer: {
     width: 300,
