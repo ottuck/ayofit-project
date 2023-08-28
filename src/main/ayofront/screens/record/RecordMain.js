@@ -28,12 +28,11 @@ const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-const { foodInfo } = route.params;
 
 
 const RecordMain = ({ route, navigation }) => {
+  const { food } = route.params;
 
-  
   //식단 기록 post 요청
   const submitFoodToServer = () => {
     axios
