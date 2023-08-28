@@ -11,7 +11,6 @@ import com.app.ayofit.model.FoodDTO;
 @Service
 public class FoodDAO {
 	
-	
 	@Autowired
 	private FoodMapper foodMapper;
 	
@@ -22,13 +21,13 @@ public class FoodDAO {
 	public List<FoodDTO> getAllFoodInfo() {
         return foodMapper.getAllFoodInfo();
     }
-
+	
     public FoodDTO getFoodInfoById(String n_no) {
         return foodMapper.getFoodInfoById(n_no);
     }
 	
-    public List<FoodDTO> searchFoodByName(String n_food_name) {
-        return foodMapper.searchFoodByName(n_food_name);
+    public List<FoodDTO> searchFoodByName(String foodName) {
+        return foodMapper.searchFoodByName(foodName);
     }
     
 }
