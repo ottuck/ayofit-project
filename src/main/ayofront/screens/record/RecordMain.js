@@ -22,21 +22,19 @@ import ImagePicker from "../../components/record/ImagePicker";
 import { usePhotoContext } from "../../store/image_context";
 
 //Server 통신을 위한 URI 수정
-const { debuggerHost } = Constants.manifest2.extra.expoGo;
-const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+// const { debuggerHost } = Constants.manifest2.extra.expoGo;
+// const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-
-
 const RecordMain = ({ route, navigation }) => {
   //전달 받은 음식 정보를 차곡차곡 foodInfos 배열에 저장한다
   const { foodInfo } = route.params;
-  const [foodInfos, setFoodInfos] = useState([]); 
+  const [foodInfos, setFoodInfos] = useState([]);
   useEffect(() => {
     if (foodInfo) {
-      setFoodInfos(prevFoodInfos => [...prevFoodInfos, foodInfo]);
+      setFoodInfos((prevFoodInfos) => [...prevFoodInfos, foodInfo]);
     }
   }, []);
   console.log(foodInfos);
@@ -80,11 +78,11 @@ const RecordMain = ({ route, navigation }) => {
   const savePickerDate = (selectedDate) => {
     setPickerDate(selectedDate);
     closeModal();
-  }
+  };
   const savePickerTime = (selectedTime) => {
     setPickerTime(selectedTime);
     closeModal();
-  }
+  };
   const showDatepicker = () => {
     openModal();
     setMode("calendar");
@@ -99,8 +97,21 @@ const RecordMain = ({ route, navigation }) => {
     if (!inputDate) {
       return null;
     }
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const [year, month, day] = inputDate.split('/');
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const [year, month, day] = inputDate.split("/");
     const monthName = months[parseInt(month, 10) - 1];
     return `${monthName} ${day}, ${year}`;
   };
@@ -132,22 +143,26 @@ const RecordMain = ({ route, navigation }) => {
 
   //current date & time
   const today = new Date();
-  const [todayDateUTC, _todayTimeUTC] = today.toISOString().split('T');
-  const [hour, minute] = _todayTimeUTC.split(':');
+  const [todayDateUTC, _todayTimeUTC] = today.toISOString().split("T");
+  const [hour, minute] = _todayTimeUTC.split(":");
   const todayTimeUTC = `${hour}:${minute}`;
   //current date formatting
-  const formattedDate = today.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
+  const formattedDate = today.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
   //current time formatting
-  const koreanTimeInAMPM = today.toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hour: '2-digit', minute: '2-digit' });
-  const [currentTime, ampm1] = koreanTimeInAMPM.split(' ');
+  const koreanTimeInAMPM = today.toLocaleTimeString("en-US", {
+    timeZone: "Asia/Seoul",
+    hour12: true,
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const [currentTime, ampm1] = koreanTimeInAMPM.split(" ");
 
   //delete recorded meal (작업 중)
-  const deleteMeal = ()=>{};
-
+  const deleteMeal = () => {};
 
   //Rendering page
   return (
@@ -160,7 +175,9 @@ const RecordMain = ({ route, navigation }) => {
           <TouchableOpacity onPress={showDatepicker}>
             <View style={styles.headerContainer}>
               <Text style={styles.headerTitle}>
-                {formattedPickerDate === null ? formattedDate : formattedPickerDate}
+                {formattedPickerDate === null
+                  ? formattedDate
+                  : formattedPickerDate}
               </Text>
             </View>
           </TouchableOpacity>
@@ -246,103 +263,110 @@ const RecordMain = ({ route, navigation }) => {
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('RecordScreen', { shouldOpenModal: true })}
+              onPress={() =>
+                navigation.navigate("RecordScreen", { shouldOpenModal: true })
+              }
             >
-            <View style={styles.buttonBox1}>
-              <Text style={styles.buttonText}> Add More </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={submitFoodToServer}>
-            <View style={styles.buttonBox2}>
-              <Text style={styles.buttonText}> Save </Text>
-            </View>
-          </TouchableOpacity>
-      </View>
-
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.recordScroll}
-      >
-        <View style={styles.foodRecordContainer}>
-          <View style={styles.recordIconContainer}>
-            {/* true일 때 Ionicons name="heart-sharp"로 분기처리 필요 */}
-            <TouchableOpacity>
-              <Ionicons name="heart-outline" style={styles.likeButton} />
+              <View style={styles.buttonBox1}>
+                <Text style={styles.buttonText}> Add More </Text>
+              </View>
             </TouchableOpacity>
-            {/* 삭제 버튼 */}
-            <TouchableOpacity onPress={deleteMeal}>
-              <AntDesign name="close" style={styles.recordDeleteButton} />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.recordMidContainer}>
-            <View style={styles.textWrapper}>
-              <Text style={styles.foodName} numberOfLines={1} ellipsizeMode="clip">
-                {/* {foodInfo[0].nFoodName} */}
-              </Text>
-              <Text style={styles.foodKcal}>
-                {/* {foodInfo[0].nKcal} Kcal */}
-              </Text>
-            </View>
-            <TouchableOpacity onPress={showTimepicker}>
-              <View style={styles.recordTimeContainer}>
-                <Text style={styles.recordTime1}>
-                  {ampm2 === null ? ampm1 : ampm2}
-                </Text>
-                <Text style={styles.recordTime2}>
-                  {formattedPickerTime === null ? currentTime : formattedPickerTime}
-                </Text>
+            <TouchableOpacity onPress={submitFoodToServer}>
+              <View style={styles.buttonBox2}>
+                <Text style={styles.buttonText}> Save </Text>
               </View>
             </TouchableOpacity>
           </View>
-          <View style={styles.foodNutrientContainer}>
-            <View style={styles.foodNutrientBox}>
-              <Text style={styles.foodNutrient}>Carb</Text>
-              <Text style={styles.foodNutrient}>
-                {/* {foodInfo[0].nCarbohydrate === null ? "-" : foodInfo[0].nCarbohydrate} */}
-              </Text>
-            </View>
-            <View style={styles.foodNutrientBox}>
-              <Text style={styles.foodNutrient}>Protein</Text>
-              <Text style={styles.foodNutrient}>
-                {/* {foodInfo[0].nProtein === null ? "-" : foodInfo[0].nProtein} */}
-              </Text>
-            </View>
-            <View style={styles.foodNutrientBox}>
-              <Text style={styles.foodNutrient}>Fat</Text>
-              <Text style={styles.foodNutrient}>
-                {/* {foodInfo[0].nFat === null ? "-" : foodInfo[0].nFat} */}
-              </Text>
-            </View>
-          </View>
-        </View>
-      </ScrollView>
 
-      <Modal
-        animationType="slide"
-        visible={modalVisible}
-        transparent={true}
-      >
-        <View style={{ marginTop: "50%" }}>
-          <TouchableOpacity onPress={closeModal}>
-            <AntDesign name="close" style={styles.modalCloseButton} />
-          </TouchableOpacity>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.recordScroll}
+          >
+            <View style={styles.foodRecordContainer}>
+              <View style={styles.recordIconContainer}>
+                {/* true일 때 Ionicons name="heart-sharp"로 분기처리 필요 */}
+                <TouchableOpacity>
+                  <Ionicons name="heart-outline" style={styles.likeButton} />
+                </TouchableOpacity>
+                {/* 삭제 버튼 */}
+                <TouchableOpacity onPress={deleteMeal}>
+                  <AntDesign name="close" style={styles.recordDeleteButton} />
+                </TouchableOpacity>
+              </View>
 
-          <DatePicker
-            style={styles.datePicker}
-            mode={mode}
-            minuteInterval={10}
-            onTimeChange={savePickerTime}
-            selectorStartingYear={2023}
-            onDateChange={savePickerDate}
-            selected={todayDateUTC}
-          />
+              <View style={styles.recordMidContainer}>
+                <View style={styles.textWrapper}>
+                  <Text
+                    style={styles.foodName}
+                    numberOfLines={1}
+                    ellipsizeMode="clip"
+                  >
+                    {/* {foodInfo[0].nFoodName} */}
+                  </Text>
+                  <Text style={styles.foodKcal}>
+                    {/* {foodInfo[0].nKcal} Kcal */}
+                  </Text>
+                </View>
+                <TouchableOpacity onPress={showTimepicker}>
+                  <View style={styles.recordTimeContainer}>
+                    <Text style={styles.recordTime1}>
+                      {ampm2 === null ? ampm1 : ampm2}
+                    </Text>
+                    <Text style={styles.recordTime2}>
+                      {formattedPickerTime === null
+                        ? currentTime
+                        : formattedPickerTime}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.foodNutrientContainer}>
+                <View style={styles.foodNutrientBox}>
+                  <Text style={styles.foodNutrient}>Carb</Text>
+                  <Text style={styles.foodNutrient}>
+                    {/* {foodInfo[0].nCarbohydrate === null ? "-" : foodInfo[0].nCarbohydrate} */}
+                  </Text>
+                </View>
+                <View style={styles.foodNutrientBox}>
+                  <Text style={styles.foodNutrient}>Protein</Text>
+                  <Text style={styles.foodNutrient}>
+                    {/* {foodInfo[0].nProtein === null ? "-" : foodInfo[0].nProtein} */}
+                  </Text>
+                </View>
+                <View style={styles.foodNutrientBox}>
+                  <Text style={styles.foodNutrient}>Fat</Text>
+                  <Text style={styles.foodNutrient}>
+                    {/* {foodInfo[0].nFat === null ? "-" : foodInfo[0].nFat} */}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
 
-        </View>
-      </Modal>
-    </ImageBackground>
-      </View >
-    </SafeAreaView >
+          <Modal
+            animationType="slide"
+            visible={modalVisible}
+            transparent={true}
+          >
+            <View style={{ marginTop: "50%" }}>
+              <TouchableOpacity onPress={closeModal}>
+                <AntDesign name="close" style={styles.modalCloseButton} />
+              </TouchableOpacity>
+
+              <DatePicker
+                style={styles.datePicker}
+                mode={mode}
+                minuteInterval={10}
+                onTimeChange={savePickerTime}
+                selectorStartingYear={2023}
+                onDateChange={savePickerDate}
+                selected={todayDateUTC}
+              />
+            </View>
+          </Modal>
+        </ImageBackground>
+      </View>
+    </SafeAreaView>
   );
 };
 export default RecordMain;
@@ -480,7 +504,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   recordTimeContainer: {
-    flexDirection: "row", alignItems: "baseline"
+    flexDirection: "row",
+    alignItems: "baseline",
   },
   recordTime1: {
     color: "#E46C0A",
@@ -494,8 +519,8 @@ const styles = StyleSheet.create({
     fontSize: 34,
   },
   textWrapper: {
-    width: '55%',
-    overflow: 'hidden',
+    width: "55%",
+    overflow: "hidden",
   },
   foodName: {
     fontWeight: "bold",
@@ -538,7 +563,7 @@ const styles = StyleSheet.create({
     fontSize: 23,
     color: "rgba(0, 0, 0, 0.3)",
   },
-  //TimePicker 
+  //TimePicker
   datePicker: {
     borderRadius: 30,
   },
@@ -548,5 +573,4 @@ const styles = StyleSheet.create({
     color: "rgba(0, 0, 0, 0.3)",
   },
   //ImagePicker
-
 });

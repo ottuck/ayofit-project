@@ -18,7 +18,6 @@ import {
   SubTitle,
 } from "../../components/account/UI/loginStyles";
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import KeyboardAvoidWrapper from "../../components/keyboardAvoidingWrapper";
 
