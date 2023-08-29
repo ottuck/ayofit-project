@@ -10,7 +10,7 @@
 	<insert id="regMeal">
 		insert into record_meal 
 		values (
-		#{mealDTO.rNO},
+		record_meal_seq.nextval,
 		'user1',
 		'아침', 
 		#{mealDTO.rMealDate}, 
