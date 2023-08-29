@@ -91,9 +91,24 @@ function NutriDetailScreen() {
   };
 
   // 유저에게 오늘 날짜 안내 예시
-  const today = new Date();
+  // const today = new Date();
+  // today.setHours(today.getHours() + 9);
+  // const formattedToday = formatDate(today); // ex)) "Mon, August 21" 형식
+  // console.log(today);
+  // console.log(formattedToday);
+  const now = new Date();
+  const today = new Date(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate(),
+    now.getUTCHours(),
+    now.getUTCMinutes(),
+    now.getUTCSeconds()
+  );
   today.setHours(today.getHours() + 9);
   const formattedToday = formatDate(today); // ex)) "Mon, August 21" 형식
+  console.log(today);
+  console.log(formattedToday);
 
   return (
     <ScrollView style={{ flex: 1 }} ref={scrollViewRef}>
