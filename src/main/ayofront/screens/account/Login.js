@@ -179,6 +179,7 @@ const Login = ({ navigation }) => {
                   setHidePassword={setHidePassword}
                 />
                 <MsgBox type={messageType}>{message}</MsgBox>
+
                 {!isSubmitting && (
                   <StyledButton onPress={handleSubmit}>
                     <ButtonText>Login</ButtonText>

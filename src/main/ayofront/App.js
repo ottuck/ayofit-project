@@ -23,6 +23,7 @@ import { PhotoProvider } from "./store/image_context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 import PedometerStack from "./navigations/PedometerStack";
+import LoginStack from "./navigations/LoginStack";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();

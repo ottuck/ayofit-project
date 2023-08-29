@@ -36,7 +36,7 @@ const Signup = () => {
         if (status !== "SUCCESS") {
           handleMessage(message, status);
         } else {
-          persistLogin({ data }, message, status);
+          persistLogin({ ...data }, message, status);
         }
         setSubmitting(false);
       })
@@ -52,6 +52,18 @@ const Signup = () => {
     setMessage(message);
   };
 
+  const persistLogin = (credentials, message, status) => {
+    AsyncStorage.setItem("@user", JSON.stringify(credentials))
+      .then(() => {
+        handleMessage(message, status);
+        setUserInfo(credentials);
+      })
+      .catch((error) => {
+        console.log(error);
+        handleMessage("Persisiting login failed");
+      });
+  };
+
   return (
     <StyledContainer>
       <InnerContainer>
@@ -64,11 +76,29 @@ const Signup = () => {
             password: "",
             confirmPassword: "",
           }}
-          onSubmit={(values, setSubmitting) => {
-            console.log(values);
+          onSubmit={(values, { setSubmitting }) => {
+            if (
+              values.name === "" ||
+              values.email === "" ||
+              values.password === "" ||
+              values.confirmPassword === ""
+            ) {
+              handleMessage("Please fill all the fields");
+              setSubmitting(false);
+            } else if (values.password !== values.confirmPassword) {
+              handleMessage("Passwords do not match");
+            } else {
+              handleSignup(values, setSubmitting);
+            }
           }}
         >
-          {({ handleChange, handleBlur, handleSubmit, values }) => (
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            isSubmitting,
+          }) => (
             <StyledFormArea>
               <MyTextInput
                 label="Name"
@@ -116,9 +146,16 @@ const Signup = () => {
                 setHidePassword={setHidePassword}
               />
               <MsgBox type={messageType}>{message}</MsgBox>
-              <StyledButton onPress={handleSubmit}>
-                <ButtonText>Login</ButtonText>
-              </StyledButton>
+              {!isSubmitting && (
+                <StyledButton onPress={handleSubmit}>
+                  <ButtonText>Sign up</ButtonText>
+                </StyledButton>
+              )}
+              {isSubmitting && (
+                <StyledButton disabled={true}>
+                  <ActivityIndicator size="small" color={primary} />
+                </StyledButton>
+              )}
             </StyledFormArea>
           )}
         </Formik>
