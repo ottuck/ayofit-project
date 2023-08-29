@@ -34,7 +34,7 @@ const RecordMain = ({ route, navigation }) => {
       setFoodInfos(prevFoodInfos => [...prevFoodInfos, foodInfo]);
     }
   }, []);
-  console.log(foodInfos);
+  // console.log(foodInfos);
 
   //식단 기록 post 요청
   const submitFoodToServer = () => {
@@ -67,37 +67,19 @@ const RecordMain = ({ route, navigation }) => {
     setPhotoUri(null);
   };
 
-  // //dateTimePicker handler
-  // const [date, setDate] = useState(new Date());
-  // console.log('피커 Date', date);
-
-  // const [mode, setMode] = useState('');
-  // const [show, setShow] = useState(false);
-
-  // const onChange = (event, selectedDate) => {
-  //   const currentDate = selectedDate;
-  //   setShow(false);
-  //   setDate(currentDate);
-  // };
-
-  // const showMode = (currentMode) => {
-  //   setShow(true);
-  //   setMode(currentMode);
-  // };
-
-  // const showDatepicker = () => {
-  //   showMode('date');
-  // };
-
-  // const showTimepicker = () => {
-  //   showMode('time');
-  // };
-
-  //DateTimePicker
+  // DateTimePicker
   const [mode, setMode] = useState("time");
   const [pickerDate, setPickerDate] = useState("");
   const [pickerTime, setPickerTime] = useState("");
 
+  const showDatepicker = () => {
+    setMode("calendar");
+    openModal();
+  };
+  const showTimepicker = () => {
+    setMode("time");
+    openModal();
+  };
   const savePickerDate = (selectedDate) => {
     setPickerDate(selectedDate);
     closeModal();
@@ -106,15 +88,10 @@ const RecordMain = ({ route, navigation }) => {
     setPickerTime(selectedTime);
     closeModal();
   }
-  const showDatepicker = () => {
-    openModal();
-    setMode("calendar");
-  };
-  const showTimepicker = () => {
-    openModal();
-    setMode("time");
-  };
 
+
+  console.log('피커 데이트', pickerDate);
+  console.log('피커 타임', pickerTime);
 
   //pickerDate formatting
   const transformPickerDate = (inputDate) => {
