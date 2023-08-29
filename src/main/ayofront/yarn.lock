@@ -2155,10 +2155,17 @@
     "mkdirp" "^1.0.4"
     "rimraf" "^3.0.2"
 
+<<<<<<< HEAD
 "@react-native-async-storage/async-storage@1.18.2":
   "integrity" "sha512-dM8AfdoeIxlh+zqgr0o5+vCTPQ0Ru1mrPzONZMsr7ufp5h+6WgNxQNza7t0r5qQ6b04AJqTlBNixTWZxqP649Q=="
   "resolved" "https://registry.npmjs.org/@react-native-async-storage/async-storage/-/async-storage-1.18.2.tgz"
   "version" "1.18.2"
+=======
+"@react-native-async-storage/async-storage@^1.18.2":
+  version "1.18.2"
+  resolved "https://registry.npmjs.org/@react-native-async-storage/async-storage/-/async-storage-1.18.2.tgz"
+  integrity sha512-dM8AfdoeIxlh+zqgr0o5+vCTPQ0Ru1mrPzONZMsr7ufp5h+6WgNxQNza7t0r5qQ6b04AJqTlBNixTWZxqP649Q==
+>>>>>>> 6c4e11c55c7da9ad9817d20f22292b7fa4754e20
   dependencies:
     "merge-options" "^3.0.4"
 

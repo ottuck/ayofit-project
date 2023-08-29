@@ -1,23 +1,25 @@
+import React, { useEffect, useState } from "react";
 import {
+  Image,
+  ImageBackground,
+  Modal,
+  SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
-  View,
-  SafeAreaView,
-  ImageBackground,
-  ScrollView,
   TouchableOpacity,
-  Modal,
-  Dimensions,
-  Image,
+  View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import DatePicker from "react-native-modern-datepicker";
+//axios
+import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import axios from "axios";
+import { BlurView } from "expo-blur";
 import Constants from "expo-constants";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
+import DatePicker from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
 import { usePhotoContext } from "../../store/image_context";
@@ -26,32 +28,22 @@ import { usePhotoContext } from "../../store/image_context";
 const { debuggerHost } = Constants.manifest2.extra.expoGo;
 const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
-
 const RecordMain = ({ route, navigation }) => {
   //전달 받은 음식 정보를 차곡차곡 foodInfos 배열에 저장한다
   const { foodInfo } = route.params;
   const [foodInfos, setFoodInfos] = useState([]);
   useEffect(() => {
     if (foodInfo) {
-      setFoodInfos((prevFoodInfos) => [...prevFoodInfos, foodInfo]);
+      axios
+        .post(`${uri}/api/meal`, foodInfo)
+        .then((response) => {
+          console.log("foodData submitted successfully:", response.data);
+        })
+        .catch(() => {
+          console.log("Error", "Failed to submit");
+        });
     }
-  }, []);
-  console.log(foodInfos);
-
-  //식단 기록 post 요청
-  const submitFoodToServer = () => {
-    axios
-      .post(`${uri}/api/meal`, foodInfo)
-      .then((response) => {
-        console.log("foodData submitted successfully:", response.data);
-      })
-      .catch(() => {
-        console.log("Error", "Failed to submit");
-      });
-  };
-
+  }, [foodInfo]);
   //Modal
   const [modalVisible, setModalVisible] = useState(false);
   const openModal = () => {
@@ -112,6 +104,14 @@ const RecordMain = ({ route, navigation }) => {
   const [pickerDate, setPickerDate] = useState("");
   const [pickerTime, setPickerTime] = useState("");
 
+  const showDatepicker = () => {
+    setMode("calendar");
+    openModal();
+  };
+  const showTimepicker = () => {
+    setMode("time");
+    openModal();
+  };
   const savePickerDate = (selectedDate) => {
     setPickerDate(selectedDate);
     closeModal();
@@ -119,14 +119,6 @@ const RecordMain = ({ route, navigation }) => {
   const savePickerTime = (selectedTime) => {
     setPickerTime(selectedTime);
     closeModal();
-  };
-  const showDatepicker = () => {
-    openModal();
-    setMode("calendar");
-  };
-  const showTimepicker = () => {
-    openModal();
-    setMode("time");
   };
 
   //pickerDate formatting
@@ -170,7 +162,6 @@ const RecordMain = ({ route, navigation }) => {
         formattedHour = numericHour - 12;
       }
     }
-
     return {
       ampm2: ampm2.toUpperCase(),
       formattedPickerTime: `${formattedHour}:${minute}`,
@@ -178,7 +169,7 @@ const RecordMain = ({ route, navigation }) => {
   };
   const { ampm2, formattedPickerTime } = transformPickerDateTime(pickerTime);
 
-  //current date & time
+  //current date & time => ContextAPI 넣기 고려
   const today = new Date();
   const [todayDateUTC, _todayTimeUTC] = today.toISOString().split("T");
   const [hour, minute] = _todayTimeUTC.split(":");
@@ -197,9 +188,6 @@ const RecordMain = ({ route, navigation }) => {
     minute: "2-digit",
   });
   const [currentTime, ampm1] = koreanTimeInAMPM.split(" ");
-
-  //delete recorded meal (작업 중)
-  const deleteMeal = () => {};
 
   //Rendering page
   return (
@@ -252,45 +240,20 @@ const RecordMain = ({ route, navigation }) => {
                     <TouchableOpacity onPress={toggleImgModal}>
                       <AntDesign
                         name="close"
-                        size={30}
-                        color="rgb(228,108,10)"
+                        style={styles.imgModalCloseButton}
                       />
                     </TouchableOpacity>
                   </View>
                   <CameraPicker onClose={toggleImgModal}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginBottom: "5%",
-                      }}
-                    >
-                      <Feather
-                        style={{ marginHorizontal: "5%" }}
-                        name="camera"
-                        size={30}
-                        color="black"
-                      />
-                      <Text>Take a photo</Text>
+                    <View style={styles.cameraPickerBox}>
+                      <Feather name="camera" style={styles.cameraImg} />
+                      <Text style={{ fontWeight: "bold" }}>Take a photo</Text>
                     </View>
                   </CameraPicker>
                   <ImagePicker onClose={toggleImgModal}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginBottom: "5%",
-                      }}
-                    >
-                      <Feather
-                        style={{ marginHorizontal: "5%" }}
-                        name="image"
-                        size={30}
-                        color="black"
-                      />
-                      <Text>Photo Gallery</Text>
+                    <View style={styles.PhotoPickerBox}>
+                      <Feather name="image" style={styles.galleryImg} />
+                      <Text style={{ fontWeight: "bold" }}>Photo Gallery</Text>
                     </View>
                   </ImagePicker>
                 </View>
@@ -308,12 +271,7 @@ const RecordMain = ({ route, navigation }) => {
                 <Text style={styles.buttonText}> Add More </Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                // submitFoodToServer();
-                uploadImage(photoUri, "user2");
-              }}
-            >
+            <TouchableOpacity onPress={submitFoodToServer}>
               <View style={styles.buttonBox2}>
                 <Text style={styles.buttonText}> Save </Text>
               </View>
@@ -324,71 +282,82 @@ const RecordMain = ({ route, navigation }) => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.recordScroll}
           >
-            <View style={styles.foodRecordContainer}>
-              <View style={styles.recordIconContainer}>
-                {/* 즐겨찾기 하트 버튼 */}
-                <TouchableOpacity onPress={handleLikedPress}>
-                  {isLiked ? (
-                    <Ionicons name="heart" style={styles.likeButton} />
-                  ) : (
-                    <Ionicons name="heart-outline" style={styles.likeButton} />
-                  )}
-                </TouchableOpacity>
-                {/* 삭제 버튼 */}
-                <TouchableOpacity onPress={deleteMeal}>
-                  <AntDesign name="close" style={styles.recordDeleteButton} />
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.recordMidContainer}>
-                <View style={styles.textWrapper}>
-                  <Text
-                    style={styles.foodName}
-                    numberOfLines={1}
-                    ellipsizeMode="clip"
-                  >
-                    {/* {food[0].nFoodName} */}
-                  </Text>
-                  {/* <Text style={styles.foodKcal}>{food[0].nKcal} Kcal</Text> */}
-                </View>
-                <TouchableOpacity onPress={showTimepicker}>
-                  <View style={styles.recordTimeContainer}>
-                    <Text style={styles.recordTime1}>
-                      {ampm2 === null ? ampm1 : ampm2}
-                    </Text>
-                    <Text style={styles.recordTime2}>
-                      {formattedPickerTime === null
-                        ? currentTime
-                        : formattedPickerTime}
-                    </Text>
+            <View style={styles.blurViewBox}>
+              <BlurView>
+                <View style={styles.foodRecordContainer}>
+                  <View style={styles.recordIconContainer}>
+                    {/* true일 때 Ionicons name="heart-sharp"로 분기처리 필요 */}
+                    <TouchableOpacity>
+                      <Ionicons
+                        name="heart-outline"
+                        style={styles.likeButton}
+                      />
+                    </TouchableOpacity>
+                    {/* 삭제 버튼 */}
+                    <TouchableOpacity onPress={{}}>
+                      <AntDesign
+                        name="close"
+                        style={styles.recordDeleteButton}
+                      />
+                    </TouchableOpacity>
                   </View>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.foodNutrientContainer}>
-                <View style={styles.foodNutrientBox}>
-                  <Text style={styles.foodNutrient}>Carb</Text>
-                  <Text style={styles.foodNutrient}>
-                    {/* {food[0].nCarbohydrate === null
-                      ? "-"
-                      : food[0].nCarbohydrate} */}
-                  </Text>
+
+                  <View style={styles.recordMidContainer}>
+                    <View style={styles.textWrapper}>
+                      <Text
+                        style={styles.foodName}
+                        numberOfLines={1}
+                        ellipsizeMode="clip"
+                      >
+                        {foodInfo[0].nFoodName}
+                      </Text>
+                      <Text style={styles.foodKcal}>
+                        {foodInfo[0].nKcal} Kcal
+                      </Text>
+                    </View>
+                    <TouchableOpacity onPress={showTimepicker}>
+                      <View style={styles.recordTimeContainer}>
+                        <Text style={styles.recordTime1}>
+                          {ampm2 === null ? ampm1 : ampm2}
+                        </Text>
+                        <Text style={styles.recordTime2}>
+                          {formattedPickerTime === null
+                            ? currentTime
+                            : formattedPickerTime}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.foodNutrientContainer}>
+                    <View style={styles.foodNutrientBox}>
+                      <Text style={styles.foodNutrient}>Carb</Text>
+                      <Text style={styles.foodNutrient}>
+                        {foodInfo[0].nCarbohydrate === null
+                          ? "-"
+                          : foodInfo[0].nCarbohydrate}
+                      </Text>
+                    </View>
+                    <View style={styles.foodNutrientBox}>
+                      <Text style={styles.foodNutrient}>Protein</Text>
+                      <Text style={styles.foodNutrient}>
+                        {foodInfo[0].nProtein === null
+                          ? "-"
+                          : foodInfo[0].nProtein}
+                      </Text>
+                    </View>
+                    <View style={styles.foodNutrientBox}>
+                      <Text style={styles.foodNutrient}>Fat</Text>
+                      <Text style={styles.foodNutrient}>
+                        {foodInfo[0].nFat === null ? "-" : foodInfo[0].nFat}
+                      </Text>
+                    </View>
+                  </View>
                 </View>
-                <View style={styles.foodNutrientBox}>
-                  <Text style={styles.foodNutrient}>Protein</Text>
-                  <Text style={styles.foodNutrient}>
-                    {/* {food[0].nProtein === null ? "-" : food[0].nProtein} */}
-                  </Text>
-                </View>
-                <View style={styles.foodNutrientBox}>
-                  <Text style={styles.foodNutrient}>Fat</Text>
-                  <Text style={styles.foodNutrient}>
-                    {/* {food[0].nFat === null ? "-" : food[0].nFat} */}
-                  </Text>
-                </View>
-              </View>
+              </BlurView>
             </View>
           </ScrollView>
 
+          {/* DateTimePicker */}
           <Modal
             animationType="slide"
             visible={modalVisible}
@@ -398,7 +367,6 @@ const RecordMain = ({ route, navigation }) => {
               <TouchableOpacity onPress={closeModal}>
                 <AntDesign name="close" style={styles.modalCloseButton} />
               </TouchableOpacity>
-
               <DatePicker
                 style={styles.datePicker}
                 mode={mode}
@@ -415,6 +383,7 @@ const RecordMain = ({ route, navigation }) => {
     </SafeAreaView>
   );
 };
+
 export default RecordMain;
 
 const styles = StyleSheet.create({
@@ -478,18 +447,41 @@ const styles = StyleSheet.create({
     left: 120,
     bottom: -15,
   },
+  //ImagePicker
   modalContainer: {
-    marginTop: SCREEN_HEIGHT * 0.2,
-    marginLeft: SCREEN_WIDTH * 0.25,
-    backgroundColor: "rgba(255, 233, 216, 0.8)",
-    padding: "5%",
+    top: "21%",
+    left: "29%",
+    backgroundColor: "rgba(255, 233, 216, 1)",
+    padding: 15,
     borderRadius: 10,
-    width: SCREEN_WIDTH * 0.5,
-    height: "15%",
-    justifyContent: "space-evenly",
+    width: 180,
+    height: 120,
   },
   modalBtn: {
     flexDirection: "row",
+  },
+  imgModalCloseButton: {
+    fontSize: 20,
+    color: "rgb(228,108,10)",
+  },
+  cameraImg: {
+    marginHorizontal: "5%",
+    fontSize: 24,
+  },
+  cameraPickerBox: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  galleryImg: {
+    marginHorizontal: 5,
+    fontSize: 26,
+  },
+  PhotoPickerBox: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   //추가, 확인 버튼
   buttonContainer: {
@@ -513,7 +505,7 @@ const styles = StyleSheet.create({
     height: 40,
     width: 160,
     borderRadius: 20,
-    backgroundColor: "red",
+    backgroundColor: "rgb(250, 71, 71)",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -531,13 +523,16 @@ const styles = StyleSheet.create({
   recordScroll: {
     alignItems: "center",
   },
-  foodRecordContainer: {
-    width: 350,
-    height: 175,
+  blurViewBox: {
+    overflow: "hidden",
+    borderRadius: 20,
     marginVertical: 20,
+  },
+  foodRecordContainer: {
+    alignSelf: "center",
+    width: 350,
     padding: 15,
     backgroundColor: "rgba(255,255,255,0.6)",
-    borderRadius: 20,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -585,7 +580,7 @@ const styles = StyleSheet.create({
   foodNutrientBox: {
     width: 100,
     height: 50,
-    marginVertical: 15,
+    marginTop: 15,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
@@ -618,5 +613,4 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: "rgba(0, 0, 0, 0.3)",
   },
-  //ImagePicker
 });
