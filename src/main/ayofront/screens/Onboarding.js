@@ -1,5 +1,11 @@
 import React from "react";
-import { Image, Dimensions, SafeAreaView, StatusBar } from "react-native";
+import {
+  Image,
+  Dimensions,
+  SafeAreaView,
+  StatusBar,
+  Platform,
+} from "react-native";
 import Onboarding from "react-native-onboarding-swiper";
 import { GlobalStyles } from "../components/UI/styles";
 
@@ -11,11 +17,10 @@ const OnboardingScreen = ({ onComplete }) => {
   const imageHeight = imageWidth / desiredImageAspectRatio;
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar
-        backgroundColor={GlobalStyles.colors.primary500}
-        barStyle="default"
-      />
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: GlobalStyles.colors.primary500 }}
+    >
+      <StatusBar barStyle="default" />
       <Onboarding
         pages={[
           {
@@ -27,7 +32,7 @@ const OnboardingScreen = ({ onComplete }) => {
                 style={{
                   height: imageHeight,
                   width: imageWidth,
-                  marginTop: "30%",
+                  marginTop: Platform.OS !== "ios" ? "30%" : 0,
                 }}
               />
             ),
@@ -43,7 +48,7 @@ const OnboardingScreen = ({ onComplete }) => {
                 style={{
                   height: imageHeight,
                   width: imageWidth,
-                  marginTop: "30%",
+                  marginTop: Platform.OS !== "ios" ? "30%" : 0,
                 }}
               />
             ),
@@ -59,7 +64,7 @@ const OnboardingScreen = ({ onComplete }) => {
                 style={{
                   height: imageHeight,
                   width: imageWidth,
-                  marginTop: "30%",
+                  marginTop: Platform.OS !== "ios" ? "30%" : 0,
                 }}
               />
             ),

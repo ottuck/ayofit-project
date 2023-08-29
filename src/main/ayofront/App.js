@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions, StatusBar } from "react-native";
+import { StyleSheet, Dimensions, StatusBar, View } from "react-native";
 import "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
@@ -21,6 +21,8 @@ import AccountMain from "./navigations/AccountStack";
 import { PedometerProvider } from "./store/PedometerContext";
 import { PhotoProvider } from "./store/image_context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Platform } from "react-native";
+import PedometerStack from "./navigations/PedometerStack";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -53,7 +55,8 @@ function MainTabsScreen() {
         tabBarStyle: {
           backgroundColor: GlobalStyles.colors.primary50,
           borderRadius: 16,
-          height: 65,
+
+          height: Platform.OS === "ios" ? 90 : 65,
           overflow: "hidden",
           position: "absolute",
         },
@@ -63,7 +66,7 @@ function MainTabsScreen() {
       <Tab.Screen name="HOME" component={NutriDetailScreen} />
       <Tab.Screen name="DIET RECORD" component={RecordScreen} />
       <Tab.Screen name="CHALLENGE" component={FastMainPage} />
-      <Tab.Screen name="STEP COUNTER" component={PedometerScreen} />
+      <Tab.Screen name="STEP COUNTER" component={PedometerStack} />
       <Tab.Screen name="MY PAGE" component={AccountMain} />
     </Tab.Navigator>
   );
@@ -109,7 +112,11 @@ export default function App() {
 
   return (
     <AccountsContextProvider>
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+        }}
+      >
         <FontProvider>
           <PhotoProvider>
             <StatusBar
@@ -153,4 +160,8 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  navigationContainer: {
+    flex: 1,
+  },
+});
