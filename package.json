@@ -1,0 +1,11 @@
+{
+  "name": "ayofit-project",
+  "version": "1.0.0",
+  "description": "Hi there! 👋  We are a short-term team studying to become a professional developer in Korea  \r This app helps you record what you eat and manage your diet",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

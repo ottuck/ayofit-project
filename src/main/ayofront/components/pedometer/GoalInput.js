@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
+  Keyboard,
 } from "react-native";
 import axios from "axios";
 import { GlobalStyles } from "../UI/styles";
@@ -39,6 +40,7 @@ const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
         onGoalChange(parseInt(newGoal));
         setNewGoal("");
         setShowWarning(false);
+        Keyboard.dismiss();
       })
       .catch((error) => {
         console.error("Update Failed:", error);
@@ -59,6 +61,8 @@ const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
         maxLength={10}
         placeholderTextColor={GlobalStyles.colors.primary200}
         selectionColor={GlobalStyles.colors.donutChartGreen}
+        returnKeyType="done"
+        onSubmitEditing={updateGoal}
       />
       {showWarning && (
         <Text style={styles.warningText}>Set your step target here</Text>

@@ -22,12 +22,13 @@ public class FoodDAO {
         return foodMapper.getAllFoodInfo();
     }
 	
+	public List<FoodDTO> searchFoodByName(String foodName) {
+		return foodMapper.searchFoodByName(foodName);
+	}
+	
     public FoodDTO getFoodInfoById(String n_no) {
         return foodMapper.getFoodInfoById(n_no);
     }
 	
-    public List<FoodDTO> searchFoodByName(String foodName) {
-        return foodMapper.searchFoodByName(foodName);
-    }
     
 }

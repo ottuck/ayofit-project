@@ -169,12 +169,10 @@ const styles = StyleSheet.create({
   },
   analysisButton: {
     backgroundColor: GlobalStyles.colors.primary500,
-    // paddingVertical: 10,
-    // paddingHorizontal: 20,
     borderRadius: 5,
     width: 150,
     alignSelf: "center",
-    marginBottom: 5,
+    marginVertical: 10,
     paddingVertical: 5,
   },
   analysisButtonText: {

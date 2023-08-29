@@ -24,14 +24,15 @@ public class FoodController {
     	return foodDAO.getAllFoodInfo();
 	}
 	
+	@GetMapping("/search/{foodName}")
+	public List<FoodDTO> searchFood(@PathVariable String foodName) {
+		return foodDAO.searchFoodByName(foodName);
+	}
+	
 	@GetMapping("{n_no}")
     public FoodDTO getMethodName(@PathVariable("n_no") String n_no) {
 			return foodDAO.getFoodInfoById(n_no);
     }
 	
-	@GetMapping("/search/{foodName}")
-	    public List<FoodDTO> searchFood(@PathVariable String foodName) {
-		return foodDAO.searchFoodByName(foodName);
-	}
 	
 }

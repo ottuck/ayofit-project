@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import OnboardingScreen from "./screens/Onboarding";
 import NutriDetailScreen from "./screens/nutriDetail/nutriDetail_test";
 import RecordScreen from "./screens/record/RecordNavigator";
-import FastMainPage from "./screens/fast/FastMainPage";
+import FastRoot from "./navigations/FastRoot";
 import { GlobalStyles } from "./components/UI/styles";
 import FontProvider from "./components/FontProvider";
 import AccountsContextProvider from "./store/accounts_context";
@@ -64,7 +64,7 @@ function MainTabsScreen() {
     >
       <Tab.Screen name="HOME" component={NutriDetailScreen} />
       <Tab.Screen name="DIET RECORD" component={RecordScreen} />
-      <Tab.Screen name="CHALLENGE" component={FastMainPage} />
+      <Tab.Screen name="CHALLENGE" component={FastRoot} />
       <Tab.Screen name="STEP COUNTER" component={PedometerStack} />
       <Tab.Screen name="MY PAGE" component={AccountMain} />
     </Tab.Navigator>
