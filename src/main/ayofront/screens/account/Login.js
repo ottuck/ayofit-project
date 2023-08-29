@@ -29,12 +29,15 @@ import {
 } from "../../components/account/UI/loginStyles";
 import KeyboardAvoidWrapper from "../../components/keyboardAvoidingWrapper";
 import { LoginContext } from "../../store/LoginContext";
+import Constants from "expo-constants";
 
 WebBrowser.maybeCompleteAuthSession();
 
 const { brand, darkLight, primary } = Colors;
 
 const Login = ({ navigation }) => {
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const url = `http://${debuggerHost.split(":").shift()}:8080/api/login`;
   const [hidePassword, setHidePassword] = useState(true);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
@@ -50,7 +53,7 @@ const Login = ({ navigation }) => {
 
   const handleLogin = (credentials, setSubmitting) => {
     handleMessage("");
-    const url = `http://213.35.96.167/api/login`;
+
     axios
       .post(url, credentials)
       .then((response) => {
@@ -110,8 +113,8 @@ const Login = ({ navigation }) => {
     }
   };
 
-  const persistLogin = (credentials, message, status) => {
-    AsyncStorage.setItem("@user", JSON.stringify(credentials))
+  const persistLogin = async (credentials, message, status) => {
+    await AsyncStorage.setItem("@user", JSON.stringify(credentials))
       .then(() => {
         handleMessage(message, status);
         setUserInfo(credentials);

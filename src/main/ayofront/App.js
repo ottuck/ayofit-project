@@ -24,6 +24,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 import PedometerStack from "./navigations/PedometerStack";
 import LoginStack from "./navigations/LoginStack";
+import { LoginContext } from "./store/LoginContext";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -91,8 +92,8 @@ export default function App() {
     setCompletedOnboarding(true);
   };
 
-  const checkLoginCredentials = () => {
-    AsyncStorage.getItem("@user")
+  const checkLoginCredentials = async () => {
+    await AsyncStorage.getItem("@user")
       .then((result) => {
         if (result !== null) {
           setUserInfo(JSON.parse(result));
@@ -112,22 +113,23 @@ export default function App() {
   }
 
   return (
-    <AccountsContextProvider>
-      <SafeAreaView
-        style={{
-          flex: 1,
-        }}
-      >
-        <FontProvider>
-          <PhotoProvider>
-            <StatusBar
-              backgroundColor={GlobalStyles.colors.primary500}
-              barStyle="default"
-            />
-            <NavigationContainer style={styles.navigationContainer}>
-              <PedometerProvider>
-                <Stack.Navigator>
-                  {/* /* 인증해야되서 주석 처리 해둠
+    <LoginContext.Provider value={{ userInfo, setUserInfo }}>
+      <AccountsContextProvider>
+        <SafeAreaView
+          style={{
+            flex: 1,
+          }}
+        >
+          <FontProvider>
+            <PhotoProvider>
+              <StatusBar
+                backgroundColor={GlobalStyles.colors.primary500}
+                barStyle="default"
+              />
+              <NavigationContainer style={styles.navigationContainer}>
+                <PedometerProvider>
+                  <Stack.Navigator>
+                    {/* /* 인증해야되서 주석 처리 해둠
               <Stack.Screen
                 name="AccountInfo"
                 component={AccountInfo}
@@ -138,26 +140,27 @@ export default function App() {
                 component={AccountNutri}
                 options={{ headerShown: false }}
               /> */}
-                  {userInfo ? (
-                    <Stack.Screen
-                      name="MainTabs"
-                      component={MainTabsScreen}
-                      options={{ headerShown: false }}
-                    />
-                  ) : (
-                    <Stack.Screen
-                      name="LoginStack"
-                      component={LoginStack}
-                      options={{ headerShown: false }}
-                    />
-                  )}
-                </Stack.Navigator>
-              </PedometerProvider>
-            </NavigationContainer>
-          </PhotoProvider>
-        </FontProvider>
-      </SafeAreaView>
-    </AccountsContextProvider>
+                    {userInfo ? (
+                      <Stack.Screen
+                        name="MainTabs"
+                        component={MainTabsScreen}
+                        options={{ headerShown: false }}
+                      />
+                    ) : (
+                      <Stack.Screen
+                        name="LoginStack"
+                        component={LoginStack}
+                        options={{ headerShown: false }}
+                      />
+                    )}
+                  </Stack.Navigator>
+                </PedometerProvider>
+              </NavigationContainer>
+            </PhotoProvider>
+          </FontProvider>
+        </SafeAreaView>
+      </AccountsContextProvider>
+    </LoginContext.Provider>
   );
 }
 
