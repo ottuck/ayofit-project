@@ -11,15 +11,15 @@ import {
   View,
 } from "react-native";
 //axios
-import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
-import { BlurView } from 'expo-blur';
 import Constants from "expo-constants";
 import DatePicker from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
-import { usePhotoContext } from "../../store/image_context";
 import MealCard2 from "../../components/record/MealCard2";
+import { usePhotoContext } from "../../store/image_context";
+import SearchModal from "../../components/record/SearchModal";
 
 
 const RecordMain = ({ route, navigation }) => {
@@ -38,11 +38,11 @@ const RecordMain = ({ route, navigation }) => {
   // console.log(foodInfos);
 
   //식단 기록 post 요청
-  const submitFoodToServer = () => {
+  const submitMealToServer = () => {
     axios
       .post(`${uri}/api/meal`, foodInfo)
       .then((response) => {
-        console.log("foodData submitted successfully:", response.data);
+        console.log("MealData submitted successfully:", response.data);
       })
       .catch(() => {
         console.log("Error", "Failed to submit");
@@ -141,6 +141,7 @@ const RecordMain = ({ route, navigation }) => {
   const koreanTimeInAMPM = today.toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hour: '2-digit', minute: '2-digit' });
   const [currentTime, ampm1] = koreanTimeInAMPM.split(' ');
 
+
   //Rendering page
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -209,25 +210,30 @@ const RecordMain = ({ route, navigation }) => {
           </View>
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
+
+            {/* <TouchableOpacity
               onPress={() => navigation.navigate('RecordScreen', { shouldOpenModal: true })}
+            > */}
+
+            <TouchableOpacity
+              onPress={openModal}
             >
               <View style={styles.buttonBox1}>
                 <Text style={styles.buttonText}> Add More </Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={submitFoodToServer}>
+            <TouchableOpacity onPress={submitMealToServer}>
               <View style={styles.buttonBox2}>
                 <Text style={styles.buttonText}> Save </Text>
               </View>
             </TouchableOpacity>
           </View>
 
+          {/* Card Scroll */}
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.recordScroll}
           >
-
             <MealCard2
               foodInfo={foodInfo}
               showTimepicker={showTimepicker}
@@ -236,8 +242,9 @@ const RecordMain = ({ route, navigation }) => {
               ampm1={ampm1}
               currentTime={currentTime}
             />
-
           </ScrollView>
+
+         
 
           {/* DateTimePicker */}
           <Modal
@@ -260,6 +267,12 @@ const RecordMain = ({ route, navigation }) => {
               />
             </View>
           </Modal>
+          
+          {/* SearchModal */}
+          <SearchModal
+            modalVisible={modalVisible}
+            closeModal={closeModal}
+          />
 
         </ImageBackground>
       </View >
@@ -401,89 +414,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
-  //식단 기록 컨테이너
   recordScroll: {
     alignItems: "center",
-  },
-  blurViewBox: {
-    overflow: 'hidden',
-    borderRadius: 20,
-    marginVertical: 20,
-  },
-  foodRecordContainer: {
-    alignSelf: 'center',
-    width: 350,
-    padding: 15,
-    backgroundColor: "rgba(255,255,255,0.6)",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 0,
-  },
-  recordMidContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-end",
-    marginVertical: 5,
-  },
-  recordTimeContainer: {
-    flexDirection: "row", alignItems: "baseline"
-  },
-  recordTime1: {
-    color: "#E46C0A",
-    fontWeight: "bold",
-    fontSize: 20,
-    marginHorizontal: 4,
-  },
-  recordTime2: {
-    color: "#E46C0A",
-    fontWeight: "bold",
-    fontSize: 34,
-  },
-  textWrapper: {
-    width: '55%',
-    overflow: 'hidden',
-  },
-  foodName: {
-    fontWeight: "bold",
-    fontSize: 16,
-    marginVertical: 2,
-  },
-  foodKcal: {
-    fontWeight: "bold",
-    fontSize: 16,
-    marginVertical: 2,
-  },
-  foodNutrientContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  foodNutrientBox: {
-    width: 100,
-    height: 50,
-    marginTop: 15,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 20,
-    backgroundColor: "rgba(0, 0, 0, 0.05)",
-  },
-  foodNutrient: {
-    fontWeight: "bold",
-    fontSize: 15,
-    marginVertical: 2,
-  },
-  //하트, 삭제 버튼
-  recordIconContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  likeButton: {
-    fontSize: 23,
-    color: "#E46C0A",
-  },
-  recordDeleteButton: {
-    fontSize: 23,
-    color: "rgba(0, 0, 0, 0.3)",
   },
   //TimePicker 
   datePicker: {

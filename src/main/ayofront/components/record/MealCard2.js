@@ -66,9 +66,6 @@ const MealCard2 = ({ foodInfo, showTimepicker, formattedPickerTime, ampm2, ampm1
 
 const styles = StyleSheet.create({
   //식단 기록 컨테이너
-  recordScroll: {
-    alignItems: "center",
-  },
   blurViewBox: {
     overflow: 'hidden',
     borderRadius: 20,
@@ -149,6 +146,7 @@ const styles = StyleSheet.create({
     fontSize: 23,
     color: "rgba(0, 0, 0, 0.3)",
   },
+
 });
 
 

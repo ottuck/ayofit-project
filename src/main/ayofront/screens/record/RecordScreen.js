@@ -1,20 +1,20 @@
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
   ImageBackground,
   SafeAreaView,
   ScrollView,
-  TouchableOpacity,
+  StyleSheet,
+  Text,
+  View
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
 import MealCard1 from '../../components/record/MealCard1';
 import SearchModal from '../../components/record/SearchModal';
 
 
 function RecordScreen( {route} ) {
+
   //Modal
-  const [modalVisible, setModalVisible] = useState(false);
+  const [searchModalVisible, setModalVisible] = useState(false);
   const openModal = () => {
     setModalVisible(true);
   };
@@ -23,13 +23,14 @@ function RecordScreen( {route} ) {
   };
 
   // recordMain.js 에서 보내는 openModal 요청 받기
-  useEffect(() => {
-    if (route.params?.shouldOpenModal) {
-      openModal();
-      route.params.shouldOpenModal = false;
-    }
-  }, [route.params?.shouldOpenModal]);
+  // useEffect(() => {
+  //   if (route.params?.shouldOpenModal) {
+  //     openModal();
+  //     route.params.shouldOpenModal = false;
+  //   }
+  // }, [route.params?.shouldOpenModal]);
 
+  //Rending page
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -52,7 +53,7 @@ function RecordScreen( {route} ) {
           </ScrollView>
 
           <SearchModal
-            modalVisible={modalVisible}
+            searchModalVisible={searchModalVisible}
             closeModal={closeModal}
           />
 

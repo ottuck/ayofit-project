@@ -6,7 +6,7 @@ spring:
 
   #Oracle DB 연결
   datasource:
-    url: jdbc:oracle:thin:@C44M4IT64ZKKEISA_high?TNS_ADMIN=./Wallet_ayofit
+    url: jdbc:oracle:thin:@C44M4IT64ZKKEISA_high?TNS_ADMIN=/Users/sanghyunkim/Oracle_instantclient10_1/Wallet_C44M4IT64ZKKEISA
     username: ADMIN
     password: Soldesk802!!
     driverClassName: oracle.jdbc.OracleDriver
