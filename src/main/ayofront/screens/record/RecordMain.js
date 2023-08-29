@@ -311,7 +311,7 @@ const RecordMain = ({ route, navigation }) => {
             <TouchableOpacity
               onPress={() => {
                 // submitFoodToServer();
-                uploadImage(photoUri, "user1");
+                uploadImage(photoUri, "user2");
               }}
             >
               <View style={styles.buttonBox2}>

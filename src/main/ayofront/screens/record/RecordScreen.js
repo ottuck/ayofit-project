@@ -108,7 +108,7 @@ function RecordScreen({ navigation, route }) {
 
   const getImg = async () => {
     await axios
-      .get(`${uri}/api/file/get-image/user1`)
+      .get(`${uri}/api/file/get-image/user2`)
       .then((response) => {
         const newImgUris = response.data.map((item) => item.fImg);
         setImgUri((prevImgUris) => [...prevImgUris, ...newImgUris]);
