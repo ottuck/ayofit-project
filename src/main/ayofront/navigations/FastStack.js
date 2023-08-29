@@ -1,5 +1,5 @@
 import React, { useEffect, useState,} from "react";
-import { StyleSheet, TouchableOpacity,Text, Alert } from 'react-native';
+import { StyleSheet,Text, Alert, Image } from 'react-native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -13,7 +13,7 @@ import {MethodContainer, MethodTitle, MethodCTouch, MethodCText, MethodCEndTouch
     ,TimerContainer,TimerTitle,TimerHomeBtn,TimerHomeBT,EndTimeText,MethodCTextS,ConfirmMessage,ConfirmMView,ConfirmStart,ConfrimSText,ConfirmEnd
     ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView,FirstMainPage,MainBtn,MainText,FastMainImage
     ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM,MethodLeftContent,MethodRightContent,
-    MethodCText2,MethodCTextS2,TimerScrollView,TimerStop, StartDate
+    MethodCText2,MethodCTextS2,TimerScrollView,TimerStop,TimerAddView
 } from '../components/fast/FastingStyled';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from "axios";
@@ -60,7 +60,7 @@ const FastMainPage = ({navigation : { navigate } }) => (
 <LinearGradient colors={['#f7d7be','#e7a370']}>
     <FirstMainPage>
     <MainBtn onPress={() => navigate("FastingMethod")}>
-        <MainText>+ Set up your plan</MainText>
+        <MainText style={{ fontFamily: 'OpenSans_800ExtraBold_Italic', fontSize: 20 }}>+ Set up your plan</MainText>
     </MainBtn>
 </FirstMainPage>
     </LinearGradient>
@@ -119,9 +119,9 @@ const FastMethod = ({ navigation }) => {
 
 
 
+<LinearGradient colors={['#f7d7be','#e7a370']}>
 <MethodScrollView>
 <MethodContainer>  
-<LinearGradient colors={['#f7d7be','#e7a370']}>
 <MethodTitle>
     Please choose a method<Ionicons name="checkmark" size={28} color="black" />
 </MethodTitle>
@@ -184,9 +184,9 @@ const FastMethod = ({ navigation }) => {
     <MethodCText>24H</MethodCText>
     <MethodCTextS>fasting</MethodCTextS>
 </MethodCEndTouch>
-</LinearGradient>
 </MethodContainer>
 </MethodScrollView>
+</LinearGradient>
 );
 };
 
@@ -248,30 +248,35 @@ if(!selectHour == '') {
 const currentEndTime = currnetDateTime.split(' : ')[1]; // " : "로 분리하고 두 번째 요소 추출
 
 return(
-<PlanContainer>
 <LinearGradient colors={['#f7d7be','#e7a370']}>
+<PlanContainer>
 <PlanTitle>{"\n"}
 </PlanTitle>
 <PlanMethodText>
     Fasting Method
 </PlanMethodText>
 <PlanMethodCView>
-<PlanMethodC> {selectMethod.string}  </PlanMethodC>
+<PlanMethodC>
+    {selectMethod.string}  
+</PlanMethodC>
+<Image source={require('../images/FastImage/Fast24moon.png')} style={styles.Howto} />
 </PlanMethodCView>
 <PlanMethodText>
     Starting Date
 </PlanMethodText>
 <PlanMethodCView>
     <FastDate onDateChange={(newDate => setSelectedDate(newDate))}/>
+    <Image source={require('../images/FastImage/FastDateimo.png')} style={styles.dateImo} />
 </PlanMethodCView>
 <PlanMethodText>
     Starting Time
 </PlanMethodText>
 <PlanMethodCView>
  <FastTime style={styles.FastTime} onTimeChange={(newTime => setSelectedTime(newTime))}/>
+ <Image source={require('../images/FastImage/FastTimerimo.png')} style={styles.timerImo} />
 </PlanMethodCView>
 <PlanEndView>
- <PlanEndText>
+ <PlanEndText style={{ fontFamily: 'OpenSans_600SemiBold_Italic', fontSize: 20 }}>
     It ends at  {"\n"}
     {totalDateTime || currnetDateTime}
 </PlanEndText>
@@ -281,8 +286,8 @@ return(
     <PlanConfirmT>Next</PlanConfirmT>
 </PlanConfirmB>
 </PlanConfirmV>
-</LinearGradient>
 </PlanContainer>
+</LinearGradient>
 );
 };
 
@@ -296,7 +301,7 @@ const FastConfirm = ({ navigation }) => {
                 },
                 ConfirmStartTime : ConfirmStartTime,
                 ConfirmEndTime : ConfirmEndTime,
-                StartDate1 : date,
+                StartDate1 : date4,
                 EndDate1 : date2,
             });
     };
@@ -337,7 +342,7 @@ const [hours2, minutes2] = currentTimeStr.split(':').map(str => parseInt(str, 10
 const [year3, month3, day3] = currentDateEnd.split('/').map(str => parseInt(str, 10));
 const [hours3, minutes3] = currentTimeEnd.split(':').map(str => parseInt(str, 10));
 
-const date = new Date(year, month - 1, day, hours, minutes);
+const date4 = new Date(year, month - 1, day, hours, minutes);
 const date2 = new Date(year2, month2 - 1, day2, hours2, minutes2);
 const date3 = new Date(year3, month3 - 1, day3, hours3, minutes3);
 const options = {
@@ -350,16 +355,16 @@ const options = {
   };
   const formatter = new Intl.DateTimeFormat('en-US', options);
   // 시작 날짜 (현재 or 셀렉)
-  const ConfirmStartTime = formatter.format(date).replace('at', '').replace(',', ', ');
+  const ConfirmStartTime = formatter.format(date4).replace('at', '').replace(',', ', ');
   // 종료 시간 (현재 or 셀렉)
   const ConfirmEndTime = formatter.format(date2).replace('at', '').replace(',', ', ');
   // 현재 날짜 (현재 종료)
   const ConfirmTimeEnd = formatter.format(date3).replace('at', '').replace(',', ', ');
 return(
 
+<LinearGradient colors={['#f7d7be','#e7a370']}>
 <ConfirmScroll>
 <ConfirmContainer>
-<LinearGradient colors={['#f7d7be','#e7a370']}>
     <ConfirmHeader>
     <ConfirmTime>{stringFormat}</ConfirmTime>
     <ConfirmTimeText>fasting </ConfirmTimeText>
@@ -370,12 +375,12 @@ return(
     <ConfirmTView>
     <ConfirmStart>
         <ConfrimSText>
-        Start : {ConfirmStartTime}
+        Start  : {ConfirmStartTime}
         </ConfrimSText>
     </ConfirmStart>
     <ConfirmEnd>
         <ConfirmEText>
-        End : {ConfirmEndTime||ConfirmTimeEnd}
+       End    :  {ConfirmEndTime||ConfirmTimeEnd}
         </ConfirmEText>
     </ConfirmEnd>
 </ConfirmTView>
@@ -385,9 +390,9 @@ return(
     <ConfirmBtn onPress={() => selectTimer(confirmTime.number) }>
     <ConfirmText>Confirm</ConfirmText>
     </ConfirmBtn>
-    </LinearGradient>
 </ConfirmContainer>
 </ConfirmScroll>
+    </LinearGradient>
 );
 }
 
@@ -414,12 +419,9 @@ function MyTimer({ navigation: {navigate} }) {
     const ConfirmStartTime = route.params.ConfirmStartTime;
     const ConfirmEndTime = route.params.ConfirmEndTime;
     const timerTime = route.params?.seletedValue;
-    const timerMethod = route.params.seletedValue.number;
-    const timerMethod2 = route.params.seletedValue.string;
     const [isPlaying, setIsPlaying] = useState(false);
     const [elapsedTime, setElapsedTime] = useState(0);
     const [remainingTime, setRemainingTime] = useState();
-
     const [fastDateSend,setFastDateSend] = useState(false);
 
     function formatOracleDate(date) {
@@ -442,7 +444,6 @@ function MyTimer({ navigation: {navigate} }) {
     const timerCurrent = currentTimerTime.getTime();
     const StartCurrentTime = timerStartTime - timerCurrent;
     const SCTime = parseInt(StartCurrentTime);
-    const SCTimeexample = 0;
 
     if (SCTime >= 0) {
         setTimeout(() => {
@@ -450,8 +451,7 @@ function MyTimer({ navigation: {navigate} }) {
         }, SCTime);
       };
 
-    const handleStopTimer = () => {
-        setIsPlaying(false), // 타이머 멈추기
+      const handleStopTimer = () => {
         Alert.alert(
             'Stop Timer',
             'Are you sure?',
@@ -459,60 +459,55 @@ function MyTimer({ navigation: {navigate} }) {
                 {
                     text: 'cancel',
                     style: 'cancel',
-                    onPress: () => {
-                        setIsPlaying(true); // 'cancel'을 누를 경우 타이머 다시 시작
-                    },
                 },
                 {
                     text: 'Stop',
-                    onPress: () => {
-                        setElapsedTime(totalSeconds - remainingTime); // 사용된 시간 계산 및 저장
-                        console.log('사용 시간 : ' + elapsedTime);
-
+                    onPress: async () => {
+                        const elapsedTimeValue = totalSeconds - remainingTime;
+    
+                        setElapsedTime(elapsedTimeValue); // 사용된 시간 계산 및 저장
+    
                         const dataToSend = {
-                            confirmStartTime : formattedStartTime,
-                            confirmEndTime : formattedEndTime,
-                            elapsedTime : elapsedTime,
+                            confirmStartTime: formattedStartTime,
+                            confirmEndTime: formattedEndTime,
+                            elapsedTime: elapsedTimeValue,
                         };
-
-                        axios
-                            .post(`${uri}`,dataToSend)
-                            .then(response => {
-                                setFastDateSend(true);
-                            })
-                            .catch(error => {
-                                console.error('Error sending data:', error)
-                            })
+    
+                        try {
+                            await axios.post(`${uri}`, dataToSend);
+                            setFastDateSend(true);
+                            console.log('사용 시간:', elapsedTimeValue);
+                        } catch (error) {
+                            console.error('Error sending data:', error);
+                        }
+    
+                        navigate("FastMainPage");
                     },
                 },
             ],
-            );
-        };
+        );
+    };
+    
         const totalSeconds = timerTime.number * 3600;
 
-        // console.log('시작 시간 :'+ConfirmStartTime);
-        // console.log('종료 시간 :'+ConfirmEndTime);
-        // console.log('단식 방법 : ' + timerMethod);
-        // console.log('단식 방법 초 : ' + totalSeconds);
-        // console.log('단식 방법 초 : ' + timerMethod2);
-        // console.log('남은 시간 : ' + remainingTime);
+        console.log('남은:' + remainingTime);
         //w : JS-> Oracle
         
     return (
         <TimerScrollView>
-            <LinearGradient colors={['#f7d7be','#e7a370']}>
         <TimerContainer>
             <TimerHomeBtn onPress={() => navigate("FastMainPage")}>
             <TimerHomeBT>Reset     <Entypo name="trash" size={24} color="black" /></TimerHomeBT> 
             </TimerHomeBtn>
+            <TimerAddView>
             <CountdownCircleTimer
     isPlaying={isPlaying}
     duration={totalSeconds}
-    colors={["#F3A36F", "#F7B801", "#A30000", "#A30000"]}
+    colors={["#F3A36F", "#f2a533", "#c94f03", "#A30000"]}
     colorsTime={[totalSeconds, (totalSeconds * 0.7), (totalSeconds * 0.3), 0]}
     onComplete={() => ({ shouldRepeat: false})}
     updateInterval={1}
-    strokeWidth={30}
+    strokeWidth={20}
     size={300}
 >
     {({ remainingTime, color }) => {
@@ -535,15 +530,16 @@ function MyTimer({ navigation: {navigate} }) {
             );
     }}
 </CountdownCircleTimer>
+</TimerAddView>
 <TimerMView>
     <TimerStart>
         <TimerSText>
-            Start : {ConfirmStartTime}
+            Start  : {ConfirmStartTime}
         </TimerSText>
     </TimerStart>
     <TimerEnd>
         <TimerEText>
-        End  :  {ConfirmEndTime}
+        End   :  {ConfirmEndTime}
         </TimerEText>
     </TimerEnd>
     <TimerStop>
@@ -553,7 +549,6 @@ function MyTimer({ navigation: {navigate} }) {
     </TimerStop>
 </TimerMView>
         </TimerContainer>
-        </LinearGradient>
         </TimerScrollView>
     );
 }
@@ -589,6 +584,15 @@ const styles = StyleSheet.create({
         fontSize: 25,
         fontWeight:10,
 
+    },
+    timerImo:{
+        left:-14,
+    },
+    dateImo:{
+        left:-40,
+    },
+    Howto:{
+        left: 100,
     },
 });
 export default FastStack;
