@@ -11,15 +11,14 @@ import {
   View,
 } from "react-native";
 //axios
-import axios from "axios";
-import Constants from "expo-constants";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
+import axios from "axios";
+import { BlurView } from 'expo-blur';
+import Constants from "expo-constants";
+import DatePicker from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
-import DateTimePicker from '@react-native-community/datetimepicker';
-import DatePicker from "react-native-modern-datepicker";
 import { usePhotoContext } from "../../store/image_context";
-import { BlurView } from 'expo-blur';
 
 
 const RecordMain = ({ route, navigation }) => {
