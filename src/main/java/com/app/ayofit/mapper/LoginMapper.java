@@ -20,4 +20,13 @@ public interface LoginMapper {
                         @Param("reqEmail") String reqEmail,
                         @Param("reqPassword") String reqPassword);
 
+        List<AccountDTO> checkGoogle(@Param("reqId") String reqId);
+
+        int setGoogle(
+                        @Param("uuid") String uuid,
+                        @Param("reqId") String reqId,
+                        @Param("reqEmail") String reqEmail,
+                        @Param("reqName") String reqName,
+                        @Param("reqPicture") String reqPicture);
+
 }

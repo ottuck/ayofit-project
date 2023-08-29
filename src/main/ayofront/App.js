@@ -72,8 +72,6 @@ function MainTabsScreen() {
 }
 
 export default function App() {
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [completedOnboarding, setCompletedOnboarding] = useState(false);
 

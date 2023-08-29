@@ -18,8 +18,7 @@ import Constants from "expo-constants";
 import { useEffect } from "react";
 
 function AccountInfo({ navigation }) {
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  const uri = "http://213.35.96.167/";
 
   const registerAccountInfo = () => {
     axios

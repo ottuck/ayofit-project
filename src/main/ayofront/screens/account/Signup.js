@@ -24,8 +24,7 @@ import KeyboardAvoidWrapper from "../../components/keyboardAvoidingWrapper";
 const { brand, darkLight, primary } = Colors;
 
 const Signup = ({ navigation }) => {
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const url = `http://${debuggerHost.split(":").shift()}:8080/api/signup`;
+  const uri = "http://213.35.96.167/";
   const [hidePassword, setHidePassword] = useState(true);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
@@ -33,7 +32,7 @@ const Signup = ({ navigation }) => {
   const handleSignup = (credentials, setSubmitting) => {
     handleMessage("");
     axios
-      .post(url, credentials)
+      .post(`${uri}/api/signup`, credentials)
       .then((response) => {
         const result = response.data;
         const { message, status } = result;

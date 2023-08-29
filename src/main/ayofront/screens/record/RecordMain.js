@@ -23,8 +23,7 @@ import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = ({ route, navigation }) => {
   //Server 통신을 위한 URI 수정
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  const uri = "http://213.35.96.167/";
 
   //전달 받은 음식 정보를 차곡차곡 foodInfos 배열에 저장한다
   const { foodInfo } = route.params;

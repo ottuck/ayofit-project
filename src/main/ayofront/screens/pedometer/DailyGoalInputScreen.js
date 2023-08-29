@@ -21,8 +21,7 @@ import SwipeButton from "rn-swipe-button";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function DailyGoalInputScreen() {
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  const uri = "http://213.35.96.167/";
   const navigation = useNavigation();
 
   const [inputGoal, setInputGoal] = useState("");
