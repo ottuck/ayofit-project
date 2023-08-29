@@ -60,7 +60,7 @@ function RecordScreen({ navigation, route }) {
       setError("리스트에서 음식을 고른 후 제출해주세요🥹");
       return;
     }
-    navigation.push("RecordMain", { food: list }, openModal);
+    navigation.push("RecordMain", { food: list });
     closeModal();
   };
 
@@ -102,9 +102,7 @@ function RecordScreen({ navigation, route }) {
       </Text>
     );
   };
-
-  const [img, setImg] = useState(""); //검색어가 포함된 데이터 리스트
-  let imgess = [];
+  const [imgUri, setImgUri] = useState([]);
   // 로컬에 있는 사진 파일 GET요청
   const { photoUri, setPhotoUri } = usePhotoContext();
 
@@ -112,25 +110,18 @@ function RecordScreen({ navigation, route }) {
     await axios
       .get(`${uri}/api/file/get-image/user1`)
       .then((response) => {
-        console.log(response);
-        response.data.forEach((item) => {
-          let path = item.fImg;
-          path = path.replace(/.*src[\\\/]main[\\\/]ayofront[\\\/]/, "../../");
-          path = `"${path}"`;
-          // console.log(path);
-          // let test = require(path);
-
-          setImg(path);
-          // imgess.push(item.fImg);
-        });
-        console.log(imgess);
+        const newImgUris = response.data.map((item) => item.fImg);
+        setImgUri((prevImgUris) => [...prevImgUris, ...newImgUris]);
       })
       .catch(() => {
         console.log("get error..", error);
       });
   };
 
-  getImg();
+  useEffect(() => {
+    getImg();
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -150,37 +141,18 @@ function RecordScreen({ navigation, route }) {
           >
             <View style={styles.cardContainer}>
               <View style={styles.cardImageContainer}>
-                <Image source={{ uri: img }} />
-                <TouchableOpacity onPress={openModal}>
-                  <Feather name="plus-circle" style={styles.plusIcon} />
-                </TouchableOpacity>
-              </View>
-              <View style={{ width: "90%" }}>
-                <View style={styles.textContainer}>
-                  <View>
-                    <Text style={styles.mealTime}>BreakFast : {img}</Text>
-                    <Text style={styles.mealTime}>BreakFast : </Text>
-                    <Text style={styles.nutrientText}>Carb : </Text>
-                    <Text style={styles.nutrientText}>Protein : </Text>
-                    <Text style={styles.nutrientText}>Fat : </Text>
-                    <Text style={styles.TotalValue}>Total calories : </Text>
-                  </View>
-                  <View>
-                    <Text style={styles.mealTime}>AM 09:44</Text>
-                    <Text style={styles.nutrientValue}>55g</Text>
-                    <Text style={styles.nutrientValue}>16.4g</Text>
-                    <Text style={styles.nutrientValue}>21.5g</Text>
-                    <Text style={styles.TotalValue}>487kcal</Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-
-            <View style={styles.cardContainer}>
-              <View style={styles.cardImageContainer}>
-                <TouchableOpacity onPress={openModal}>
-                  <Feather name="plus-circle" style={styles.plusIcon} />
-                </TouchableOpacity>
+                {imgUri.length > 0 ? (
+                  <Image
+                    source={{
+                      uri: imgUri[0],
+                    }}
+                    style={{ width: 200, height: 200 }}
+                  />
+                ) : (
+                  <TouchableOpacity onPress={openModal}>
+                    <Feather name="plus-circle" style={styles.plusIcon} />
+                  </TouchableOpacity>
+                )}
               </View>
               <View style={{ width: "90%" }}>
                 <View style={styles.textContainer}>
@@ -204,9 +176,53 @@ function RecordScreen({ navigation, route }) {
 
             <View style={styles.cardContainer}>
               <View style={styles.cardImageContainer}>
-                <TouchableOpacity onPress={openModal}>
-                  <Feather name="plus-circle" style={styles.plusIcon} />
-                </TouchableOpacity>
+                {imgUri.length > 0 ? (
+                  <Image
+                    source={{
+                      uri: imgUri[1],
+                    }}
+                    style={{ width: 200, height: 200 }}
+                  />
+                ) : (
+                  <TouchableOpacity onPress={openModal}>
+                    <Feather name="plus-circle" style={styles.plusIcon} />
+                  </TouchableOpacity>
+                )}
+              </View>
+              <View style={{ width: "90%" }}>
+                <View style={styles.textContainer}>
+                  <View>
+                    <Text style={styles.mealTime}>BreakFast : </Text>
+                    <Text style={styles.nutrientText}>Carb : </Text>
+                    <Text style={styles.nutrientText}>Protein : </Text>
+                    <Text style={styles.nutrientText}>Fat : </Text>
+                    <Text style={styles.TotalValue}>Total calories : </Text>
+                  </View>
+                  <View>
+                    <Text style={styles.mealTime}>AM 09:44</Text>
+                    <Text style={styles.nutrientValue}>55g</Text>
+                    <Text style={styles.nutrientValue}>16.4g</Text>
+                    <Text style={styles.nutrientValue}>21.5g</Text>
+                    <Text style={styles.TotalValue}>487kcal</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.cardContainer}>
+              <View style={styles.cardImageContainer}>
+                {imgUri.length > 0 ? (
+                  <Image
+                    source={{
+                      uri: imgUri[2],
+                    }}
+                    style={{ width: 200, height: 200 }}
+                  />
+                ) : (
+                  <TouchableOpacity onPress={openModal}>
+                    <Feather name="plus-circle" style={styles.plusIcon} />
+                  </TouchableOpacity>
+                )}
               </View>
               <View style={{ width: "90%" }}>
                 <View style={styles.textContainer}>

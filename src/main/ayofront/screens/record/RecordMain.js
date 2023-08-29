@@ -76,7 +76,7 @@ const RecordMain = ({ route, navigation }) => {
   // 사진 등록 POST 요청
   const uploadImage = async (imageUri, userId) => {
     const formData = new FormData();
-    formData.append("image", {
+    formData.append("file", {
       uri: imageUri,
       name: "image.jpg",
       type: "image/jpeg",
@@ -85,7 +85,7 @@ const RecordMain = ({ route, navigation }) => {
     formData.append("userId", userId);
 
     try {
-      const response = await fetch(uri + "/api/file/upload-image", {
+      const response = await fetch(uri + "/api/file/files", {
         method: "POST",
         body: formData,
         headers: {
@@ -98,6 +98,13 @@ const RecordMain = ({ route, navigation }) => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  // 즐겨찾기 로직
+  const [isLiked, setIsLiked] = useState(false);
+
+  const handleLikedPress = () => {
+    setIsLiked(!isLiked);
   };
 
   //DateTimePicker
@@ -319,9 +326,13 @@ const RecordMain = ({ route, navigation }) => {
           >
             <View style={styles.foodRecordContainer}>
               <View style={styles.recordIconContainer}>
-                {/* true일 때 Ionicons name="heart-sharp"로 분기처리 필요 */}
-                <TouchableOpacity>
-                  <Ionicons name="heart-outline" style={styles.likeButton} />
+                {/* 즐겨찾기 하트 버튼 */}
+                <TouchableOpacity onPress={handleLikedPress}>
+                  {isLiked ? (
+                    <Ionicons name="heart" style={styles.likeButton} />
+                  ) : (
+                    <Ionicons name="heart-outline" style={styles.likeButton} />
+                  )}
                 </TouchableOpacity>
                 {/* 삭제 버튼 */}
                 <TouchableOpacity onPress={deleteMeal}>
