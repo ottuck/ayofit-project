@@ -653,3 +653,14 @@ export const GoalNutriRatioViewText = styled.Text`
   font-weight: 600;
   margin-horizontal: 26px;
 `;
+
+export const RecordSupplementContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 100%;
+  height: 250px;
+  margin-vertical: 8px;
+  border-radius: 20px;
+  top: 348px;
+`;

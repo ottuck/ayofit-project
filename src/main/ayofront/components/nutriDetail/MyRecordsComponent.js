@@ -43,7 +43,9 @@ import {
   WeightChartText,
   DetailsCircleContainer,
   DetailsCircleRow,
+  RecordSupplementContainer,
 } from "../../components/nutriDetail/StyledComponents";
+import Supplement from "./Supplement";
 
 const MyRecordsComponent = () => {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -626,6 +628,7 @@ const MyRecordsComponent = () => {
           </RecordsWeightModalView>
         </Modal>
       </MyRecordsTodaysWeightContainer>
+      <Supplement />
     </MyRecordsDailyNutritionContainer>
   );
 };
