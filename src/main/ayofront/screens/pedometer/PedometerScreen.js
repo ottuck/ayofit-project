@@ -8,6 +8,7 @@ import {
   Keyboard,
   ScrollView,
   RefreshControl,
+  TouchableOpacity,
   Text,
 } from "react-native";
 import Constants from "expo-constants";
@@ -56,14 +57,14 @@ function PedometerScreen() {
   const isFocused = useIsFocused();
   useEffect(() => {
     if (!isFocused) {
-      console.log("Steps when leaving PedometerScreen:", steps);
+      // console.log("Steps when leaving PedometerScreen:", steps);
 
       async function updateStepsOnServer() {
         try {
           const userId = "user4"; // 현재 사용자 ID
-          console.log(userId);
-          console.log(steps);
-          console.log(formattedDate);
+          // console.log(userId);
+          // console.log(steps);
+          // console.log(formattedDate);
 
           await axios.put(`${uri}/api/pedometer/update-daily-step`, {
             pId: userId,
@@ -71,9 +72,9 @@ function PedometerScreen() {
             pDate: formattedDate,
           });
 
-          console.log("Steps updated on the server.");
+          // console.log("Steps updated on the server.");
         } catch (error) {
-          console.error("Failed to update steps on the server:", error);
+          // console.error("Failed to update steps on the server:", error);
         }
       }
       updateStepsOnServer();
@@ -105,7 +106,17 @@ function PedometerScreen() {
                 ))}
               </View>
             </View>
-
+            <TouchableOpacity
+              style={styles.analysisButton}
+              onPress={() =>
+                navigation.navigate("Steps Analysis", {
+                  currentSteps: steps,
+                  calories: calculateCaloriesBurned(),
+                })
+              }
+            >
+              <Text style={styles.analysisButtonText}>Go to Analysis</Text>
+            </TouchableOpacity>
             {/* progress ring */}
             <PedometerProgressRing steps={steps} goal={goal} />
 
@@ -122,7 +133,6 @@ function PedometerScreen() {
                 value={`${calculateCaloriesBurned()} kcal`}
               />
             </View>
-
             <GoalInput
               goal={goal}
               onGoalChange={handleGoalUpdate}
@@ -145,7 +155,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: GlobalStyles.colors.primary100,
-    paddingTop: "5%",
+    paddingTop: "10%",
   },
   dayContainerWrapper: {
     flexDirection: "row",
@@ -154,8 +164,24 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 20,
+    marginVertical: 10,
     marginHorizontal: 14,
+  },
+  analysisButton: {
+    backgroundColor: GlobalStyles.colors.primary500,
+    // paddingVertical: 10,
+    // paddingHorizontal: 20,
+    borderRadius: 5,
+    width: 150,
+    alignSelf: "center",
+    marginBottom: 5,
+    paddingVertical: 5,
+  },
+  analysisButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
   },
   bottomTextContainer: {
     flexDirection: "row",
