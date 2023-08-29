@@ -1,7 +1,7 @@
 import { Ionicons, Octicons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import { useState } from "react";
-import { View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import {
   ButtonText,
   Colors,
@@ -17,8 +17,10 @@ import {
   StyledTextInput,
   SubTitle,
 } from "../../components/account/UI/loginStyles";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const { brand, darkLight } = Colors;
+const { brand, darkLight, primary } = Colors;
 
 const Signup = () => {
   const [hidePassword, setHidePassword] = useState(true);
@@ -103,7 +105,7 @@ const Signup = () => {
               <MyTextInput
                 label="Name"
                 icon="person"
-                placeholder="Name"
+                placeholder="Your Name"
                 placeholderTextColor={darkLight}
                 onChangeText={handleChange("name")}
                 onBlur={handleBlur("name")}
