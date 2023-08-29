@@ -68,7 +68,7 @@ function MainTabsScreen() {
       <Tab.Screen name="HOME" component={NutriDetailScreen} />
       <Tab.Screen name="DIET RECORD" component={RecordScreen} />
       <Tab.Screen name="CHALLENGE" component={FastRoot} />
-      <Tab.Screen name="STEP COUNTER" component={PedometerScreen} />
+      <Tab.Screen name="STEP COUNTER" component={PedometerStack} />
       <Tab.Screen name="MY PAGE" component={AccountMain} />
     </Tab.Navigator>
   );
