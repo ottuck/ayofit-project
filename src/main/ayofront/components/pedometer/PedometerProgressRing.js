@@ -17,7 +17,7 @@ const PedometerProgressRing = ({ steps, goal }) => {
     <View style={styles.progressContainer}>
       <CircularProgress
         value={calculateAchievementPercentage()}
-        radius={180}
+        radius={170}
         progressValueColor={GlobalStyles.colors.primary500}
         duration={500}
         strokeColorConfig={[
