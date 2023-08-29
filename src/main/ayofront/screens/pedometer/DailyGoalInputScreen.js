@@ -23,13 +23,19 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 function DailyGoalInputScreen() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  const navigation = useNavigation();
+
   const [inputGoal, setInputGoal] = useState("");
   const [goalAdded, setGoalAdded] = useState(false);
-  const navigation = useNavigation();
+  const [showWarning, setShowWarning] = useState(false);
 
   const { todayData, setTodayData, setGoal } = useContext(PedometerContext);
 
   const submitGoal = async () => {
+    if (!inputGoal) {
+      setShowWarning(true);
+      return;
+    }
     try {
       const userId = "user4";
 
@@ -48,10 +54,9 @@ function DailyGoalInputScreen() {
     }
   };
 
-  // goalAdded 값이 변경되면 화면을 다시 렌더링
   useEffect(() => {
     if (goalAdded) {
-      navigation.goBack(); // 이전 화면으로 돌아감
+      navigation.goBack();
     }
   }, [goalAdded]);
 
@@ -66,10 +71,6 @@ function DailyGoalInputScreen() {
           resizeMode="cover"
           style={styles.backgroundImage}
         >
-          {/* <Image
-            style={styles.goalIcon}
-            source={require("../../assets/goal-target-icon.png")}
-          /> */}
           <Text style={styles.goalText}>Enter your daily goal:</Text>
           <TextInput
             style={styles.input}
@@ -78,9 +79,6 @@ function DailyGoalInputScreen() {
             keyboardType="numeric"
             selectionColor={GlobalStyles.colors.primary200}
           />
-          {/* <TouchableOpacity onPress={submitGoal} style={styles.button}>
-            <Text style={styles.buttonText}>Submit</Text>
-          </TouchableOpacity> */}
 
           <SwipeButton
             disabled={false}
@@ -99,7 +97,13 @@ function DailyGoalInputScreen() {
             thumbIconBorderColor="white"
             railBackgroundColor={GlobalStyles.colors.gradientGreen}
             railBorderColor="transparent"
-          ></SwipeButton>
+            shouldResetAfterSuccess={true}
+          />
+          {showWarning && (
+            <Text style={styles.warningText}>
+              Please enter a goal before submitting.
+            </Text>
+          )}
         </ImageBackground>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
@@ -135,18 +139,10 @@ const styles = StyleSheet.create({
     width: 200,
     borderRadius: 16,
   },
-  button: {
-    backgroundColor: GlobalStyles.colors.gradientGreen,
-    width: 100,
-    height: 50,
-    borderRadius: 16,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
-    paddingLeft: 50,
+  warningText: {
+    color: "tomato",
+    fontSize: 14,
+    marginTop: 10,
   },
   swipeText: {
     color: "white",

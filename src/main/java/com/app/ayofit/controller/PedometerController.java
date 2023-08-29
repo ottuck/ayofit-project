@@ -21,40 +21,40 @@ import com.app.ayofit.service.PedometerDAO;
 @RestController
 @RequestMapping("/api/pedometer")
 public class PedometerController {
-	 @Autowired
-	    private PedometerDAO pedometerDAO;
-	 
-	 @PostMapping("/add-goal")
-	    public void addGoal(@RequestBody PedometerDTO pedometerDTO) {
-	        pedometerDAO.addGoal(pedometerDTO);
-	    }
+	@Autowired
+	private PedometerDAO pedometerDAO;
 
-	 @GetMapping("/weekly-achievement")
-	    public ResponseEntity<List<PedometerDTO>> getWeeklyAchievement(
-	            @RequestParam String userId,
-	            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-	        
-	        List<PedometerDTO> weeklyAchievement = pedometerDAO.getWeeklyAchievement(userId, date);
-	        return new ResponseEntity<>(weeklyAchievement, HttpStatus.OK);
-	    }
-	 
-//	 @PutMapping("/update-step-goal")
-//	 public ResponseEntity<String> updateStepGoal(@RequestBody PedometerDTO pedometerDTO) {
-//	     pedometerDAO.updateStepGoal(pedometerDTO);
-//	     
-//	     return ResponseEntity.ok("Step goal updated successfully");
-//	 }
-	 
-	 @PutMapping("/update-daily-step")
-	 public ResponseEntity<String> updateDailyStep(@RequestBody PedometerDTO pedometerDTO) {
-	     try {
-	    	 System.out.println(pedometerDTO);
-	         pedometerDAO.updateDailyStep(pedometerDTO);
-	         return ResponseEntity.ok("Daily step updated successfully");
-	     } catch (Exception e) {
-	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating daily step");
-	     }
-	 }
-	 
-	    
+	@PostMapping("/add-goal")
+	public void addGoal(@RequestBody PedometerDTO pedometerDTO) {
+		pedometerDAO.addGoal(pedometerDTO);
+	}
+
+	@GetMapping("/weekly-achievement")
+	public ResponseEntity<List<PedometerDTO>> getWeeklyAchievement(@RequestParam String userId,
+			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+
+		List<PedometerDTO> weeklyAchievement = pedometerDAO.getWeeklyAchievement(userId, date);
+		return new ResponseEntity<>(weeklyAchievement, HttpStatus.OK);
+	}
+	
+	// Daily Step Goal Update
+	@PutMapping("/update-step-goal")
+	public ResponseEntity<String> updateStepGoal(@RequestBody PedometerDTO pedometerDTO) {
+		pedometerDAO.updateStepGoal(pedometerDTO);
+
+		return ResponseEntity.ok("Step goal updated successfully");
+	}
+	
+	// Daily Current Step Counts Update
+	@PutMapping("/update-daily-step")
+	public ResponseEntity<String> updateDailyStep(@RequestBody PedometerDTO pedometerDTO) {
+		try {
+			System.out.println(pedometerDTO);
+			pedometerDAO.updateDailyStep(pedometerDTO);
+			return ResponseEntity.ok("Daily step updated successfully");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating daily step");
+		}
+	}
+
 }
