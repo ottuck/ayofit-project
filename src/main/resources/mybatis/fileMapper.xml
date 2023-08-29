@@ -7,4 +7,9 @@
 		insert into record_img values (record_img_seq.nextval, #{fDTO.fId}, #{fDTO.fImg}, sysdate)
 	</insert>
 	
+	<select id="getImg" resultType="FileDTO">
+		select r_i_no as fNo, r_i_id as fId, r_img as fImg, r_img_date as fDate
+		from record_img where r_i_id = #{userId}
+	</select>
+	
 </mapper>
