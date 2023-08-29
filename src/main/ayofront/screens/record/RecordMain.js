@@ -49,15 +49,6 @@ const RecordMain = ({ route, navigation }) => {
       });
   };
 
-  //Modal
-  const [modalVisible, setModalVisible] = useState(false);
-  const openModal = () => {
-    setModalVisible(true);
-  };
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
   //ImgModal
   const [imgModalVisible, setImgModalVisible] = useState(false);
   const toggleImgModal = () => {
@@ -68,26 +59,45 @@ const RecordMain = ({ route, navigation }) => {
     setPhotoUri(null);
   };
 
-  // DateTimePicker
+  //Search Modal
+  const [searchModalVisible, setSearchModalVisible] = useState(false);
+  const openSearchModal = () => {
+    setSearchModalVisible(true);
+  };
+  const closeSearchModal = () => {
+    setSearchModalVisible(false);
+  };
+
+  //DatePicker Modal
+  const [DatePickerModalVisible, setDatePickerModalVisible] = useState(false);
+  const openDatePickerModal = () => {
+    setDatePickerModalVisible(true);
+  };
+  const closeDatePickerModal = () => {
+    setDatePickerModalVisible(false);
+  };
+
+  //DateTimePicker
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [mode, setMode] = useState("time");
   const [pickerDate, setPickerDate] = useState("");
   const [pickerTime, setPickerTime] = useState("");
 
-  const showDatepicker = () => {
+  const useDatepicker = () => {
     setMode("calendar");
-    openModal();
+    openDatePickerModal();
   };
-  const showTimepicker = () => {
+  const useTimepicker = () => {
     setMode("time");
-    openModal();
+    openDatePickerModal();
   };
   const savePickerDate = (selectedDate) => {
     setPickerDate(selectedDate);
-    closeModal();
+    closeDatePickerModal();
   }
   const savePickerTime = (selectedTime) => {
     setPickerTime(selectedTime);
-    closeModal();
+    closeDatePickerModal();
   }
 
   //pickerDate formatting
@@ -150,7 +160,7 @@ const RecordMain = ({ route, navigation }) => {
           source={require("../../images/background-img.png")}
           style={styles.backgroundImage}
         >
-          <TouchableOpacity onPress={showDatepicker}>
+          <TouchableOpacity onPress={useDatepicker}>
             <View style={styles.headerContainer}>
               <Text style={styles.headerTitle}>
                 {formattedPickerDate === null ? formattedDate : formattedPickerDate}
@@ -186,25 +196,30 @@ const RecordMain = ({ route, navigation }) => {
                 visible={imgModalVisible}
                 transparent={true}
               >
-                <View style={styles.modalContainer}>
-                  <View style={{ alignItems: "flex-end" }}>
-                    <TouchableOpacity onPress={toggleImgModal}>
-                      <AntDesign name="close" style={styles.imgModalCloseButton} />
-                    </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ flex: 1 }}
+                  onPress={toggleImgModal} // 모달 바깥을 클릭하면 모달 닫힘
+                >
+                  <View style={styles.modalContainer}>
+                    <View style={{ alignItems: "flex-end" }}>
+                      <TouchableOpacity onPress={toggleImgModal}>
+                        <AntDesign name="close" style={styles.imgModalCloseButton} />
+                      </TouchableOpacity>
+                    </View>
+                    <CameraPicker onClose={toggleImgModal}>
+                      <View style={styles.cameraPickerBox}>
+                        <Feather name="camera" style={styles.cameraImg} />
+                        <Text style={{ fontWeight: 'bold' }}>Take a photo</Text>
+                      </View>
+                    </CameraPicker>
+                    <ImagePicker onClose={toggleImgModal}>
+                      <View style={styles.PhotoPickerBox} >
+                        <Feather name="image" style={styles.galleryImg} />
+                        <Text style={{ fontWeight: 'bold' }}>Photo Gallery</Text>
+                      </View>
+                    </ImagePicker>
                   </View>
-                  <CameraPicker onClose={toggleImgModal}>
-                    <View style={styles.cameraPickerBox}>
-                      <Feather name="camera" style={styles.cameraImg} />
-                      <Text style={{ fontWeight: 'bold' }}>Take a photo</Text>
-                    </View>
-                  </CameraPicker>
-                  <ImagePicker onClose={toggleImgModal}>
-                    <View style={styles.PhotoPickerBox} >
-                      <Feather name="image" style={styles.galleryImg} />
-                      <Text style={{ fontWeight: 'bold' }}>Photo Gallery</Text>
-                    </View>
-                  </ImagePicker>
-                </View>
+                </TouchableOpacity>
               </Modal>
             </View>
           </View>
@@ -216,7 +231,7 @@ const RecordMain = ({ route, navigation }) => {
             > */}
 
             <TouchableOpacity
-              onPress={openModal}
+              onPress={openSearchModal}
             >
               <View style={styles.buttonBox1}>
                 <Text style={styles.buttonText}> Add More </Text>
@@ -236,7 +251,7 @@ const RecordMain = ({ route, navigation }) => {
           >
             <MealCard2
               foodInfo={foodInfo}
-              showTimepicker={showTimepicker}
+              useTimepicker={useTimepicker}
               formattedPickerTime={formattedPickerTime}
               ampm2={ampm2}
               ampm1={ampm1}
@@ -244,34 +259,32 @@ const RecordMain = ({ route, navigation }) => {
             />
           </ScrollView>
 
-         
-
           {/* DateTimePicker */}
           <Modal
             animationType="slide"
-            visible={modalVisible}
+            visible={DatePickerModalVisible}
             transparent={true}
           >
             <View style={{ marginTop: "50%" }}>
-              <TouchableOpacity onPress={closeModal}>
+              <TouchableOpacity onPress={closeDatePickerModal}>
                 <AntDesign name="close" style={styles.modalCloseButton} />
               </TouchableOpacity>
               <DatePicker
                 style={styles.datePicker}
                 mode={mode}
                 minuteInterval={10}
-                onTimeChange={savePickerTime}
+                selected={todayDateUTC}
                 selectorStartingYear={2023}
                 onDateChange={savePickerDate}
-                selected={todayDateUTC}
+                onTimeChange={savePickerTime}
               />
             </View>
           </Modal>
-          
+
           {/* SearchModal */}
           <SearchModal
-            modalVisible={modalVisible}
-            closeModal={closeModal}
+            searchModalVisible={searchModalVisible}
+            closeSearchModal={closeSearchModal}
           />
 
         </ImageBackground>

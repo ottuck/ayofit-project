@@ -16,7 +16,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import axios from "axios";
 import Constants from "expo-constants";
 
-const SearchModal = ({ modalVisible, closeModal }) => {
+const SearchModal = ({ searchModalVisible, closeSearchModal }) => {
   const navigation = useNavigation();
 
   //Server 통신을 위한 URI 수정
@@ -29,7 +29,7 @@ const SearchModal = ({ modalVisible, closeModal }) => {
 
   useEffect(() => {
     if (keyword === '') {
-      return; // 초기값일 때는 요청을 보내지 않음
+      return; // 초기값일때(=페이지에 들어왔을때)는 요청을 보내지 않음
     }
 
     const getList = () => {
@@ -45,7 +45,7 @@ const SearchModal = ({ modalVisible, closeModal }) => {
 
     const debounce = setTimeout(() => {
       getList();
-    }, 200);  //keyword가 입력되고 0.x초 후 실행되게 지연시킴
+    }, 100);  //keyword가 입력되고 0.x초 후 실행되게 지연시킴
 
     return () => {
       clearTimeout(debounce);
@@ -56,12 +56,12 @@ const SearchModal = ({ modalVisible, closeModal }) => {
   const [error, setError] = useState('');
   const submitSearchResult = () => {
     const foundItem = list.find(item => item.nFoodName.trim() === keyword.trim());
-    if (!foundItem || "") {
+    if (!foundItem) {
       setError('리스트에서 음식을 고른 후 제출해주세요🥹');
       return;
     }
     navigation.push('RecordMain', { foodInfo: list });
-    closeModal();
+    closeSearchModal();
   };
 
   //검색어 하이라이트 색상 적용
@@ -79,14 +79,14 @@ const SearchModal = ({ modalVisible, closeModal }) => {
   };
 
   return (
-    <Modal animationType="slide" visible={modalVisible} transparent={true} >
+    <Modal animationType="slide" visible={searchModalVisible} transparent={true} >
       <BlurView style={{ flex: 1 }}>
         <View style={styles.modalScreen}>
-          <TouchableOpacity onPress={closeModal} >
+          <TouchableOpacity onPress={closeSearchModal} >
             <AntDesign name="close" style={styles.modalCloseButton} />
           </TouchableOpacity>
           <View style={styles.modalSearchContainer}>
-            <TouchableOpacity onPress={submitSearchResult}>
+            <TouchableOpacity onPress={submitSearchResult} style={{zIndex:1}}>
               <FontAwesome5 name="search" style={styles.modalSearchButton} />
             </TouchableOpacity>
             <View style={styles.modalTextInputBox}>

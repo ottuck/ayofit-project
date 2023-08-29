@@ -13,19 +13,19 @@ import SearchModal from '../../components/record/SearchModal';
 
 function RecordScreen( {route} ) {
 
-  //Modal
-  const [searchModalVisible, setModalVisible] = useState(false);
-  const openModal = () => {
-    setModalVisible(true);
+  //Search Modal
+  const [searchModalVisible, setSearchModalVisible] = useState(false);
+  const openSearchModal = () => {
+    setSearchModalVisible(true);
   };
-  const closeModal = () => {
-    setModalVisible(false);
+  const closeSearchModal = () => {
+    setSearchModalVisible(false);
   };
 
-  // recordMain.js 에서 보내는 openModal 요청 받기
+  // recordMain.js 에서 보내는 openSearchModal 요청 받기
   // useEffect(() => {
   //   if (route.params?.shouldOpenModal) {
-  //     openModal();
+  //     openSearchModal();
   //     route.params.shouldOpenModal = false;
   //   }
   // }, [route.params?.shouldOpenModal]);
@@ -46,15 +46,15 @@ function RecordScreen( {route} ) {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.cardScroll}
           >
-            <MealCard1 mealType="Breakfast" mealTime="10:00" carb="55" protein="16.4" fat="21.5" totalCalories="487" openModal={openModal} />
-            <MealCard1 mealType="Lunch" mealTime="10:00" carb="60" protein="18" fat="20" totalCalories="500" openModal={openModal} />
-            <MealCard1 mealType="Dinner" mealTime="10:00" carb="65" protein="19" fat="23" totalCalories="550" openModal={openModal} />
-            <MealCard1 mealType="Snack" mealTime="10:00" carb="65" protein="19" fat="23" totalCalories="550" openModal={openModal} />
+            <MealCard1 mealType="Breakfast" mealTime="10:00" carb="55" protein="16.4" fat="21.5" totalCalories="487" openSearchModal={openSearchModal} />
+            <MealCard1 mealType="Lunch" mealTime="10:00" carb="60" protein="18" fat="20" totalCalories="500" openSearchModal={openSearchModal} />
+            <MealCard1 mealType="Dinner" mealTime="10:00" carb="65" protein="19" fat="23" totalCalories="550" openSearchModal={openSearchModal} />
+            <MealCard1 mealType="Snack" mealTime="10:00" carb="65" protein="19" fat="23" totalCalories="550" openSearchModal={openSearchModal} />
           </ScrollView>
 
           <SearchModal
             searchModalVisible={searchModalVisible}
-            closeModal={closeModal}
+            closeSearchModal={closeSearchModal}
           />
 
         </ImageBackground>
