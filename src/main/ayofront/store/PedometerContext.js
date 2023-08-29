@@ -37,6 +37,7 @@ export const PedometerProvider = ({ children }) => {
   ]);
 
   const currentDate = new Date();
+  currentDate.setHours(currentDate.getHours() + 9);
   const formattedDate = `${currentDate.getFullYear()}-${(
     currentDate.getMonth() + 1
   )
