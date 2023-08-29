@@ -1,6 +1,7 @@
 
 ### 전자 지갑##
 src/main/resources/application.properties
+src/main/resources/application.yml
 
 ##VS Code 설정
 .vscode/setting.json

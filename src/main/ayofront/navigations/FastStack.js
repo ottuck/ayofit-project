@@ -1,4 +1,4 @@
-import React, { useState,} from "react";
+import React, { useEffect, useState,} from "react";
 import { StyleSheet, TouchableOpacity,Text, Alert } from 'react-native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from '@expo/vector-icons';
@@ -340,7 +340,6 @@ const [hours3, minutes3] = currentTimeEnd.split(':').map(str => parseInt(str, 10
 const date = new Date(year, month - 1, day, hours, minutes);
 const date2 = new Date(year2, month2 - 1, day2, hours2, minutes2);
 const date3 = new Date(year3, month3 - 1, day3, hours3, minutes3);
-
 const options = {
     year: 'numeric',
     month: 'long',
@@ -356,7 +355,6 @@ const options = {
   const ConfirmEndTime = formatter.format(date2).replace('at', '').replace(',', ', ');
   // 현재 날짜 (현재 종료)
   const ConfirmTimeEnd = formatter.format(date3).replace('at', '').replace(',', ', ');
-  
 return(
 
 <ConfirmScroll>
@@ -418,7 +416,7 @@ function MyTimer({ navigation: {navigate} }) {
     const timerTime = route.params?.seletedValue;
     const timerMethod = route.params.seletedValue.number;
     const timerMethod2 = route.params.seletedValue.string;
-    const [isPlaying, setIsPlaying] = useState(true);
+    const [isPlaying, setIsPlaying] = useState(false);
     const [elapsedTime, setElapsedTime] = useState(0);
     const [remainingTime, setRemainingTime] = useState();
 
@@ -434,13 +432,26 @@ function MyTimer({ navigation: {navigate} }) {
     
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
+    const currentTimerTime = new Date();
+    
     const parsedStartTime = new Date(StartDate1);
     const parsedStartTime2 = new Date(EndDate1);
     const formattedStartTime = formatOracleDate(parsedStartTime);
     const formattedEndTime = formatOracleDate(parsedStartTime2);
+    const timerStartTime = parsedStartTime.getTime();
+    const timerCurrent = currentTimerTime.getTime();
+    const StartCurrentTime = timerStartTime - timerCurrent;
+    const SCTime = parseInt(StartCurrentTime);
+    const SCTimeexample = 0;
 
+    if (SCTime >= 0) {
+        setTimeout(() => {
+          setIsPlaying(true);
+        }, SCTime);
+      };
 
     const handleStopTimer = () => {
+        setIsPlaying(false), // 타이머 멈추기
         Alert.alert(
             'Stop Timer',
             'Are you sure?',
@@ -448,11 +459,13 @@ function MyTimer({ navigation: {navigate} }) {
                 {
                     text: 'cancel',
                     style: 'cancel',
+                    onPress: () => {
+                        setIsPlaying(true); // 'cancel'을 누를 경우 타이머 다시 시작
+                    },
                 },
                 {
                     text: 'Stop',
                     onPress: () => {
-                        setIsPlaying(false); // 타이머 멈추기
                         setElapsedTime(totalSeconds - remainingTime); // 사용된 시간 계산 및 저장
                         console.log('사용 시간 : ' + elapsedTime);
 
@@ -477,15 +490,13 @@ function MyTimer({ navigation: {navigate} }) {
         };
         const totalSeconds = timerTime.number * 3600;
 
-        console.log('시작 시간 :'+ConfirmStartTime);
-        console.log('종료 시간 :'+ConfirmEndTime);
-        console.log('단식 방법 : ' + timerMethod);
-        console.log('단식 방법 초 : ' + totalSeconds);
-        console.log('단식 방법 초 : ' + timerMethod2);
-        console.log('남은 시간 : ' + remainingTime);
-
+        // console.log('시작 시간 :'+ConfirmStartTime);
+        // console.log('종료 시간 :'+ConfirmEndTime);
+        // console.log('단식 방법 : ' + timerMethod);
+        // console.log('단식 방법 초 : ' + totalSeconds);
+        // console.log('단식 방법 초 : ' + timerMethod2);
+        // console.log('남은 시간 : ' + remainingTime);
         //w : JS-> Oracle
-
         
     return (
         <TimerScrollView>
@@ -494,13 +505,12 @@ function MyTimer({ navigation: {navigate} }) {
             <TimerHomeBtn onPress={() => navigate("FastMainPage")}>
             <TimerHomeBT>Reset     <Entypo name="trash" size={24} color="black" /></TimerHomeBT> 
             </TimerHomeBtn>
-            <TouchableOpacity activeOpacity={0} onPress={() => setIsPlaying(prev => !prev)}>
             <CountdownCircleTimer
     isPlaying={isPlaying}
     duration={totalSeconds}
     colors={["#F3A36F", "#F7B801", "#A30000", "#A30000"]}
     colorsTime={[totalSeconds, (totalSeconds * 0.7), (totalSeconds * 0.3), 0]}
-    onComplete={() => ({ shouldRepeat: true, delay: 2 })}
+    onComplete={() => ({ shouldRepeat: false})}
     updateInterval={1}
     strokeWidth={30}
     size={300}
@@ -525,8 +535,6 @@ function MyTimer({ navigation: {navigate} }) {
             );
     }}
 </CountdownCircleTimer>
-
-            </TouchableOpacity>
 <TimerMView>
     <TimerStart>
         <TimerSText>
