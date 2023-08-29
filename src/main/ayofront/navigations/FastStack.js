@@ -1,5 +1,5 @@
 import React, { useEffect, useState,} from "react";
-import { StyleSheet, TouchableOpacity,Text, Alert } from 'react-native';
+import { StyleSheet,Text, Alert, Image } from 'react-native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -256,19 +256,24 @@ return(
     Fasting Method
 </PlanMethodText>
 <PlanMethodCView>
-<PlanMethodC> {selectMethod.string}  </PlanMethodC>
+<PlanMethodC>
+    {selectMethod.string}  
+</PlanMethodC>
+<Image source={require('../images/FastImage/Fast24moon.png')} style={styles.Howto} />
 </PlanMethodCView>
 <PlanMethodText>
     Starting Date
 </PlanMethodText>
 <PlanMethodCView>
     <FastDate onDateChange={(newDate => setSelectedDate(newDate))}/>
+    <Image source={require('../images/FastImage/FastDateimo.png')} style={styles.dateImo} />
 </PlanMethodCView>
 <PlanMethodText>
     Starting Time
 </PlanMethodText>
 <PlanMethodCView>
  <FastTime style={styles.FastTime} onTimeChange={(newTime => setSelectedTime(newTime))}/>
+ <Image source={require('../images/FastImage/FastTimerimo.png')} style={styles.timerImo} />
 </PlanMethodCView>
 <PlanEndView>
  <PlanEndText style={{ fontFamily: 'OpenSans_600SemiBold_Italic', fontSize: 20 }}>
@@ -296,7 +301,7 @@ const FastConfirm = ({ navigation }) => {
                 },
                 ConfirmStartTime : ConfirmStartTime,
                 ConfirmEndTime : ConfirmEndTime,
-                StartDate1 : date,
+                StartDate1 : date4,
                 EndDate1 : date2,
             });
     };
@@ -337,7 +342,7 @@ const [hours2, minutes2] = currentTimeStr.split(':').map(str => parseInt(str, 10
 const [year3, month3, day3] = currentDateEnd.split('/').map(str => parseInt(str, 10));
 const [hours3, minutes3] = currentTimeEnd.split(':').map(str => parseInt(str, 10));
 
-const date = new Date(year, month - 1, day, hours, minutes);
+const date4 = new Date(year, month - 1, day, hours, minutes);
 const date2 = new Date(year2, month2 - 1, day2, hours2, minutes2);
 const date3 = new Date(year3, month3 - 1, day3, hours3, minutes3);
 const options = {
@@ -350,7 +355,7 @@ const options = {
   };
   const formatter = new Intl.DateTimeFormat('en-US', options);
   // 시작 날짜 (현재 or 셀렉)
-  const ConfirmStartTime = formatter.format(date).replace('at', '').replace(',', ', ');
+  const ConfirmStartTime = formatter.format(date4).replace('at', '').replace(',', ', ');
   // 종료 시간 (현재 or 셀렉)
   const ConfirmEndTime = formatter.format(date2).replace('at', '').replace(',', ', ');
   // 현재 날짜 (현재 종료)
@@ -414,12 +419,9 @@ function MyTimer({ navigation: {navigate} }) {
     const ConfirmStartTime = route.params.ConfirmStartTime;
     const ConfirmEndTime = route.params.ConfirmEndTime;
     const timerTime = route.params?.seletedValue;
-    const timerMethod = route.params.seletedValue.number;
-    const timerMethod2 = route.params.seletedValue.string;
     const [isPlaying, setIsPlaying] = useState(false);
     const [elapsedTime, setElapsedTime] = useState(0);
     const [remainingTime, setRemainingTime] = useState();
-
     const [fastDateSend,setFastDateSend] = useState(false);
 
     function formatOracleDate(date) {
@@ -449,7 +451,7 @@ function MyTimer({ navigation: {navigate} }) {
         }, SCTime);
       };
 
-    const handleStopTimer = () => {
+      const handleStopTimer = () => {
         Alert.alert(
             'Stop Timer',
             'Are you sure?',
@@ -460,37 +462,34 @@ function MyTimer({ navigation: {navigate} }) {
                 },
                 {
                     text: 'Stop',
-                    onPress: () => {
-                        navigate("FastMainPage");
-                        setElapsedTime(totalSeconds - remainingTime); // 사용된 시간 계산 및 저장
-                        console.log('사용 시간 : ' + elapsedTime);
-
+                    onPress: async () => {
+                        const elapsedTimeValue = totalSeconds - remainingTime;
+    
+                        setElapsedTime(elapsedTimeValue); // 사용된 시간 계산 및 저장
+    
                         const dataToSend = {
-                            confirmStartTime : formattedStartTime,
-                            confirmEndTime : formattedEndTime,
-                            elapsedTime : elapsedTime,
+                            confirmStartTime: formattedStartTime,
+                            confirmEndTime: formattedEndTime,
+                            elapsedTime: elapsedTimeValue,
                         };
-
-                        axios
-                            .post(`${uri}`,dataToSend)
-                            .then(response => {
-                                setFastDateSend(true);
-                            })
-                            .catch(error => {
-                                console.error('Error sending data:', error)
-                            })
+    
+                        try {
+                            await axios.post(`${uri}`, dataToSend);
+                            setFastDateSend(true);
+                            console.log('사용 시간:', elapsedTimeValue);
+                        } catch (error) {
+                            console.error('Error sending data:', error);
+                        }
+    
+                        navigate("FastMainPage");
                     },
                 },
             ],
-            );
-        };
+        );
+    };
+    
         const totalSeconds = timerTime.number * 3600;
 
-        // console.log('시작 시간 :'+ConfirmStartTime);
-        // console.log('종료 시간 :'+ConfirmEndTime);
-        // console.log('단식 방법 : ' + timerMethod);
-        // console.log('단식 방법 초 : ' + totalSeconds);
-        // console.log('단식 방법 초 : ' + timerMethod2);
         console.log('남은:' + remainingTime);
         //w : JS-> Oracle
         
@@ -585,6 +584,15 @@ const styles = StyleSheet.create({
         fontSize: 25,
         fontWeight:10,
 
+    },
+    timerImo:{
+        left:-14,
+    },
+    dateImo:{
+        left:-40,
+    },
+    Howto:{
+        left: 100,
     },
 });
 export default FastStack;

@@ -116,7 +116,6 @@ bottom: 60px;
 export const PlanContainer = styled.ScrollView`
 width: 100%;
 height: 100%;
-border: 3px solid red;
 `;
 export const PlanTitle = styled.Text`
 font-size: 17px;
@@ -142,11 +141,12 @@ width: 80%;
 margin-top : 10px;
 margin-left : 40px;
 margin-right : 20px;
-
+flex-direction : row;
 `;
 export const PlanMethodC = styled.Text`
 font-size: 20px;
 color: #505050;
+
 `;
 
 export const PlanEndView = styled.View`
@@ -155,6 +155,7 @@ justify-content: center;
 margin-top : 50px;
 width : 100%;
 height : 100px;
+
 `;
 export const PlanEndText = styled.Text`
 font-size : 20px;
@@ -358,7 +359,6 @@ justify-content: center;
 `;
 //---------------------FastDate.js---------------------//
 export const FastDateContainer = styled.View`
-
 justify-content: center;
 align-items: center;
 `;
@@ -372,6 +372,7 @@ height: 80px;
 export const StartDate = styled.Text`
 font-size: 20px;
 color: #505050;
+margin-top: 15px;
 `;
 export const ModalContent = styled.View`
 background-color: white;
@@ -397,6 +398,7 @@ height: 80px;
 export const StartTime = styled.Text`
 font-size: 20px;
 color: #505050;
+margin-top: 15px;
 `;
 export const ModalContent2 = styled.View`
 background-color: white;
