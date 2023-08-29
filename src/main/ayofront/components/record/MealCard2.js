@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 
-const MealCard2 = ({ foodInfo, useTimepicker, formattedPickerTime, ampm2, ampm1, currentTime }) => {
+const MealCard2 = ({ useTimepicker, formattedPickerTime, ampm2, ampm1, currentTime, mealList }) => {
   return (
     <View style={styles.blurViewBox}>
       <BlurView>
@@ -20,10 +20,10 @@ const MealCard2 = ({ foodInfo, useTimepicker, formattedPickerTime, ampm2, ampm1,
           <View style={styles.recordMidContainer}>
             <View style={styles.textWrapper}>
               <Text style={styles.foodName} numberOfLines={1} ellipsizeMode="clip">
-                {foodInfo[0].nFoodName}
+                {mealList[0].nFoodName}
               </Text>
               <Text style={styles.foodKcal}>
-                {foodInfo[0].nKcal} Kcal
+                {mealList[0].nKcal} Kcal
               </Text>
             </View>
             <TouchableOpacity onPress={useTimepicker}>
@@ -42,19 +42,19 @@ const MealCard2 = ({ foodInfo, useTimepicker, formattedPickerTime, ampm2, ampm1,
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Carb</Text>
               <Text style={styles.foodNutrient}>
-                {foodInfo[0].nCarbohydrate === null ? "-" : foodInfo[0].nCarbohydrate}
+                {mealList[0].nCarbohydrate === null ? "-" : mealList[0].nCarbohydrate}
               </Text>
             </View>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Protein</Text>
               <Text style={styles.foodNutrient}>
-                {foodInfo[0].nProtein === null ? "-" : foodInfo[0].nProtein}
+                {mealList[0].nProtein === null ? "-" : mealList[0].nProtein}
               </Text>
             </View>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Fat</Text>
               <Text style={styles.foodNutrient}>
-                {foodInfo[0].nFat === null ? "-" : foodInfo[0].nFat}
+                {mealList[0].nFat === null ? "-" : mealList[0].nFat}
               </Text>
             </View>
           </View>

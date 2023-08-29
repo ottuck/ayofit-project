@@ -10,32 +10,25 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-//axios
 import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
 import Constants from "expo-constants";
-import DatePicker from "react-native-modern-datepicker";
+import DatePicker, { getToday, getFormatedDate } from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
-import MealCard2 from "../../components/record/MealCard2";
 import { usePhotoContext } from "../../store/image_context";
+import { useMealContext } from '../../store/MealContext';
 import SearchModal from "../../components/record/SearchModal";
+import MealCard2 from "../../components/record/MealCard2";
 
 
-const RecordMain = ({ route, navigation }) => {
+const RecordMain = () => {
+  const { mealList } = useMealContext();
+  // console.log("Meal ContextAPI => ", mealList);
+
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-
-  //전달 받은 음식 정보를 차곡차곡 foodInfos 배열에 저장한다
-  const { foodInfo } = route.params;
-  const [foodInfos, setFoodInfos] = useState([]);
-  useEffect(() => {
-    if (foodInfo) {
-      setFoodInfos(prevFoodInfos => [...prevFoodInfos, foodInfo]);
-    }
-  }, []);
-  // console.log(foodInfos);
 
   //식단 기록 post 요청
   const submitMealToServer = () => {
@@ -78,10 +71,12 @@ const RecordMain = ({ route, navigation }) => {
   };
 
   //DateTimePicker
-  const [showDatePicker, setShowDatePicker] = useState(false);
   const [mode, setMode] = useState("time");
   const [pickerDate, setPickerDate] = useState("");
   const [pickerTime, setPickerTime] = useState("");
+
+  //Current Date
+  console.log(getFormatedDate(new Date(), "YYYY/MM/DD h:m"));
 
   const useDatepicker = () => {
     setMode("calendar");
@@ -250,7 +245,7 @@ const RecordMain = ({ route, navigation }) => {
             contentContainerStyle={styles.recordScroll}
           >
             <MealCard2
-              foodInfo={foodInfo}
+              mealList={mealList}
               useTimepicker={useTimepicker}
               formattedPickerTime={formattedPickerTime}
               ampm2={ampm2}
@@ -273,8 +268,8 @@ const RecordMain = ({ route, navigation }) => {
                 style={styles.datePicker}
                 mode={mode}
                 minuteInterval={10}
-                selected={todayDateUTC}
-                selectorStartingYear={2023}
+                selected={getToday()}
+                selectorStartingYear={getToday()}
                 onDateChange={savePickerDate}
                 onTimeChange={savePickerTime}
               />
@@ -283,6 +278,7 @@ const RecordMain = ({ route, navigation }) => {
 
           {/* SearchModal */}
           <SearchModal
+            fromPage="RecordMain"
             searchModalVisible={searchModalVisible}
             closeSearchModal={closeSearchModal}
           />

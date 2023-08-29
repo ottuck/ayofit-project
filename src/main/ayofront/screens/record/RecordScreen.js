@@ -9,9 +9,10 @@ import {
 } from 'react-native';
 import MealCard1 from '../../components/record/MealCard1';
 import SearchModal from '../../components/record/SearchModal';
+import { useMealContext } from '../../store/MealContext';
 
 
-function RecordScreen( {route} ) {
+function RecordScreen({ route }) {
 
   //Search Modal
   const [searchModalVisible, setSearchModalVisible] = useState(false);
@@ -53,6 +54,7 @@ function RecordScreen( {route} ) {
           </ScrollView>
 
           <SearchModal
+            fromPage="RecordScreen"
             searchModalVisible={searchModalVisible}
             closeSearchModal={closeSearchModal}
           />

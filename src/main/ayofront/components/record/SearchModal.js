@@ -15,9 +15,9 @@ import { FontAwesome5 } from '@expo/vector-icons';
 //axios
 import axios from "axios";
 import Constants from "expo-constants";
+import { useMealContext } from '../../store/MealContext';
 
-const SearchModal = ({ searchModalVisible, closeSearchModal }) => {
-  const navigation = useNavigation();
+const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -53,14 +53,24 @@ const SearchModal = ({ searchModalVisible, closeSearchModal }) => {
   }, [keyword]);
 
   //최종 검색어 제출, Validation : keyword와 list의 값이 일치하지 않으면 제출못하게 막고 error 표시
+  const { setMealList } = useMealContext(); 
+  const navigation = useNavigation();
   const [error, setError] = useState('');
+
   const submitSearchResult = () => {
     const foundItem = list.find(item => item.nFoodName.trim() === keyword.trim());
     if (!foundItem) {
-      setError('리스트에서 음식을 고른 후 제출해주세요🥹');
+      setError('Please select the food on the list🥹');
       return;
     }
-    navigation.push('RecordMain', { foodInfo: list });
+    if (fromPage === 'RecordScreen') {
+      setMealList(list);  //ContextAPI에 저장하고 이동
+      navigation.navigate('RecordMain');
+    }
+    if (fromPage === 'RecordMain') {
+      setMealList(list);  
+    }
+
     closeSearchModal();
   };
 
@@ -78,6 +88,7 @@ const SearchModal = ({ searchModalVisible, closeSearchModal }) => {
     );
   };
 
+
   return (
     <Modal animationType="slide" visible={searchModalVisible} transparent={true} >
       <BlurView style={{ flex: 1 }}>
@@ -86,7 +97,7 @@ const SearchModal = ({ searchModalVisible, closeSearchModal }) => {
             <AntDesign name="close" style={styles.modalCloseButton} />
           </TouchableOpacity>
           <View style={styles.modalSearchContainer}>
-            <TouchableOpacity onPress={submitSearchResult} style={{zIndex:1}}>
+            <TouchableOpacity onPress={submitSearchResult} style={{ zIndex: 1 }}>
               <FontAwesome5 name="search" style={styles.modalSearchButton} />
             </TouchableOpacity>
             <View style={styles.modalTextInputBox}>
@@ -100,7 +111,7 @@ const SearchModal = ({ searchModalVisible, closeSearchModal }) => {
                 onSubmitEditing={submitSearchResult}
                 onFocus={() => setError('')}
               />
-              <Text style={{ color: 'red', fontWeight: 'bold' }}>{error}</Text>
+              <Text style={styles.errorMSG}>{error}</Text>
             </View>
             <TouchableOpacity onPress={() => setKeyword('')}>
               <AntDesign name="closecircleo" style={styles.clearButton} />
@@ -158,6 +169,11 @@ const styles = StyleSheet.create({
     width: '80%',
     height: 45,
     fontSize: 16,
+  },
+  errorMSG: {
+    color: 'red', 
+    fontWeight: 'bold', 
+    right: 10, 
   },
   modalSearchButton: {
     fontSize: 20,
