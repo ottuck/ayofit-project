@@ -85,7 +85,7 @@ const RecordMain = ({ route, navigation }) => {
         },
       });
 
-      const responseData = await response.json();
+      const responseData = await response;
       console.log(responseData);
     } catch (error) {
       console.error(error);

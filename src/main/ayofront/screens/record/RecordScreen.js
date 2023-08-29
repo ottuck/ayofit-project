@@ -8,16 +8,18 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
-  FlatList
-} from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { BlurView } from 'expo-blur';
-import { Feather } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
+  FlatList,
+  Image,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { BlurView } from "expo-blur";
+import { Feather } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 //axios
 import axios from "axios";
 import Constants from "expo-constants";
+import { usePhotoContext } from "../../store/image_context";
 
 function RecordScreen({ navigation, route }) {
   //Server 통신을 위한 URI 수정
@@ -25,8 +27,8 @@ function RecordScreen({ navigation, route }) {
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
   //Debounce를 적용한 SearchAPI 호출
-  const [keyword, setKeyword] = useState('');   //검색 키워드
-  const [list, setList] = useState([]);   //검색어가 포함된 데이터 리스트
+  const [keyword, setKeyword] = useState(""); //검색 키워드
+  const [list, setList] = useState([]); //검색어가 포함된 데이터 리스트
 
   useEffect(() => {
     const getList = () => {
@@ -36,13 +38,12 @@ function RecordScreen({ navigation, route }) {
         .then((response) => {
           setList(response.data);
         })
-        .catch(() => {
-        });
+        .catch(() => {});
     };
 
     const debounce = setTimeout(() => {
       getList();
-    }, 200);  //keyword가 입력되고 0.x초 후 실행되게 지연시킴
+    }, 200); //keyword가 입력되고 0.x초 후 실행되게 지연시킴
 
     return () => {
       clearTimeout(debounce);
@@ -50,14 +51,16 @@ function RecordScreen({ navigation, route }) {
   }, [keyword]);
 
   //최종 검색어 제출, Validation : keyword와 list의 값이 일치하지 않으면 제출못하게 막고 error 표시
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const submitSearchResult = () => {
-    const foundItem = list.find(item => item.nFoodName.trim() === keyword.trim());
+    const foundItem = list.find(
+      (item) => item.nFoodName.trim() === keyword.trim()
+    );
     if (!foundItem || "") {
-      setError('리스트에서 음식을 고른 후 제출해주세요🥹');
+      setError("리스트에서 음식을 고른 후 제출해주세요🥹");
       return;
-    } 
-    navigation.push('RecordMain', { food: list }, openModal);
+    }
+    navigation.push("RecordMain", { food: list }, openModal);
     closeModal();
   };
 
@@ -84,24 +87,57 @@ function RecordScreen({ navigation, route }) {
 
   //검색어 하이라이트 색상 적용
   const highlightKeyword = (text, keyword) => {
-    const parts = text.split(new RegExp(`(${keyword})`, 'gi')); //JS의 RegExp은 정규표현식 사용 'gi'는 옵션
+    const parts = text.split(new RegExp(`(${keyword})`, "gi")); //JS의 RegExp은 정규표현식 사용 'gi'는 옵션
     return (
       <Text style={{ fontSize: 18 }}>
-        {parts.map((part, i) => (
-          part.toLowerCase() === keyword.toLowerCase()
-            ? <Text key={i} style={{ color: 'red', fontWeight: 'bold' }}>{part}</Text>
-            : part
-        ))}
+        {parts.map((part, i) =>
+          part.toLowerCase() === keyword.toLowerCase() ? (
+            <Text key={i} style={{ color: "red", fontWeight: "bold" }}>
+              {part}
+            </Text>
+          ) : (
+            part
+          )
+        )}
       </Text>
     );
   };
 
+  const [img, setImg] = useState(""); //검색어가 포함된 데이터 리스트
+  let imgess = [];
+  // 로컬에 있는 사진 파일 GET요청
+  const { photoUri, setPhotoUri } = usePhotoContext();
 
+  const getImg = async () => {
+    await axios
+      .get(`${uri}/api/file/get-image/user1`)
+      .then((response) => {
+        console.log(response);
+        response.data.forEach((item) => {
+          let path = item.fImg;
+          path = path.replace(/.*src[\\\/]main[\\\/]ayofront[\\\/]/, "../../");
+          path = `"${path}"`;
+          // console.log(path);
+          // let test = require(path);
+
+          setImg(path);
+          // imgess.push(item.fImg);
+        });
+        console.log(imgess);
+      })
+      .catch(() => {
+        console.log("get error..", error);
+      });
+  };
+
+  getImg();
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <ImageBackground source={require('../../images/background-img.png')} style={styles.backgroundImage}>
-
+        <ImageBackground
+          source={require("../../images/background-img.png")}
+          style={styles.backgroundImage}
+        >
           <View style={styles.headerContainer}>
             <Text style={styles.headerTitle}> Diet Record</Text>
             <Text style={styles.headerDate}> {formattedToday} </Text>
@@ -114,16 +150,18 @@ function RecordScreen({ navigation, route }) {
           >
             <View style={styles.cardContainer}>
               <View style={styles.cardImageContainer}>
+                <Image source={{ uri: img }} />
                 <TouchableOpacity onPress={openModal}>
                   <Feather name="plus-circle" style={styles.plusIcon} />
                 </TouchableOpacity>
               </View>
-              <View style={{ width: '90%' }}>
+              <View style={{ width: "90%" }}>
                 <View style={styles.textContainer}>
                   <View>
+                    <Text style={styles.mealTime}>BreakFast : {img}</Text>
                     <Text style={styles.mealTime}>BreakFast : </Text>
                     <Text style={styles.nutrientText}>Carb : </Text>
-                    <Text style={styles.nutrientText}>Protein :  </Text>
+                    <Text style={styles.nutrientText}>Protein : </Text>
                     <Text style={styles.nutrientText}>Fat : </Text>
                     <Text style={styles.TotalValue}>Total calories : </Text>
                   </View>
@@ -144,12 +182,12 @@ function RecordScreen({ navigation, route }) {
                   <Feather name="plus-circle" style={styles.plusIcon} />
                 </TouchableOpacity>
               </View>
-              <View style={{ width: '90%' }}>
+              <View style={{ width: "90%" }}>
                 <View style={styles.textContainer}>
                   <View>
                     <Text style={styles.mealTime}>BreakFast : </Text>
                     <Text style={styles.nutrientText}>Carb : </Text>
-                    <Text style={styles.nutrientText}>Protein :  </Text>
+                    <Text style={styles.nutrientText}>Protein : </Text>
                     <Text style={styles.nutrientText}>Fat : </Text>
                     <Text style={styles.TotalValue}>Total calories : </Text>
                   </View>
@@ -170,12 +208,12 @@ function RecordScreen({ navigation, route }) {
                   <Feather name="plus-circle" style={styles.plusIcon} />
                 </TouchableOpacity>
               </View>
-              <View style={{ width: '90%' }}>
+              <View style={{ width: "90%" }}>
                 <View style={styles.textContainer}>
                   <View>
                     <Text style={styles.mealTime}>BreakFast : </Text>
                     <Text style={styles.nutrientText}>Carb : </Text>
-                    <Text style={styles.nutrientText}>Protein :  </Text>
+                    <Text style={styles.nutrientText}>Protein : </Text>
                     <Text style={styles.nutrientText}>Fat : </Text>
                     <Text style={styles.TotalValue}>Total calories : </Text>
                   </View>
@@ -189,18 +227,24 @@ function RecordScreen({ navigation, route }) {
                 </View>
               </View>
             </View>
-
           </ScrollView>
 
-          <Modal animationType="slide" visible={modalVisible} transparent={true} >
+          <Modal
+            animationType="slide"
+            visible={modalVisible}
+            transparent={true}
+          >
             <BlurView style={{ flex: 1 }}>
               <View style={styles.modalScreen}>
-                <TouchableOpacity onPress={closeModal} >
+                <TouchableOpacity onPress={closeModal}>
                   <AntDesign name="close" style={styles.modalCloseButton} />
                 </TouchableOpacity>
                 <View style={styles.modalSearchContainer}>
                   <TouchableOpacity onPress={submitSearchResult}>
-                    <FontAwesome5 name="search" style={styles.modalSearchButton} />
+                    <FontAwesome5
+                      name="search"
+                      style={styles.modalSearchButton}
+                    />
                   </TouchableOpacity>
                   <View style={styles.modalTextInputBox}>
                     <TextInput
@@ -211,11 +255,13 @@ function RecordScreen({ navigation, route }) {
                       onChangeText={setKeyword}
                       value={keyword}
                       onSubmitEditing={submitSearchResult}
-                      onFocus={() => setError('')} 
+                      onFocus={() => setError("")}
                     />
-                    <Text style={{color:'red', fontWeight: 'bold'}}>{error}</Text>
+                    <Text style={{ color: "red", fontWeight: "bold" }}>
+                      {error}
+                    </Text>
                   </View>
-                  <TouchableOpacity onPress={() => setKeyword('')}>
+                  <TouchableOpacity onPress={() => setKeyword("")}>
                     <AntDesign name="closecircleo" style={styles.clearButton} />
                   </TouchableOpacity>
                 </View>
@@ -225,53 +271,54 @@ function RecordScreen({ navigation, route }) {
                   style={styles.searchScrollView}
                   keyExtractor={(item, index) => item.nNo || String(index)}
                   //FlatList Rendering
-                  renderItem={({ item }) =>
+                  renderItem={({ item }) => (
                     <TouchableOpacity
-                      style={{ marginVertical: '3%', fontSize: 18 }}
-                      onPress={() => { setKeyword(item.nFoodName) }}
+                      style={{ marginVertical: "3%", fontSize: 18 }}
+                      onPress={() => {
+                        setKeyword(item.nFoodName);
+                      }}
                     >
                       {highlightKeyword(item.nFoodName, keyword)}
                     </TouchableOpacity>
-                  }
+                  )}
                 />
               </View>
             </BlurView>
           </Modal>
-
         </ImageBackground>
-      </View >
-    </SafeAreaView >
+      </View>
+    </SafeAreaView>
   );
 }
 export default RecordScreen;
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#E46C0A',
+    backgroundColor: "#E46C0A",
   },
   container: {
-    backgroundColor: '#FFE9D8',
+    backgroundColor: "#FFE9D8",
   },
   backgroundImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     width: 350,
     marginVertical: 80,
     marginHorizontal: 35,
   },
   headerTitle: {
-    fontWeight: '500',
+    fontWeight: "500",
     fontSize: 25,
-    color: 'white',
+    color: "white",
   },
   headerDate: {
-    color: '#CECECE',
+    color: "#CECECE",
     fontSize: 17,
   },
   //카드 디자인
@@ -282,101 +329,103 @@ const styles = StyleSheet.create({
     width: 300,
     height: 430,
     marginHorizontal: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 15,
-    shadowColor: 'black',
+    shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   cardImageContainer: {
     width: 270,
     height: 270,
-    backgroundColor: 'rgba(0, 0, 0, 0.10)',
+    backgroundColor: "rgba(0, 0, 0, 0.10)",
     borderRadius: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   plusIcon: {
     fontSize: 60,
-    color: 'rgba(0, 0, 0, 0.10)',
+    color: "rgba(0, 0, 0, 0.10)",
   },
   textContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 20,
   },
   mealTime: {
-    color: 'orange',
-    fontWeight: 'bold',
+    color: "orange",
+    fontWeight: "bold",
     fontSize: 20,
   },
   nutrientText: {
     fontSize: 17,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   nutrientValue: {
     fontSize: 17,
-    fontWeight: 'bold',
-    textAlign: 'right',
+    fontWeight: "bold",
+    textAlign: "right",
   },
   TotalValue: {
     fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'right',
+    fontWeight: "bold",
+    textAlign: "right",
   },
   //모달 디자인
   modalScreen: {
     flex: 1,
-    marginTop: '11%',
-    backgroundColor: 'rgba(255,255,255,0.6)',
+    marginTop: "11%",
+    backgroundColor: "rgba(255,255,255,0.6)",
     borderRadius: 30,
     padding: 15,
   },
   modalCloseButton: {
     margin: 10,
-    left: '90%',
+    left: "90%",
     fontSize: 25,
-    color: 'rgba(0, 0, 0, 0.1)',
+    color: "rgba(0, 0, 0, 0.1)",
   },
   modalSearchContainer: {
-    alignItems: 'center',
-    width: '100%',
-    position: 'relative',
+    alignItems: "center",
+    width: "100%",
+    position: "relative",
   },
   modalTextInputBox: {
-    width: '80%',
+    width: "80%",
     height: 45,
-    borderColor: 'rgba(0, 0, 0, 0.3)',
+    borderColor: "rgba(0, 0, 0, 0.3)",
     borderWidth: 1,
     borderRadius: 10,
     paddingLeft: 50,
   },
   modalTextInput: {
-    width: '80%',
+    width: "80%",
     height: 45,
     fontSize: 16,
   },
   modalSearchButton: {
     fontSize: 20,
-    color: 'orange',
-    position: 'absolute',
-    right: '30%',
+    color: "orange",
+    position: "absolute",
+    right: "30%",
     top: 13,
-    zIndex: 1
+    zIndex: 1,
   },
   clearButton: {
     fontSize: 20,
-    color: 'rgba(0, 0, 0, 0.2)',
-    position: 'absolute',
-    left: '32%',
+    color: "rgba(0, 0, 0, 0.2)",
+    position: "absolute",
+    left: "32%",
     bottom: 12,
   },
   //FlatList
   searchScrollView: {
-    height: '80%', marginTop: '5%', marginLeft: '10%'
+    height: "80%",
+    marginTop: "5%",
+    marginLeft: "10%",
   },
 });
