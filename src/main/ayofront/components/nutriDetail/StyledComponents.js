@@ -2,7 +2,7 @@ import styled from "styled-components/native";
 import * as Progress from "react-native-progress";
 
 export const HomeSafeAreaView = styled.SafeAreaView`
-  height: 1920px;
+  height: 2000px;
   background-color: #ffe9d8;
 `;
 

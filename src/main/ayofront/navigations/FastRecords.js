@@ -19,7 +19,6 @@ const FastRecord = ({navigation : { navigate } }) => {
         axios
         .get(`${uri}`)
           .then(response => {
-            console.log('Data from server:', response.data[0]);
             setFastData(response.data);
           })
           .catch(error => {
@@ -38,7 +37,7 @@ const FastRecord = ({navigation : { navigate } }) => {
         formattedTime: formatTimeFromSeconds(item.elapsedTime)
       }));
       
-      console.log('Formatted Fast Data:', formattedFastData);
+
       
 
       function formatTimeFromSeconds(remainTimeF) {
