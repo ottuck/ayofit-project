@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';  // 또는 사용하는 아이콘 라이브러리
 
-const MealCard = ({ mealType, mealTime, carb, protein, fat, totalCalories, openModal}) => {
+const MealCard1 = ({ mealType, mealTime, carb, protein, fat, totalCalories, openModal}) => {
     return (
         <View style={styles.cardContainer}>
             <View style={styles.cardImageContainer}>
@@ -90,4 +90,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default MealCard;
+export default MealCard1;

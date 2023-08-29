@@ -19,6 +19,7 @@ import DatePicker from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
 import { usePhotoContext } from "../../store/image_context";
+import MealCard2 from "../../components/record/MealCard2";
 
 
 const RecordMain = ({ route, navigation }) => {
@@ -88,10 +89,6 @@ const RecordMain = ({ route, navigation }) => {
     setPickerTime(selectedTime);
     closeModal();
   }
-
-
-  console.log('피커 데이트', pickerDate);
-  console.log('피커 타임', pickerTime);
 
   //pickerDate formatting
   const transformPickerDate = (inputDate) => {
@@ -230,63 +227,16 @@ const RecordMain = ({ route, navigation }) => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.recordScroll}
           >
-            <View style={styles.blurViewBox}>
-              <BlurView>
-                <View style={styles.foodRecordContainer}>
-                  <View style={styles.recordIconContainer}>
-                    {/* true일 때 Ionicons name="heart-sharp"로 분기처리 필요 */}
-                    <TouchableOpacity>
-                      <Ionicons name="heart-outline" style={styles.likeButton} />
-                    </TouchableOpacity>
-                    {/* 삭제 버튼 */}
-                    <TouchableOpacity onPress={{}}>
-                      <AntDesign name="close" style={styles.recordDeleteButton} />
-                    </TouchableOpacity>
-                  </View>
 
-                  <View style={styles.recordMidContainer}>
-                    <View style={styles.textWrapper}>
-                      <Text style={styles.foodName} numberOfLines={1} ellipsizeMode="clip">
-                        {foodInfo[0].nFoodName}
-                      </Text>
-                      <Text style={styles.foodKcal}>
-                        {foodInfo[0].nKcal} Kcal
-                      </Text>
-                    </View>
-                    <TouchableOpacity onPress={showTimepicker}>
-                      <View style={styles.recordTimeContainer}>
-                        <Text style={styles.recordTime1}>
-                          {ampm2 === null ? ampm1 : ampm2}
-                        </Text>
-                        <Text style={styles.recordTime2}>
-                          {formattedPickerTime === null ? currentTime : formattedPickerTime}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={styles.foodNutrientContainer}>
-                    <View style={styles.foodNutrientBox}>
-                      <Text style={styles.foodNutrient}>Carb</Text>
-                      <Text style={styles.foodNutrient}>
-                        {foodInfo[0].nCarbohydrate === null ? "-" : foodInfo[0].nCarbohydrate}
-                      </Text>
-                    </View>
-                    <View style={styles.foodNutrientBox}>
-                      <Text style={styles.foodNutrient}>Protein</Text>
-                      <Text style={styles.foodNutrient}>
-                        {foodInfo[0].nProtein === null ? "-" : foodInfo[0].nProtein}
-                      </Text>
-                    </View>
-                    <View style={styles.foodNutrientBox}>
-                      <Text style={styles.foodNutrient}>Fat</Text>
-                      <Text style={styles.foodNutrient}>
-                        {foodInfo[0].nFat === null ? "-" : foodInfo[0].nFat}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </BlurView>
-            </View>
+            <MealCard2
+              foodInfo={foodInfo}
+              showTimepicker={showTimepicker}
+              formattedPickerTime={formattedPickerTime}
+              ampm2={ampm2}
+              ampm1={ampm1}
+              currentTime={currentTime}
+            />
+
           </ScrollView>
 
           {/* DateTimePicker */}
