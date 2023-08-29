@@ -28,6 +28,10 @@ const SearchModal = ({ modalVisible, closeModal }) => {
   const [list, setList] = useState([]);   //검색어가 포함된 데이터 리스트
 
   useEffect(() => {
+    if (keyword === '') {
+      return; // 초기값일 때는 요청을 보내지 않음
+    }
+
     const getList = () => {
       const query = keyword.trim();
       axios
