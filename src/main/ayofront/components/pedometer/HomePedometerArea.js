@@ -10,7 +10,7 @@ const HomePedometerArea = () => {
   //   console.log("Has recorded today? : " + todayData);
 
   useEffect(() => {
-    console.log("Has recorded today? : " + todayData);
+    // console.log("Has recorded today? : " + todayData);
   }, [todayData]);
 
   const navigation = useNavigation();

@@ -10,7 +10,7 @@ import {
   Dimensions,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DatePicker from "react-native-modern-datepicker";
 import axios from "axios";
 import Constants from "expo-constants";
@@ -30,12 +30,20 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const RecordMain = ({ route, navigation }) => {
-  const { food } = route.params;
+  //전달 받은 음식 정보를 차곡차곡 foodInfos 배열에 저장한다
+  const { foodInfo } = route.params;
+  const [foodInfos, setFoodInfos] = useState([]);
+  useEffect(() => {
+    if (foodInfo) {
+      setFoodInfos((prevFoodInfos) => [...prevFoodInfos, foodInfo]);
+    }
+  }, []);
+  console.log(foodInfos);
 
   //식단 기록 post 요청
   const submitFoodToServer = () => {
     axios
-      .post(`${uri}/api/meal`, food)
+      .post(`${uri}/api/meal`, foodInfo)
       .then((response) => {
         console.log("foodData submitted successfully:", response.data);
       })
@@ -328,9 +336,9 @@ const RecordMain = ({ route, navigation }) => {
                     numberOfLines={1}
                     ellipsizeMode="clip"
                   >
-                    {food[0].nFoodName}
+                    {/* {food[0].nFoodName} */}
                   </Text>
-                  <Text style={styles.foodKcal}>{food[0].nKcal} Kcal</Text>
+                  {/* <Text style={styles.foodKcal}>{food[0].nKcal} Kcal</Text> */}
                 </View>
                 <TouchableOpacity onPress={showTimepicker}>
                   <View style={styles.recordTimeContainer}>
@@ -349,21 +357,21 @@ const RecordMain = ({ route, navigation }) => {
                 <View style={styles.foodNutrientBox}>
                   <Text style={styles.foodNutrient}>Carb</Text>
                   <Text style={styles.foodNutrient}>
-                    {food[0].nCarbohydrate === null
+                    {/* {food[0].nCarbohydrate === null
                       ? "-"
-                      : food[0].nCarbohydrate}
+                      : food[0].nCarbohydrate} */}
                   </Text>
                 </View>
                 <View style={styles.foodNutrientBox}>
                   <Text style={styles.foodNutrient}>Protein</Text>
                   <Text style={styles.foodNutrient}>
-                    {food[0].nProtein === null ? "-" : food[0].nProtein}
+                    {/* {food[0].nProtein === null ? "-" : food[0].nProtein} */}
                   </Text>
                 </View>
                 <View style={styles.foodNutrientBox}>
                   <Text style={styles.foodNutrient}>Fat</Text>
                   <Text style={styles.foodNutrient}>
-                    {food[0].nFat === null ? "-" : food[0].nFat}
+                    {/* {food[0].nFat === null ? "-" : food[0].nFat} */}
                   </Text>
                 </View>
               </View>

@@ -4,8 +4,8 @@ import java.util.Date;
 
 public class FastDTO {
 	
-   private String ConfirmStartTime;
-   private String ConfirmEndTime;
+   private String confirmStartTime;
+   private String confirmEndTime;
    private int elapsedTime;
    
    public FastDTO() {
@@ -14,25 +14,25 @@ public class FastDTO {
 
 public FastDTO(String confirmStartTime, String confirmEndTime, int elapsedTime) {
 	super();
-	ConfirmStartTime = confirmStartTime;
-	ConfirmEndTime = confirmEndTime;
+	this.confirmStartTime = confirmStartTime;
+	this.confirmEndTime = confirmEndTime;
 	this.elapsedTime = elapsedTime;
 }
 
 public String getConfirmStartTime() {
-	return ConfirmStartTime;
+	return confirmStartTime;
 }
 
 public void setConfirmStartTime(String confirmStartTime) {
-	ConfirmStartTime = confirmStartTime;
+	this.confirmStartTime = confirmStartTime;
 }
 
 public String getConfirmEndTime() {
-	return ConfirmEndTime;
+	return confirmEndTime;
 }
 
 public void setConfirmEndTime(String confirmEndTime) {
-	ConfirmEndTime = confirmEndTime;
+	this.confirmEndTime = confirmEndTime;
 }
 
 public int getElapsedTime() {
@@ -45,7 +45,7 @@ public void setElapsedTime(int elapsedTime) {
 
 @Override
 public String toString() {
-	return "FastDTO [ConfirmStartTime=" + ConfirmStartTime + ", ConfirmEndTime=" + ConfirmEndTime + ", elapsedTime="
+	return "FastDTO [confirmStartTime=" + confirmStartTime + ", confirmEndTime=" + confirmEndTime + ", elapsedTime="
 			+ elapsedTime + "]";
 }
 

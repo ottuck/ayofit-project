@@ -35,6 +35,7 @@ const FastDate = ({ onDateChange }) => {
   let currentDay = DateNumber(nowDate.getDate());
   let currentDate = `${currentYear}/${currentMonth}/${currentDay}`;
   let currentDateString = `"${currentYear}-${currentMonth}-${currentDay}"`;
+  console.log(currentDateString)
  
   return (
     <FastDateContainer>

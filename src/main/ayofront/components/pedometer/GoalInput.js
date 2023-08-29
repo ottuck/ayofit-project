@@ -12,6 +12,15 @@ import { GlobalStyles } from "../UI/styles";
 const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
   const [newGoal, setNewGoal] = useState("");
   const [showWarning, setShowWarning] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
 
   const updateGoal = () => {
     if (newGoal.trim() === "") {
@@ -26,10 +35,10 @@ const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
         pStepGoal: parseInt(newGoal),
       })
       .then((response) => {
-        console.log(response.data); // "Step goal updated successfully"
+        console.log(response.data);
         onGoalChange(parseInt(newGoal));
-        setNewGoal(""); // Empty input field
-        setShowWarning(false); // Hide the warning
+        setNewGoal("");
+        setShowWarning(false);
       })
       .catch((error) => {
         console.error("Update Failed:", error);
@@ -40,12 +49,16 @@ const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
     <View style={styles.inputContainer}>
       <TextInput
         style={styles.input}
-        placeholder="Enter your goal"
+        placeholder={isFocused ? "" : "Update your goal"}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         value={newGoal}
         onChangeText={setNewGoal}
         inputMode="numeric"
         keyboardType="numeric"
         maxLength={10}
+        placeholderTextColor={GlobalStyles.colors.primary200}
+        selectionColor={GlobalStyles.colors.donutChartGreen}
       />
       {showWarning && (
         <Text style={styles.warningText}>Set your step target here</Text>
@@ -65,7 +78,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: GlobalStyles.colors.primary500,
     padding: 10,
     width: 200,
   },
@@ -82,7 +95,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   warningText: {
-    color: "red",
+    color: "tomato",
     marginTop: 5,
   },
 });

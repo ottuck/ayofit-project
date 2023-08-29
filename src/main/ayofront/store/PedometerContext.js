@@ -85,16 +85,16 @@ export const PedometerProvider = ({ children }) => {
         .padStart(2, "0")}`;
 
       try {
-        await axios.put(`${uri}/api/pedometer/update-daily-step`, {
+        await axios.put(`${uri}/api/pedometer/update-step-goal`, {
           pId: userId,
           pDate: formattedDate,
           pStepCnt: updatedSteps,
         });
-        console.log("Daily step count updated successfully.");
+        // console.log("Daily step count updated successfully.");
         setSteps(updatedSteps);
         await AsyncStorage.setItem("steps", updatedSteps.toString());
       } catch (error) {
-        console.error("Failed to update daily step count:", error);
+        // console.error("Failed to update daily step count:", error);
       }
     }
   };
@@ -125,7 +125,7 @@ export const PedometerProvider = ({ children }) => {
       })
       .then((response) => {
         const weeklyAchievement = response.data;
-        console.log(response.data);
+        // console.log(response.data);
 
         // Find today's data from weekly achievement
         const todayData = weeklyAchievement.find(
@@ -136,12 +136,12 @@ export const PedometerProvider = ({ children }) => {
         if (todayData) {
           const todayStepGoal = todayData.pStepGoal;
           const todayCurrentStep = todayData.pStepCnt;
-          console.log(`${userId}'s daily initial goal:`, todayStepGoal);
+          // console.log(`${userId}'s daily initial goal:`, todayStepGoal);
           setGoal(todayStepGoal);
           setSteps(todayCurrentStep);
           setTodayData(true);
         } else {
-          console.log("Today's data not found, using existing goal.");
+          // console.log("Today's data not found, using existing goal.");
           setTodayData(false);
         }
 
@@ -163,7 +163,7 @@ export const PedometerProvider = ({ children }) => {
         setDaysAchieved(updatedDaysAchieved);
       })
       .catch((error) => {
-        console.error("Failed to fetch weekly achievement data:", error);
+        // console.error("Failed to fetch weekly achievement data:", error);
       });
   }, []);
 

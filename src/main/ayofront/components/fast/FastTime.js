@@ -56,13 +56,10 @@ const FastTime = ({ onTimeChange }) => {
               textSecondaryColor: '#2c3e50',
               borderColor: 'rgba(122, 146, 165, 0.1)',
             }}
-            current={HourMinutesString}
-            selected={HourMinutesString}
             onTimeChange={handleTimeChange}
             mode="time"
             minuteInterval={1}
             style={styles.timePicker}
-            is24Hour={true}
           />
         </ModalContent2>
       </Modal>
