@@ -14,17 +14,14 @@ import com.app.ayofit.model.GoalDTO;
 
 @Service
 public class AccountDAO {
-	
+
 	@Autowired
 	private AccountMapper aMapper;
-	
-	@Autowired
-	private ResourceLoader resourceLoader;
 
 	public boolean regAccountInfos(String userId, AccountDTO aDTO) {
 		if (aMapper.regAccountInfos(userId, aDTO) == 1) {
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
@@ -32,7 +29,7 @@ public class AccountDAO {
 	public boolean regAccountGoal(String userId, GoalDTO gDTO) {
 		if (aMapper.regAccountGoal(userId, gDTO) == 1) {
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
@@ -58,21 +55,19 @@ public class AccountDAO {
 	}
 
 	public boolean updateAccountInfos(String userId, AccountDTO aDTO) {
-		if(aMapper.updateAccountInfos(userId, aDTO) == 1) {
+		if (aMapper.updateAccountInfos(userId, aDTO) == 1) {
 			return true;
-		}else {
+		} else {
 			return false;
 		}
 	}
 
 	public boolean updateAccountGoal(String userId, GoalDTO gDTO) {
-		if(aMapper.updateAccountGoal(userId, gDTO) == 1) {
+		if (aMapper.updateAccountGoal(userId, gDTO) == 1) {
 			return true;
-		}else {
-			return false; 
+		} else {
+			return false;
 		}
 	}
-	
-	
-	
+
 }

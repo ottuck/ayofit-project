@@ -11,4 +11,9 @@
 		and l_password = #{reqPassword}
 	</select>
 
+	<insert id="setUser">
+		insert into login (l_id, l_email, l_password, l_name)
+		values (#{uuid}, #{reqEmail}, #{reqPassword}, #{reqName})
+	</insert>
+
 </mapper>
