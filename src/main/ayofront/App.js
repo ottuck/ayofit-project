@@ -10,7 +10,7 @@ import { useEffect, useState, useContext } from "react";
 import OnboardingScreen from "./screens/Onboarding";
 import NutriDetailScreen from "./screens/nutriDetail/nutriDetail_test";
 import RecordScreen from "./screens/record/RecordNavigator";
-import FastMainPage from "./screens/fast/FastMainPage";
+import FastRoot from "./navigations/FastRoot";
 import PedometerScreen from "./screens/pedometer/PedometerScreen";
 import AccountInfo from "./screens/account/AccountInfo";
 import AccountNutri from "./screens/account/AccountNutri";
@@ -20,8 +20,10 @@ import AccountsContextProvider from "./store/accounts_context";
 import AccountMain from "./navigations/AccountStack";
 import { PedometerProvider } from "./store/PedometerContext";
 import { PhotoProvider } from "./store/image_context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 import PedometerStack from "./navigations/PedometerStack";
+import LoginStack from "./navigations/LoginStack";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -64,8 +66,8 @@ function MainTabsScreen() {
     >
       <Tab.Screen name="HOME" component={NutriDetailScreen} />
       <Tab.Screen name="DIET RECORD" component={RecordScreen} />
-      <Tab.Screen name="CHALLENGE" component={FastMainPage} />
-      <Tab.Screen name="STEP COUNTER" component={PedometerStack} />
+      <Tab.Screen name="CHALLENGE" component={FastRoot} />
+      <Tab.Screen name="STEP COUNTER" component={PedometerScreen} />
       <Tab.Screen name="MY PAGE" component={AccountMain} />
     </Tab.Navigator>
   );
@@ -83,9 +85,27 @@ export default function App() {
   const imageWidth = width;
   const imageHeight = imageWidth / desiredImageAspectRatio;
 
+  const [userInfo, setUserInfo] = useState();
+
   const handleOnboardingComplete = () => {
     setCompletedOnboarding(true);
   };
+
+  const checkLoginCredentials = () => {
+    AsyncStorage.getItem("@user")
+      .then((result) => {
+        if (result !== null) {
+          setUserInfo(JSON.parse(result));
+        } else {
+          setUserInfo(null);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    checkLoginCredentials();
+  }, []);
 
   if (showOnboarding && !completedOnboarding) {
     return <OnboardingScreen onComplete={handleOnboardingComplete} />;
@@ -118,11 +138,19 @@ export default function App() {
                 component={AccountNutri}
                 options={{ headerShown: false }}
               /> */}
-                  <Stack.Screen
-                    name="MainTabs"
-                    component={MainTabsScreen}
-                    options={{ headerShown: false }}
-                  />
+                  {userInfo ? (
+                    <Stack.Screen
+                      name="MainTabs"
+                      component={MainTabsScreen}
+                      options={{ headerShown: false }}
+                    />
+                  ) : (
+                    <Stack.Screen
+                      name="LoginStack"
+                      component={LoginStack}
+                      options={{ headerShown: false }}
+                    />
+                  )}
                 </Stack.Navigator>
               </PedometerProvider>
             </NavigationContainer>

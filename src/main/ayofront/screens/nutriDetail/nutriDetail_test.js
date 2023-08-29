@@ -94,8 +94,6 @@ function NutriDetailScreen() {
   const today = new Date();
   today.setHours(today.getHours() + 9);
   const formattedToday = formatDate(today); // ex)) "Mon, August 21" 형식
-  // console.log(formattedToday);
-  console.log(today);
 
   return (
     <ScrollView style={{ flex: 1 }} ref={scrollViewRef}>

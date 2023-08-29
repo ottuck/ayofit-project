@@ -7,6 +7,7 @@ export const MainBtn = styled.TouchableOpacity`
  height : 60px;
  align-items: center;
  justify-content: center;
+ margin-bottom: 60px;
 `;
 export const MainText = styled.Text`
  color : black;
@@ -36,19 +37,18 @@ z-index : -1;
 export const MethodScrollView = styled.ScrollView`
 width:100%;
 height:100%;
-background-color: #FFE9D8;
 `;
 export const MethodContainer = styled.View`
 width:100%;
-height:850px;
-
+height:100%;
 `;
 export const MethodTitle = styled.Text`
 font-size: 20px;
 align-self: center;
 color: black;
 bottom: 50px;
-margin-top: 100px;
+margin-top: 70px;
+font-weight: 600;
 `;
 export const MethodCTouch = styled.TouchableOpacity`
 border-radius : 20px;
@@ -102,7 +102,7 @@ right : 30px;
 export const MethodCEndTouch = styled.TouchableOpacity`
 border-radius : 20px;
 background-color: #FFFFFF80;
-height: 70px;
+height: 65px;
 width: 88%;
 margin-top : 50px;
 margin-left : 20px;
@@ -110,12 +110,12 @@ margin-right : 20px;
 margin-bottom : 30px;
 align-items: center;
 justify-content: center;
-bottom: 50px;
+bottom: 60px;
 `;
 //---------------FastPlan(Stack.js)---------------//
 export const PlanContainer = styled.ScrollView`
-background-color: #FFE9D8;
 width: 100%;
+height: 100%;
 `;
 export const PlanTitle = styled.Text`
 font-size: 17px;
@@ -126,7 +126,7 @@ color: black;
 export const PlanMethodText = styled.Text`
 font-size: 18px;
 font-weight : 500;
-margin-top : 50px;
+margin-top : 30px;
 margin-left : 35px;
 line-height : 25px;
 `;
@@ -141,11 +141,12 @@ width: 80%;
 margin-top : 10px;
 margin-left : 40px;
 margin-right : 20px;
-
+flex-direction : row;
 `;
 export const PlanMethodC = styled.Text`
 font-size: 20px;
 color: #505050;
+
 `;
 
 export const PlanEndView = styled.View`
@@ -154,6 +155,7 @@ justify-content: center;
 margin-top : 50px;
 width : 100%;
 height : 100px;
+
 `;
 export const PlanEndText = styled.Text`
 font-size : 20px;
@@ -179,10 +181,8 @@ color : white;
 `;
 //--------------------Confirm(Stack.js)----------------------//
 export const ConfirmScroll = styled.ScrollView`
-flex: 1;
 `;
 export const ConfirmContainer = styled.View`
-background-color: #FFE9D8;
 height: 710px;
 position : relative;
 `;
@@ -191,21 +191,21 @@ export const ConfirmTime = styled.Text`
 align-self: center;
 font-size: 35px;
 color : #E46C0A;
-top: 170px;
+top: 100px;
 margin-right : 10px;
 `;
 export const ConfirmTimeText = styled.Text`
 align-self: center;
 font-size: 15px;
 color : black;
-top: 170px;
+top: 100px;
 margin-right : 10px;
 `;
 export const ConfirmTextM = styled.Text`
 align-self: center;
 font-size: 15px;
 color : black;
-top: 175px;
+top: 105px;
 margin-right : 10px;
 padding : 5px;
 `;
@@ -221,7 +221,7 @@ background-color: #E46C0A;
 height: 50px;
 width: 85%;
 position : absolute;
-bottom : 130px;
+bottom : 100px;
 margin-left : 30px;
 margin-right : 20px;
 align-items: center;
@@ -240,7 +240,7 @@ color : #000000;
 export const ConfirmMView = styled.View`
 justify-content : center;
 align-items: center;
-top:-300px;
+top:-270px;
 `;
 export const ConfirmTView = styled.View`
 align-items: center;
@@ -248,10 +248,10 @@ justify-content: center;
 height: 100%;
 `;
 export const ConfirmStart = styled.View`
-top: -100px;
+top: -130px;
 width: 85%;
 height: 50px;
-background-color : #E46C0A33;
+background-color : #fce1cd;
 border-radius: 20px;
 align-items: center;
 justify-content: center;
@@ -261,11 +261,11 @@ font-size: 18px;
 font-weight : 500;
 `;
 export const ConfirmEnd = styled.View`
-top: -100px;
+top: -130px;
 margin-top : 30px;
 width: 85%;
 height: 50px;
-background-color : #E46C0A33;
+background-color : #fce1cd;
 border-radius: 20px;
 align-items: center;
 justify-content: center;
@@ -276,15 +276,17 @@ font-weight : 500;
 `;
 //--------------------Timer(Stack.js)----------------------//
 export const TimerScrollView = styled.ScrollView`
-flex:1;
-border : 3px solid black;
+background-color: #FFE9D8;
 `;
 
 export const TimerContainer = styled.View`
 align-items: center;
 justify-content: center;
 background-color: #FFE9D8;
-height: 710px;
+height: 730px;
+`;
+export const TimerAddView = styled.View`
+bottom: 50px;
 `;
 export const TimerTitle = styled.Text`
 font-size : 20px;
@@ -300,11 +302,12 @@ height : 50px;
 width : 33%;
 right : -120px;
 margin-bottom : 30px;
+bottom: 50px;
+
 `;
 export const TimerHomeBT = styled.Text`
 font-size : 20px;
 color : black;
-white-space : pre;
 `;
 export const EndTimeText = styled.Text`
 font-size: 20;
@@ -314,6 +317,7 @@ export const TimerMView = styled.View`
 justify-content : center;
 align-items: center;
 
+bottom: 50px;
 `;
 export const TimerStart = styled.View`
 margin-top : 40px;
@@ -323,6 +327,7 @@ background-color : #E46C0A33;
 border-radius: 20px;
 align-items: center;
 justify-content: center;
+
 `;
 export const TimerSText = styled.Text`
 font-size: 18px;
@@ -336,6 +341,7 @@ background-color : #E46C0A33;
 border-radius: 20px;
 align-items: center;
 justify-content: center;
+
 `;
 export const TimerEText = styled.Text`
 font-size: 18px;
@@ -349,10 +355,10 @@ background-color : #723b0e33;
 border-radius: 20px;
 align-items: center;
 justify-content: center;
+
 `;
 //---------------------FastDate.js---------------------//
 export const FastDateContainer = styled.View`
-
 justify-content: center;
 align-items: center;
 `;
@@ -366,6 +372,7 @@ height: 80px;
 export const StartDate = styled.Text`
 font-size: 20px;
 color: #505050;
+margin-top: 15px;
 `;
 export const ModalContent = styled.View`
 background-color: white;
@@ -391,6 +398,7 @@ height: 80px;
 export const StartTime = styled.Text`
 font-size: 20px;
 color: #505050;
+margin-top: 15px;
 `;
 export const ModalContent2 = styled.View`
 background-color: white;
@@ -417,7 +425,6 @@ export const RecordScrollView = styled.ScrollView`
 `;
 export const FastRecordView = styled.View`
 width: 100%;
-height: 100%;
 justify-content : center;
 align-items : center;
 padding-top: 100px;
@@ -427,7 +434,6 @@ border: 3px solid red;
 export const RecordUnderC = styled.View`
 width: 100%;
 height: 100%;
-justify-content : center;
 align-items : center;
 border: 3px solid black;
 `;

@@ -17,8 +17,9 @@ const FastRoot = () => (
       header: ({ navigation: { navigate } }) => (
         <HeaderView
           style={{
-            marginTop: Platform.OS === "ios" ? "8%" : "-5%",
-            marginLeft: "3%",
+            marginTop: Platform.OS === "ios" ? '8%' : '-5%',
+            marginLeft: 10,
+            backgroundColor: 'white',
           }}
         >
           <HeaderTouch onPress={() => navigate("Timer")}>
