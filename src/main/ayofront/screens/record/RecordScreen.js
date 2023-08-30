@@ -10,6 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 import MealCard1 from "../../components/record/MealCard1";
 import SearchModal from "../../components/record/SearchModal";
+import { usePhotoContext } from "../../store/image_context";
 
 function RecordScreen({ route }) {
   //Modal

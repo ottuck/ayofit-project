@@ -15,7 +15,6 @@ import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { BlurView } from "expo-blur";
 import Constants from "expo-constants";
-
 import DatePicker from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
@@ -35,6 +34,19 @@ const RecordMain = ({ route, navigation }) => {
       setFoodInfos((prevFoodInfos) => [...prevFoodInfos, foodInfo]);
     }
   }, [foodInfo]);
+
+  //식단 기록 post 요청
+  const submitFoodToServer = () => {
+    axios
+      .post(`${uri}/api/meal`, foodInfo)
+      .then((response) => {
+        console.log("foodData submitted successfully:", response.data);
+      })
+      .catch(() => {
+        console.log("Error", "Failed to submit");
+      });
+  };
+
   //Modal
   const [modalVisible, setModalVisible] = useState(false);
   const openModal = () => {
