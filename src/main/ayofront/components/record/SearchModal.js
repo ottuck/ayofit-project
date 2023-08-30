@@ -19,7 +19,7 @@ import { useMealContext } from "../../store/MealContext";
 
 const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
   // mealData를 set할 Context
-  const { addMeal } = useMealContext();
+  const { addItemToMealList } = useMealContext();
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -66,13 +66,13 @@ const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
       return;
     }
     if (fromPage === "RecordScreen") {
-      setList(list); //ContextAPI에 저장하고 이동
+      // console.log(foundItem);
+      addItemToMealList(foundItem); //ContextAPI에 저장하고 이동
       navigation.navigate("RecordMain");
     }
     if (fromPage === "RecordMain") {
-      setList(list);
+      addItemToMealList(foundItem);
     }
-
     closeSearchModal();
   };
 

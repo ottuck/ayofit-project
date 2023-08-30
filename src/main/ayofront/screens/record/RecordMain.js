@@ -23,14 +23,7 @@ import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = (route) => {
   const { mealList } = useMealContext();
-  // console.log("컨택스트API => 레코드메인 ", mealList);
-
-  //ContextAPI에 저장 
-  const addItemToMealList = (newItem) => {
-    setMealList((prevMealList) => [...prevMealList, newItem]);
-  };
-
-
+  console.log("컨택스트API => 레코드 메인 ", mealList);
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -294,26 +287,19 @@ const RecordMain = (route) => {
             contentContainerStyle={styles.recordScroll}
           >
             {/* <Text>{mealList[0].nFoodName}</Text> */}
-            {/* {mealList.map((mealInfo, index) => (
+
+            {mealList && mealList.map((mealInfo, index)=> (
               <MealCard2
                 key={index}
-                mealInfo={mealInfo}
+                mealList={mealList}
                 useTimepicker={useTimepicker}
                 formattedCurrentTime={formattedCurrentTime}
                 formattedPickerTime={formattedPickerTime}
                 ampm1={ampm1}
                 ampm2={ampm2}
               />
-            ))} */}
+            ))}
 
-            {/* <MealCard2
-              mealList={mealList}
-              useTimepicker={useTimepicker}
-              formattedCurrentTime={formattedCurrentTime}
-              formattedPickerTime={formattedPickerTime}
-              ampm1={ampm1}
-              ampm2={ampm2}
-            /> */}
           </ScrollView>
 
           {/* DateTimePicker */}

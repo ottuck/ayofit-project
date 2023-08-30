@@ -37,25 +37,25 @@ function RecordScreen({ route }) {
   //   }
   // }, [route.params?.shouldOpenModal]);
 
-  // 로컬에 있는 사진 파일 GET요청
-  const [imgUri, setImgUri] = useState([]);
-  const { photoUri, setPhotoUri } = usePhotoContext();
+  // // 로컬에 있는 사진 파일 GET요청
+  // const [imgUri, setImgUri] = useState([]);
+  // const { photoUri, setPhotoUri } = usePhotoContext();
 
-  const getImg = async () => {
-    await axios
-      .get(`${uri}/api/file/get-image/user2`)
-      .then((response) => {
-        const newImgUris = response.data.map((item) => item.fImg);
-        setImgUri((prevImgUris) => [...prevImgUris, ...newImgUris]);
-      })
-      .catch(() => {
-        console.log("get error..", error);
-      });
-  };
+  // const getImg = async () => {
+  //   await axios
+  //     .get(`${uri}/api/file/get-image/user2`)
+  //     .then((response) => {
+  //       const newImgUris = response.data.map((item) => item.fImg);
+  //       setImgUri((prevImgUris) => [...prevImgUris, ...newImgUris]);
+  //     })
+  //     .catch(() => {
+  //       console.log("get error..", error);
+  //     });
+  // };
 
-  useEffect(() => {
-    getImg();
-  }, []);
+  // useEffect(() => {
+  //   getImg();
+  // }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
