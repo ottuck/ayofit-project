@@ -1,25 +1,27 @@
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
   ImageBackground,
   SafeAreaView,
   ScrollView,
-  TouchableOpacity,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import MealCard1 from "../../components/record/MealCard1";
-import SearchModal from "../../components/record/SearchModal";
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
+import MealCard1 from '../../components/record/MealCard1';
+import SearchModal from '../../components/record/SearchModal';
+import { useMealContext } from '../../store/MealContext';
 import { usePhotoContext } from "../../store/image_context";
 
+
 function RecordScreen({ route }) {
-  //Modal
-  const [modalVisible, setModalVisible] = useState(false);
-  const openModal = () => {
-    setModalVisible(true);
+
+  //Search Modal
+  const [searchModalVisible, setSearchModalVisible] = useState(false);
+  const openSearchModal = () => {
+    setSearchModalVisible(true);
   };
-  const closeModal = () => {
-    setModalVisible(false);
+  const closeSearchModal = () => {
+    setSearchModalVisible(false);
   };
 
   // recordMain.js 에서 보내는 openModal 요청 받기
@@ -67,45 +69,18 @@ function RecordScreen({ route }) {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.cardScroll}
           >
-            <MealCard1
-              mealType="Breakfast"
-              mealTime="10:00"
-              carb="55"
-              protein="16.4"
-              fat="21.5"
-              totalCalories="487"
-              openModal={openModal}
-            />
-            <MealCard1
-              mealType="Lunch"
-              mealTime="10:00"
-              carb="60"
-              protein="18"
-              fat="20"
-              totalCalories="500"
-              openModal={openModal}
-            />
-            <MealCard1
-              mealType="Dinner"
-              mealTime="10:00"
-              carb="65"
-              protein="19"
-              fat="23"
-              totalCalories="550"
-              openModal={openModal}
-            />
-            <MealCard1
-              mealType="Snack"
-              mealTime="10:00"
-              carb="65"
-              protein="19"
-              fat="23"
-              totalCalories="550"
-              openModal={openModal}
-            />
+            <MealCard1 mealType="Breakfast" mealTime="10:00" carb="55" protein="16.4" fat="21.5" totalCalories="487" openSearchModal={openSearchModal} />
+            <MealCard1 mealType="Lunch" mealTime="10:00" carb="60" protein="18" fat="20" totalCalories="500" openSearchModal={openSearchModal} />
+            <MealCard1 mealType="Dinner" mealTime="10:00" carb="65" protein="19" fat="23" totalCalories="550" openSearchModal={openSearchModal} />
+            <MealCard1 mealType="Snack" mealTime="10:00" carb="65" protein="19" fat="23" totalCalories="550" openSearchModal={openSearchModal} />
           </ScrollView>
 
-          <SearchModal modalVisible={modalVisible} closeModal={closeModal} />
+          <SearchModal
+            fromPage="RecordScreen"
+            searchModalVisible={searchModalVisible}
+            closeSearchModal={closeSearchModal}
+          />
+
         </ImageBackground>
       </View>
     </SafeAreaView>

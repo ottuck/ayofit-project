@@ -10,50 +10,40 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-//axios
-import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
 import { BlurView } from "expo-blur";
 import Constants from "expo-constants";
-import DatePicker from "react-native-modern-datepicker";
+import DatePicker, { getToday, getFormatedDate } from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
 import { usePhotoContext } from "../../store/image_context";
-
-//Server 통신을 위한 URI 수정
-const { debuggerHost } = Constants.manifest2.extra.expoGo;
-const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+import { useMealContext } from '../../store/MealContext';
+import SearchModal from "../../components/record/SearchModal";
 import MealCard2 from "../../components/record/MealCard2";
 
-const RecordMain = ({ route, navigation }) => {
-  //전달 받은 음식 정보를 차곡차곡 foodInfos 배열에 저장한다
-  const { foodInfo } = route.params;
-  const [foodInfos, setFoodInfos] = useState([]);
-  useEffect(() => {
-    if (foodInfo) {
-      setFoodInfos((prevFoodInfos) => [...prevFoodInfos, foodInfo]);
-    }
-  }, [foodInfo]);
+
+const RecordMain = (route) => {
+  const { mealList } = useMealContext();
+  // console.log("컨택스트API => 레코드메인 ", mealList);
+
+
+  // 콘솔 로그일때 컨텍스트 ㅁPIdp wkfTKdkslkfor문 돌려보기
+
+  //Server 통신을 위한 URI 수정
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
   //식단 기록 post 요청
-  const submitFoodToServer = () => {
+  const submitMealToServer = () => {
     axios
-      .post(`${uri}/api/meal`, foodInfo)
+      .post(`${uri}/api/meal`, mealList)
       .then((response) => {
-        console.log("foodData submitted successfully:", response.data);
+        console.log("MealData submitted successfully:", response.data);
       })
       .catch(() => {
         console.log("Error", "Failed to submit");
       });
-  };
-
-  //Modal
-  const [modalVisible, setModalVisible] = useState(false);
-  const openModal = () => {
-    setModalVisible(true);
-  };
-  const closeModal = () => {
-    setModalVisible(false);
   };
 
   //ImgModal
@@ -68,6 +58,23 @@ const RecordMain = ({ route, navigation }) => {
     setPhotoUri(null);
   };
 
+  //Search Modal
+  const [searchModalVisible, setSearchModalVisible] = useState(false);
+  const openSearchModal = () => {
+    setSearchModalVisible(true);
+  };
+  const closeSearchModal = () => {
+    setSearchModalVisible(false);
+  };
+
+  //DatePicker Modal
+  const [DatePickerModalVisible, setDatePickerModalVisible] = useState(false);
+  const openDatePickerModal = () => {
+    setDatePickerModalVisible(true);
+  };
+  const closeDatePickerModal = () => {
+    setDatePickerModalVisible(false);
+  };
   // 사진 등록 POST 요청
   const uploadImage = async (imageUri, userId) => {
     const formData = new FormData();
@@ -107,25 +114,29 @@ const RecordMain = ({ route, navigation }) => {
   const [pickerDate, setPickerDate] = useState("");
   const [pickerTime, setPickerTime] = useState("");
 
-  const showDatepicker = () => {
+  const useDatepicker = () => {
     setMode("calendar");
-    openModal();
+    openDatePickerModal();
   };
-  const showTimepicker = () => {
+  const useTimepicker = () => {
     setMode("time");
-    openModal();
+    openDatePickerModal();
   };
   const savePickerDate = (selectedDate) => {
     setPickerDate(selectedDate);
-    closeModal();
-  };
+    closeDatePickerModal();
+  }
   const savePickerTime = (selectedTime) => {
     setPickerTime(selectedTime);
-    closeModal();
-  };
+    closeDatePickerModal();
+  }
 
-  //pickerDate formatting
-  const transformPickerDate = (inputDate) => {
+  //Current Date
+  const currentDate = getFormatedDate(new Date(), "YYYY/MM/DD");
+  const currentTime = getFormatedDate(new Date(), "h:m");
+
+  //change date format
+  const transformDate = (inputDate) => {
     if (!inputDate) {
       return null;
     }
@@ -147,50 +158,32 @@ const RecordMain = ({ route, navigation }) => {
     const monthName = months[parseInt(month, 10) - 1];
     return `${monthName} ${day}, ${year}`;
   };
-  const formattedPickerDate = transformPickerDate(pickerDate);
+  const formattedPickerDate = transformDate(pickerDate);
+  const formattedCurrentDate = transformDate(currentDate);
 
-  //pickerTime formatting
-  const transformPickerDateTime = (inputTime) => {
+  //change time format
+  const transformDateTime = (inputTime) => {
     if (!inputTime) {
-      return { ampm2: null, formattedPickerTime: null };
+      return { ampm: null, formattedTime: null };
     }
     const [hour, minute] = inputTime.split(":");
     const numericHour = parseInt(hour, 10);
-    let ampm2 = "am";
+    let ampm = "AM";
     let formattedHour = numericHour;
-
     if (numericHour >= 12) {
-      ampm2 = "pm";
+      ampm = "PM";
       if (numericHour > 12) {
         formattedHour = numericHour - 12;
       }
     }
     return {
-      ampm2: ampm2.toUpperCase(),
-      formattedPickerTime: `${formattedHour}:${minute}`,
+      ampm: ampm,
+      formattedTime: `${String(formattedHour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
     };
   };
-  const { ampm2, formattedPickerTime } = transformPickerDateTime(pickerTime);
+  const { ampm: ampm2, formattedTime: formattedPickerTime } = transformDateTime(pickerTime);
+  const { ampm: ampm1, formattedTime: formattedCurrentTime } = transformDateTime(currentTime);
 
-  //current date & time => ContextAPI 넣기 고려
-  const today = new Date();
-  const [todayDateUTC, _todayTimeUTC] = today.toISOString().split("T");
-  const [hour, minute] = _todayTimeUTC.split(":");
-  const todayTimeUTC = `${hour}:${minute}`;
-  //current date formatting
-  const formattedDate = today.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-  //current time formatting
-  const koreanTimeInAMPM = today.toLocaleTimeString("en-US", {
-    timeZone: "Asia/Seoul",
-    hour12: true,
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  const [currentTime, ampm1] = koreanTimeInAMPM.split(" ");
 
   //Rendering page
   return (
@@ -200,12 +193,10 @@ const RecordMain = ({ route, navigation }) => {
           source={require("../../images/background-img.png")}
           style={styles.backgroundImage}
         >
-          <TouchableOpacity onPress={showDatepicker}>
+          <TouchableOpacity onPress={useDatepicker}>
             <View style={styles.headerContainer}>
               <Text style={styles.headerTitle}>
-                {formattedPickerDate === null
-                  ? formattedDate
-                  : formattedPickerDate}
+                {formattedPickerDate === null ? formattedCurrentDate : formattedPickerDate}
               </Text>
             </View>
           </TouchableOpacity>
@@ -238,43 +229,43 @@ const RecordMain = ({ route, navigation }) => {
                 visible={imgModalVisible}
                 transparent={true}
               >
-                <View style={styles.modalContainer}>
-                  <View style={{ alignItems: "flex-end" }}>
-                    <TouchableOpacity onPress={toggleImgModal}>
-                      <AntDesign
-                        name="close"
-                        style={styles.imgModalCloseButton}
-                      />
-                    </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ flex: 1 }}
+                  onPress={toggleImgModal} // 모달 바깥을 클릭하면 모달 닫힘
+                >
+                  <View style={styles.modalContainer}>
+                    <View style={{ alignItems: "flex-end" }}>
+                      <TouchableOpacity onPress={toggleImgModal}>
+                        <AntDesign name="close" style={styles.imgModalCloseButton} />
+                      </TouchableOpacity>
+                    </View>
+                    <CameraPicker onClose={toggleImgModal}>
+                      <View style={styles.cameraPickerBox}>
+                        <Feather name="camera" style={styles.cameraImg} />
+                        <Text style={{ fontWeight: 'bold' }}>Take a photo</Text>
+                      </View>
+                    </CameraPicker>
+                    <ImagePicker onClose={toggleImgModal}>
+                      <View style={styles.PhotoPickerBox} >
+                        <Feather name="image" style={styles.galleryImg} />
+                        <Text style={{ fontWeight: 'bold' }}>Photo Gallery</Text>
+                      </View>
+                    </ImagePicker>
                   </View>
-                  <CameraPicker onClose={toggleImgModal}>
-                    <View style={styles.cameraPickerBox}>
-                      <Feather name="camera" style={styles.cameraImg} />
-                      <Text style={{ fontWeight: "bold" }}>Take a photo</Text>
-                    </View>
-                  </CameraPicker>
-                  <ImagePicker onClose={toggleImgModal}>
-                    <View style={styles.PhotoPickerBox}>
-                      <Feather name="image" style={styles.galleryImg} />
-                      <Text style={{ fontWeight: "bold" }}>Photo Gallery</Text>
-                    </View>
-                  </ImagePicker>
-                </View>
-              </Modal>
-            </View>
-          </View>
+                </TouchableOpacity>
+              </Modal >
+            </View >
+          </View >
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("RecordScreen", { shouldOpenModal: true })
-              }
+              onPress={openSearchModal}
             >
               <View style={styles.buttonBox1}>
                 <Text style={styles.buttonText}> Add More </Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={submitFoodToServer}>
+            <TouchableOpacity onPress={submitMealToServer}>
               <View style={styles.buttonBox2}>
                 <Text style={styles.buttonText}> Save </Text>
               </View>
@@ -285,270 +276,293 @@ const RecordMain = ({ route, navigation }) => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.recordScroll}
           >
-            <MealCard2
-              foodInfo={foodInfo}
-              showTimepicker={showTimepicker}
+            {/* <Text>{mealList[0].nFoodName}</Text> */}
+            {
+              mealList.map((mealInfo, index) => (
+                <MealCard2
+                  key={index}
+                  mealInfo={mealInfo}
+                  useTimepicker={useTimepicker}
+                  formattedCurrentTime={formattedCurrentTime}
+                  formattedPickerTime={formattedPickerTime}
+                  ampm1={ampm1}
+                  ampm2={ampm2}
+                />
+              ))
+            }
+
+            {/* <MealCard2
+              mealList={mealList}
+              useTimepicker={useTimepicker}
+              formattedCurrentTime={formattedCurrentTime}
               formattedPickerTime={formattedPickerTime}
-              ampm2={ampm2}
               ampm1={ampm1}
-              currentTime={currentTime}
-            />
-          </ScrollView>
+              ampm2={ampm2}
+            /> */}
+          </ScrollView >
 
           {/* DateTimePicker */}
-          <Modal
+          < Modal
             animationType="slide"
-            visible={modalVisible}
+            visible={DatePickerModalVisible}
             transparent={true}
           >
             <View style={{ marginTop: "50%" }}>
-              <TouchableOpacity onPress={closeModal}>
+              <TouchableOpacity onPress={closeDatePickerModal}>
                 <AntDesign name="close" style={styles.modalCloseButton} />
               </TouchableOpacity>
               <DatePicker
                 style={styles.datePicker}
                 mode={mode}
                 minuteInterval={10}
-                onTimeChange={savePickerTime}
+                selected={getToday()}
                 selectorStartingYear={2023}
                 onDateChange={savePickerDate}
-                selected={todayDateUTC}
+                onTimeChange={savePickerTime}
               />
             </View>
-          </Modal>
-        </ImageBackground>
-      </View>
-    </SafeAreaView>
+          </Modal >
+
+          {/* SearchModal */}
+          < SearchModal
+            fromPage="RecordMain"
+            searchModalVisible={searchModalVisible}
+            closeSearchModal={closeSearchModal}
+          />
+
+        </ImageBackground >
+      </View >
+    </SafeAreaView >
   );
 };
 
 export default RecordMain;
 
-const styles = StyleSheet.create({
-  safeArea: {
-    backgroundColor: "#E46C0A",
-  },
-  container: {
-    backgroundColor: "#FFE9D8",
-  },
-  backgroundImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  //해더
-  headerContainer: {
-    alignSelf: "center",
-    top: 20,
-    marginVertical: 10,
-  },
-  headerTitle: {
-    fontSize: 24,
-    color: "white",
-    fontWeight: "bold",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 0,
-  },
-  //사진 등록 창
-  cardContainer: {
-    alignSelf: "center",
-    width: 290,
-    height: 240,
-    marginVertical: 30,
-    backgroundColor: "white",
-    borderRadius: 15,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 0,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  cardImageContainer: {
-    width: 280,
-    height: 230,
-    backgroundColor: "rgba(0, 0, 0, 0.10)",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  plusIcon: {
-    fontSize: 40,
-    color: "rgba(0, 0, 0, 0.10)",
-  },
-  photoDeleteButton: {
-    fontSize: 30,
-    color: "rgba(0, 0, 0, 0.5)",
-    position: "absolute",
-    left: 120,
-    bottom: -15,
-  },
-  //ImagePicker
-  modalContainer: {
-    top: "21%",
-    left: "29%",
-    backgroundColor: "rgba(255, 233, 216, 1)",
-    padding: 15,
-    borderRadius: 10,
-    width: 180,
-    height: 120,
-  },
-  modalBtn: {
-    flexDirection: "row",
-  },
-  imgModalCloseButton: {
-    fontSize: 20,
-    color: "rgb(228,108,10)",
-  },
-  cameraImg: {
-    marginHorizontal: "5%",
-    fontSize: 24,
-  },
-  cameraPickerBox: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  galleryImg: {
-    marginHorizontal: 5,
-    fontSize: 26,
-  },
-  PhotoPickerBox: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  //추가, 확인 버튼
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  buttonBox1: {
-    height: 40,
-    width: 160,
-    borderRadius: 20,
-    backgroundColor: "#FFB172",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 10,
-  },
-  buttonBox2: {
-    height: 40,
-    width: 160,
-    borderRadius: 20,
-    backgroundColor: "rgb(250, 71, 71)",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 10,
-  },
-  buttonText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "white",
-  },
-  //식단 기록 컨테이너
-  recordScroll: {
-    alignItems: "center",
-  },
-  blurViewBox: {
-    overflow: "hidden",
-    borderRadius: 20,
-    marginVertical: 20,
-  },
-  foodRecordContainer: {
-    alignSelf: "center",
-    width: 350,
-    padding: 15,
-    backgroundColor: "rgba(255,255,255,0.6)",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 0,
-  },
-  recordMidContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-end",
-    marginVertical: 5,
-  },
-  recordTimeContainer: {
-    flexDirection: "row",
-    alignItems: "baseline",
-  },
-  recordTime1: {
-    color: "#E46C0A",
-    fontWeight: "bold",
-    fontSize: 20,
-    marginHorizontal: 4,
-  },
-  recordTime2: {
-    color: "#E46C0A",
-    fontWeight: "bold",
-    fontSize: 34,
-  },
-  textWrapper: {
-    width: "55%",
-    overflow: "hidden",
-  },
-  foodName: {
-    fontWeight: "bold",
-    fontSize: 16,
-    marginVertical: 2,
-  },
-  foodKcal: {
-    fontWeight: "bold",
-    fontSize: 16,
-    marginVertical: 2,
-  },
-  foodNutrientContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  foodNutrientBox: {
-    width: 100,
-    height: 50,
-    marginTop: 15,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 20,
-    backgroundColor: "rgba(0, 0, 0, 0.05)",
-  },
-  foodNutrient: {
-    fontWeight: "bold",
-    fontSize: 15,
-    marginVertical: 2,
-  },
-  //하트, 삭제 버튼
-  recordIconContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  likeButton: {
-    fontSize: 23,
-    color: "#E46C0A",
-  },
-  recordDeleteButton: {
-    fontSize: 23,
-    color: "rgba(0, 0, 0, 0.3)",
-  },
-  //TimePicker
-  datePicker: {
-    borderRadius: 30,
-  },
-  modalCloseButton: {
-    left: "90%",
-    fontSize: 25,
-    color: "rgba(0, 0, 0, 0.3)",
-  },
-});
+  const styles = StyleSheet.create({
+    safeArea: {
+      backgroundColor: "#E46C0A",
+    },
+    container: {
+      backgroundColor: "#FFE9D8",
+    },
+    backgroundImage: {
+      width: "100%",
+      height: "100%",
+      resizeMode: "cover",
+    },
+    //해더
+    headerContainer: {
+      alignSelf: "center",
+      top: 20,
+      marginVertical: 10,
+    },
+    headerTitle: {
+      fontSize: 24,
+      color: "white",
+      fontWeight: "bold",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+      elevation: 0,
+    },
+    //사진 등록 창
+    cardContainer: {
+      alignSelf: "center",
+      width: 290,
+      height: 240,
+      marginVertical: 30,
+      backgroundColor: "white",
+      borderRadius: 15,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+      elevation: 0,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    cardImageContainer: {
+      width: 280,
+      height: 230,
+      backgroundColor: "rgba(0, 0, 0, 0.10)",
+      borderRadius: 10,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    plusIcon: {
+      fontSize: 40,
+      color: "rgba(0, 0, 0, 0.10)",
+    },
+    photoDeleteButton: {
+      fontSize: 30,
+      color: "rgba(0, 0, 0, 0.5)",
+      position: "absolute",
+      left: 120,
+      bottom: -15,
+    },
+    //ImagePicker
+    modalContainer: {
+      top: "21%",
+      left: "29%",
+      backgroundColor: "rgba(255, 233, 216, 1)",
+      padding: 15,
+      borderRadius: 10,
+      width: 180,
+      height: 120,
+    },
+    modalBtn: {
+      flexDirection: "row",
+    },
+    imgModalCloseButton: {
+      fontSize: 20,
+      color: "rgb(228,108,10)",
+    },
+    cameraImg: {
+      marginHorizontal: "5%",
+      fontSize: 24,
+    },
+    cameraPickerBox: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 10,
+    },
+    galleryImg: {
+      marginHorizontal: 5,
+      fontSize: 26,
+    },
+    PhotoPickerBox: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    //추가, 확인 버튼
+    buttonContainer: {
+      flexDirection: "row",
+      justifyContent: "center",
+    },
+    buttonBox1: {
+      height: 40,
+      width: 160,
+      borderRadius: 20,
+      backgroundColor: "#FFB172",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+      elevation: 0,
+      justifyContent: "center",
+      alignItems: "center",
+      marginHorizontal: 10,
+    },
+    buttonBox2: {
+      height: 40,
+      width: 160,
+      borderRadius: 20,
+      backgroundColor: "rgb(250, 71, 71)",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+      elevation: 0,
+      justifyContent: "center",
+      alignItems: "center",
+      marginHorizontal: 10,
+    },
+    buttonText: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: "white",
+    },
+    recordScroll: {
+      alignItems: "center",
+    },
+    //TimePicker
+    blurViewBox: {
+      overflow: "hidden",
+      borderRadius: 20,
+      marginVertical: 20,
+    },
+    foodRecordContainer: {
+      alignSelf: "center",
+      width: 350,
+      padding: 15,
+      backgroundColor: "rgba(255,255,255,0.6)",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+      elevation: 0,
+    },
+    recordMidContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "flex-end",
+      marginVertical: 5,
+    },
+    recordTimeContainer: {
+      flexDirection: "row",
+      alignItems: "baseline",
+    },
+    recordTime1: {
+      color: "#E46C0A",
+      fontWeight: "bold",
+      fontSize: 20,
+      marginHorizontal: 4,
+    },
+    recordTime2: {
+      color: "#E46C0A",
+      fontWeight: "bold",
+      fontSize: 34,
+    },
+    textWrapper: {
+      width: "55%",
+      overflow: "hidden",
+    },
+    foodName: {
+      fontWeight: "bold",
+      fontSize: 16,
+      marginVertical: 2,
+    },
+    foodKcal: {
+      fontWeight: "bold",
+      fontSize: 16,
+      marginVertical: 2,
+    },
+    foodNutrientContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    foodNutrientBox: {
+      width: 100,
+      height: 50,
+      marginTop: 15,
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 20,
+      backgroundColor: "rgba(0, 0, 0, 0.05)",
+    },
+    foodNutrient: {
+      fontWeight: "bold",
+      fontSize: 15,
+      marginVertical: 2,
+    },
+    //하트, 삭제 버튼
+    recordIconContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    likeButton: {
+      fontSize: 23,
+      color: "#E46C0A",
+    },
+    recordDeleteButton: {
+      fontSize: 23,
+      color: "rgba(0, 0, 0, 0.3)",
+    },
+    //TimePicker
+    datePicker: {
+      borderRadius: 30,
+    },
+    modalCloseButton: {
+      left: "90%",
+      fontSize: 25,
+      color: "rgba(0, 0, 0, 0.3)",
+    },
+  });
