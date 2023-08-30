@@ -3,7 +3,7 @@ export const FoodCaloriesData = {
     calories: 4,
     weight: 3,
     portion: "1 piece",
-    image: require("../../assets/pedometer-analysis/mango.png"),
+    image: require("../../assets/pedometer-analysis/green_olive.png"),
   },
   fig: {
     calories: 30,

@@ -117,7 +117,7 @@ const DetailsComponent = () => {
     axios
       .get(`${uri}/api/weights/daily/${rId}/${formattedToday}`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setDailyWeightData(response.data.reverse());
       })
       .catch((error) => {
@@ -133,7 +133,7 @@ const DetailsComponent = () => {
     axios
       .get(`${uri}/api/weights/weekly-averages/${rId}/${formattedToday}`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setWeeklyData(response.data.reverse());
       })
       .catch((error) => {
@@ -149,7 +149,7 @@ const DetailsComponent = () => {
     axios
       .get(`${uri}/api/weights/monthly-averages/${rId}/${formattedToday}`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setMonthlyData(response.data.reverse());
       })
       .catch((error) => {

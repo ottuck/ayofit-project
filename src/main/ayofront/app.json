@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "ayofront",
-    "slug": "ayofront",
+    "name": "Ayofit",
+    "slug": "ayofit",
+    "scheme": "ayofit",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./images/ayofit-icon.png",
@@ -11,15 +12,22 @@
       "resizeMode": "contain",
       "backgroundColor": "#FFB172"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.app.ayofit"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./images/ayofit-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.app.ayofit"
     },
     "web": {
       "favicon": "./images/ayofit-favicon.png"

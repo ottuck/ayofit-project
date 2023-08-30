@@ -37,7 +37,6 @@ public class AccountController {
 	
 	@GetMapping("/{userId}/goal")
 	public GoalDTO getAccountGoals(@PathVariable String userId) {
-		System.out.println(userId);
 		return aDAO.getAccountGoals(userId);
 	}
 	
