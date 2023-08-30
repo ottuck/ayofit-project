@@ -75,9 +75,6 @@ const RecordMain = () => {
   const [pickerDate, setPickerDate] = useState("");
   const [pickerTime, setPickerTime] = useState("");
 
-  //Current Date
-  console.log(getFormatedDate(new Date(), "YYYY/MM/DD h:m"));
-
   const useDatepicker = () => {
     setMode("calendar");
     openDatePickerModal();
@@ -95,8 +92,12 @@ const RecordMain = () => {
     closeDatePickerModal();
   }
 
-  //pickerDate formatting
-  const transformPickerDate = (inputDate) => {
+  //Current Date
+  const currentDate = getFormatedDate(new Date(), "YYYY/MM/DD");
+  const currentTime = getFormatedDate(new Date(), "h:m");
+
+  //change date format
+  const transformDate = (inputDate) => {
     if (!inputDate) {
       return null;
     }
@@ -105,48 +106,37 @@ const RecordMain = () => {
     const monthName = months[parseInt(month, 10) - 1];
     return `${monthName} ${day}, ${year}`;
   };
-  const formattedPickerDate = transformPickerDate(pickerDate);
+  const formattedPickerDate = transformDate(pickerDate);
+  const formattedCurrentDate = transformDate(currentDate);
 
-  //pickerTime formatting
-  const transformPickerDateTime = (inputTime) => {
+  //change time format
+  const transformDateTime = (inputTime) => {
     if (!inputTime) {
-      return { ampm2: null, formattedPickerTime: null };
+      return { ampm: null, formattedTime: null };
     }
+
     const [hour, minute] = inputTime.split(":");
     const numericHour = parseInt(hour, 10);
-    let ampm2 = "am";
+    let ampm = "AM";
     let formattedHour = numericHour;
 
     if (numericHour >= 12) {
-      ampm2 = "pm";
+      ampm = "PM";
       if (numericHour > 12) {
         formattedHour = numericHour - 12;
       }
     }
+
     return {
-      ampm2: ampm2.toUpperCase(),
-      formattedPickerTime: `${formattedHour}:${minute}`,
+      ampm: ampm,
+      formattedTime: `${String(formattedHour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
     };
   };
-  const { ampm2, formattedPickerTime } = transformPickerDateTime(pickerTime);
+  const { ampm: ampm2, formattedTime: formattedPickerTime } = transformDateTime(pickerTime);
+  const { ampm: ampm1, formattedTime: formattedCurrentTime } = transformDateTime(currentTime);
 
 
-  //current date & time => ContextAPI 넣기 고려 
-  const today = new Date();
-  const [todayDateUTC, _todayTimeUTC] = today.toISOString().split('T');
-  const [hour, minute] = _todayTimeUTC.split(':');
-  const todayTimeUTC = `${hour}:${minute}`;
-  //current date formatting
-  const formattedDate = today.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-  //current time formatting
-  const koreanTimeInAMPM = today.toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hour: '2-digit', minute: '2-digit' });
-  const [currentTime, ampm1] = koreanTimeInAMPM.split(' ');
-
-
+  
   //Rendering page
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -158,7 +148,7 @@ const RecordMain = () => {
           <TouchableOpacity onPress={useDatepicker}>
             <View style={styles.headerContainer}>
               <Text style={styles.headerTitle}>
-                {formattedPickerDate === null ? formattedDate : formattedPickerDate}
+                {formattedPickerDate === null ? formattedCurrentDate : formattedPickerDate}
               </Text>
             </View>
           </TouchableOpacity>
@@ -221,10 +211,6 @@ const RecordMain = () => {
 
           <View style={styles.buttonContainer}>
 
-            {/* <TouchableOpacity
-              onPress={() => navigation.navigate('RecordScreen', { shouldOpenModal: true })}
-            > */}
-
             <TouchableOpacity
               onPress={openSearchModal}
             >
@@ -247,10 +233,10 @@ const RecordMain = () => {
             <MealCard2
               mealList={mealList}
               useTimepicker={useTimepicker}
+              formattedCurrentTime={formattedCurrentTime}
               formattedPickerTime={formattedPickerTime}
-              ampm2={ampm2}
               ampm1={ampm1}
-              currentTime={currentTime}
+              ampm2={ampm2}
             />
           </ScrollView>
 

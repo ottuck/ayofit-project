@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 
-const MealCard2 = ({ useTimepicker, formattedPickerTime, ampm2, ampm1, currentTime, mealList }) => {
+const MealCard2 = ({ useTimepicker, formattedCurrentTime, formattedPickerTime, ampm1, ampm2, mealList }) => {
+
   return (
     <View style={styles.blurViewBox}>
       <BlurView>
@@ -32,12 +33,12 @@ const MealCard2 = ({ useTimepicker, formattedPickerTime, ampm2, ampm1, currentTi
                   {ampm2 === null ? ampm1 : ampm2}
                 </Text>
                 <Text style={styles.recordTime2}>
-                  {formattedPickerTime === null ? currentTime : formattedPickerTime}
+                  {formattedPickerTime === null ? formattedCurrentTime : formattedPickerTime}
                 </Text>
               </View>
             </TouchableOpacity>
           </View>
-          
+
           <View style={styles.foodNutrientContainer}>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Carb</Text>

@@ -23,14 +23,6 @@ function RecordScreen({ route }) {
     setSearchModalVisible(false);
   };
 
-  // recordMain.js 에서 보내는 openSearchModal 요청 받기
-  // useEffect(() => {
-  //   if (route.params?.shouldOpenModal) {
-  //     openSearchModal();
-  //     route.params.shouldOpenModal = false;
-  //   }
-  // }, [route.params?.shouldOpenModal]);
-
   //Rending page
   return (
     <SafeAreaView style={styles.safeArea}>
