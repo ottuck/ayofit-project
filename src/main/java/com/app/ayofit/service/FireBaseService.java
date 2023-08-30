@@ -1,4 +1,4 @@
-package com.app.ayofit.controller;
+package com.app.ayofit.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class FireBaseService {
 	@Value("${app.firebase-configuration-file}")
 	private String firebaseConfigPath;
 	
-	public String uploadFiles(MultipartFile file, String userId) throws IOException {
+	public String uploadFiles(MultipartFile file, String userId, String mealType) throws IOException {
 		
 		
 		Bucket bucket = StorageClient.getInstance().bucket(firebaseBucket);
@@ -37,7 +37,7 @@ public class FireBaseService {
 		Blob blob = bucket.create(uuid, content, file.getContentType());
 		// uuid , userid
 		uuid = "https://firebasestorage.googleapis.com/v0/b/ayofit-57ea5.appspot.com/o/" + uuid + "?alt=media";
-		fileMapper.saveFile(uuid, userId);
+		fileMapper.saveFile(uuid, userId,mealType);
 	    return uuid;
 		
 		
