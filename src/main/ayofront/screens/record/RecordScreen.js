@@ -1,36 +1,41 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   ImageBackground,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
-  View
-} from 'react-native';
-import MealCard1 from '../../components/record/MealCard1';
-import SearchModal from '../../components/record/SearchModal';
-import { useMealContext } from '../../store/MealContext';
+  View,
+} from "react-native";
+import MealCard1 from "../../components/record/MealCard1";
+import SearchModal from "../../components/record/SearchModal";
+import { useMealContext } from "../../store/MealContext";
 import { usePhotoContext } from "../../store/image_context";
 
-
 function RecordScreen({ route }) {
-
   //Search Modal
   const [searchModalVisible, setSearchModalVisible] = useState(false);
   const openSearchModal = () => {
     setSearchModalVisible(true);
   };
+
+  // mealType 카드별로 받아서 set
+  const { updateMealType } = useMealContext();
+  const setMealType = (mealType) => {
+    updateMealType(mealType);
+  };
+
   const closeSearchModal = () => {
     setSearchModalVisible(false);
   };
 
-  // recordMain.js 에서 보내는 openModal 요청 받기
-  useEffect(() => {
-    if (route.params?.shouldOpenModal) {
-      openModal();
-      route.params.shouldOpenModal = false;
-    }
-  }, [route.params?.shouldOpenModal]);
+  // // recordMain.js 에서 보내는 openModal 요청 받기
+  // useEffect(() => {
+  //   if (route.params?.shouldOpenModal) {
+  //     openModal();
+  //     route.params.shouldOpenModal = false;
+  //   }
+  // }, [route.params?.shouldOpenModal]);
 
   // 로컬에 있는 사진 파일 GET요청
   const [imgUri, setImgUri] = useState([]);
@@ -69,10 +74,54 @@ function RecordScreen({ route }) {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.cardScroll}
           >
-            <MealCard1 mealType="Breakfast" mealTime="10:00" carb="55" protein="16.4" fat="21.5" totalCalories="487" openSearchModal={openSearchModal} />
-            <MealCard1 mealType="Lunch" mealTime="10:00" carb="60" protein="18" fat="20" totalCalories="500" openSearchModal={openSearchModal} />
-            <MealCard1 mealType="Dinner" mealTime="10:00" carb="65" protein="19" fat="23" totalCalories="550" openSearchModal={openSearchModal} />
-            <MealCard1 mealType="Snack" mealTime="10:00" carb="65" protein="19" fat="23" totalCalories="550" openSearchModal={openSearchModal} />
+            <MealCard1
+              mealType="Breakfast"
+              mealTime="10:00"
+              carb="55"
+              protein="16.4"
+              fat="21.5"
+              totalCalories="487"
+              openSearchModal={() => {
+                openSearchModal();
+                setMealType("breakfast");
+              }}
+            />
+            <MealCard1
+              mealType="Lunch"
+              mealTime="10:00"
+              carb="60"
+              protein="18"
+              fat="20"
+              totalCalories="500"
+              openSearchModal={() => {
+                openSearchModal();
+                setMealType("lunch");
+              }}
+            />
+            <MealCard1
+              mealType="Dinner"
+              mealTime="10:00"
+              carb="65"
+              protein="19"
+              fat="23"
+              totalCalories="550"
+              openSearchModal={() => {
+                openSearchModal();
+                setMealType("dinner");
+              }}
+            />
+            <MealCard1
+              mealType="Snack"
+              mealTime="10:00"
+              carb="65"
+              protein="19"
+              fat="23"
+              totalCalories="550"
+              openSearchModal={() => {
+                openSearchModal();
+                setMealType("snack");
+              }}
+            />
           </ScrollView>
 
           <SearchModal
@@ -80,7 +129,6 @@ function RecordScreen({ route }) {
             searchModalVisible={searchModalVisible}
             closeSearchModal={closeSearchModal}
           />
-
         </ImageBackground>
       </View>
     </SafeAreaView>
