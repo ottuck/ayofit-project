@@ -15,10 +15,9 @@ import { FontAwesome5 } from "@expo/vector-icons";
 //axios
 import axios from "axios";
 import Constants from "expo-constants";
+import { useMealContext } from "../../store/MealContext";
 
-const SearchModal = ({ modalVisible, closeModal }) => {
-  const navigation = useNavigation();
-
+const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
   //Server 통신을 위한 URI 수정
   const uri = "http://213.35.96.167/";
 
@@ -28,7 +27,7 @@ const SearchModal = ({ modalVisible, closeModal }) => {
 
   useEffect(() => {
     if (keyword === "") {
-      return; // 초기값일 때는 요청을 보내지 않음
+      return; // 초기값일때(=페이지에 들어왔을때)는 요청을 보내지 않음
     }
 
     const getList = () => {
@@ -43,7 +42,7 @@ const SearchModal = ({ modalVisible, closeModal }) => {
 
     const debounce = setTimeout(() => {
       getList();
-    }, 200); //keyword가 입력되고 0.x초 후 실행되게 지연시킴
+    }, 100); //keyword가 입력되고 0.x초 후 실행되게 지연시킴
 
     return () => {
       clearTimeout(debounce);
@@ -51,17 +50,27 @@ const SearchModal = ({ modalVisible, closeModal }) => {
   }, [keyword]);
 
   //최종 검색어 제출, Validation : keyword와 list의 값이 일치하지 않으면 제출못하게 막고 error 표시
+  const { setMealList } = useMealContext();
+  const navigation = useNavigation();
   const [error, setError] = useState("");
+
   const submitSearchResult = () => {
     const foundItem = list.find(
       (item) => item.nFoodName.trim() === keyword.trim()
     );
-    if (!foundItem || "") {
-      setError("리스트에서 음식을 고른 후 제출해주세요🥹");
+    if (!foundItem) {
+      setError("Please select the food on the list🥹");
       return;
     }
-    navigation.push("RecordMain", { foodInfo: list });
-    closeModal();
+    if (fromPage === "RecordScreen") {
+      setMealList(list); //ContextAPI에 저장하고 이동
+      navigation.navigate("RecordMain");
+    }
+    if (fromPage === "RecordMain") {
+      setMealList(list);
+    }
+
+    closeSearchModal();
   };
 
   //검색어 하이라이트 색상 적용
@@ -83,14 +92,21 @@ const SearchModal = ({ modalVisible, closeModal }) => {
   };
 
   return (
-    <Modal animationType="slide" visible={modalVisible} transparent={true}>
+    <Modal
+      animationType="slide"
+      visible={searchModalVisible}
+      transparent={true}
+    >
       <BlurView style={{ flex: 1 }}>
         <View style={styles.modalScreen}>
-          <TouchableOpacity onPress={closeModal}>
+          <TouchableOpacity onPress={closeSearchModal}>
             <AntDesign name="close" style={styles.modalCloseButton} />
           </TouchableOpacity>
           <View style={styles.modalSearchContainer}>
-            <TouchableOpacity onPress={submitSearchResult}>
+            <TouchableOpacity
+              onPress={submitSearchResult}
+              style={{ zIndex: 1 }}
+            >
               <FontAwesome5 name="search" style={styles.modalSearchButton} />
             </TouchableOpacity>
             <View style={styles.modalTextInputBox}>
@@ -104,7 +120,7 @@ const SearchModal = ({ modalVisible, closeModal }) => {
                 onSubmitEditing={submitSearchResult}
                 onFocus={() => setError("")}
               />
-              <Text style={{ color: "red", fontWeight: "bold" }}>{error}</Text>
+              <Text style={styles.errorMSG}>{error}</Text>
             </View>
             <TouchableOpacity onPress={() => setKeyword("")}>
               <AntDesign name="closecircleo" style={styles.clearButton} />
@@ -164,6 +180,11 @@ const styles = StyleSheet.create({
     width: "80%",
     height: 45,
     fontSize: 16,
+  },
+  errorMSG: {
+    color: "red",
+    fontWeight: "bold",
+    right: 10,
   },
   modalSearchButton: {
     fontSize: 20,

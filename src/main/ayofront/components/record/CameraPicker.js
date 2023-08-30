@@ -4,12 +4,9 @@ import {
   useCameraPermissions,
 } from "expo-image-picker";
 import { Alert, TouchableOpacity } from "react-native";
-import Constants from "expo-constants";
 import { usePhotoContext } from "../../store/image_context";
 
 function CameraPicker({ children, onClose }) {
-  const uri = "http://213.35.96.167/";
-
   const { setPhotoUri } = usePhotoContext();
   const [cameraPermissionInformation, requestPermission] =
     useCameraPermissions();
@@ -46,36 +43,11 @@ function CameraPicker({ children, onClose }) {
     });
 
     if (!image.canceled) {
-      console.log(image.assets[0].uri);
       setPhotoUri(image.assets[0].uri);
       onClose();
-      uploadImage(image.assets[0].uri);
     }
   }
 
-  const uploadImage = async (imageUri) => {
-    const formData = new FormData();
-    formData.append("image", {
-      uri: imageUri,
-      name: "image.jpg",
-      type: "image/jpeg",
-    });
-
-    try {
-      const response = await fetch(uri + "/api/file/upload-image", {
-        method: "POST",
-        body: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      const responseData = await response.json();
-      console.log(responseData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
   return (
     <TouchableOpacity onPress={takeImageHandler}>{children}</TouchableOpacity>
   );

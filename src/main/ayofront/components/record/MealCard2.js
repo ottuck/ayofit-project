@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 
-const MealCard2 = ({ foodInfo, showTimepicker, formattedPickerTime, ampm2, ampm1, currentTime }) => {
+const MealCard2 = ({ useTimepicker, formattedCurrentTime, formattedPickerTime, ampm1, ampm2, mealInfo }) => {
+
   return (
     <View style={styles.blurViewBox}>
       <BlurView>
@@ -20,41 +21,41 @@ const MealCard2 = ({ foodInfo, showTimepicker, formattedPickerTime, ampm2, ampm1
           <View style={styles.recordMidContainer}>
             <View style={styles.textWrapper}>
               <Text style={styles.foodName} numberOfLines={1} ellipsizeMode="clip">
-                {foodInfo[0].nFoodName}
+                {/* {mealInfo[0].nFoodName} */}
               </Text>
               <Text style={styles.foodKcal}>
-                {foodInfo[0].nKcal} Kcal
+                {/* {mealInfo[0].nKcal} Kcal */}
               </Text>
             </View>
-            <TouchableOpacity onPress={showTimepicker}>
+            <TouchableOpacity onPress={useTimepicker}>
               <View style={styles.recordTimeContainer}>
                 <Text style={styles.recordTime1}>
                   {ampm2 === null ? ampm1 : ampm2}
                 </Text>
                 <Text style={styles.recordTime2}>
-                  {formattedPickerTime === null ? currentTime : formattedPickerTime}
+                  {formattedPickerTime === null ? formattedCurrentTime : formattedPickerTime}
                 </Text>
               </View>
             </TouchableOpacity>
           </View>
-          
+
           <View style={styles.foodNutrientContainer}>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Carb</Text>
               <Text style={styles.foodNutrient}>
-                {foodInfo[0].nCarbohydrate === null ? "-" : foodInfo[0].nCarbohydrate}
+                {/* {mealInfo[0].nCarbohydrate === null ? "-" : mealInfo[0].nCarbohydrate} */}
               </Text>
             </View>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Protein</Text>
               <Text style={styles.foodNutrient}>
-                {foodInfo[0].nProtein === null ? "-" : foodInfo[0].nProtein}
+                {/* {mealInfo[0].nProtein === null ? "-" : mealInfo[0].nProtein} */}
               </Text>
             </View>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Fat</Text>
               <Text style={styles.foodNutrient}>
-                {foodInfo[0].nFat === null ? "-" : foodInfo[0].nFat}
+                {/* {mealInfo[0].nFat === null ? "-" : mealInfo[0].nFat} */}
               </Text>
             </View>
           </View>
@@ -66,13 +67,10 @@ const MealCard2 = ({ foodInfo, showTimepicker, formattedPickerTime, ampm2, ampm1
 
 const styles = StyleSheet.create({
   //식단 기록 컨테이너
-  recordScroll: {
-    alignItems: "center",
-  },
   blurViewBox: {
     overflow: 'hidden',
     borderRadius: 20,
-    marginVertical: 20,
+    marginTop: 20,
   },
   foodRecordContainer: {
     alignSelf: 'center',
@@ -149,6 +147,7 @@ const styles = StyleSheet.create({
     fontSize: 23,
     color: "rgba(0, 0, 0, 0.3)",
   },
+
 });
 
 

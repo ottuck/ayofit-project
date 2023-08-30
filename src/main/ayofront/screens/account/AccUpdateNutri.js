@@ -59,8 +59,7 @@ function AccUpdateNutri({ navigation }) {
     <TouchableNativeFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
         <View style={styles.top}>
-          <Text style={styles.topText}>Tell us about your goals</Text>
-          <Text style={styles.topText}>to get started.</Text>
+          <Text style={styles.topText}>Edit Your Account Information</Text>
         </View>
         <View style={styles.calorieContainer}>
           <Input
