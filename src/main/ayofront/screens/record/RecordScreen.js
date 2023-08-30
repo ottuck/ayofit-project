@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import MealCard from "../../components/record/MealCard";
+import MealCard1 from "../../components/record/MealCard1";
 import SearchModal from "../../components/record/SearchModal";
 
 function RecordScreen({ route }) {
@@ -66,7 +66,7 @@ function RecordScreen({ route }) {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.cardScroll}
           >
-            <MealCard
+            <MealCard1
               mealType="Breakfast"
               mealTime="10:00"
               carb="55"
@@ -75,7 +75,7 @@ function RecordScreen({ route }) {
               totalCalories="487"
               openModal={openModal}
             />
-            <MealCard
+            <MealCard1
               mealType="Lunch"
               mealTime="10:00"
               carb="60"
@@ -84,7 +84,7 @@ function RecordScreen({ route }) {
               totalCalories="500"
               openModal={openModal}
             />
-            <MealCard
+            <MealCard1
               mealType="Dinner"
               mealTime="10:00"
               carb="65"
@@ -93,7 +93,7 @@ function RecordScreen({ route }) {
               totalCalories="550"
               openModal={openModal}
             />
-            <MealCard
+            <MealCard1
               mealType="Snack"
               mealTime="10:00"
               carb="65"

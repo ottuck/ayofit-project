@@ -24,6 +24,7 @@ import { usePhotoContext } from "../../store/image_context";
 //Server 통신을 위한 URI 수정
 const { debuggerHost } = Constants.manifest2.extra.expoGo;
 const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = ({ route, navigation }) => {
   //전달 받은 음식 정보를 차곡차곡 foodInfos 배열에 저장한다
@@ -31,14 +32,7 @@ const RecordMain = ({ route, navigation }) => {
   const [foodInfos, setFoodInfos] = useState([]);
   useEffect(() => {
     if (foodInfo) {
-      axios
-        .post(`${uri}/api/meal`, foodInfo)
-        .then((response) => {
-          console.log("foodData submitted successfully:", response.data);
-        })
-        .catch(() => {
-          console.log("Error", "Failed to submit");
-        });
+      setFoodInfos((prevFoodInfos) => [...prevFoodInfos, foodInfo]);
     }
   }, [foodInfo]);
   //Modal
@@ -279,79 +273,14 @@ const RecordMain = ({ route, navigation }) => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.recordScroll}
           >
-            <View style={styles.blurViewBox}>
-              <BlurView>
-                <View style={styles.foodRecordContainer}>
-                  <View style={styles.recordIconContainer}>
-                    {/* true일 때 Ionicons name="heart-sharp"로 분기처리 필요 */}
-                    <TouchableOpacity>
-                      <Ionicons
-                        name="heart-outline"
-                        style={styles.likeButton}
-                      />
-                    </TouchableOpacity>
-                    {/* 삭제 버튼 */}
-                    <TouchableOpacity onPress={{}}>
-                      <AntDesign
-                        name="close"
-                        style={styles.recordDeleteButton}
-                      />
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={styles.recordMidContainer}>
-                    <View style={styles.textWrapper}>
-                      <Text
-                        style={styles.foodName}
-                        numberOfLines={1}
-                        ellipsizeMode="clip"
-                      >
-                        {foodInfo[0].nFoodName}
-                      </Text>
-                      <Text style={styles.foodKcal}>
-                        {foodInfo[0].nKcal} Kcal
-                      </Text>
-                    </View>
-                    <TouchableOpacity onPress={showTimepicker}>
-                      <View style={styles.recordTimeContainer}>
-                        <Text style={styles.recordTime1}>
-                          {ampm2 === null ? ampm1 : ampm2}
-                        </Text>
-                        <Text style={styles.recordTime2}>
-                          {formattedPickerTime === null
-                            ? currentTime
-                            : formattedPickerTime}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={styles.foodNutrientContainer}>
-                    <View style={styles.foodNutrientBox}>
-                      <Text style={styles.foodNutrient}>Carb</Text>
-                      <Text style={styles.foodNutrient}>
-                        {foodInfo[0].nCarbohydrate === null
-                          ? "-"
-                          : foodInfo[0].nCarbohydrate}
-                      </Text>
-                    </View>
-                    <View style={styles.foodNutrientBox}>
-                      <Text style={styles.foodNutrient}>Protein</Text>
-                      <Text style={styles.foodNutrient}>
-                        {foodInfo[0].nProtein === null
-                          ? "-"
-                          : foodInfo[0].nProtein}
-                      </Text>
-                    </View>
-                    <View style={styles.foodNutrientBox}>
-                      <Text style={styles.foodNutrient}>Fat</Text>
-                      <Text style={styles.foodNutrient}>
-                        {foodInfo[0].nFat === null ? "-" : foodInfo[0].nFat}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </BlurView>
-            </View>
+            <MealCard2
+              foodInfo={foodInfo}
+              showTimepicker={showTimepicker}
+              formattedPickerTime={formattedPickerTime}
+              ampm2={ampm2}
+              ampm1={ampm1}
+              currentTime={currentTime}
+            />
           </ScrollView>
 
           {/* DateTimePicker */}
