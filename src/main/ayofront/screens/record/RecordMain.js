@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   Image,
   ImageBackground,
@@ -10,27 +9,28 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import React, { useState } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
-import { BlurView } from "expo-blur";
 import Constants from "expo-constants";
-import DatePicker, {
-  getToday,
-  getFormatedDate,
-} from "react-native-modern-datepicker";
+import DatePicker, { getFormatedDate, getToday } from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
+import SearchModal from "../../components/record/SearchModal";
 import { usePhotoContext } from "../../store/image_context";
 import { useMealContext } from "../../store/MealContext";
-import SearchModal from "../../components/record/SearchModal";
 import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = (route) => {
-  const { mealType } = useMealContext();
-  console.log(mealType);
-  // console.log("컨택스트API => 레코드메인 ", mealData);
+  const { mealList } = useMealContext();
+  // console.log("컨택스트API => 레코드메인 ", mealList);
 
-  // 콘솔 로그일때 컨텍스트 ㅁPIdp wkfTKdkslkfor문 돌려보기
+  //ContextAPI에 저장 
+  const addItemToMealList = (newItem) => {
+    setMealList((prevMealList) => [...prevMealList, newItem]);
+  };
+
+
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -77,6 +77,7 @@ const RecordMain = (route) => {
   const closeDatePickerModal = () => {
     setDatePickerModalVisible(false);
   };
+
   // 사진 등록 POST 요청
   const uploadImage = async (imageUri, userId, mealType) => {
     const formData = new FormData();
