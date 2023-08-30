@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.app.ayofit.mapper.FavMapper">
+
+	<select id="getFavoirtes">
+		select * from favorites, record_meal
+		where f_r_no = r_no and f_id= #{f_id}
+	</select>
+
+</mapper>

@@ -19,13 +19,13 @@ import DatePicker from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
 import { usePhotoContext } from "../../store/image_context";
+
+//Server 통신을 위한 URI 수정
+const { debuggerHost } = Constants.manifest2.extra.expoGo;
+const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = ({ route, navigation }) => {
-  //Server 통신을 위한 URI 수정
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-
   //전달 받은 음식 정보를 차곡차곡 foodInfos 배열에 저장한다
   const { foodInfo } = route.params;
   const [foodInfos, setFoodInfos] = useState([]);
@@ -33,8 +33,7 @@ const RecordMain = ({ route, navigation }) => {
     if (foodInfo) {
       setFoodInfos((prevFoodInfos) => [...prevFoodInfos, foodInfo]);
     }
-  }, []);
-  // console.log(foodInfos);
+  }, [foodInfo]);
 
   //식단 기록 post 요청
   const submitFoodToServer = () => {
@@ -63,11 +62,47 @@ const RecordMain = ({ route, navigation }) => {
     setImgModalVisible(!imgModalVisible);
   };
   const { photoUri, setPhotoUri } = usePhotoContext();
+  console.log(photoUri);
   const deletePhoto = () => {
+    console.log(photoUri);
     setPhotoUri(null);
   };
 
-  // DateTimePicker
+  // 사진 등록 POST 요청
+  const uploadImage = async (imageUri, userId) => {
+    const formData = new FormData();
+    formData.append("file", {
+      uri: imageUri,
+      name: "image.jpg",
+      type: "image/jpeg",
+    });
+
+    formData.append("userId", userId);
+
+    try {
+      const response = await fetch(uri + "/api/file/files", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const responseData = await response;
+      console.log(responseData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // 즐겨찾기 로직
+  const [isLiked, setIsLiked] = useState(false);
+
+  const handleLikedPress = () => {
+    setIsLiked(!isLiked);
+  };
+
+  //DateTimePicker
   const [mode, setMode] = useState("time");
   const [pickerDate, setPickerDate] = useState("");
   const [pickerTime, setPickerTime] = useState("");
@@ -286,6 +321,7 @@ const RecordMain = ({ route, navigation }) => {
     </SafeAreaView>
   );
 };
+
 export default RecordMain;
 
 const styles = StyleSheet.create({
