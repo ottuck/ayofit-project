@@ -1,15 +1,18 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
 const MealContext = createContext();
 
 export const useMealContext = () => useContext(MealContext);
 
 export const MealProvider = ({ children }) => {
-  const [mealList, setMealList] = useState([]);
-  // console.log('meal List 배열', mealList);
+  const [mealType, setMealType] = useState("");
+
+  const updateMealType = (newMealType) => {
+    setMealType(newMealType);
+  };
 
   return (
-    <MealContext.Provider value={{ mealList, setMealList }}>
+    <MealContext.Provider value={{ mealType, updateMealType }}>
       {children}
     </MealContext.Provider>
   );

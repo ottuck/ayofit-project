@@ -14,6 +14,6 @@ public interface FileMapper {
 
 	List<FileDTO> getImg(String userId);
 
-	int saveFile(@Param(value = "uuid") String uuid, @Param(value = "userId")String userId);
+	int saveFile(@Param("uuid") String uuid, @Param("userId")String userId, @Param("mealType") String mealType);
 
 }
