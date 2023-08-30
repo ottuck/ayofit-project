@@ -2,19 +2,21 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
+import { useMealContext } from "../../store/MealContext";
 
-const MealCard2 = ({ useTimepicker, formattedCurrentTime, formattedPickerTime, ampm1, ampm2, mealList }) => {
+const MealCard2 = ({ useTimepicker, formattedCurrentTime, formattedPickerTime, ampm1, ampm2, mealInfo }) => {
+  const { deleteToMealByNO } = useMealContext();
+  // console.log(mealInfo.nNO);
 
   return (
     <View style={styles.blurViewBox}>
       <BlurView>
-        {mealList.map((meal, index) => (
-          <View key={index} style={styles.foodRecordContainer}>
+          <View style={styles.foodRecordContainer}>
             <View style={styles.recordIconContainer}>
               <TouchableOpacity>
                 <Ionicons name="heart-outline" style={styles.likeButton} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={{}}>
+              <TouchableOpacity onPress={() => deleteToMealByNO(mealInfo.nNO)}>
                 <AntDesign name="close" style={styles.recordDeleteButton} />
               </TouchableOpacity>
             </View>
@@ -22,10 +24,10 @@ const MealCard2 = ({ useTimepicker, formattedCurrentTime, formattedPickerTime, a
             <View style={styles.recordMidContainer}>
               <View style={styles.textWrapper}>
                 <Text style={styles.foodName} numberOfLines={1} ellipsizeMode="clip">
-                  {meal.nFoodName}
+                  {mealInfo.nFoodName}
                 </Text>
                 <Text style={styles.foodKcal}>
-                  {meal.nKcal} Kcal
+                  {mealInfo.nKcal} Kcal
                 </Text>
               </View>
               <TouchableOpacity onPress={useTimepicker}>
@@ -44,24 +46,23 @@ const MealCard2 = ({ useTimepicker, formattedCurrentTime, formattedPickerTime, a
               <View style={styles.foodNutrientBox}>
                 <Text style={styles.foodNutrient}>Carb</Text>
                 <Text style={styles.foodNutrient}>
-                  {meal.nCarbohydrate === null ? "-" : meal.nCarbohydrate}
+                  {mealInfo.nCarbohydrate === null ? "-" : mealInfo.nCarbohydrate}
                 </Text>
               </View>
               <View style={styles.foodNutrientBox}>
                 <Text style={styles.foodNutrient}>Protein</Text>
                 <Text style={styles.foodNutrient}>
-                  {meal.nProtein === null ? "-" : meal.nProtein}
+                  {mealInfo.nProtein === null ? "-" : mealInfo.nProtein}
                 </Text>
               </View>
               <View style={styles.foodNutrientBox}>
                 <Text style={styles.foodNutrient}>Fat</Text>
                 <Text style={styles.foodNutrient}>
-                  {meal.nFat === null ? "-" : meal.nFat}
+                  {mealInfo.nFat === null ? "-" : mealInfo.nFat}
                 </Text>
               </View>
             </View>
-          </View>
-        ))}
+          </View>  
       </BlurView>
     </View>
 
@@ -72,19 +73,19 @@ const styles = StyleSheet.create({
   //식단 기록 컨테이너
   blurViewBox: {
     overflow: 'hidden',
-    borderRadius: 20,
-    // marginVertical: 10,
+    borderRadius: 30,
+    height: 170,
+    marginVertical: 10,
   },
   foodRecordContainer: {
     alignSelf: 'center',
     width: 350,
     padding: 15,
     backgroundColor: "rgba(255,255,255,0.6)",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 0,
-    marginVertical: 10,
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.2,
+    // shadowRadius: 4,
+    // elevation: 0,
   },
   recordMidContainer: {
     flexDirection: "row",

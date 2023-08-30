@@ -286,12 +286,10 @@ const RecordMain = (route) => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.recordScroll}
           >
-            {/* <Text>{mealList[0].nFoodName}</Text> */}
-
-            {mealList && mealList.map((mealInfo, index)=> (
+            {mealList.map((mealInfo, index)=> (
               <MealCard2
                 key={index}
-                mealList={mealList}
+                mealInfo={mealInfo}
                 useTimepicker={useTimepicker}
                 formattedCurrentTime={formattedCurrentTime}
                 formattedPickerTime={formattedPickerTime}
@@ -439,6 +437,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
+    marginBottom: 15
   },
   buttonBox1: {
     height: 40,

@@ -11,13 +11,17 @@ export const MealProvider = ({ children }) => {
     setMealType(newMealType);
   };
 
-  const [mealList, setMealList] = useState("");
+  const [mealList, setMealList] = useState([]);
   const addItemToMealList = (newItem) => {
     setMealList((prevMealList) => [...prevMealList, newItem]);
   };
 
+  const deleteToMealByNO = (NO) => {
+    setMealList((prevMealList) => prevMealList.filter((item) => item.nNO !== NO));
+  };  
+
   return (
-    <MealContext.Provider value={{ mealType, updateMealType, mealList, addItemToMealList }}>
+    <MealContext.Provider value={{ mealType, updateMealType, mealList, addItemToMealList, deleteToMealByNO }}>
       {children}
     </MealContext.Provider>
   );

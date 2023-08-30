@@ -73,6 +73,7 @@ const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
     if (fromPage === "RecordMain") {
       addItemToMealList(foundItem);
     }
+    setKeyword("");
     closeSearchModal();
   };
 
