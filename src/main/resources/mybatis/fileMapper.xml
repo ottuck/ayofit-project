@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.app.ayofit.mapper.FileMapper">
+
+	<insert id="saveFile">
+		insert into record_img values (record_img_seq.nextval, #{userId}, #{uuid}, sysdate)
+	</insert>
+
+
+
+
+	<insert id="uploadImg">
+		insert into record_img values (record_img_seq.nextval, #{fDTO.fId}, #{fDTO.fImg}, sysdate)
+	</insert>
+	
+	<select id="getImg" resultType="FileDTO">
+		select r_i_no as fNo, r_i_id as fId, r_img as fImg, r_img_date as fDate
+		from record_img where r_i_id = #{userId}
+	</select>
+	
+</mapper>
