@@ -16,7 +16,7 @@ import axios from "axios";
 import Constants from "expo-constants";
 
 function AccountNutri({ navigation }) {
-  const uri = "http://213.35.96.167/";
+  const uri = "http://213.35.96.167";
 
   const registerAccountGoal = () => {
     axios

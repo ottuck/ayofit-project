@@ -18,7 +18,7 @@ import Constants from "expo-constants";
 import { useEffect } from "react";
 
 function AccUpdateInfo({ navigation }) {
-  const uri = "http://213.35.96.167/";
+  const uri = "http://213.35.96.167";
 
   const getAccountInfos = () => {
     axios

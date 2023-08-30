@@ -14,24 +14,25 @@ import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
 import { BlurView } from "expo-blur";
 import Constants from "expo-constants";
-import DatePicker, { getToday, getFormatedDate } from "react-native-modern-datepicker";
+import DatePicker, {
+  getToday,
+  getFormatedDate,
+} from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
 import { usePhotoContext } from "../../store/image_context";
-import { useMealContext } from '../../store/MealContext';
+import { useMealContext } from "../../store/MealContext";
 import SearchModal from "../../components/record/SearchModal";
 import MealCard2 from "../../components/record/MealCard2";
-
 
 const RecordMain = (route) => {
   const { mealList } = useMealContext();
   // console.log("컨택스트API => 레코드메인 ", mealList);
 
-
   // 콘솔 로그일때 컨텍스트 ㅁPIdp wkfTKdkslkfor문 돌려보기
 
   //Server 통신을 위한 URI 수정
-  const uri = "http://213.35.96.167/";
+  const uri = "http://213.35.96.167";
 
   //식단 기록 post 요청
   const submitMealToServer = () => {
@@ -124,11 +125,11 @@ const RecordMain = (route) => {
   const savePickerDate = (selectedDate) => {
     setPickerDate(selectedDate);
     closeDatePickerModal();
-  }
+  };
   const savePickerTime = (selectedTime) => {
     setPickerTime(selectedTime);
     closeDatePickerModal();
-  }
+  };
 
   //Current Date
   const currentDate = getFormatedDate(new Date(), "YYYY/MM/DD");
@@ -177,12 +178,15 @@ const RecordMain = (route) => {
     }
     return {
       ampm: ampm,
-      formattedTime: `${String(formattedHour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
+      formattedTime: `${String(formattedHour).padStart(2, "0")}:${String(
+        minute
+      ).padStart(2, "0")}`,
     };
   };
-  const { ampm: ampm2, formattedTime: formattedPickerTime } = transformDateTime(pickerTime);
-  const { ampm: ampm1, formattedTime: formattedCurrentTime } = transformDateTime(currentTime);
-
+  const { ampm: ampm2, formattedTime: formattedPickerTime } =
+    transformDateTime(pickerTime);
+  const { ampm: ampm1, formattedTime: formattedCurrentTime } =
+    transformDateTime(currentTime);
 
   //Rendering page
   return (
@@ -195,7 +199,9 @@ const RecordMain = (route) => {
           <TouchableOpacity onPress={useDatepicker}>
             <View style={styles.headerContainer}>
               <Text style={styles.headerTitle}>
-                {formattedPickerDate === null ? formattedCurrentDate : formattedPickerDate}
+                {formattedPickerDate === null
+                  ? formattedCurrentDate
+                  : formattedPickerDate}
               </Text>
             </View>
           </TouchableOpacity>
@@ -235,31 +241,34 @@ const RecordMain = (route) => {
                   <View style={styles.modalContainer}>
                     <View style={{ alignItems: "flex-end" }}>
                       <TouchableOpacity onPress={toggleImgModal}>
-                        <AntDesign name="close" style={styles.imgModalCloseButton} />
+                        <AntDesign
+                          name="close"
+                          style={styles.imgModalCloseButton}
+                        />
                       </TouchableOpacity>
                     </View>
                     <CameraPicker onClose={toggleImgModal}>
                       <View style={styles.cameraPickerBox}>
                         <Feather name="camera" style={styles.cameraImg} />
-                        <Text style={{ fontWeight: 'bold' }}>Take a photo</Text>
+                        <Text style={{ fontWeight: "bold" }}>Take a photo</Text>
                       </View>
                     </CameraPicker>
                     <ImagePicker onClose={toggleImgModal}>
-                      <View style={styles.PhotoPickerBox} >
+                      <View style={styles.PhotoPickerBox}>
                         <Feather name="image" style={styles.galleryImg} />
-                        <Text style={{ fontWeight: 'bold' }}>Photo Gallery</Text>
+                        <Text style={{ fontWeight: "bold" }}>
+                          Photo Gallery
+                        </Text>
                       </View>
                     </ImagePicker>
                   </View>
                 </TouchableOpacity>
-              </Modal >
-            </View >
-          </View >
+              </Modal>
+            </View>
+          </View>
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={openSearchModal}
-            >
+            <TouchableOpacity onPress={openSearchModal}>
               <View style={styles.buttonBox1}>
                 <Text style={styles.buttonText}> Add More </Text>
               </View>
@@ -276,19 +285,17 @@ const RecordMain = (route) => {
             contentContainerStyle={styles.recordScroll}
           >
             {/* <Text>{mealList[0].nFoodName}</Text> */}
-            {
-              mealList.map((mealInfo, index) => (
-                <MealCard2
-                  key={index}
-                  mealInfo={mealInfo}
-                  useTimepicker={useTimepicker}
-                  formattedCurrentTime={formattedCurrentTime}
-                  formattedPickerTime={formattedPickerTime}
-                  ampm1={ampm1}
-                  ampm2={ampm2}
-                />
-              ))
-            }
+            {mealList.map((mealInfo, index) => (
+              <MealCard2
+                key={index}
+                mealInfo={mealInfo}
+                useTimepicker={useTimepicker}
+                formattedCurrentTime={formattedCurrentTime}
+                formattedPickerTime={formattedPickerTime}
+                ampm1={ampm1}
+                ampm2={ampm2}
+              />
+            ))}
 
             {/* <MealCard2
               mealList={mealList}
@@ -298,10 +305,10 @@ const RecordMain = (route) => {
               ampm1={ampm1}
               ampm2={ampm2}
             /> */}
-          </ScrollView >
+          </ScrollView>
 
           {/* DateTimePicker */}
-          < Modal
+          <Modal
             animationType="slide"
             visible={DatePickerModalVisible}
             transparent={true}
@@ -320,248 +327,247 @@ const RecordMain = (route) => {
                 onTimeChange={savePickerTime}
               />
             </View>
-          </Modal >
+          </Modal>
 
           {/* SearchModal */}
-          < SearchModal
+          <SearchModal
             fromPage="RecordMain"
             searchModalVisible={searchModalVisible}
             closeSearchModal={closeSearchModal}
           />
-
-        </ImageBackground >
-      </View >
-    </SafeAreaView >
+        </ImageBackground>
+      </View>
+    </SafeAreaView>
   );
 };
 
 export default RecordMain;
 
-  const styles = StyleSheet.create({
-    safeArea: {
-      backgroundColor: "#E46C0A",
-    },
-    container: {
-      backgroundColor: "#FFE9D8",
-    },
-    backgroundImage: {
-      width: "100%",
-      height: "100%",
-      resizeMode: "cover",
-    },
-    //해더
-    headerContainer: {
-      alignSelf: "center",
-      top: 20,
-      marginVertical: 10,
-    },
-    headerTitle: {
-      fontSize: 24,
-      color: "white",
-      fontWeight: "bold",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.2,
-      shadowRadius: 4,
-      elevation: 0,
-    },
-    //사진 등록 창
-    cardContainer: {
-      alignSelf: "center",
-      width: 290,
-      height: 240,
-      marginVertical: 30,
-      backgroundColor: "white",
-      borderRadius: 15,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.2,
-      shadowRadius: 4,
-      elevation: 0,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    cardImageContainer: {
-      width: 280,
-      height: 230,
-      backgroundColor: "rgba(0, 0, 0, 0.10)",
-      borderRadius: 10,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    plusIcon: {
-      fontSize: 40,
-      color: "rgba(0, 0, 0, 0.10)",
-    },
-    photoDeleteButton: {
-      fontSize: 30,
-      color: "rgba(0, 0, 0, 0.5)",
-      position: "absolute",
-      left: 120,
-      bottom: -15,
-    },
-    //ImagePicker
-    modalContainer: {
-      top: "21%",
-      left: "29%",
-      backgroundColor: "rgba(255, 233, 216, 1)",
-      padding: 15,
-      borderRadius: 10,
-      width: 180,
-      height: 120,
-    },
-    modalBtn: {
-      flexDirection: "row",
-    },
-    imgModalCloseButton: {
-      fontSize: 20,
-      color: "rgb(228,108,10)",
-    },
-    cameraImg: {
-      marginHorizontal: "5%",
-      fontSize: 24,
-    },
-    cameraPickerBox: {
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
-      marginBottom: 10,
-    },
-    galleryImg: {
-      marginHorizontal: 5,
-      fontSize: 26,
-    },
-    PhotoPickerBox: {
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    //추가, 확인 버튼
-    buttonContainer: {
-      flexDirection: "row",
-      justifyContent: "center",
-    },
-    buttonBox1: {
-      height: 40,
-      width: 160,
-      borderRadius: 20,
-      backgroundColor: "#FFB172",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.2,
-      shadowRadius: 4,
-      elevation: 0,
-      justifyContent: "center",
-      alignItems: "center",
-      marginHorizontal: 10,
-    },
-    buttonBox2: {
-      height: 40,
-      width: 160,
-      borderRadius: 20,
-      backgroundColor: "rgb(250, 71, 71)",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.2,
-      shadowRadius: 4,
-      elevation: 0,
-      justifyContent: "center",
-      alignItems: "center",
-      marginHorizontal: 10,
-    },
-    buttonText: {
-      fontSize: 20,
-      fontWeight: "bold",
-      color: "white",
-    },
-    recordScroll: {
-      alignItems: "center",
-    },
-    //TimePicker
-    blurViewBox: {
-      overflow: "hidden",
-      borderRadius: 20,
-      marginVertical: 20,
-    },
-    foodRecordContainer: {
-      alignSelf: "center",
-      width: 350,
-      padding: 15,
-      backgroundColor: "rgba(255,255,255,0.6)",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.2,
-      shadowRadius: 4,
-      elevation: 0,
-    },
-    recordMidContainer: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "flex-end",
-      marginVertical: 5,
-    },
-    recordTimeContainer: {
-      flexDirection: "row",
-      alignItems: "baseline",
-    },
-    recordTime1: {
-      color: "#E46C0A",
-      fontWeight: "bold",
-      fontSize: 20,
-      marginHorizontal: 4,
-    },
-    recordTime2: {
-      color: "#E46C0A",
-      fontWeight: "bold",
-      fontSize: 34,
-    },
-    textWrapper: {
-      width: "55%",
-      overflow: "hidden",
-    },
-    foodName: {
-      fontWeight: "bold",
-      fontSize: 16,
-      marginVertical: 2,
-    },
-    foodKcal: {
-      fontWeight: "bold",
-      fontSize: 16,
-      marginVertical: 2,
-    },
-    foodNutrientContainer: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-    },
-    foodNutrientBox: {
-      width: 100,
-      height: 50,
-      marginTop: 15,
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: 20,
-      backgroundColor: "rgba(0, 0, 0, 0.05)",
-    },
-    foodNutrient: {
-      fontWeight: "bold",
-      fontSize: 15,
-      marginVertical: 2,
-    },
-    //하트, 삭제 버튼
-    recordIconContainer: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-    },
-    likeButton: {
-      fontSize: 23,
-      color: "#E46C0A",
-    },
-    recordDeleteButton: {
-      fontSize: 23,
-      color: "rgba(0, 0, 0, 0.3)",
-    },
-    //TimePicker
-    datePicker: {
-      borderRadius: 30,
-    },
-    modalCloseButton: {
-      left: "90%",
-      fontSize: 25,
-      color: "rgba(0, 0, 0, 0.3)",
-    },
-  });
+const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: "#E46C0A",
+  },
+  container: {
+    backgroundColor: "#FFE9D8",
+  },
+  backgroundImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  //해더
+  headerContainer: {
+    alignSelf: "center",
+    top: 20,
+    marginVertical: 10,
+  },
+  headerTitle: {
+    fontSize: 24,
+    color: "white",
+    fontWeight: "bold",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 0,
+  },
+  //사진 등록 창
+  cardContainer: {
+    alignSelf: "center",
+    width: 290,
+    height: 240,
+    marginVertical: 30,
+    backgroundColor: "white",
+    borderRadius: 15,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 0,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cardImageContainer: {
+    width: 280,
+    height: 230,
+    backgroundColor: "rgba(0, 0, 0, 0.10)",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  plusIcon: {
+    fontSize: 40,
+    color: "rgba(0, 0, 0, 0.10)",
+  },
+  photoDeleteButton: {
+    fontSize: 30,
+    color: "rgba(0, 0, 0, 0.5)",
+    position: "absolute",
+    left: 120,
+    bottom: -15,
+  },
+  //ImagePicker
+  modalContainer: {
+    top: "21%",
+    left: "29%",
+    backgroundColor: "rgba(255, 233, 216, 1)",
+    padding: 15,
+    borderRadius: 10,
+    width: 180,
+    height: 120,
+  },
+  modalBtn: {
+    flexDirection: "row",
+  },
+  imgModalCloseButton: {
+    fontSize: 20,
+    color: "rgb(228,108,10)",
+  },
+  cameraImg: {
+    marginHorizontal: "5%",
+    fontSize: 24,
+  },
+  cameraPickerBox: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  galleryImg: {
+    marginHorizontal: 5,
+    fontSize: 26,
+  },
+  PhotoPickerBox: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  //추가, 확인 버튼
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  buttonBox1: {
+    height: 40,
+    width: 160,
+    borderRadius: 20,
+    backgroundColor: "#FFB172",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 10,
+  },
+  buttonBox2: {
+    height: 40,
+    width: 160,
+    borderRadius: 20,
+    backgroundColor: "rgb(250, 71, 71)",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 10,
+  },
+  buttonText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
+  },
+  recordScroll: {
+    alignItems: "center",
+  },
+  //TimePicker
+  blurViewBox: {
+    overflow: "hidden",
+    borderRadius: 20,
+    marginVertical: 20,
+  },
+  foodRecordContainer: {
+    alignSelf: "center",
+    width: 350,
+    padding: 15,
+    backgroundColor: "rgba(255,255,255,0.6)",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 0,
+  },
+  recordMidContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    marginVertical: 5,
+  },
+  recordTimeContainer: {
+    flexDirection: "row",
+    alignItems: "baseline",
+  },
+  recordTime1: {
+    color: "#E46C0A",
+    fontWeight: "bold",
+    fontSize: 20,
+    marginHorizontal: 4,
+  },
+  recordTime2: {
+    color: "#E46C0A",
+    fontWeight: "bold",
+    fontSize: 34,
+  },
+  textWrapper: {
+    width: "55%",
+    overflow: "hidden",
+  },
+  foodName: {
+    fontWeight: "bold",
+    fontSize: 16,
+    marginVertical: 2,
+  },
+  foodKcal: {
+    fontWeight: "bold",
+    fontSize: 16,
+    marginVertical: 2,
+  },
+  foodNutrientContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  foodNutrientBox: {
+    width: 100,
+    height: 50,
+    marginTop: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    backgroundColor: "rgba(0, 0, 0, 0.05)",
+  },
+  foodNutrient: {
+    fontWeight: "bold",
+    fontSize: 15,
+    marginVertical: 2,
+  },
+  //하트, 삭제 버튼
+  recordIconContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  likeButton: {
+    fontSize: 23,
+    color: "#E46C0A",
+  },
+  recordDeleteButton: {
+    fontSize: 23,
+    color: "rgba(0, 0, 0, 0.3)",
+  },
+  //TimePicker
+  datePicker: {
+    borderRadius: 30,
+  },
+  modalCloseButton: {
+    left: "90%",
+    fontSize: 25,
+    color: "rgba(0, 0, 0, 0.3)",
+  },
+});

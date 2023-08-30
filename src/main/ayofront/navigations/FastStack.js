@@ -481,7 +481,7 @@ function secondsToHMS(seconds) {
 }
 
 function MyTimer({ navigation: { navigate } }) {
-  const uri = "http://213.35.96.167/";
+  const uri = "http://213.35.96.167";
 
   const route = useRoute();
   const StartDate1 = route.params.StartDate1;

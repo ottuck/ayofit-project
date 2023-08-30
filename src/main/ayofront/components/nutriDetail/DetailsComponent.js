@@ -54,7 +54,7 @@ import DateCalendar from "./DateCalendar";
 import WeightCalendar from "./WeightCalendar";
 
 const DetailsComponent = () => {
-  const uri = "http://213.35.96.167/";
+  const uri = "http://213.35.96.167";
 
   const [selectedDateMeals, setSelectedDateMeals] = useState([]);
   const [resetDate, setResetDate] = useState(false);

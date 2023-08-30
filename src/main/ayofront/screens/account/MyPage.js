@@ -23,7 +23,7 @@ import { useEffect, useState } from "react";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 function MyPage({ navigation }) {
-  const uri = "http://213.35.96.167/";
+  const uri = "http://213.35.96.167";
 
   const [goals, setGoals] = useState({});
 

@@ -36,7 +36,7 @@ WebBrowser.maybeCompleteAuthSession();
 const { brand, darkLight, primary } = Colors;
 
 const Login = ({ navigation }) => {
-  const uri = "http://172.16.11.209:8080";
+  const uri = "http://213.35.96.167";
   const [hidePassword, setHidePassword] = useState(true);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");

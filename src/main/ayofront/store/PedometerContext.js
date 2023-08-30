@@ -17,7 +17,7 @@ const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 export const PedometerProvider = ({ children }) => {
   // ---------- Consts ----------
 
-  const uri = "http://213.35.96.167/";
+  const uri = "http://213.35.96.167";
 
   const [todayData, setTodayData] = useState(null);
 

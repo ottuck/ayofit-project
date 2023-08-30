@@ -26,7 +26,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 const FastRecord = ({ navigation: { navigate } }) => {
-  const uri = "http://213.35.96.167/";
+  const uri = "http://213.35.96.167";
 
   const [fastData, setFastData] = useState([]);
   useEffect(() => {

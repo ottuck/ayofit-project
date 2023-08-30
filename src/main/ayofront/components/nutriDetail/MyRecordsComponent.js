@@ -46,7 +46,7 @@ import {
 } from "../../components/nutriDetail/StyledComponents";
 
 const MyRecordsComponent = () => {
-  const uri = "http://213.35.96.167/";
+  const uri = "http://213.35.96.167";
 
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDateMeals, setSelectedDateMeals] = useState([]);
