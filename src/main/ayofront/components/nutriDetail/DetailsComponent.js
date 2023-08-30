@@ -945,11 +945,11 @@ const DetailsComponent = () => {
           />
           <WeightChartTopText>My weight changes</WeightChartTopText>
           <Image
-            source={require("../../assets/weightChart.png")}
+            source={require("../../assets/combinedChart.png")}
             style={{
-              width: 49,
-              height: 46,
-              top: 9.6,
+              width: 46,
+              height: 50,
+              top: 12,
             }}
           />
         </WeightChartTop>
@@ -1044,15 +1044,15 @@ const DetailsComponent = () => {
 
       <GoalNutriRatioContainer>
         <GoalNutriRatioView>
-          <GoalNutriRatioViewText>체중</GoalNutriRatioViewText>
+          <GoalNutriRatioViewText>Weight</GoalNutriRatioViewText>
           <GoalNutriRatioViewText>65kg</GoalNutriRatioViewText>
         </GoalNutriRatioView>
         <GoalNutriRatioView>
-          <GoalNutriRatioViewText>칼로리</GoalNutriRatioViewText>
+          <GoalNutriRatioViewText>Calorie</GoalNutriRatioViewText>
           <GoalNutriRatioViewText>1953 kcal</GoalNutriRatioViewText>
         </GoalNutriRatioView>
         <GoalNutriRatioView>
-          <GoalNutriRatioViewText>탄단지</GoalNutriRatioViewText>
+          <GoalNutriRatioViewText>MacroRatio</GoalNutriRatioViewText>
           <GoalNutriRatioViewText>50 : 30 : 20</GoalNutriRatioViewText>
         </GoalNutriRatioView>
       </GoalNutriRatioContainer>
