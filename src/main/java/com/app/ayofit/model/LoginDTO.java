@@ -6,9 +6,9 @@ public class LoginDTO {
 
     private String status;
     private String message;
-    private List<AccountDTO> data;
+    private List<LoginInfoDTO> data;
 
-    public LoginDTO(String status, String message, List<AccountDTO> data) {
+    public LoginDTO(String status, String message, List<LoginInfoDTO> data) {
         this.status = status;
         this.message = message;
         this.data = data;
@@ -30,11 +30,11 @@ public class LoginDTO {
         this.message = message;
     }
 
-    public List<AccountDTO> getData() {
+    public List<LoginInfoDTO> getData() {
         return data;
     }
 
-    public void setData(List<AccountDTO> data) {
+    public void setData(List<LoginInfoDTO> data) {
         this.data = data;
     }
 
