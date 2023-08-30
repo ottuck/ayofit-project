@@ -13,13 +13,13 @@ import {
 //axios
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import axios from "axios";
-import { BlurView } from 'expo-blur';
+import { BlurView } from "expo-blur";
 import Constants from "expo-constants";
 import DatePicker from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
 import { usePhotoContext } from "../../store/image_context";
-
+import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = ({ route, navigation }) => {
   //Server 통신을 위한 URI 수정
@@ -31,7 +31,7 @@ const RecordMain = ({ route, navigation }) => {
   const [foodInfos, setFoodInfos] = useState([]);
   useEffect(() => {
     if (foodInfo) {
-      setFoodInfos(prevFoodInfos => [...prevFoodInfos, foodInfo]);
+      setFoodInfos((prevFoodInfos) => [...prevFoodInfos, foodInfo]);
     }
   }, []);
   // console.log(foodInfos);
@@ -83,23 +83,32 @@ const RecordMain = ({ route, navigation }) => {
   const savePickerDate = (selectedDate) => {
     setPickerDate(selectedDate);
     closeModal();
-  }
+  };
   const savePickerTime = (selectedTime) => {
     setPickerTime(selectedTime);
     closeModal();
-  }
-
-
-  console.log('피커 데이트', pickerDate);
-  console.log('피커 타임', pickerTime);
+  };
 
   //pickerDate formatting
   const transformPickerDate = (inputDate) => {
     if (!inputDate) {
       return null;
     }
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const [year, month, day] = inputDate.split('/');
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const [year, month, day] = inputDate.split("/");
     const monthName = months[parseInt(month, 10) - 1];
     return `${monthName} ${day}, ${year}`;
   };
@@ -128,21 +137,25 @@ const RecordMain = ({ route, navigation }) => {
   };
   const { ampm2, formattedPickerTime } = transformPickerDateTime(pickerTime);
 
-
-  //current date & time => ContextAPI 넣기 고려 
+  //current date & time => ContextAPI 넣기 고려
   const today = new Date();
-  const [todayDateUTC, _todayTimeUTC] = today.toISOString().split('T');
-  const [hour, minute] = _todayTimeUTC.split(':');
+  const [todayDateUTC, _todayTimeUTC] = today.toISOString().split("T");
+  const [hour, minute] = _todayTimeUTC.split(":");
   const todayTimeUTC = `${hour}:${minute}`;
   //current date formatting
-  const formattedDate = today.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
+  const formattedDate = today.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
   //current time formatting
-  const koreanTimeInAMPM = today.toLocaleTimeString('en-US', { timeZone: 'Asia/Seoul', hour12: true, hour: '2-digit', minute: '2-digit' });
-  const [currentTime, ampm1] = koreanTimeInAMPM.split(' ');
+  const koreanTimeInAMPM = today.toLocaleTimeString("en-US", {
+    timeZone: "Asia/Seoul",
+    hour12: true,
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const [currentTime, ampm1] = koreanTimeInAMPM.split(" ");
 
   //Rendering page
   return (
@@ -155,7 +168,9 @@ const RecordMain = ({ route, navigation }) => {
           <TouchableOpacity onPress={showDatepicker}>
             <View style={styles.headerContainer}>
               <Text style={styles.headerTitle}>
-                {formattedPickerDate === null ? formattedDate : formattedPickerDate}
+                {formattedPickerDate === null
+                  ? formattedDate
+                  : formattedPickerDate}
               </Text>
             </View>
           </TouchableOpacity>
@@ -191,19 +206,22 @@ const RecordMain = ({ route, navigation }) => {
                 <View style={styles.modalContainer}>
                   <View style={{ alignItems: "flex-end" }}>
                     <TouchableOpacity onPress={toggleImgModal}>
-                      <AntDesign name="close" style={styles.imgModalCloseButton} />
+                      <AntDesign
+                        name="close"
+                        style={styles.imgModalCloseButton}
+                      />
                     </TouchableOpacity>
                   </View>
                   <CameraPicker onClose={toggleImgModal}>
                     <View style={styles.cameraPickerBox}>
                       <Feather name="camera" style={styles.cameraImg} />
-                      <Text style={{ fontWeight: 'bold' }}>Take a photo</Text>
+                      <Text style={{ fontWeight: "bold" }}>Take a photo</Text>
                     </View>
                   </CameraPicker>
                   <ImagePicker onClose={toggleImgModal}>
-                    <View style={styles.PhotoPickerBox} >
+                    <View style={styles.PhotoPickerBox}>
                       <Feather name="image" style={styles.galleryImg} />
-                      <Text style={{ fontWeight: 'bold' }}>Photo Gallery</Text>
+                      <Text style={{ fontWeight: "bold" }}>Photo Gallery</Text>
                     </View>
                   </ImagePicker>
                 </View>
@@ -213,7 +231,9 @@ const RecordMain = ({ route, navigation }) => {
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('RecordScreen', { shouldOpenModal: true })}
+              onPress={() =>
+                navigation.navigate("RecordScreen", { shouldOpenModal: true })
+              }
             >
               <View style={styles.buttonBox1}>
                 <Text style={styles.buttonText}> Add More </Text>
@@ -230,63 +250,14 @@ const RecordMain = ({ route, navigation }) => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.recordScroll}
           >
-            <View style={styles.blurViewBox}>
-              <BlurView>
-                <View style={styles.foodRecordContainer}>
-                  <View style={styles.recordIconContainer}>
-                    {/* true일 때 Ionicons name="heart-sharp"로 분기처리 필요 */}
-                    <TouchableOpacity>
-                      <Ionicons name="heart-outline" style={styles.likeButton} />
-                    </TouchableOpacity>
-                    {/* 삭제 버튼 */}
-                    <TouchableOpacity onPress={{}}>
-                      <AntDesign name="close" style={styles.recordDeleteButton} />
-                    </TouchableOpacity>
-                  </View>
-
-                  <View style={styles.recordMidContainer}>
-                    <View style={styles.textWrapper}>
-                      <Text style={styles.foodName} numberOfLines={1} ellipsizeMode="clip">
-                        {foodInfo[0].nFoodName}
-                      </Text>
-                      <Text style={styles.foodKcal}>
-                        {foodInfo[0].nKcal} Kcal
-                      </Text>
-                    </View>
-                    <TouchableOpacity onPress={showTimepicker}>
-                      <View style={styles.recordTimeContainer}>
-                        <Text style={styles.recordTime1}>
-                          {ampm2 === null ? ampm1 : ampm2}
-                        </Text>
-                        <Text style={styles.recordTime2}>
-                          {formattedPickerTime === null ? currentTime : formattedPickerTime}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={styles.foodNutrientContainer}>
-                    <View style={styles.foodNutrientBox}>
-                      <Text style={styles.foodNutrient}>Carb</Text>
-                      <Text style={styles.foodNutrient}>
-                        {foodInfo[0].nCarbohydrate === null ? "-" : foodInfo[0].nCarbohydrate}
-                      </Text>
-                    </View>
-                    <View style={styles.foodNutrientBox}>
-                      <Text style={styles.foodNutrient}>Protein</Text>
-                      <Text style={styles.foodNutrient}>
-                        {foodInfo[0].nProtein === null ? "-" : foodInfo[0].nProtein}
-                      </Text>
-                    </View>
-                    <View style={styles.foodNutrientBox}>
-                      <Text style={styles.foodNutrient}>Fat</Text>
-                      <Text style={styles.foodNutrient}>
-                        {foodInfo[0].nFat === null ? "-" : foodInfo[0].nFat}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </BlurView>
-            </View>
+            <MealCard2
+              foodInfo={foodInfo}
+              showTimepicker={showTimepicker}
+              formattedPickerTime={formattedPickerTime}
+              ampm2={ampm2}
+              ampm1={ampm1}
+              currentTime={currentTime}
+            />
           </ScrollView>
 
           {/* DateTimePicker */}
@@ -310,10 +281,9 @@ const RecordMain = ({ route, navigation }) => {
               />
             </View>
           </Modal>
-
         </ImageBackground>
-      </View >
-    </SafeAreaView >
+      </View>
+    </SafeAreaView>
   );
 };
 export default RecordMain;
@@ -381,8 +351,8 @@ const styles = StyleSheet.create({
   },
   //ImagePicker
   modalContainer: {
-    top: '21%',
-    left: '29%',
+    top: "21%",
+    left: "29%",
     backgroundColor: "rgba(255, 233, 216, 1)",
     padding: 15,
     borderRadius: 10,
@@ -437,7 +407,7 @@ const styles = StyleSheet.create({
     height: 40,
     width: 160,
     borderRadius: 20,
-    backgroundColor: 'rgb(250, 71, 71)',
+    backgroundColor: "rgb(250, 71, 71)",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -456,12 +426,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   blurViewBox: {
-    overflow: 'hidden',
+    overflow: "hidden",
     borderRadius: 20,
     marginVertical: 20,
   },
   foodRecordContainer: {
-    alignSelf: 'center',
+    alignSelf: "center",
     width: 350,
     padding: 15,
     backgroundColor: "rgba(255,255,255,0.6)",
@@ -477,7 +447,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   recordTimeContainer: {
-    flexDirection: "row", alignItems: "baseline"
+    flexDirection: "row",
+    alignItems: "baseline",
   },
   recordTime1: {
     color: "#E46C0A",
@@ -491,8 +462,8 @@ const styles = StyleSheet.create({
     fontSize: 34,
   },
   textWrapper: {
-    width: '55%',
-    overflow: 'hidden',
+    width: "55%",
+    overflow: "hidden",
   },
   foodName: {
     fontWeight: "bold",
@@ -535,7 +506,7 @@ const styles = StyleSheet.create({
     fontSize: 23,
     color: "rgba(0, 0, 0, 0.3)",
   },
-  //TimePicker 
+  //TimePicker
   datePicker: {
     borderRadius: 30,
   },
@@ -544,5 +515,4 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: "rgba(0, 0, 0, 0.3)",
   },
-
 });

@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import MealCard from '../../components/record/MealCard';
+import MealCard1 from '../../components/record/MealCard1';
 import SearchModal from '../../components/record/SearchModal';
 
 
@@ -45,10 +45,10 @@ function RecordScreen( {route} ) {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.cardScroll}
           >
-            <MealCard mealType="Breakfast" mealTime="10:00" carb="55" protein="16.4" fat="21.5" totalCalories="487" openModal={openModal} />
-            <MealCard mealType="Lunch" mealTime="10:00" carb="60" protein="18" fat="20" totalCalories="500" openModal={openModal} />
-            <MealCard mealType="Dinner" mealTime="10:00" carb="65" protein="19" fat="23" totalCalories="550" openModal={openModal} />
-            <MealCard mealType="Snack" mealTime="10:00" carb="65" protein="19" fat="23" totalCalories="550" openModal={openModal} />
+            <MealCard1 mealType="Breakfast" mealTime="10:00" carb="55" protein="16.4" fat="21.5" totalCalories="487" openModal={openModal} />
+            <MealCard1 mealType="Lunch" mealTime="10:00" carb="60" protein="18" fat="20" totalCalories="500" openModal={openModal} />
+            <MealCard1 mealType="Dinner" mealTime="10:00" carb="65" protein="19" fat="23" totalCalories="550" openModal={openModal} />
+            <MealCard1 mealType="Snack" mealTime="10:00" carb="65" protein="19" fat="23" totalCalories="550" openModal={openModal} />
           </ScrollView>
 
           <SearchModal

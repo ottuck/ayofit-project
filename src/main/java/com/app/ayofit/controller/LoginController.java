@@ -12,15 +12,20 @@ import com.app.ayofit.model.LoginDTO;
 import com.app.ayofit.service.LoginDAO;
 
 @RestController
-@RequestMapping("api/login")
+@RequestMapping("api")
 public class LoginController {
 
     @Autowired
     private LoginDAO loginDAO;
 
-    @PostMapping("")
+    @PostMapping("login")
     public LoginDTO checkLogin(@RequestBody Map<String, Object> requestData) {
         return loginDAO.checkLogin(requestData);
+    }
+
+    @PostMapping("signup")
+    public LoginDTO setUser(@RequestBody Map<String, Object> requestData) {
+        return loginDAO.setUser(requestData);
     }
 
 }
