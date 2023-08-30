@@ -19,6 +19,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import axios from "axios";
 import Constants from "expo-constants";
 import FastHeaderCom from "../components/fast/FastHeaderCom";
+import FastHeaderCom2 from "../components/fast/FastHeaderCom2";
 
 
 
@@ -133,7 +134,7 @@ const FastMethod = ({ navigation }) => {
     resizeMode="cover"
     style={styles.backgroundMain}
     >
-<FastHeaderCom navigation={navigation} />
+<FastHeaderCom2 navigation={navigation} />
 <MethodScrollView>
 <MethodContainer>  
 <MethodTitle>
@@ -267,7 +268,7 @@ return(
     resizeMode="cover"
     style={styles.backgroundMain}
     >
-<FastHeaderCom navigation={navigation} />
+<FastHeaderCom2 navigation={navigation} />
 <PlanContainer>
 <PlanMethodText>
     Fasting Method
@@ -430,7 +431,7 @@ function secondsToHMS(seconds) {
     return { hours, minutes, seconds: remainingSeconds };
 }
 
-function MyTimer({ navigation: {navigate} }) {
+function MyTimer({ navigation}) {
 
     const { debuggerHost } = Constants.manifest2.extra.expoGo;
     const uri = `http://${debuggerHost.split(":").shift()}:8080/api/fast`;
@@ -521,16 +522,15 @@ function MyTimer({ navigation: {navigate} }) {
     resizeMode="cover"
     style={styles.backgroundMain}
     >
-        
         <TimerContainer>
-            <TimerHomeBtn onPress={() => navigate("FastMainPage")}>
+            <TimerHomeBtn onPress={() => navigation.navigate("FastMainPage")}>
             <TimerHomeBT>Reset <Entypo name="trash" size={24} color="white" /></TimerHomeBT> 
             </TimerHomeBtn>
             <TimerAddView>
             <CountdownCircleTimer
     isPlaying={isPlaying}
     duration={totalSeconds}
-    colors={["#bfe761", "#f2a533", "#c94f03", "#A30000"]}
+    colors={["#6de06f", "#36f233", "#f26717", "#A30000"]}
     colorsTime={[totalSeconds, (totalSeconds * 0.7), (totalSeconds * 0.3), 0]}
     onComplete={() => ({ shouldRepeat: false})}
     updateInterval={1}

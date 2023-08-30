@@ -369,6 +369,7 @@ border-radius: 20px;
 align-items: center;
 justify-content: center;
 `;
+
 //---------------------FastDate.js---------------------//
 export const FastDateContainer = styled.View`
 justify-content: center;
@@ -441,7 +442,7 @@ height: 100%;
 export const FastRecordView = styled.View`
 flex:1;
 padding-top: 100px;
-padding-bottom: 100px;
+padding-bottom: 270px;
 `;
 export const RecordUpC = styled.View`
 justify-content: center;
@@ -487,9 +488,25 @@ align-items: flex-start; /* 왼쪽에 붙이는 정렬 */
 `;
 export const FastHeader = styled.TouchableOpacity`
 margin-top:55px;
-margin-left:20px;
+margin-left : 20px;
 `;
 export const FastHeaderT = styled.Text`
+font-size: 25px;
+color: white;
+`;
+//--------------------HeaderCom2-------------------//
+export const FastTotalHeader2 = styled.View`
+width: 100%;
+display: flex;
+flex-direction: row; /* 가로로 정렬 */
+align-items: flex-start; /* 왼쪽에 붙이는 정렬 */
+`;
+export const FastHeader2 = styled.TouchableOpacity`
+margin-top:55px;
+margin-left : 20px;
+left: -40px;
+`;
+export const FastHeaderT2 = styled.Text`
 font-size: 25px;
 color: white;
 `;

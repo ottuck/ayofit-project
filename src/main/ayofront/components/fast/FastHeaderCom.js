@@ -1,6 +1,7 @@
 import React from 'react';
 import { FastHeader, FastHeaderT, FastTotalHeader } from './FastingStyled';
 
+
 const FastHeaderCom = ({ navigation }) => {
     return (
         <FastTotalHeader>
