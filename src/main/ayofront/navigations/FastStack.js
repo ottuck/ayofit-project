@@ -13,7 +13,7 @@ import {MethodContainer, MethodTitle, MethodCTouch, MethodCText, MethodCEndTouch
     ,TimerContainer,TimerTitle,TimerHomeBtn,TimerHomeBT,EndTimeText,MethodCTextS,ConfirmMessage,ConfirmMView,ConfirmStart,ConfrimSText,ConfirmEnd
     ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView,FirstMainPage,MainBtn,MainText,FastMainImage
     ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM,MethodLeftContent,MethodRightContent,MainHeaderBtn,
-    MethodCText2,MethodCTextS2,TimerScrollView,TimerStop,TimerAddView
+    MethodCText2,MethodCTextS2,TimerScrollView,TimerStop,TimerAddView,TimerStopText,PlanMethodTText,PlanMethodCTouch
 } from '../components/fast/FastingStyled';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from "axios";
@@ -128,7 +128,12 @@ const FastMethod = ({ navigation }) => {
 
 
 
-<LinearGradient colors={['#f7d7be','#e7a370']}>
+<ImageBackground
+    source={require("../images/FastImage/FastBackground.png")}
+    resizeMode="cover"
+    style={styles.backgroundMain}
+    >
+<FastHeaderCom navigation={navigation} />
 <MethodScrollView>
 <MethodContainer>  
 <MethodTitle>
@@ -195,7 +200,7 @@ const FastMethod = ({ navigation }) => {
 </MethodCEndTouch>
 </MethodContainer>
 </MethodScrollView>
-</LinearGradient>
+</ImageBackground>
 );
 };
 
@@ -257,10 +262,13 @@ if(!selectHour == '') {
 const currentEndTime = currnetDateTime.split(' : ')[1]; // " : "로 분리하고 두 번째 요소 추출
 
 return(
-<LinearGradient colors={['#f7d7be','#e7a370']}>
+<ImageBackground
+    source={require("../images/FastImage/FastBackground.png")}
+    resizeMode="cover"
+    style={styles.backgroundMain}
+    >
+<FastHeaderCom navigation={navigation} />
 <PlanContainer>
-<PlanTitle>{"\n"}
-</PlanTitle>
 <PlanMethodText>
     Fasting Method
 </PlanMethodText>
@@ -273,17 +281,17 @@ return(
 <PlanMethodText>
     Starting Date
 </PlanMethodText>
-<PlanMethodCView>
+<PlanMethodCTouch>
     <FastDate onDateChange={(newDate => setSelectedDate(newDate))}/>
     <Image source={require('../images/FastImage/FastDateimo.png')} style={styles.dateImo} />
-</PlanMethodCView>
-<PlanMethodText>
+</PlanMethodCTouch>
+<PlanMethodTText>
     Starting Time
-</PlanMethodText>
-<PlanMethodCView>
+</PlanMethodTText>
+<PlanMethodCTouch>
  <FastTime style={styles.FastTime} onTimeChange={(newTime => setSelectedTime(newTime))}/>
  <Image source={require('../images/FastImage/FastTimerimo.png')} style={styles.timerImo} />
-</PlanMethodCView>
+</PlanMethodCTouch>
 <PlanEndView>
  <PlanEndText style={{ fontFamily: 'OpenSans_600SemiBold_Italic', fontSize: 20 }}>
     It ends at  {"\n"}
@@ -296,7 +304,7 @@ return(
 </PlanConfirmB>
 </PlanConfirmV>
 </PlanContainer>
-</LinearGradient>
+</ImageBackground>
 );
 };
 
@@ -371,13 +379,18 @@ const options = {
   const ConfirmTimeEnd = formatter.format(date3).replace('at', '').replace(',', ', ');
 return(
 
-<LinearGradient colors={['#f7d7be','#e7a370']}>
+<ImageBackground
+    source={require("../images/FastImage/FastBackground.png")}
+    resizeMode="cover"
+    style={styles.backgroundMain}
+    >
+<FastHeaderCom navigation={navigation} />
 <ConfirmScroll>
 <ConfirmContainer>
     <ConfirmHeader>
     <ConfirmTime>{stringFormat}</ConfirmTime>
     <ConfirmTimeText>fasting </ConfirmTimeText>
-    <ConfirmTextM><FontAwesome5 name="minus" size={15} color="#E46C0A" /></ConfirmTextM>
+    <ConfirmTextM><FontAwesome5 name="minus" size={15} color="#FFFFFF" /></ConfirmTextM>
     <ConfirmTime> {stringFormat2}</ConfirmTime>
     <ConfirmTimeText>relaxing</ConfirmTimeText>
     </ConfirmHeader>
@@ -401,7 +414,7 @@ return(
     </ConfirmBtn>
 </ConfirmContainer>
 </ConfirmScroll>
-    </LinearGradient>
+</ImageBackground>
 );
 }
 
@@ -503,7 +516,12 @@ function MyTimer({ navigation: {navigate} }) {
         //w : JS-> Oracle
         
     return (
-        <TimerScrollView>
+        <ImageBackground
+    source={require("../images/FastImage/FastBackground.png")}
+    resizeMode="cover"
+    style={styles.backgroundMain}
+    >
+        
         <TimerContainer>
             <TimerHomeBtn onPress={() => navigate("FastMainPage")}>
             <TimerHomeBT>Reset <Entypo name="trash" size={24} color="white" /></TimerHomeBT> 
@@ -512,22 +530,22 @@ function MyTimer({ navigation: {navigate} }) {
             <CountdownCircleTimer
     isPlaying={isPlaying}
     duration={totalSeconds}
-    colors={["#F3A36F", "#f2a533", "#c94f03", "#A30000"]}
+    colors={["#bfe761", "#f2a533", "#c94f03", "#A30000"]}
     colorsTime={[totalSeconds, (totalSeconds * 0.7), (totalSeconds * 0.3), 0]}
     onComplete={() => ({ shouldRepeat: false})}
     updateInterval={1}
-    strokeWidth={20}
-    size={300}
+    strokeWidth={19}
+    size={285}
 >
     {({ remainingTime, color }) => {
         const { hours, minutes, seconds } = secondsToHMS(remainingTime);
         setRemainingTime(remainingTime); // remainingTime 상태 업데이트
         return (
             <>
-                <Text style={{ color:"#505050", fontSize: 18 }}>
+                <Text style={{ color:"#fbf7f7", fontSize: 18 }}>
                     Elapsed Time
                 </Text>
-                <Text style={{ color, fontSize: 40 }}>
+                <Text style={{ color:"#fbf7f7", fontSize: 40 }}>
                     {`${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}`}
                 </Text>
                 {isPlaying && remainingTime === 0 && (
@@ -552,13 +570,13 @@ function MyTimer({ navigation: {navigate} }) {
         </TimerEText>
     </TimerEnd>
     <TimerStop>
-        <TimerEText onPress={handleStopTimer}>
+        <TimerStopText onPress={handleStopTimer}>
         STOP
-        </TimerEText>
+        </TimerStopText>
     </TimerStop>
 </TimerMView>
         </TimerContainer>
-        </TimerScrollView>
+        </ImageBackground>
     );
 }
 
