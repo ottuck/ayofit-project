@@ -15,9 +15,6 @@ import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { BlurView } from "expo-blur";
 import Constants from "expo-constants";
-import { Feather } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
 
 import DatePicker from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
