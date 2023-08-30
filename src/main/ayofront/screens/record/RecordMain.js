@@ -22,9 +22,12 @@ import SearchModal from "../../components/record/SearchModal";
 import MealCard2 from "../../components/record/MealCard2";
 
 
-const RecordMain = () => {
+const RecordMain = (route) => {
   const { mealList } = useMealContext();
-  // console.log("Meal ContextAPI => ", mealList);
+  // console.log("컨택스트API => 레코드메인 ", mealList);
+
+
+  // 콘솔 로그일때 컨텍스트 ㅁPIdp wkfTKdkslkfor문 돌려보기
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -114,19 +117,16 @@ const RecordMain = () => {
     if (!inputTime) {
       return { ampm: null, formattedTime: null };
     }
-
     const [hour, minute] = inputTime.split(":");
     const numericHour = parseInt(hour, 10);
     let ampm = "AM";
     let formattedHour = numericHour;
-
     if (numericHour >= 12) {
       ampm = "PM";
       if (numericHour > 12) {
         formattedHour = numericHour - 12;
       }
     }
-
     return {
       ampm: ampm,
       formattedTime: `${String(formattedHour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
@@ -136,7 +136,7 @@ const RecordMain = () => {
   const { ampm: ampm1, formattedTime: formattedCurrentTime } = transformDateTime(currentTime);
 
 
-  
+
   //Rendering page
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -210,7 +210,6 @@ const RecordMain = () => {
           </View>
 
           <View style={styles.buttonContainer}>
-
             <TouchableOpacity
               onPress={openSearchModal}
             >
@@ -225,19 +224,33 @@ const RecordMain = () => {
             </TouchableOpacity>
           </View>
 
-          {/* Card Scroll */}
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.recordScroll}
           >
-            <MealCard2
+            {/* <Text>{mealList[0].nFoodName}</Text> */}
+            {
+              mealList.map((mealInfo, index) => (
+                <MealCard2
+                  key={index}
+                  mealInfo={mealInfo} 
+                  useTimepicker={useTimepicker}
+                  formattedCurrentTime={formattedCurrentTime}
+                  formattedPickerTime={formattedPickerTime}
+                  ampm1={ampm1}
+                  ampm2={ampm2}
+                />
+              ))
+            }
+
+            {/* <MealCard2
               mealList={mealList}
               useTimepicker={useTimepicker}
               formattedCurrentTime={formattedCurrentTime}
               formattedPickerTime={formattedPickerTime}
               ampm1={ampm1}
               ampm2={ampm2}
-            />
+            /> */}
           </ScrollView>
 
           {/* DateTimePicker */}
@@ -255,7 +268,7 @@ const RecordMain = () => {
                 mode={mode}
                 minuteInterval={10}
                 selected={getToday()}
-                selectorStartingYear={getToday()}
+                selectorStartingYear={2023}
                 onDateChange={savePickerDate}
                 onTimeChange={savePickerTime}
               />
