@@ -1,5 +1,5 @@
 import React, { useEffect, useState,} from "react";
-import { StyleSheet,Text, Alert, Image } from 'react-native';
+import { StyleSheet,Text, Alert, Image, ImageBackground,StatusBar } from 'react-native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -12,12 +12,13 @@ import {MethodContainer, MethodTitle, MethodCTouch, MethodCText, MethodCEndTouch
     ,PlanEndView,PlanEndText,PlanConfirmV,PlanConfirmB,PlanConfirmT,ConfirmScroll,ConfirmContainer,ConfirmTitle,ConfirmTime,ConfirmBtn,ConfirmText
     ,TimerContainer,TimerTitle,TimerHomeBtn,TimerHomeBT,EndTimeText,MethodCTextS,ConfirmMessage,ConfirmMView,ConfirmStart,ConfrimSText,ConfirmEnd
     ,ConfirmEText,ConfirmTView,TimerStart,TimerSText,TimerEnd,TimerEText,TimerMView,FirstMainPage,MainBtn,MainText,FastMainImage
-    ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM,MethodLeftContent,MethodRightContent,
+    ,ConfirmHeader,MethodScrollView,ConfirmTimeText,ConfirmTextM,MethodLeftContent,MethodRightContent,MainHeaderBtn,
     MethodCText2,MethodCTextS2,TimerScrollView,TimerStop,TimerAddView
 } from '../components/fast/FastingStyled';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from "axios";
 import Constants from "expo-constants";
+import FastHeaderCom from "../components/fast/FastHeaderCom";
 
 
 
@@ -54,18 +55,26 @@ let HourMinutes = `${nowHours}:${nowminutes}`
 
 //-----------------------------------------------------------------------//
 
-
 //---------------------StackPage-----------------------------------------//
-const FastMainPage = ({navigation : { navigate } }) => (
-<LinearGradient colors={['#f7d7be','#e7a370']}>
+const FastMainPage = ({ navigation }) => (
+    <>   
+    <StatusBar translucent backgroundColor="transparent" />
+        <ImageBackground
+    source={require("../images/FastImage/FastBackground.png")}
+    resizeMode="cover"
+    style={styles.backgroundMain}
+    >
+        <FastHeaderCom navigation={navigation} />
     <FirstMainPage>
-    <MainBtn onPress={() => navigate("FastingMethod")}>
+    <MainBtn onPress={() => navigation.navigate("FastingMethod")}>
         <MainText style={{ fontFamily: 'OpenSans_800ExtraBold_Italic', fontSize: 20 }}>+ Set up your plan</MainText>
     </MainBtn>
 </FirstMainPage>
-    </LinearGradient>
-    );
-    
+</ImageBackground>
+</>
+);
+
+
 
 
 const FastMethod = ({ navigation }) => {
@@ -497,7 +506,7 @@ function MyTimer({ navigation: {navigate} }) {
         <TimerScrollView>
         <TimerContainer>
             <TimerHomeBtn onPress={() => navigate("FastMainPage")}>
-            <TimerHomeBT>Reset     <Entypo name="trash" size={24} color="black" /></TimerHomeBT> 
+            <TimerHomeBT>Reset <Entypo name="trash" size={24} color="white" /></TimerHomeBT> 
             </TimerHomeBtn>
             <TimerAddView>
             <CountdownCircleTimer
@@ -594,5 +603,10 @@ const styles = StyleSheet.create({
     Howto:{
         left: 100,
     },
+    backgroundMain:{
+        justifyContent: "center",
+        alignItems: "center",
+        flex:1,
+      },
 });
 export default FastStack;

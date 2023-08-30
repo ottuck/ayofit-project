@@ -17,10 +17,11 @@ export const MainText = styled.Text`
  font-weight : 400
 `;
 export const FirstMainPage = styled.View`
-width : 100%;
-height : 100%;
+flex:1;
 align-items: center;
 justify-content: center;
+`;
+export const MainHeaderBtn = styled.TouchableOpacity`
 
 `;
 //---------------------------------------------------------------//
@@ -276,13 +277,13 @@ font-weight : 500;
 `;
 //--------------------Timer(Stack.js)----------------------//
 export const TimerScrollView = styled.ScrollView`
-background-color: #FFE9D8;
+background-color: #f7d7be;
 `;
 
 export const TimerContainer = styled.View`
 align-items: center;
 justify-content: center;
-background-color: #FFE9D8;
+background-color: #f7d7be;
 height: 730px;
 `;
 export const TimerAddView = styled.View`
@@ -293,21 +294,21 @@ font-size : 20px;
 margin-bottom : 20px;
 `;
 export const TimerHomeBtn = styled.TouchableOpacity`
-background-color: #E46C0A33;
+background-color: #E46C0A;
 border-radius : 50px;
 align-items: center;
 justify-content: center;
 border : 1px solid #FFE9D8;
 height : 50px;
-width : 33%;
+width : 27%;
 right : -120px;
 margin-bottom : 30px;
 bottom: 50px;
-
+border: 5px solid #160c02;
 `;
 export const TimerHomeBT = styled.Text`
 font-size : 20px;
-color : black;
+color : white;
 `;
 export const EndTimeText = styled.Text`
 font-size: 20;
@@ -316,7 +317,6 @@ text-align: center;
 export const TimerMView = styled.View`
 justify-content : center;
 align-items: center;
-
 bottom: 50px;
 `;
 export const TimerStart = styled.View`
@@ -327,11 +327,11 @@ background-color : #E46C0A33;
 border-radius: 20px;
 align-items: center;
 justify-content: center;
-
 `;
 export const TimerSText = styled.Text`
 font-size: 18px;
 font-weight : 500;
+
 `;
 export const TimerEnd = styled.View`
 margin-top : 20px;
@@ -341,7 +341,6 @@ background-color : #E46C0A33;
 border-radius: 20px;
 align-items: center;
 justify-content: center;
-
 `;
 export const TimerEText = styled.Text`
 font-size: 18px;
@@ -351,11 +350,10 @@ export const TimerStop = styled.TouchableOpacity`
 margin-top : 20px;
 width: 100px;
 height: 50px;
-background-color : #723b0e33;
+background-color : #E46C0A;
 border-radius: 20px;
 align-items: center;
 justify-content: center;
-
 `;
 //---------------------FastDate.js---------------------//
 export const FastDateContainer = styled.View`
@@ -417,35 +415,37 @@ export const HeaderTouch = styled.TouchableOpacity`
 `;
 export const HeaderText = styled.Text`
 font-size : 20px;
+color:white;
 margin-top : 30px;
 margin-left : 10px;
 `;
 //----------------------RecordPage-------------------//
 export const RecordScrollView = styled.ScrollView`
-`;
-export const FastRecordView = styled.View`
-width: 100%;
-justify-content : center;
-align-items : center;
-padding-top: 100px;
-padding-bottom: 100px;
-border: 3px solid red;
-`;
-export const RecordUnderC = styled.View`
 width: 100%;
 height: 100%;
+`;
+export const FastRecordView = styled.View`
+flex:1;
+padding-top: 100px;
+padding-bottom: 100px;
+`;
+export const RecordUpC = styled.View`
+justify-content: center;
+align-items: center;
+bottom: 70px;
+`;
+export const RecordUnderC = styled.View`
 align-items : center;
-border: 3px solid black;
 `;
 export const RecordOneView = styled.View`
-  width: 85%;
-  height: 120px;
-  border: 1px solid black;
+  border: 3px solid white;
   border-radius: 15px;
   background-color: rgba(255, 255, 255, 0.5);
   margin-top: 20px;
+  height: 10%;
+  width: 90%;
+  bottom: 30px;
 `;
-
 export const RecordUseTime = styled.Text`
 margin-top : 10px;
 margin-left : 10px;
@@ -458,4 +458,24 @@ margin-left : 10px;
 export const RecordETime = styled.Text`
 margin-top : 10px;
 margin-left : 10px;
+`;
+export const RecordRTime = styled.Text`
+font-size: 20px;
+font-weight: 600;
+top:-50px;
+`;
+//--------------------HeaderCom-------------------//
+export const FastTotalHeader = styled.View`
+width: 100%;
+display: flex;
+flex-direction: row; /* 가로로 정렬 */
+align-items: flex-start; /* 왼쪽에 붙이는 정렬 */
+`;
+export const FastHeader = styled.TouchableOpacity`
+margin-top:55px;
+margin-left:20px;
+`;
+export const FastHeaderT = styled.Text`
+font-size: 25px;
+color: white;
 `;

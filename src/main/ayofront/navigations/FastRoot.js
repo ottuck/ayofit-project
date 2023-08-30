@@ -14,13 +14,13 @@ const FastNav = createNativeStackNavigator();
 const FastRoot = () => (
   <FastNav.Navigator
     screenOptions={{
+      headerShown:false,
       header: ({ navigation: { navigate } }) => (
         <HeaderView
           style={{
             marginTop: Platform.OS === "ios" ? '8%' : '-5%',
-            marginLeft: 10,
-            backgroundColor: 'white',
-          }}
+            backgroundColor: '#FFE9D8',
+            }}
         >
           <HeaderTouch onPress={() => navigate("Timer")}>
             <HeaderText>Timer</HeaderText>
@@ -32,7 +32,10 @@ const FastRoot = () => (
       ),
     }}
   >
-    <FastNav.Screen name="Timer" component={FastStack} />
+    <FastNav.Screen name="Timer" component={FastStack} 
+    Options={{
+      headerShown:false,
+    }} />
     <FastNav.Screen name="Records" component={FastRecord} />
   </FastNav.Navigator>
 );
