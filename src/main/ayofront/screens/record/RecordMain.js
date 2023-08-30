@@ -1,7 +1,3 @@
-import { AntDesign, Feather } from "@expo/vector-icons";
-import axios from "axios";
-import Constants from "expo-constants";
-import React, { useState } from "react";
 import {
   Image,
   ImageBackground,
@@ -13,23 +9,17 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import DatePicker, { getFormatedDate, getToday } from "react-native-modern-datepicker";
+import React, { useState } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
 import Constants from "expo-constants";
-import DatePicker, {
-  getToday,
-  getFormatedDate,
-} from "react-native-modern-datepicker";
+import DatePicker, { getFormatedDate, getToday } from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
+import SearchModal from "../../components/record/SearchModal";
 import { usePhotoContext } from "../../store/image_context";
 import { useMealContext } from "../../store/MealContext";
-import SearchModal from "../../components/record/SearchModal";
 import MealCard2 from "../../components/record/MealCard2";
-import SearchModal from "../../components/record/SearchModal";
-import { useMealContext } from '../../store/MealContext';
-import { usePhotoContext } from "../../store/image_context";
 
 const RecordMain = (route) => {
   const { mealList } = useMealContext();
