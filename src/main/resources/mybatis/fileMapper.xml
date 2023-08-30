@@ -4,7 +4,7 @@
 <mapper namespace="com.app.ayofit.mapper.FileMapper">
 
 	<insert id="saveFile">
-		insert into record_img values (record_img_seq.nextval, #{userId}, #{uuid}, sysdate)
+		insert into record_img values (record_img_seq.nextval, #{userId}, #{uuid}, sysdate, #{mealType})
 	</insert>
 
 

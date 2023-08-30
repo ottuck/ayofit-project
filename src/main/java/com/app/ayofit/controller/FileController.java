@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.app.ayofit.model.FileDTO;
 import com.app.ayofit.service.FileDAO;
-import com.google.firebase.FirebaseApp;
+import com.app.ayofit.service.FireBaseService;
 @RestController
 @RequestMapping("/api/file")
 public class FileController {
@@ -29,7 +29,7 @@ public class FileController {
 	private FireBaseService fireBaseService;
 
 	@PostMapping("/files")
-	public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("userId") String userId )
+	public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("userId") String userId, @RequestParam("mealType") String mealType )
 			throws IOException {
 
 		System.out.println(file);
@@ -38,15 +38,10 @@ public class FileController {
 		if (file.isEmpty()) {
 			return "is empty";
 		}
-		String url = fireBaseService.uploadFiles(file, userId);
+		String url = fireBaseService.uploadFiles(file, userId,mealType);
 		System.out.println(url);
 		return url;
 
-	}
-
-	@PostMapping("/upload-image")
-	public void uploadImg(@RequestPart("image") MultipartFile file, @RequestPart("userId") String userId) {
-		fileDAO.uploadImg(file, userId);
 	}
 
 	@GetMapping("/get-image/{userId}")
