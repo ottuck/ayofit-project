@@ -21,24 +21,34 @@ import { usePhotoContext } from "../../store/image_context";
 import { useMealContext } from "../../store/MealContext";
 import MealCard2 from "../../components/record/MealCard2";
 
-const RecordMain = (route) => {
-  const { mealList } = useMealContext();
-  console.log("컨택스트API => 레코드 메인 ", mealList);
+//Server 통신을 위한 URI 수정
+const { debuggerHost } = Constants.manifest2.extra.expoGo;
+const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
-  //Server 통신을 위한 URI 수정
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+const RecordMain = () => {
+  const { mealList, mealType } = useMealContext();
+  console.log("컨택스트API => 레코드 메인 ", mealList);
+  // console.log(mealType);
 
   //식단 기록 post 요청
-  const submitMealToServer = () => {
-    axios
-      .post(`${uri}/api/meal`, mealData)
-      .then((response) => {
-        console.log("MealData submitted successfully:", response.data);
-      })
-      .catch(() => {
-        console.log("Error", "Failed to submit");
-      });
+  const submitMealListToServer = () => {
+    const updatedMealList = mealList.map((meal) => {
+      const { nNO, nSize, ...rest } = meal; // nNO와 nSize를 제거
+      return {
+        ...rest,
+        nMealType: mealType //mealType 추가
+      };
+    });
+    console.log("업데이트 밀리스트:", updatedMealList);
+
+    // axios
+    //   .post(`${uri}/api/meal`, mealList)
+    //   .then((response) => {
+    //     console.log("MealData submitted successfully:", response.data);
+    //   })
+    //   .catch(() => {
+    //     console.log("Error", "Failed to submit");
+    //   });
   };
 
   //ImgModal
@@ -47,7 +57,7 @@ const RecordMain = (route) => {
     setImgModalVisible(!imgModalVisible);
   };
   const { photoUri, setPhotoUri } = usePhotoContext();
-  console.log(photoUri);
+  // console.log(photoUri);
   const deletePhoto = () => {
     console.log(photoUri);
     setPhotoUri(null);
@@ -131,6 +141,12 @@ const RecordMain = (route) => {
   //Current Date
   const currentDate = getFormatedDate(new Date(), "YYYY/MM/DD");
   const currentTime = getFormatedDate(new Date(), "h:m");
+
+
+  //서버에 넘김 임시 Date
+  const date = new Date();
+  const isoDate = date.toISOString();
+
 
   //change date format
   const transformDate = (inputDate) => {
@@ -272,8 +288,8 @@ const RecordMain = (route) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                // submitMealToServer();
-                uploadImage(photoUri, "user1", mealType);
+                submitMealListToServer();
+                // uploadImage(photoUri, "user1", mealType);
               }}
             >
               <View style={styles.buttonBox2}>
@@ -286,7 +302,7 @@ const RecordMain = (route) => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.recordScroll}
           >
-            {mealList.map((mealInfo, index)=> (
+            {mealList.map((mealInfo, index) => (
               <MealCard2
                 key={index}
                 mealInfo={mealInfo}

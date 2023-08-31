@@ -10,12 +10,12 @@ export const MealProvider = ({ children }) => {
   const updateMealType = (newMealType) => {
     setMealType(newMealType);
   };
-
+  
+  //MealCard2 handle function in RecordMain.js
   const [mealList, setMealList] = useState([]);
   const addItemToMealList = (newItem) => {
     setMealList((prevMealList) => [...prevMealList, newItem]);
   };
-
   const deleteToMealByNO = (NO) => {
     setMealList((prevMealList) => prevMealList.filter((item) => item.nNO !== NO));
   };  

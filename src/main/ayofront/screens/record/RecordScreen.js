@@ -29,14 +29,6 @@ function RecordScreen({ route }) {
     setSearchModalVisible(false);
   };
 
-  // // recordMain.js 에서 보내는 openModal 요청 받기
-  // useEffect(() => {
-  //   if (route.params?.shouldOpenModal) {
-  //     openModal();
-  //     route.params.shouldOpenModal = false;
-  //   }
-  // }, [route.params?.shouldOpenModal]);
-
   // // 로컬에 있는 사진 파일 GET요청
   // const [imgUri, setImgUri] = useState([]);
   // const { photoUri, setPhotoUri } = usePhotoContext();

@@ -137,19 +137,19 @@ export default function App() {
                 component={AccountNutri}
                 options={{ headerShown: false }}
               /> */}
-                    {userInfo ? (
+                    {/* {userInfo ? ( */}
                       <Stack.Screen
                         name="MainTabs"
                         component={MainTabsScreen}
                         options={{ headerShown: false }}
                       />
-                    ) : (
+                    {/* ) : (
                       <Stack.Screen
                         name="LoginStack"
                         component={LoginStack}
                         options={{ headerShown: false }}
                       />
-                    )}
+                    )} */}
                   </Stack.Navigator>
                 </PedometerProvider>
               </NavigationContainer>
