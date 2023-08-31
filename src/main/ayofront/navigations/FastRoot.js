@@ -14,6 +14,7 @@ const FastNav = createNativeStackNavigator();
 const FastRoot = () => (
   <FastNav.Navigator
     screenOptions={{
+      headerShown:false,
       header: ({ navigation: { navigate } }) => (
         <HeaderView
           style={{
@@ -33,7 +34,10 @@ const FastRoot = () => (
       ),
     }}
   >
-    <FastNav.Screen name="Timer" component={FastStack} />
+    <FastNav.Screen name="Timer" component={FastStack} 
+    Options={{
+      headerShown:false,
+    }} />
     <FastNav.Screen name="Records" component={FastRecord} />
   </FastNav.Navigator>
 );
