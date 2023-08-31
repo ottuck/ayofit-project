@@ -37,7 +37,7 @@ function RecordScreen() {
   // 로컬에 있는 사진 파일 GET요청
   const [img, setImgs] = useState([]);
   const { setPhotoUri, setPhotoId } = usePhotoContext();
-  const getImg = async () => {
+  const getImgs = async () => {
     await axios
       .get(`${uri}/api/file/get-image/user1`)
       .then((response) => {
@@ -55,7 +55,7 @@ function RecordScreen() {
   };
 
   useEffect(() => {
-    getImg();
+    getImgs();
   }, []);
 
   return (
