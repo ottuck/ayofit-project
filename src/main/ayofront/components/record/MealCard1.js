@@ -56,11 +56,10 @@ const MealCard1 = ({
 
 const styles = StyleSheet.create({
   cardContainer: {
-    // width: 300,
-    // height: 430,
     width: 280,
     height: 410,
     marginHorizontal: 20,
+    marginTop: 40,
     backgroundColor: "white",
     borderRadius: 15,
     shadowColor: "black",

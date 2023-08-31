@@ -34,7 +34,18 @@ function RecordScreen() {
     setSearchModalVisible(false);
   };
 
-  // 로컬에 있는 사진 파일 GET요청
+  //화면에 들어올때 get 요청
+  useEffect(() => {
+    getImg();
+    // getMealInfo();
+  }, []);
+
+  //서버에 저장된 식단 정보 GET요청
+  const getMealInfo = () => {
+    
+  }
+
+  //로컬에 있는 사진 파일 GET요청
   const [img, setImgs] = useState([]);
   const { setPhotoUri, setPhotoId } = usePhotoContext();
   const getImg = async () => {
@@ -54,9 +65,7 @@ function RecordScreen() {
       });
   };
 
-  useEffect(() => {
-    getImg();
-  }, []);
+  
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -170,7 +179,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: 350,
-    marginVertical: 62,
+    marginVertical: 50,
     alignSelf: "center",
   },
   headerTitle: {
