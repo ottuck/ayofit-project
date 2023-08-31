@@ -30,7 +30,9 @@ const RecordMain = ({ navigation }) => {
 
   //서버에 넘김 임시 Date
   const mealDate = new Date();
-  // console.log(mealDate);
+  const formattedDate = mealDate.toISOString().slice(0, 19).replace("T", " ");
+
+  // console.log(formattedDate); // "2023-08-31 08:36:40"
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -51,7 +53,7 @@ const RecordMain = ({ navigation }) => {
       );
       return {
         ...rKeysObject,
-        rMealDate: mealDate,
+        rMealDate: formattedDate,
         rMealType: mealType, //mealType 추가
       };
     });
@@ -333,9 +335,9 @@ const RecordMain = ({ navigation }) => {
                 if (mealList.length === 0) {
                   deleteMealListOnServer();
                 } else {
-                  // submitMealListToServer();
-                  uploadImage(photoUri, "user1", mealType);
-                  navigation.navigate("RecordScreen");
+                  submitMealListToServer();
+                  // uploadImage(photoUri, "user1", mealType);
+                  // navigation.navigate("RecordScreen");
                 }
               }}
             >
