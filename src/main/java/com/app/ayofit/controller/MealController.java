@@ -29,7 +29,6 @@ public class MealController {
 	
 	@PostMapping("")
 	public void regMeal(@RequestBody List<MealDTO> mealList) {
-		System.out.println(mealList.get(0));
 		mealDAO.regMeal(mealList);
 	}
 	

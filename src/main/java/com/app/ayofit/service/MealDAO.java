@@ -26,7 +26,21 @@ public class MealDAO {
         int successCount = 0;  // 성공한 삽입 연산의 개수를 추적
 
         for (MealDTO meal : mealList) {
+                
+                if (meal.getrCarbohydrate() == null) {
+					 meal.setrCarbohydrate("0");
+				}
+                
+                if (meal.getrProtein() == null) {
+                	meal.setrProtein("0");
+                }
+                
+                if (meal.getrFat() == null) {
+                	meal.setrFat("0");
+                }
+                
                 System.out.println(meal);
+                
                 
                 // 여기에서 DB에 삽입 (하나씩)
                 if (mealMapper.regMeal(meal) == 1) {
