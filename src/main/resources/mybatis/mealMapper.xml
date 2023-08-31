@@ -8,16 +8,16 @@
 	</select>
 	
 	<insert id="regMeal">
-		insert into record_meal (R_NO, R_ID, R_FOOD_NAME, R_MEAL_TYPE, R_MEAL_DATE, R_CARBOHYDRATE, R_PROTEIN, R_FAT)
+		insert into record_meal
 		values (
 			record_meal_seq.nextval,
 			'user1',
-			#{mealDTO.rFoodName},
-			#{mealDTO.rMealType},
-			to_date(#{mealDT.rMealDate}, 'yyyy-mm-dd hh24:mi:ss'),
-			#{mealDTO.rCarbohydrate},
-			#{mealDTO.rProtein}, 
-			#{mealDTO.rFat}
+			#{rFoodName},
+			#{rMealType},
+			TO_DATE(#{rMealDate}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{rCarbohydrate},
+			#{rProtein}, 
+			#{rFat}
 		)
 	</insert>
 	

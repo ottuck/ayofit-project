@@ -30,7 +30,9 @@ const RecordMain = ({ navigation }) => {
 
   //서버에 넘김 임시 Date
   const mealDate = new Date();
-  // console.log(mealDate);
+  const formattedDate = mealDate.toISOString().slice(0, 19).replace("T", " ");
+
+  // console.log(formattedDate); // "2023-08-31 08:36:40"
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -44,12 +46,15 @@ const RecordMain = ({ navigation }) => {
 
       // 'n'을 'r'로 바꾼 새로운 객체 생성
       const rKeysObject = Object.fromEntries(
-        Object.entries(rest).map(([key, value]) => [key.replace(/^n/, 'r'), value])
+        Object.entries(rest).map(([key, value]) => [
+          key.replace(/^n/, "r"),
+          value,
+        ])
       );
       return {
         ...rKeysObject,
-        rMealDate: mealDate,
-        rMealType: mealType //mealType 추가
+        rMealDate: formattedDate,
+        rMealType: mealType, //mealType 추가
       };
     });
     console.log("Save버튼 누른후 제출전 :", updatedMealList);
@@ -69,7 +74,7 @@ const RecordMain = ({ navigation }) => {
     axios
       .delete(`${uri}/api/meal`, {
         params: {
-          rMealDate: mealDate, 
+          rMealDate: mealDate,
           rMealType: mealType,
         },
       })
@@ -79,7 +84,7 @@ const RecordMain = ({ navigation }) => {
       .catch(() => {
         console.log("Error", "Failed to delete");
       });
-  }
+  };
 
   //ImgModal
   const [imgModalVisible, setImgModalVisible] = useState(false);
@@ -338,7 +343,7 @@ const RecordMain = ({ navigation }) => {
             >
               <View style={styles.buttonBox2}>
                 <Text style={styles.buttonText}>
-                  {mealList.length === 0 ? 'Update' : 'Save'}  
+                  {mealList.length === 0 ? "Update" : "Save"}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -359,7 +364,6 @@ const RecordMain = ({ navigation }) => {
                 ampm2={ampm2}
               />
             ))}
-
           </ScrollView>
 
           {/* DateTimePicker */}
@@ -499,7 +503,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginBottom: 15
+    marginBottom: 15,
   },
   buttonBox1: {
     height: 40,
