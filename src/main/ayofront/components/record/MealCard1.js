@@ -56,8 +56,10 @@ const MealCard1 = ({
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: 300,
-    height: 430,
+    // width: 300,
+    // height: 430,
+    width: 280,
+    height: 410,
     marginHorizontal: 20,
     backgroundColor: "white",
     borderRadius: 15,
@@ -70,8 +72,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cardImageContainer: {
-    width: 270,
-    height: 270,
+    width: 260,
+    height: 260,
     backgroundColor: "rgba(0, 0, 0, 0.10)",
     borderRadius: 1,
     justifyContent: "center",

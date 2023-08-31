@@ -170,12 +170,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: 350,
-    marginVertical: 80,
-    marginHorizontal: 35,
+    marginVertical: 62,
+    alignSelf: "center",
   },
   headerTitle: {
     fontWeight: "500",
-    fontSize: 25,
+    fontSize: 26,
     color: "white",
   },
   headerDate: {
