@@ -22,7 +22,7 @@ function MainImage({ navigate }) {
           fImg: item.fImg,
           fType: item.fType,
         }));
-        setImgs((prevImgs) => [...prevImgs, ...newImgs]);
+        setImgs(newImgs);
       })
       .catch(() => {
         console.log("get error..");
@@ -57,7 +57,7 @@ function MainImage({ navigate }) {
             <Text style={styles.text}>Breakfast</Text>
             <TouchableOpacity onPress={navigate}>
               <View style={styles.imgCard}>
-                {img.length > 0 ? (
+                {img.find((item) => item.fType === "breakfast") ? (
                   <Image
                     source={{
                       uri:
@@ -69,7 +69,7 @@ function MainImage({ navigate }) {
                 ) : (
                   <Image
                     source={require("../../assets/default-recordimg.png")}
-                    style={styles.img}
+                    style={styles.defaultImg}
                   />
                 )}
               </View>
@@ -79,7 +79,7 @@ function MainImage({ navigate }) {
             <Text style={styles.text}>Lunch</Text>
             <TouchableOpacity onPress={navigate}>
               <View style={styles.imgCard}>
-                {img.length > 0 ? (
+                {img.find((item) => item.fType === "lunch") ? (
                   <Image
                     source={{
                       uri:
@@ -91,7 +91,7 @@ function MainImage({ navigate }) {
                 ) : (
                   <Image
                     source={require("../../assets/default-recordimg.png")}
-                    style={styles.img}
+                    style={styles.defaultImg}
                   />
                 )}
               </View>
@@ -103,7 +103,7 @@ function MainImage({ navigate }) {
             <Text style={styles.text}>Dinner</Text>
             <TouchableOpacity onPress={navigate}>
               <View style={styles.imgCard}>
-                {img.length > 0 ? (
+                {img.find((item) => item.fType === "dinner") ? (
                   <Image
                     source={{
                       uri:
@@ -115,7 +115,7 @@ function MainImage({ navigate }) {
                 ) : (
                   <Image
                     source={require("../../assets/default-recordimg.png")}
-                    style={styles.img}
+                    style={styles.defaultImg}
                   />
                 )}
               </View>
@@ -125,7 +125,7 @@ function MainImage({ navigate }) {
             <Text style={styles.text}>Snack</Text>
             <TouchableOpacity onPress={navigate}>
               <View style={styles.imgCard}>
-                {img.length > 0 ? (
+                {img.find((item) => item.fType === "snack") ? (
                   <Image
                     source={{
                       uri:
@@ -137,7 +137,7 @@ function MainImage({ navigate }) {
                 ) : (
                   <Image
                     source={require("../../assets/default-recordimg.png")}
-                    style={styles.img}
+                    style={styles.defaultImg}
                   />
                 )}
               </View>
@@ -182,5 +182,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  img: { width: 40, height: 40 },
+  defaultImg: { width: 40, height: 40 },
+  img: { borderRadius: 16, width: 180, height: 100, resizeMode: "cover" },
 });
