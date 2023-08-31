@@ -5,14 +5,16 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.app.ayofit.model.LoginInfoDTO;
+import com.app.ayofit.model.AccountDTO;
 
 @Mapper
 public interface LoginMapper {
 
-        List<LoginInfoDTO> checkLogin(
+        AccountDTO checkLogin(
                         @Param("reqEmail") String reqEmail,
                         @Param("reqPassword") String reqPassword);
+
+        int setEmptyInfo(@Param("infoUuid") String infoUuid);
 
         int setUser(
                         @Param("idUuid") String uuid,
@@ -21,7 +23,7 @@ public interface LoginMapper {
                         @Param("reqPassword") String reqPassword,
                         @Param("infoUuid") String infoUuid);
 
-        List<LoginInfoDTO> checkGoogle(@Param("reqId") String reqId);
+        AccountDTO checkGoogle(@Param("reqId") String reqId);
 
         int setGoogle(
                         @Param("idUuid") String uuid,

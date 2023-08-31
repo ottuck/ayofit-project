@@ -9,14 +9,11 @@ import org.springframework.stereotype.Service;
 import com.app.ayofit.mapper.RecordWeightMapper;
 import com.app.ayofit.model.RecordWeightDTO;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.time.ZoneId;
-
 
 @Service
 public class RecordWeightDAO {
@@ -31,7 +28,7 @@ public class RecordWeightDAO {
     public RecordWeightDTO getWeightByDateAndId(Date rWeightDate, String rId) {
         return mapper.findByDateAndId(rWeightDate, rId);
     }
-    
+
     public List<Map<String, Object>> getDailyForUser(String rId, String formattedToday) {
         List<RecordWeightDTO> weights = mapper.findAllByUserId(rId);
 
@@ -44,7 +41,7 @@ public class RecordWeightDAO {
             double dailySum = 0;
             int count = 0;
 
-            for (RecordWeightDTO weight: weights) {
+            for (RecordWeightDTO weight : weights) {
                 Date weightDate = weight.getrWeightDate();
                 LocalDate recordDate = weightDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
@@ -52,7 +49,7 @@ public class RecordWeightDAO {
                     dailySum += weight.getrWeight();
                     count++;
                 }
-              
+
             }
 
             double value;
@@ -71,10 +68,9 @@ public class RecordWeightDAO {
         return dailyData;
     }
 
-    
     public List<Map<String, Object>> getWeeklyAveragesForUser(String rId, String formattedToday) {
         List<RecordWeightDTO> weights = mapper.findAllWeightsByUserId(rId);
-        
+
         LocalDate weekEnd = LocalDate.parse(formattedToday); // 주의 끝: 입력된 날짜
         LocalDate weekStart = weekEnd.minusDays(6); // 주의 시작: 입력된 날짜로부터 6일 전
 
@@ -84,10 +80,10 @@ public class RecordWeightDAO {
             double weeklySum = 0;
             int count = 0;
 
-            for (RecordWeightDTO weight: weights) {
+            for (RecordWeightDTO weight : weights) {
                 Date date = weight.getrWeightDate();
                 LocalDate weightDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                
+
                 if ((weightDate.isEqual(weekStart) || weightDate.isAfter(weekStart))
                         && (weightDate.isEqual(weekEnd) || weightDate.isBefore(weekEnd))) {
                     weeklySum += weight.getrWeight();
@@ -115,18 +111,21 @@ public class RecordWeightDAO {
     }
 
     public List<Map<String, Object>> getMonthlyAveragesForUser(String rId, String formattedToday) {
-        LocalDate monthEnd = LocalDate.parse(formattedToday).withDayOfMonth(LocalDate.parse(formattedToday).lengthOfMonth()); // 해당 월의 마지막 날
+        LocalDate monthEnd = LocalDate.parse(formattedToday)
+                .withDayOfMonth(LocalDate.parse(formattedToday).lengthOfMonth()); // 해당 월의 마지막 날
         LocalDate monthStart = monthEnd.withDayOfMonth(1); // 해당 월의 첫 날
 
         List<Map<String, Object>> monthlyAverages = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) { // 3달 간의 데이터
-            List<RecordWeightDTO> weightsForMonth = mapper.findWeightsBetweenDates(rId, Date.from(monthStart.atStartOfDay(ZoneId.systemDefault()).toInstant()), Date.from(monthEnd.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            List<RecordWeightDTO> weightsForMonth = mapper.findWeightsBetweenDates(rId,
+                    Date.from(monthStart.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                    Date.from(monthEnd.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
             double monthlySum = 0;
             int count = weightsForMonth.size();
 
-            for (RecordWeightDTO weight: weightsForMonth) {
+            for (RecordWeightDTO weight : weightsForMonth) {
                 monthlySum += weight.getrWeight();
             }
 
@@ -150,7 +149,6 @@ public class RecordWeightDAO {
         return monthlyAverages;
     }
 
-    
     public void addWeight(RecordWeightDTO record) {
         mapper.insert(record);
     }
@@ -162,6 +160,5 @@ public class RecordWeightDAO {
     public void delete(String rId, Date rWeightDate) {
         mapper.delete(rId, rWeightDate);
     }
-    
-}
 
+}

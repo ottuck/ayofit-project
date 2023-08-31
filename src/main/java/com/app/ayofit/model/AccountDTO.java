@@ -9,17 +9,19 @@ public class AccountDTO {
 	private String l_picture;
 	private String l_type;
 	private String l_info;
+	private int a_type;
 	private int age;
 	private String gender;
 	private double height;
 	private double curWeight;
 	private String activity;
 
-	public AccountDTO() {
+	public AccountDTO(String l_info) {
+		this.l_info = l_info;
 	}
 
 	public AccountDTO(String l_id, String l_email, String l_password, String l_name, String l_picture, String l_type,
-			String l_info, int age, String gender, double height, double curWeight, String activity) {
+			String l_info, int a_type, int age, String gender, double height, double curWeight, String activity) {
 		this.l_id = l_id;
 		this.l_email = l_email;
 		this.l_password = l_password;
@@ -27,6 +29,7 @@ public class AccountDTO {
 		this.l_picture = l_picture;
 		this.l_type = l_type;
 		this.l_info = l_info;
+		this.a_type = a_type;
 		this.age = age;
 		this.gender = gender;
 		this.height = height;
@@ -90,6 +93,14 @@ public class AccountDTO {
 		this.l_info = l_info;
 	}
 
+	public int getA_type() {
+		return a_type;
+	}
+
+	public void setA_type(int a_type) {
+		this.a_type = a_type;
+	}
+
 	public int getAge() {
 		return age;
 	}
@@ -133,9 +144,9 @@ public class AccountDTO {
 	@Override
 	public String toString() {
 		return "AccountDTO [l_id=" + l_id + ", l_email=" + l_email + ", l_password=" + l_password + ", l_name=" + l_name
-				+ ", l_picture=" + l_picture + ", l_type=" + l_type + ", l_info=" + l_info + ", age=" + age
-				+ ", gender=" + gender + ", height=" + height + ", curWeight=" + curWeight + ", activity=" + activity
-				+ "]";
+				+ ", l_picture=" + l_picture + ", l_type=" + l_type + ", l_info=" + l_info + ", a_type=" + a_type
+				+ ", age=" + age + ", gender=" + gender + ", height=" + height + ", curWeight=" + curWeight
+				+ ", activity=" + activity + "]";
 	}
 
 }

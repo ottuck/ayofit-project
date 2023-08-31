@@ -1,14 +1,15 @@
 package com.app.ayofit.model;
 
-import java.util.List;
-
 public class LoginDTO {
 
     private String status;
     private String message;
-    private List<LoginInfoDTO> data;
+    private AccountDTO data;
 
-    public LoginDTO(String status, String message, List<LoginInfoDTO> data) {
+    public LoginDTO() {
+    }
+
+    public LoginDTO(String status, String message, AccountDTO data) {
         this.status = status;
         this.message = message;
         this.data = data;
@@ -30,11 +31,11 @@ public class LoginDTO {
         this.message = message;
     }
 
-    public List<LoginInfoDTO> getData() {
+    public AccountDTO getData() {
         return data;
     }
 
-    public void setData(List<LoginInfoDTO> data) {
+    public void setData(AccountDTO data) {
         this.data = data;
     }
 

@@ -61,7 +61,7 @@ const Login = ({ navigation }) => {
         if (status !== "SUCCESS") {
           handleMessage(message, status);
         } else {
-          persistLogin({ ...data[0] }, message, status);
+          persistLogin({ ...data }, message, status);
         }
         setSubmitting(false);
       })
@@ -110,7 +110,7 @@ const Login = ({ navigation }) => {
           if (status !== "SUCCESS") {
             handleMessage(message, status);
           } else {
-            persistLogin({ ...data[0] }, message, status);
+            persistLogin({ ...data }, message, status);
           }
         })
         .catch((error) => {

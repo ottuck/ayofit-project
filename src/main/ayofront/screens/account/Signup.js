@@ -35,10 +35,10 @@ const Signup = ({ navigation }) => {
       .post(`${uri}/api/signup`, credentials)
       .then((response) => {
         const result = response.data;
-        const { message, status } = result;
+        const { message, status, data } = result;
         handleMessage(message, status);
         if (status === "SUCCESS") {
-          navigation.navigate("Login");
+          navigation.navigate("AccountInfo", { ...data });
         }
       })
       .catch((error) => {

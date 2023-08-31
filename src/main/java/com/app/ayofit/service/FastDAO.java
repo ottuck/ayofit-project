@@ -7,24 +7,19 @@ import org.springframework.stereotype.Service;
 
 import com.app.ayofit.mapper.FastMapper;
 import com.app.ayofit.model.FastDTO;
-import com.app.ayofit.model.FoodDTO;
-
 
 @Service
 public class FastDAO {
-    
+
     @Autowired
     private FastMapper fastMapper;
-    
+
     public void insertFastData(FastDTO fastDTO) {
-        fastMapper.insertFastData(fastDTO); 
+        fastMapper.insertFastData(fastDTO);
     }
-    
-	public List<FastDTO> getAllFastRecord() {
+
+    public List<FastDTO> getAllFastRecord() {
         return fastMapper.getAllFastRecord();
     }
 
-   
 }
-
-    

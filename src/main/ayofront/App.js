@@ -124,17 +124,6 @@ export default function App() {
               <NavigationContainer style={styles.navigationContainer}>
                 <PedometerProvider>
                   <Stack.Navigator>
-                    {/* /* 인증해야되서 주석 처리 해둠
-              <Stack.Screen
-                name="AccountInfo"
-                component={AccountInfo}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="AccountNutri"
-                component={AccountNutri}
-                options={{ headerShown: false }}
-              /> */}
                     {userInfo ? (
                       <Stack.Screen
                         name="MainTabs"
