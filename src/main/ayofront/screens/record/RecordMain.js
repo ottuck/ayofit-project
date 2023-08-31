@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   Image,
   ImageBackground,
@@ -10,40 +9,48 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import React, { useState } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
-import { BlurView } from "expo-blur";
 import Constants from "expo-constants";
 import DatePicker, {
-  getToday,
   getFormatedDate,
+  getToday,
 } from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
+import SearchModal from "../../components/record/SearchModal";
 import { usePhotoContext } from "../../store/image_context";
 import { useMealContext } from "../../store/MealContext";
-import SearchModal from "../../components/record/SearchModal";
 import MealCard2 from "../../components/record/MealCard2";
 
-const RecordMain = (route) => {
-  const { mealList } = useMealContext();
-  // console.log("컨택스트API => 레코드메인 ", mealList);
-
-  // 콘솔 로그일때 컨텍스트 ㅁPIdp wkfTKdkslkfor문 돌려보기
+const RecordMain = ({ navigation }) => {
+  const { mealType, mealList } = useMealContext();
+  // console.log(mealType);
+  // console.log("컨택스트API => 레코드메인 ", mealData);
 
   //Server 통신을 위한 URI 수정
   const uri = "http://213.35.96.167";
 
   //식단 기록 post 요청
-  const submitMealToServer = () => {
-    axios
-      .post(`${uri}/api/meal`, mealList)
-      .then((response) => {
-        console.log("MealData submitted successfully:", response.data);
-      })
-      .catch(() => {
-        console.log("Error", "Failed to submit");
-      });
+  const submitMealListToServer = () => {
+    const updatedMealList = mealList.map((meal) => {
+      const { nNO, nSize, ...rest } = meal; // nNO와 nSize를 제거
+      return {
+        ...rest,
+        nMealType: mealType, //mealType 추가
+      };
+    });
+    console.log("업데이트 밀리스트:", updatedMealList);
+
+    // axios
+    //   .post(`${uri}/api/meal`, mealList)
+    //   .then((response) => {
+    //     console.log("MealData submitted successfully:", response.data);
+    //   })
+    //   .catch(() => {
+    //     console.log("Error", "Failed to submit");
+    //   });
   };
 
   //ImgModal
@@ -51,11 +58,28 @@ const RecordMain = (route) => {
   const toggleImgModal = () => {
     setImgModalVisible(!imgModalVisible);
   };
-  const { photoUri, setPhotoUri } = usePhotoContext();
+  const { photoUri, setPhotoUri, photoId } = usePhotoContext();
+  // console.log(photoUri);
+
+  // 사진 파일 삭제 로직
   console.log(photoUri);
-  const deletePhoto = () => {
-    console.log(photoUri);
-    setPhotoUri(null);
+  console.log(photoId);
+
+  const deleteFile = () => {
+    axios
+      .delete(`${uri}/api/file/delete`, {
+        params: {
+          fNo: photoId,
+          fUrl: photoUri,
+        },
+      })
+      .then((response) => {
+        console.log("PhotoFile deleted successfully:", response.data);
+        setPhotoUri(null);
+      })
+      .catch(() => {
+        console.log("Failed to delete");
+      });
   };
 
   //Search Modal
@@ -75,8 +99,9 @@ const RecordMain = (route) => {
   const closeDatePickerModal = () => {
     setDatePickerModalVisible(false);
   };
+
   // 사진 등록 POST 요청
-  const uploadImage = async (imageUri, userId) => {
+  const uploadImage = async (imageUri, userId, mealType) => {
     const formData = new FormData();
     formData.append("file", {
       uri: imageUri,
@@ -85,6 +110,7 @@ const RecordMain = (route) => {
     });
 
     formData.append("userId", userId);
+    formData.append("mealType", mealType);
 
     try {
       const response = await fetch(uri + "/api/file/files", {
@@ -134,6 +160,10 @@ const RecordMain = (route) => {
   //Current Date
   const currentDate = getFormatedDate(new Date(), "YYYY/MM/DD");
   const currentTime = getFormatedDate(new Date(), "h:m");
+
+  //서버에 넘김 임시 Date
+  const date = new Date();
+  const isoDate = date.toISOString();
 
   //change date format
   const transformDate = (inputDate) => {
@@ -210,7 +240,7 @@ const RecordMain = (route) => {
             {/* imagePiker 사진 입력 부분 작업중 */}
             <View style={styles.cardImageContainer}>
               {photoUri ? (
-                <TouchableOpacity onPress={deletePhoto} style={{ zIndex: 10 }}>
+                <TouchableOpacity onPress={deleteFile} style={{ zIndex: 10 }}>
                   <AntDesign
                     name="closecircle"
                     style={styles.photoDeleteButton}
@@ -273,7 +303,13 @@ const RecordMain = (route) => {
                 <Text style={styles.buttonText}> Add More </Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={submitMealToServer}>
+            <TouchableOpacity
+              onPress={() => {
+                // submitMealToServer();
+                uploadImage(photoUri, "user1", mealType);
+                navigation.navigate("RecordScreen");
+              }}
+            >
               <View style={styles.buttonBox2}>
                 <Text style={styles.buttonText}> Save </Text>
               </View>
@@ -284,7 +320,6 @@ const RecordMain = (route) => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.recordScroll}
           >
-            {/* <Text>{mealList[0].nFoodName}</Text> */}
             {mealList.map((mealInfo, index) => (
               <MealCard2
                 key={index}
@@ -296,15 +331,6 @@ const RecordMain = (route) => {
                 ampm2={ampm2}
               />
             ))}
-
-            {/* <MealCard2
-              mealList={mealList}
-              useTimepicker={useTimepicker}
-              formattedCurrentTime={formattedCurrentTime}
-              formattedPickerTime={formattedPickerTime}
-              ampm1={ampm1}
-              ampm2={ampm2}
-            /> */}
           </ScrollView>
 
           {/* DateTimePicker */}
@@ -444,6 +470,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
+    marginBottom: 15,
   },
   buttonBox1: {
     height: 40,

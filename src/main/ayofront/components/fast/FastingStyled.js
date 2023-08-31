@@ -3,7 +3,7 @@ import styled from "styled-components/native"
 //-------------------MainPage-----------------------------//
 export const MainBtn = styled.TouchableOpacity`
  border-radius : 20px;
- width : 200px;
+ width : 300px;
  height : 60px;
  align-items: center;
  justify-content: center;
@@ -13,39 +13,29 @@ export const MainText = styled.Text`
  color : black;
  text-shadow: 2px 3px 5px #f8d5bc;
  opacity: 0.8;
- font-size : 22px;
+ font-size : 26px;
  font-weight : 400
 `;
 export const FirstMainPage = styled.View`
-width : 100%;
-height : 100%;
+flex:1;
 align-items: center;
 justify-content: center;
+`;
+export const MainHeaderBtn = styled.TouchableOpacity`
 
 `;
-//---------------------------------------------------------------//
-export const FastBGImgView = styled.View`
-width: 100%;
-height: 100%;
-`;
-export const FastBGImg = styled.ImageBackground`
-width: 100%;
-height: 750px;
-z-index : -1;
-`;
+
 //---------------------FastMethod(Stack.js)----------------------//
 export const MethodScrollView = styled.ScrollView`
-width:100%;
-height:100%;
+width: 100%;
 `;
 export const MethodContainer = styled.View`
-width:100%;
-height:100%;
+flex:1;
 `;
 export const MethodTitle = styled.Text`
 font-size: 20px;
 align-self: center;
-color: black;
+color: white;
 bottom: 50px;
 margin-top: 70px;
 font-weight: 600;
@@ -115,7 +105,8 @@ bottom: 60px;
 //---------------FastPlan(Stack.js)---------------//
 export const PlanContainer = styled.ScrollView`
 width: 100%;
-height: 100%;
+height: 700px;
+bottom:-30px;
 `;
 export const PlanTitle = styled.Text`
 font-size: 17px;
@@ -129,8 +120,30 @@ font-weight : 500;
 margin-top : 30px;
 margin-left : 35px;
 line-height : 25px;
+color: white;
 `;
-export const PlanMethodCView = styled.TouchableOpacity`
+export const PlanMethodTText = styled.Text`
+font-size: 18px;
+font-weight : 500;
+margin-top : 30px;
+margin-left : 35px;
+line-height : 25px;
+
+`;
+export const PlanMethodCTouch = styled.TouchableOpacity`
+align-items: center;
+justify-content: center;
+border: 1px solid #000000;
+border-radius : 20px;
+background-color: #FFFFFF80;
+height: 45px;
+width: 80%;
+margin-top : 10px;
+margin-left : 40px;
+margin-right : 20px;
+flex-direction : row;
+`;
+export const PlanMethodCView = styled.View`
 align-items: center;
 justify-content: center;
 border: 1px solid #000000;
@@ -146,9 +159,7 @@ flex-direction : row;
 export const PlanMethodC = styled.Text`
 font-size: 20px;
 color: #505050;
-
 `;
-
 export const PlanEndView = styled.View`
 align-items: center;
 justify-content: center;
@@ -160,6 +171,7 @@ height : 100px;
 export const PlanEndText = styled.Text`
 font-size : 20px;
 line-height : 28px;
+text-shadow: 2px 3px 5px #f6c099;
 `;
 export const PlanConfirmV = styled.View`
 height: 130px;
@@ -171,7 +183,7 @@ width : 85%;
 height : 50px;
 align-items: center;
 justify-content: center;
-margin-top : 45px;
+margin-top : 25px;
 margin-left : 30px;
 `;
 export const PlanConfirmT = styled.Text`
@@ -181,31 +193,35 @@ color : white;
 `;
 //--------------------Confirm(Stack.js)----------------------//
 export const ConfirmScroll = styled.ScrollView`
+width:100%;
+height:100%;
+bottom: -25px;
 `;
 export const ConfirmContainer = styled.View`
-height: 710px;
+height: 650px;
 position : relative;
 `;
 
 export const ConfirmTime = styled.Text`
 align-self: center;
 font-size: 35px;
-color : #E46C0A;
-top: 100px;
+color : white;
+top: 50px;
 margin-right : 10px;
 `;
 export const ConfirmTimeText = styled.Text`
 align-self: center;
-font-size: 15px;
-color : black;
-top: 100px;
+font-size: 20px;
+font-weight: 400;
+color : white;
+top: 50px;
 margin-right : 10px;
 `;
 export const ConfirmTextM = styled.Text`
 align-self: center;
 font-size: 15px;
 color : black;
-top: 105px;
+top: 50px;
 margin-right : 10px;
 padding : 5px;
 `;
@@ -275,15 +291,11 @@ font-size: 18px;
 font-weight : 500;
 `;
 //--------------------Timer(Stack.js)----------------------//
-export const TimerScrollView = styled.ScrollView`
-background-color: #FFE9D8;
-`;
-
 export const TimerContainer = styled.View`
 align-items: center;
 justify-content: center;
-background-color: #FFE9D8;
-height: 730px;
+height: 850px;
+bottom:-30px;
 `;
 export const TimerAddView = styled.View`
 bottom: 50px;
@@ -293,21 +305,19 @@ font-size : 20px;
 margin-bottom : 20px;
 `;
 export const TimerHomeBtn = styled.TouchableOpacity`
-background-color: #E46C0A33;
+background-color: #E46C0A;
 border-radius : 50px;
 align-items: center;
 justify-content: center;
-border : 1px solid #FFE9D8;
 height : 50px;
-width : 33%;
+width : 100px;
 right : -120px;
 margin-bottom : 30px;
-bottom: 50px;
-
+bottom: 40px;
 `;
 export const TimerHomeBT = styled.Text`
 font-size : 20px;
-color : black;
+color : white;
 `;
 export const EndTimeText = styled.Text`
 font-size: 20;
@@ -316,7 +326,6 @@ text-align: center;
 export const TimerMView = styled.View`
 justify-content : center;
 align-items: center;
-
 bottom: 50px;
 `;
 export const TimerStart = styled.View`
@@ -327,11 +336,11 @@ background-color : #E46C0A33;
 border-radius: 20px;
 align-items: center;
 justify-content: center;
-
 `;
 export const TimerSText = styled.Text`
 font-size: 18px;
 font-weight : 500;
+
 `;
 export const TimerEnd = styled.View`
 margin-top : 20px;
@@ -341,22 +350,26 @@ background-color : #E46C0A33;
 border-radius: 20px;
 align-items: center;
 justify-content: center;
-
 `;
 export const TimerEText = styled.Text`
 font-size: 18px;
 font-weight : 500;
 `;
+export const TimerStopText = styled.Text`
+font-size: 18px;
+font-weight : 500;
+color: white;
+`;
 export const TimerStop = styled.TouchableOpacity`
-margin-top : 20px;
+margin-top : 40px;
 width: 100px;
 height: 50px;
-background-color : #723b0e33;
+background-color : #E46C0A;
 border-radius: 20px;
 align-items: center;
 justify-content: center;
-
 `;
+
 //---------------------FastDate.js---------------------//
 export const FastDateContainer = styled.View`
 justify-content: center;
@@ -417,35 +430,37 @@ export const HeaderTouch = styled.TouchableOpacity`
 `;
 export const HeaderText = styled.Text`
 font-size : 20px;
+color:white;
 margin-top : 30px;
 margin-left : 10px;
 `;
 //----------------------RecordPage-------------------//
 export const RecordScrollView = styled.ScrollView`
-`;
-export const FastRecordView = styled.View`
-width: 100%;
-justify-content : center;
-align-items : center;
-padding-top: 100px;
-padding-bottom: 100px;
-border: 3px solid red;
-`;
-export const RecordUnderC = styled.View`
 width: 100%;
 height: 100%;
+`;
+export const FastRecordView = styled.View`
+flex:1;
+padding-top: 100px;
+padding-bottom: 270px;
+`;
+export const RecordUpC = styled.View`
+justify-content: center;
+align-items: center;
+bottom: 70px;
+`;
+export const RecordUnderC = styled.View`
 align-items : center;
-border: 3px solid black;
 `;
 export const RecordOneView = styled.View`
-  width: 85%;
-  height: 120px;
-  border: 1px solid black;
+  border: 3px solid white;
   border-radius: 15px;
   background-color: rgba(255, 255, 255, 0.5);
   margin-top: 20px;
+  height: 10%;
+  width: 90%;
+  bottom: 30px;
 `;
-
 export const RecordUseTime = styled.Text`
 margin-top : 10px;
 margin-left : 10px;
@@ -458,4 +473,53 @@ margin-left : 10px;
 export const RecordETime = styled.Text`
 margin-top : 10px;
 margin-left : 10px;
+`;
+export const RecordRTime = styled.Text`
+font-size: 20px;
+font-weight: 600;
+top:-50px;
+`;
+//--------------------HeaderCom-------------------//
+export const FastTotalHeader = styled.View`
+width: 100%;
+display: flex;
+flex-direction: row; /* 가로로 정렬 */
+align-items: flex-start; /* 왼쪽에 붙이는 정렬 */
+`;
+export const FastHeader = styled.TouchableOpacity`
+margin-top:55px;
+margin-left : 20px;
+`;
+export const FastHeaderR = styled.TouchableOpacity`
+margin-top:55px;
+margin-left : 20px;
+`;
+export const FastHeaderT = styled.Text`
+font-size: 25px;
+font-weight: 600;
+color: white; 
+`;
+//--------------------HeaderCom2-------------------//
+export const FastTotalHeader2 = styled.View`
+width: 100%;
+display: flex;
+flex-direction: row; /* 가로로 정렬 */
+align-items: flex-start; /* 왼쪽에 붙이는 정렬 */
+`;
+export const FastHeader2 = styled.TouchableOpacity`
+margin-top: 55px;
+margin-left : 40px;
+left: -30px;
+`;
+export const FastHeader2R = styled.TouchableOpacity`
+margin-top: 55px;
+margin-left : 20px;
+left: -30px;
+`;
+export const FastHeaderT2 = styled.Text`
+font-size: 25px;
+font-weight: 600;
+color: white;
+`;
+export const BackBtnTouch = styled.TouchableOpacity`
 `;

@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, Alert, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  Alert,
+  Image,
+  ImageBackground,
+  StatusBar,
+} from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -58,15 +65,22 @@ import {
   ConfirmTextM,
   MethodLeftContent,
   MethodRightContent,
+  MainHeaderBtn,
   MethodCText2,
   MethodCTextS2,
   TimerScrollView,
   TimerStop,
   TimerAddView,
+  TimerStopText,
+  PlanMethodTText,
+  PlanMethodCTouch,
 } from "../components/fast/FastingStyled";
 import { LinearGradient } from "expo-linear-gradient";
 import axios from "axios";
 import Constants from "expo-constants";
+import FastHeaderCom from "../components/fast/FastHeaderCom";
+import FastHeaderCom2 from "../components/fast/FastHeaderCom2";
+import { WhiteBalance } from "expo-camera";
 
 //-------------------------------current Time------------------------------//
 let nowDate = new Date();
@@ -99,18 +113,24 @@ let HourMinutes = `${nowHours}:${nowminutes}`;
 //-----------------------------------------------------------------------//
 
 //---------------------StackPage-----------------------------------------//
-const FastMainPage = ({ navigation: { navigate } }) => (
-  <LinearGradient colors={["#f7d7be", "#e7a370"]}>
-    <FirstMainPage>
-      <MainBtn onPress={() => navigate("FastingMethod")}>
-        <MainText
-          style={{ fontFamily: "OpenSans_800ExtraBold_Italic", fontSize: 20 }}
-        >
-          + Set up your plan
-        </MainText>
-      </MainBtn>
-    </FirstMainPage>
-  </LinearGradient>
+const FastMainPage = ({ navigation }) => (
+  <>
+    <ImageBackground
+      source={require("../images/FastImage/FastBackground.png")}
+      resizeMode="cover"
+      style={styles.backgroundMain}
+    >
+      <StatusBar translucent backgroundColor="transparent" />
+      <FastHeaderCom navigation={navigation} />
+      <FirstMainPage>
+        <MainBtn onPress={() => navigation.navigate("FastingMethod")}>
+          <MainText style={{ fontFamily: "OpenSans_800ExtraBold_Italic" }}>
+            + Set up your plan
+          </MainText>
+        </MainBtn>
+      </FirstMainPage>
+    </ImageBackground>
+  </>
 );
 
 const FastMethod = ({ navigation }) => {
@@ -164,77 +184,80 @@ const FastMethod = ({ navigation }) => {
     });
   };
 
-  return (
-    <LinearGradient colors={["#f7d7be", "#e7a370"]}>
-      <MethodScrollView>
-        <MethodContainer>
-          <MethodTitle>
-            Please choose a method
-            <Ionicons name="checkmark" size={28} color="black" />
-          </MethodTitle>
-          <MethodCTouch onPress={() => selectMethod(12)}>
-            <MethodLeftContent>
-              <MethodCText>12H</MethodCText>
-              <MethodCTextS>fasting</MethodCTextS>
-            </MethodLeftContent>
-            <FontAwesome5 name="minus" size={24} color="#E46C0A" />
-            <MethodRightContent>
-              <MethodCText2>12H</MethodCText2>
-              <MethodCTextS2>relaxing</MethodCTextS2>
-            </MethodRightContent>
-          </MethodCTouch>
-          <MethodCTouch onPress={() => selectMethod(14)}>
-            <MethodLeftContent>
-              <MethodCText>14H</MethodCText>
-              <MethodCTextS>fasting</MethodCTextS>
-            </MethodLeftContent>
-            <FontAwesome5 name="minus" size={24} color="#E46C0A" />
-            <MethodRightContent>
-              <MethodCText2>10H</MethodCText2>
-              <MethodCTextS2>relaxing</MethodCTextS2>
-            </MethodRightContent>
-          </MethodCTouch>
-          <MethodCTouch onPress={() => selectMethod(16)}>
-            <MethodLeftContent>
-              <MethodCText>16H</MethodCText>
-              <MethodCTextS>fasting</MethodCTextS>
-            </MethodLeftContent>
-            <FontAwesome5 name="minus" size={24} color="#E46C0A" />
-            <MethodRightContent>
-              <MethodCText2>8H</MethodCText2>
-              <MethodCTextS2>relaxing</MethodCTextS2>
-            </MethodRightContent>
-          </MethodCTouch>
-          <MethodCTouch onPress={() => selectMethod(18)}>
-            <MethodLeftContent>
-              <MethodCText>18H</MethodCText>
-              <MethodCTextS>fasting</MethodCTextS>
-            </MethodLeftContent>
-            <FontAwesome5 name="minus" size={24} color="#E46C0A" />
-            <MethodRightContent>
-              <MethodCText2>6H</MethodCText2>
-              <MethodCTextS2>relaxing</MethodCTextS2>
-            </MethodRightContent>
-          </MethodCTouch>
-          <MethodCTouch onPress={() => selectMethod(20)}>
-            <MethodLeftContent>
-              <MethodCText>20H</MethodCText>
-              <MethodCTextS>fasting</MethodCTextS>
-            </MethodLeftContent>
-            <FontAwesome5 name="minus" size={24} color="#E46C0A" />
-            <MethodRightContent>
-              <MethodCText2>4H</MethodCText2>
-              <MethodCTextS2>relaxing</MethodCTextS2>
-            </MethodRightContent>
-          </MethodCTouch>
-          <MethodCEndTouch onPress={() => selectMethod(24)}>
-            <MethodCText>24H</MethodCText>
+  <ImageBackground
+    source={require("../images/FastImage/FastBackground.png")}
+    resizeMode="cover"
+    style={styles.backgroundMain}
+  >
+    <FastHeaderCom2 navigation={navigation} />
+    <MethodScrollView>
+      <MethodContainer>
+        <MethodTitle>
+          Please choose a method
+          <Ionicons name="checkmark" size={28} color="white" />
+        </MethodTitle>
+        <MethodCTouch onPress={() => selectMethod(12)}>
+          <MethodLeftContent>
+            <MethodCText>12H</MethodCText>
             <MethodCTextS>fasting</MethodCTextS>
-          </MethodCEndTouch>
-        </MethodContainer>
-      </MethodScrollView>
-    </LinearGradient>
-  );
+          </MethodLeftContent>
+          <FontAwesome5 name="minus" size={24} color="#E46C0A" />
+          <MethodRightContent>
+            <MethodCText2>12H</MethodCText2>
+            <MethodCTextS2>relaxing</MethodCTextS2>
+          </MethodRightContent>
+        </MethodCTouch>
+        <MethodCTouch onPress={() => selectMethod(14)}>
+          <MethodLeftContent>
+            <MethodCText>14H</MethodCText>
+            <MethodCTextS>fasting</MethodCTextS>
+          </MethodLeftContent>
+          <FontAwesome5 name="minus" size={24} color="#E46C0A" />
+          <MethodRightContent>
+            <MethodCText2>10H</MethodCText2>
+            <MethodCTextS2>relaxing</MethodCTextS2>
+          </MethodRightContent>
+        </MethodCTouch>
+        <MethodCTouch onPress={() => selectMethod(16)}>
+          <MethodLeftContent>
+            <MethodCText>16H</MethodCText>
+            <MethodCTextS>fasting</MethodCTextS>
+          </MethodLeftContent>
+          <FontAwesome5 name="minus" size={24} color="#E46C0A" />
+          <MethodRightContent>
+            <MethodCText2>8H</MethodCText2>
+            <MethodCTextS2>relaxing</MethodCTextS2>
+          </MethodRightContent>
+        </MethodCTouch>
+        <MethodCTouch onPress={() => selectMethod(18)}>
+          <MethodLeftContent>
+            <MethodCText>18H</MethodCText>
+            <MethodCTextS>fasting</MethodCTextS>
+          </MethodLeftContent>
+          <FontAwesome5 name="minus" size={24} color="#E46C0A" />
+          <MethodRightContent>
+            <MethodCText2>6H</MethodCText2>
+            <MethodCTextS2>relaxing</MethodCTextS2>
+          </MethodRightContent>
+        </MethodCTouch>
+        <MethodCTouch onPress={() => selectMethod(20)}>
+          <MethodLeftContent>
+            <MethodCText>20H</MethodCText>
+            <MethodCTextS>fasting</MethodCTextS>
+          </MethodLeftContent>
+          <FontAwesome5 name="minus" size={24} color="#E46C0A" />
+          <MethodRightContent>
+            <MethodCText2>4H</MethodCText2>
+            <MethodCTextS2>relaxing</MethodCTextS2>
+          </MethodRightContent>
+        </MethodCTouch>
+        <MethodCEndTouch onPress={() => selectMethod(24)}>
+          <MethodCText>24H</MethodCText>
+          <MethodCTextS>fasting</MethodCTextS>
+        </MethodCEndTouch>
+      </MethodContainer>
+    </MethodScrollView>
+  </ImageBackground>;
 };
 
 const FastPlan = ({ navigation }) => {
@@ -301,9 +324,13 @@ const FastPlan = ({ navigation }) => {
   const currentEndTime = currnetDateTime.split(" : ")[1]; // " : "로 분리하고 두 번째 요소 추출
 
   return (
-    <LinearGradient colors={["#f7d7be", "#e7a370"]}>
+    <ImageBackground
+      source={require("../images/FastImage/FastBackground.png")}
+      resizeMode="cover"
+      style={styles.backgroundMain}
+    >
+      <FastHeaderCom2 navigation={navigation} />
       <PlanContainer>
-        <PlanTitle>{"\n"}</PlanTitle>
         <PlanMethodText>Fasting Method</PlanMethodText>
         <PlanMethodCView>
           <PlanMethodC>{selectMethod.string}</PlanMethodC>
@@ -313,15 +340,15 @@ const FastPlan = ({ navigation }) => {
           />
         </PlanMethodCView>
         <PlanMethodText>Starting Date</PlanMethodText>
-        <PlanMethodCView>
+        <PlanMethodCTouch>
           <FastDate onDateChange={(newDate) => setSelectedDate(newDate)} />
           <Image
             source={require("../images/FastImage/FastDateimo.png")}
             style={styles.dateImo}
           />
-        </PlanMethodCView>
-        <PlanMethodText>Starting Time</PlanMethodText>
-        <PlanMethodCView>
+        </PlanMethodCTouch>
+        <PlanMethodTText>Starting Time</PlanMethodTText>
+        <PlanMethodCTouch>
           <FastTime
             style={styles.FastTime}
             onTimeChange={(newTime) => setSelectedTime(newTime)}
@@ -330,10 +357,10 @@ const FastPlan = ({ navigation }) => {
             source={require("../images/FastImage/FastTimerimo.png")}
             style={styles.timerImo}
           />
-        </PlanMethodCView>
+        </PlanMethodCTouch>
         <PlanEndView>
           <PlanEndText
-            style={{ fontFamily: "OpenSans_600SemiBold_Italic", fontSize: 20 }}
+            style={{ fontFamily: "OpenSans_700Bold_Italic", fontSize: 20 }}
           >
             It ends at {"\n"}
             {totalDateTime || currnetDateTime}
@@ -345,7 +372,7 @@ const FastPlan = ({ navigation }) => {
           </PlanConfirmB>
         </PlanConfirmV>
       </PlanContainer>
-    </LinearGradient>
+    </ImageBackground>
   );
 };
 
@@ -435,14 +462,19 @@ const FastConfirm = ({ navigation }) => {
     .replace("at", "")
     .replace(",", ", ");
   return (
-    <LinearGradient colors={["#f7d7be", "#e7a370"]}>
+    <ImageBackground
+      source={require("../images/FastImage/FastBackground.png")}
+      resizeMode="cover"
+      style={styles.backgroundMain}
+    >
+      <FastHeaderCom2 navigation={navigation} />
       <ConfirmScroll>
         <ConfirmContainer>
           <ConfirmHeader>
             <ConfirmTime>{stringFormat}</ConfirmTime>
             <ConfirmTimeText>fasting </ConfirmTimeText>
             <ConfirmTextM>
-              <FontAwesome5 name="minus" size={15} color="#E46C0A" />
+              <FontAwesome5 name="minus" size={15} color="#FFFFFF" />
             </ConfirmTextM>
             <ConfirmTime> {stringFormat2}</ConfirmTime>
             <ConfirmTimeText>relaxing</ConfirmTimeText>
@@ -465,7 +497,7 @@ const FastConfirm = ({ navigation }) => {
           </ConfirmBtn>
         </ConfirmContainer>
       </ConfirmScroll>
-    </LinearGradient>
+    </ImageBackground>
   );
 };
 
@@ -521,57 +553,26 @@ function MyTimer({ navigation: { navigate } }) {
     }, SCTime);
   }
 
-  const handleStopTimer = () => {
-    Alert.alert("Stop Timer", "Are you sure?", [
-      {
-        text: "cancel",
-        style: "cancel",
-      },
-      {
-        text: "Stop",
-        onPress: async () => {
-          const elapsedTimeValue = totalSeconds - remainingTime;
-
-          setElapsedTime(elapsedTimeValue); // 사용된 시간 계산 및 저장
-
-          const dataToSend = {
-            confirmStartTime: formattedStartTime,
-            confirmEndTime: formattedEndTime,
-            elapsedTime: elapsedTimeValue,
-          };
-
-          try {
-            await axios.post(`${uri}/api/fast`, dataToSend);
-            setFastDateSend(true);
-            console.log("사용 시간:", elapsedTimeValue);
-          } catch (error) {
-            console.error("Error sending data:", error);
-          }
-
-          navigate("FastMainPage");
-        },
-      },
-    ]);
-  };
-
-  const totalSeconds = timerTime.number * 3600;
-
   console.log("남은:" + remainingTime);
   //w : JS-> Oracle
 
   return (
-    <TimerScrollView>
+    <ImageBackground
+      source={require("../images/FastImage/FastBackground.png")}
+      resizeMode="cover"
+      style={styles.backgroundMain}
+    >
       <TimerContainer>
-        <TimerHomeBtn onPress={() => navigate("FastMainPage")}>
+        <TimerHomeBtn onPress={() => navigation.navigate("FastMainPage")}>
           <TimerHomeBT>
-            Reset <Entypo name="trash" size={24} color="black" />
+            Reset <Entypo name="trash" size={24} color="white" />
           </TimerHomeBT>
         </TimerHomeBtn>
         <TimerAddView>
           <CountdownCircleTimer
             isPlaying={isPlaying}
             duration={totalSeconds}
-            colors={["#F3A36F", "#f2a533", "#c94f03", "#A30000"]}
+            colors={["#FFDD94", "#36f233", "#f26717", "#c23616"]}
             colorsTime={[
               totalSeconds,
               totalSeconds * 0.7,
@@ -580,25 +581,28 @@ function MyTimer({ navigation: { navigate } }) {
             ]}
             onComplete={() => ({ shouldRepeat: false })}
             updateInterval={1}
-            strokeWidth={20}
-            size={300}
+            strokeWidth={19}
+            size={285}
           >
             {({ remainingTime, color }) => {
               const { hours, minutes, seconds } = secondsToHMS(remainingTime);
               setRemainingTime(remainingTime); // remainingTime 상태 업데이트
               return (
                 <>
-                  <Text style={{ color: "#505050", fontSize: 18 }}>
+                  <Text style={{ color: "#fbf7f7", fontSize: 18 }}>
                     Elapsed Time
                   </Text>
-                  <Text style={{ color, fontSize: 40 }}>
+                  <Text style={{ color: "#fbf7f7", fontSize: 40 }}>
                     {`${formatNumber(hours)}:${formatNumber(
                       minutes
                     )}:${formatNumber(seconds)}`}
                   </Text>
+                  <Text style={styles.percentInt}>
+                    {(remainingTime / totalSeconds) * 100}%
+                  </Text>
                   {isPlaying && remainingTime === 0 && (
                     <EndTimeText style={{ fontSize: 20, textAlign: "center" }}>
-                      Time over!
+                      You've done it!
                     </EndTimeText>
                   )}
                 </>
@@ -614,11 +618,11 @@ function MyTimer({ navigation: { navigate } }) {
             <TimerEText>End : {ConfirmEndTime}</TimerEText>
           </TimerEnd>
           <TimerStop>
-            <TimerEText onPress={handleStopTimer}>STOP</TimerEText>
+            <TimerStopText onPress={handleStopTimer}>STOP</TimerStopText>
           </TimerStop>
         </TimerMView>
       </TimerContainer>
-    </TimerScrollView>
+    </ImageBackground>
   );
 }
 
@@ -658,6 +662,17 @@ const styles = StyleSheet.create({
   },
   Howto: {
     left: 100,
+  },
+  backgroundMain: {
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
+  percentInt: {
+    color: "#E46C0A",
+    fontSize: 24,
+    marginTop: 5,
+    fontFamily: "OpenSans_800ExtraBold_Italic",
   },
 });
 export default FastStack;

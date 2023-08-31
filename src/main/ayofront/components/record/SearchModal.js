@@ -18,6 +18,12 @@ import Constants from "expo-constants";
 import { useMealContext } from "../../store/MealContext";
 
 const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
+<<<<<<< HEAD
+=======
+  // mealData를 set할 Context
+  const { addItemToMealList } = useMealContext();
+
+>>>>>>> 148ad539c6424aed83a9143125b91ea8c47d518e
   //Server 통신을 위한 URI 수정
   const uri = "http://213.35.96.167/";
 
@@ -50,7 +56,10 @@ const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
   }, [keyword]);
 
   //최종 검색어 제출, Validation : keyword와 list의 값이 일치하지 않으면 제출못하게 막고 error 표시
+<<<<<<< HEAD
   const { setMealList } = useMealContext();
+=======
+>>>>>>> 148ad539c6424aed83a9143125b91ea8c47d518e
   const navigation = useNavigation();
   const [error, setError] = useState("");
 
@@ -63,13 +72,22 @@ const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
       return;
     }
     if (fromPage === "RecordScreen") {
+<<<<<<< HEAD
       setMealList(list); //ContextAPI에 저장하고 이동
       navigation.navigate("RecordMain");
     }
     if (fromPage === "RecordMain") {
       setMealList(list);
+=======
+      // console.log(foundItem);
+      addItemToMealList(foundItem); //ContextAPI에 저장하고 이동
+      navigation.navigate("RecordMain");
     }
-
+    if (fromPage === "RecordMain") {
+      addItemToMealList(foundItem);
+>>>>>>> 148ad539c6424aed83a9143125b91ea8c47d518e
+    }
+    setKeyword("");
     closeSearchModal();
   };
 

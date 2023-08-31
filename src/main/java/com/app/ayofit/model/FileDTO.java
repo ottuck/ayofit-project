@@ -8,17 +8,19 @@ public class FileDTO {
 	private String fId;
 	private String fImg;
 	private Date fDate;
+	private String fType;
 	
 	public FileDTO() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public FileDTO(int fNo, String fId, String fImg, Date fDate) {
+	public FileDTO(int fNo, String fId, String fImg, Date fDate, String fType) {
 		super();
 		this.fNo = fNo;
 		this.fId = fId;
 		this.fImg = fImg;
 		this.fDate = fDate;
+		this.fType = fType;
 	}
 
 	public int getfNo() {
@@ -53,10 +55,18 @@ public class FileDTO {
 		this.fDate = fDate;
 	}
 
+	public String getfType() {
+		return fType;
+	}
+
+	public void setfType(String fType) {
+		this.fType = fType;
+	}
+
 	@Override
 	public String toString() {
-		return "FileDTO [fNo=" + fNo + ", fId=" + fId + ", fImg=" + fImg + ", fDate=" + fDate + "]";
+		return "FileDTO [fNo=" + fNo + ", fId=" + fId + ", fImg=" + fImg + ", fDate=" + fDate + ", fType=" + fType
+				+ "]";
 	}
-	
 	
 }

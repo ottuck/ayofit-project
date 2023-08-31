@@ -1,4 +1,4 @@
-package com.app.ayofit.controller;
+package com.app.ayofit.service;
 
 import javax.annotation.PostConstruct;
 
