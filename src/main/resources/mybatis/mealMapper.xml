@@ -8,20 +8,21 @@
 	</select>
 	
 	<insert id="regMeal">
-		insert into record_meal 
+		insert into record_meal
 		values (
-		record_meal_seq.nextval,
-		'user1',
-		'아침', 
-		#{mealDTO.rMealDate}, 
-		#{mealDTO.rCarbohydrate},
-		#{mealDTO.rProtein},
-		#{mealDTO.rFat},
+			record_meal_seq.nextval,
+			'user1',
+			#{rFoodName},
+			#{rMealType},
+			TO_DATE(#{rMealDate}, 'YYYY-MM-DD HH24:MI:SS'),
+			#{rCarbohydrate},
+			#{rProtein}, 
+			#{rFat}
 		)
 	</insert>
 	
 	<delete id="deleteMeal">
-		delete record_meal where r_no = #{rNO}
+		delete record_meal where r_meal_type = #{rMealType} and r_meal_date = #{rMealDate}
 	</delete>
 	
 </mapper>

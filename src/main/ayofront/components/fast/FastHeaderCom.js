@@ -1,5 +1,5 @@
 import React from 'react';
-import { FastHeader, FastHeaderT, FastTotalHeader } from './FastingStyled';
+import { FastHeader, FastHeaderT, FastTotalHeader,FastHeaderR } from './FastingStyled';
 
 
 const FastHeaderCom = ({ navigation }) => {
@@ -8,9 +8,9 @@ const FastHeaderCom = ({ navigation }) => {
             <FastHeader onPress={() => navigation.navigate("Timer")}>
                 <FastHeaderT>Timer</FastHeaderT>
             </FastHeader>
-            <FastHeader onPress={() => navigation.navigate("Records")}>
+            <FastHeaderR onPress={() => navigation.navigate("Records")}>
                 <FastHeaderT>Record</FastHeaderT>
-            </FastHeader>
+            </FastHeaderR>
         </FastTotalHeader>
     );
 };
