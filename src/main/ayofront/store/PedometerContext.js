@@ -84,7 +84,7 @@ export const PedometerProvider = ({ children }) => {
         .padStart(2, "0")}`;
 
       try {
-        await axios.put(`${uri}/api/pedometer/update-step-goal`, {
+        await axios.put(`${uri}/api/pedometer/update-daily-step`, {
           pId: userId,
           pDate: formattedDate,
           pStepCnt: updatedSteps,
@@ -101,6 +101,12 @@ export const PedometerProvider = ({ children }) => {
   const handleStepsUpdate = async (updatedSteps) => {
     setSteps(updatedSteps);
     await updateStepsOnServer(updatedSteps);
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await updateStepsOnServer(steps);
+    setRefreshing(false);
   };
 
   // ---------- useEffects ----------
@@ -242,6 +248,7 @@ export const PedometerProvider = ({ children }) => {
         formattedDateRef,
         todayData,
         setTodayData,
+        onRefresh,
       }}
     >
       {children}

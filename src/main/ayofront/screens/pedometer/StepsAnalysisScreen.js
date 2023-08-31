@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   },
 
   infoText: {
-    fontSize: 16,
+    fontSize: 18,
     marginBottom: 10,
     textAlign: "center",
     color: "black",
