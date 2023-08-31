@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.ayofit.model.MealDTO;
@@ -27,13 +28,14 @@ public class MealController {
 	}
 	
 	@PostMapping("")
-	public void regMeal(@RequestBody MealDTO mealDTO) {
-		mealDAO.regMeal(mealDTO);
+	public void regMeal(@RequestBody List<MealDTO> mealList) {
+		System.out.println(mealList.get(0));
+		mealDAO.regMeal(mealList);
 	}
 	
-	@DeleteMapping("{no}")
-	public void delMeal(@PathVariable("no") String no) {
-		mealDAO.delMeal(no);
+	@DeleteMapping("")
+	public void delMeal(@RequestParam("rMealDate") String mealDate, @RequestParam("rMealType") String mealType) {
+		mealDAO.delMeal(mealDate, mealType);
 	}
 	
 }
