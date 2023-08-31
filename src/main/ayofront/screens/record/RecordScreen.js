@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import MealCard1 from "../../components/record/MealCard1";
 import SearchModal from "../../components/record/SearchModal";
-import axios from "axios";
+import axios, { Axios } from "axios";
 import Constants from "expo-constants";
 import { useMealContext } from "../../store/MealContext";
 import { usePhotoContext } from "../../store/image_context";
@@ -36,129 +36,139 @@ function RecordScreen() {
 
   //화면에 들어올때 get 요청
   useEffect(() => {
-    getImg();
+    // getImg();
     // getMealInfo();
   }, []);
 
+
+
   //서버에 저장된 식단 정보 GET요청
   const getMealInfo = () => {
-    
-  }
-
-  //로컬에 있는 사진 파일 GET요청
-  const [img, setImgs] = useState([]);
-  const { setPhotoUri, setPhotoId } = usePhotoContext();
-  const getImg = async () => {
-    await axios
-      .get(`${uri}/api/file/get-image/user1`)
+    axios
+      .get(`${uri}/api/meal/{date}`)
       .then((response) => {
-        const newImgs = response.data.map((item) => ({
-          fNo: item.fNo,
-          fImg: item.fImg,
-          fType: item.fType,
-        }));
-        console.log(newImgs);
-        setImgs((prevImgs) => [...prevImgs, ...newImgs]);
+        
       })
       .catch(() => {
-        console.log("get error..");
+        console.log("getMealInfo error..");
       });
-  };
+  }
 
-  
 
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <ImageBackground
-          source={require("../../images/background-img.png")}
-          style={styles.backgroundImage}
+//로컬에 있는 사진 파일 GET요청
+const [img, setImgs] = useState([]);
+const { setPhotoUri, setPhotoId } = usePhotoContext();
+const getImg = async () => {
+  await axios
+    .get(`${uri}/api/file/get-image/user1`)
+    .then((response) => {
+      const newImgs = response.data.map((item) => ({
+        fNo: item.fNo,
+        fImg: item.fImg,
+        fType: item.fType,
+      }));
+      console.log(newImgs);
+      setImgs((prevImgs) => [...prevImgs, ...newImgs]);
+    })
+    .catch(() => {
+      console.log("getImg error..");
+    });
+};
+
+
+
+return (
+  <SafeAreaView style={styles.safeArea}>
+    <View style={styles.container}>
+      <ImageBackground
+        source={require("../../images/background-img.png")}
+        style={styles.backgroundImage}
+      >
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerTitle}> Diet Record</Text>
+          <Text style={styles.headerDate}> 2023.08.29 </Text>
+        </View>
+
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.cardScroll}
         >
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerTitle}> Diet Record</Text>
-            <Text style={styles.headerDate}> 2023.08.29 </Text>
-          </View>
-
-          <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.cardScroll}
-          >
-            <MealCard1
-              imgUri={
-                img.find((item) => item.fType === "breakfast")?.fImg || null
-              }
-              mealType="Breakfast"
-              mealTime="10:00"
-              carb="55"
-              protein="16.4"
-              fat="21.5"
-              totalCalories="487"
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("breakfast");
-                setPhotoUri(
-                  img.find((item) => item.fType === "breakfast")?.fImg
-                );
-                setPhotoId(img.find((item) => item.fType === "breakfast")?.fNo);
-              }}
-            />
-            <MealCard1
-              imgUri={img.find((item) => item.fType === "lunch")?.fImg || null}
-              mealType="Lunch"
-              mealTime="10:00"
-              carb="60"
-              protein="18"
-              fat="20"
-              totalCalories="500"
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("lunch");
-                setPhotoUri(img.find((item) => item.fType === "lunch")?.fImg);
-                setPhotoId(img.find((item) => item.fType === "lunch")?.fNo);
-              }}
-            />
-            <MealCard1
-              imgUri={img.find((item) => item.fType === "dinner")?.fImg || null}
-              mealType="Dinner"
-              mealTime="10:00"
-              carb="65"
-              protein="19"
-              fat="23"
-              totalCalories="550"
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("dinner");
-                setPhotoUri(img.find((item) => item.fType === "dinner")?.fImg);
-                setPhotoId(img.find((item) => item.fType === "dinner")?.fNo);
-              }}
-            />
-            <MealCard1
-              imgUri={img.find((item) => item.fType === "snack")?.fImg || null}
-              mealType="Snack"
-              mealTime="10:00"
-              carb="65"
-              protein="19"
-              fat="23"
-              totalCalories="550"
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("snack");
-                setPhotoUri(img.find((item) => item.fType === "snack")?.fImg);
-                setPhotoId(img.find((item) => item.fType === "snack")?.fNo);
-              }}
-            />
-          </ScrollView>
-
-          <SearchModal
-            fromPage="RecordScreen"
-            searchModalVisible={searchModalVisible}
-            closeSearchModal={closeSearchModal}
+          <MealCard1
+            imgUri={
+              img.find((item) => item.fType === "breakfast")?.fImg || null
+            }
+            mealType="Breakfast"
+            mealTime="10:00"
+            carb="55"
+            protein="16.4"
+            fat="21.5"
+            totalCalories="487"
+            openSearchModal={() => {
+              openSearchModal();
+              setMealType("breakfast");
+              setPhotoUri(
+                img.find((item) => item.fType === "breakfast")?.fImg
+              );
+              setPhotoId(img.find((item) => item.fType === "breakfast")?.fNo);
+            }}
           />
-        </ImageBackground>
-      </View>
-    </SafeAreaView>
-  );
+          <MealCard1
+            imgUri={img.find((item) => item.fType === "lunch")?.fImg || null}
+            mealType="Lunch"
+            mealTime="10:00"
+            carb="60"
+            protein="18"
+            fat="20"
+            totalCalories="500"
+            openSearchModal={() => {
+              openSearchModal();
+              setMealType("lunch");
+              setPhotoUri(img.find((item) => item.fType === "lunch")?.fImg);
+              setPhotoId(img.find((item) => item.fType === "lunch")?.fNo);
+            }}
+          />
+          <MealCard1
+            imgUri={img.find((item) => item.fType === "dinner")?.fImg || null}
+            mealType="Dinner"
+            mealTime="10:00"
+            carb="65"
+            protein="19"
+            fat="23"
+            totalCalories="550"
+            openSearchModal={() => {
+              openSearchModal();
+              setMealType("dinner");
+              setPhotoUri(img.find((item) => item.fType === "dinner")?.fImg);
+              setPhotoId(img.find((item) => item.fType === "dinner")?.fNo);
+            }}
+          />
+          <MealCard1
+            imgUri={img.find((item) => item.fType === "snack")?.fImg || null}
+            mealType="Snack"
+            mealTime="10:00"
+            carb="65"
+            protein="19"
+            fat="23"
+            totalCalories="550"
+            openSearchModal={() => {
+              openSearchModal();
+              setMealType("snack");
+              setPhotoUri(img.find((item) => item.fType === "snack")?.fImg);
+              setPhotoId(img.find((item) => item.fType === "snack")?.fNo);
+            }}
+          />
+        </ScrollView>
+
+        <SearchModal
+          fromPage="RecordScreen"
+          searchModalVisible={searchModalVisible}
+          closeSearchModal={closeSearchModal}
+        />
+      </ImageBackground>
+    </View>
+  </SafeAreaView>
+);
 }
 export default RecordScreen;
 
