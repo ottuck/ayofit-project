@@ -44,6 +44,8 @@ import {
   DetailsCircleContainer,
   DetailsCircleRow,
 } from "../../components/nutriDetail/StyledComponents";
+import MainImage from "../record/MainImage";
+import { useNavigation } from "@react-navigation/native";
 
 const MyRecordsComponent = () => {
   const uri = "http://213.35.96.167";
@@ -325,307 +327,332 @@ const MyRecordsComponent = () => {
     }
   }, [carbPercentage, proteinPercentage, fatPercentage]);
 
+  const navigation = useNavigation();
+  const goToRecordScreen = () => {
+    navigation.navigate("DIET RECORD");
+  };
   return (
-    <MyRecordsDailyNutritionContainer>
-      <DailyConsumptionContainer>
-        <DailyConsumptionText>
-          Daily Calorie Consumption :{" "}
-        </DailyConsumptionText>
-        <DailyConsumptionKcal>
-          {Math.floor(totalCalories)} kcal
-        </DailyConsumptionKcal>
-      </DailyConsumptionContainer>
-      <FaintLine></FaintLine>
-      <CircularProgressContainer>
-        <AnimatedCircularProgress
-          size={110}
-          width={7}
-          fill={carbPercentage}
-          tintColor="#E2F0B5"
-          backgroundColor="rgba(0, 0, 0, 0.2)"
-        >
-          {(fill) => (
-            <CircularProgressTextContainer>
-              <CircularProgressCarbText>Carb</CircularProgressCarbText>
-              <CircularProgressPercentage>
-                {fill.toFixed(2)}%
-              </CircularProgressPercentage>
-            </CircularProgressTextContainer>
-          )}
-        </AnimatedCircularProgress>
-        <AnimatedCircularProgress
-          size={110}
-          width={7}
-          fill={proteinPercentage}
-          tintColor="#FFEC99"
-          backgroundColor="rgba(0, 0, 0, 0.2)"
-        >
-          {(fill) => (
-            <CircularProgressTextContainer>
-              <CircularProgressCarbText>Protein</CircularProgressCarbText>
-              <CircularProgressPercentage>
-                {fill.toFixed(2)}%
-              </CircularProgressPercentage>
-            </CircularProgressTextContainer>
-          )}
-        </AnimatedCircularProgress>
-        <AnimatedCircularProgress
-          size={110}
-          width={7}
-          fill={fatPercentage}
-          tintColor="#FFD6D1"
-          backgroundColor="rgba(0, 0, 0, 0.2)"
-        >
-          {(fill) => (
-            <CircularProgressTextContainer>
-              <CircularProgressCarbText>Fat</CircularProgressCarbText>
-              <CircularProgressPercentage>
-                {fill.toFixed(2)}%
-              </CircularProgressPercentage>
-            </CircularProgressTextContainer>
-          )}
-        </AnimatedCircularProgress>
-      </CircularProgressContainer>
-      <DetailsCircleContainer>
-        {/* 첫 번째 원 */}
-        <Animated.View
-          style={[
-            styles.circle,
-            {
-              backgroundColor: "#FFD6D1",
-              width: fatAnimationValue,
-              height: fatAnimationValue,
-            },
-          ]}
-        >
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: "600",
-              color: "rgba(0, 0, 0, 0.8)",
-            }}
-          >{`${fatPercentage.toFixed(2)}%`}</Text>
-        </Animated.View>
-
-        {/* 두 번째 원 */}
-        <DetailsCircleRow>
-          <Animated.View
-            style={[
-              styles.circle,
-              {
-                backgroundColor: "#E2F0B5",
-                width: carbAnimationValue,
-                height: carbAnimationValue,
-              },
-            ]}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "600",
-                color: "rgba(0, 0, 0, 0.8)",
-              }}
-            >{`${carbPercentage.toFixed(2)}%`}</Text>
-          </Animated.View>
-          {/* 세 번째 원 */}
-          <Animated.View
-            style={[
-              styles.circle,
-              {
-                backgroundColor: "#FFEC99",
-                width: proteinAnimationValue,
-                height: proteinAnimationValue,
-              },
-            ]}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "600",
-                color: "rgba(0, 0, 0, 0.8)",
-              }}
-            >{`${proteinPercentage.toFixed(2)}%`}</Text>
-          </Animated.View>
-        </DetailsCircleRow>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center",
-            width: "100%",
-            top: 12,
-          }}
-        >
-          <View>
-            <Image
-              source={require("../../assets/rectangleCarb.png")}
-              style={{
-                height: 23,
-                width: 30,
-              }}
-            />
-            <Text style={{ fontSize: 19, fontWeight: "400", color: "#84a220" }}>
-              Carb
-            </Text>
-          </View>
-          <View>
-            <Image
-              source={require("../../assets/rectangleProtein.png")}
-              style={{
-                height: 23,
-                width: 30,
-              }}
-            />
-            <Text style={{ fontSize: 19, fontWeight: "400", color: "#dfc552" }}>
-              Protein
-            </Text>
-          </View>
-          <View>
-            <Image
-              source={require("../../assets/rectangleFat.png")}
-              style={{
-                height: 23,
-                width: 30,
-              }}
-            />
-            <Text style={{ fontSize: 19, fontWeight: "400", color: "#e88174" }}>
-              Fat
-            </Text>
-          </View>
-        </View>
-      </DetailsCircleContainer>
-      <MyRecordsTodaysWeightContainer>
-        <TodaysWeightTextContainer>
-          <TodaysWeightText>Today's Recorded Weight : </TodaysWeightText>
-          <TodaysWeightKg>
-            {recordedWeight ? parseFloat(recordedWeight).toFixed(1) : "00.0"} Kg
-          </TodaysWeightKg>
-        </TodaysWeightTextContainer>
+    <View>
+      <View style={styles.mainImg}>
+        <Text style={{ fontSize: 20, fontWeight: "700", marginBottom: "2%" }}>
+          Daily Report
+        </Text>
+        <MainImage navigate={goToRecordScreen} />
+      </View>
+      <MyRecordsDailyNutritionContainer>
+        <DailyConsumptionContainer>
+          <DailyConsumptionText>
+            Daily Calorie Consumption :{" "}
+          </DailyConsumptionText>
+          <DailyConsumptionKcal>
+            {Math.floor(totalCalories)} kcal
+          </DailyConsumptionKcal>
+        </DailyConsumptionContainer>
         <FaintLine></FaintLine>
-        <WeightChartText>Recorded Weight for the last 7 days</WeightChartText>
-        <LineChart
-          data={chartData}
-          width={Dimensions.get("window").width - 56}
-          height={186}
-          yAxisSuffix="kg"
-          yAxisInterval={7}
-          yAxisLabel=""
-          chartConfig={{
-            backgroundColor: "#FFF4EC",
-            backgroundGradientFrom: "#FFF4EC",
-            backgroundGradientTo: "#FFF4EC",
-            decimalPlaces: 1,
-            color: (opacity = 1) => "#E46C0A",
-            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            propsForBackgroundLines: {
-              strokeWidth: 0.6,
-            },
-          }}
-          bezier
-          style={{
-            marginVertical: 12,
-            marginLeft: 2, // 왼쪽 마진
-            marginRight: 12, // 오른쪽 마진
-          }}
-        />
-        <RecordsWeightContainer>
-          <RecordsMyWeightImgContainer>
-            <RecordsMyWeightText>Today's My Weight?</RecordsMyWeightText>
-            <RecordsKgText>
-              {recordedWeight ? parseFloat(recordedWeight).toFixed(1) : "00.0"}{" "}
-              kg
-            </RecordsKgText>
-            <Image
-              source={require("../../assets/avatar.png")}
+        <CircularProgressContainer>
+          <AnimatedCircularProgress
+            size={110}
+            width={7}
+            fill={carbPercentage}
+            tintColor="#E2F0B5"
+            backgroundColor="rgba(0, 0, 0, 0.2)"
+          >
+            {(fill) => (
+              <CircularProgressTextContainer>
+                <CircularProgressCarbText>Carb</CircularProgressCarbText>
+                <CircularProgressPercentage>
+                  {fill.toFixed(2)}%
+                </CircularProgressPercentage>
+              </CircularProgressTextContainer>
+            )}
+          </AnimatedCircularProgress>
+          <AnimatedCircularProgress
+            size={110}
+            width={7}
+            fill={proteinPercentage}
+            tintColor="#FFEC99"
+            backgroundColor="rgba(0, 0, 0, 0.2)"
+          >
+            {(fill) => (
+              <CircularProgressTextContainer>
+                <CircularProgressCarbText>Protein</CircularProgressCarbText>
+                <CircularProgressPercentage>
+                  {fill.toFixed(2)}%
+                </CircularProgressPercentage>
+              </CircularProgressTextContainer>
+            )}
+          </AnimatedCircularProgress>
+          <AnimatedCircularProgress
+            size={110}
+            width={7}
+            fill={fatPercentage}
+            tintColor="#FFD6D1"
+            backgroundColor="rgba(0, 0, 0, 0.2)"
+          >
+            {(fill) => (
+              <CircularProgressTextContainer>
+                <CircularProgressCarbText>Fat</CircularProgressCarbText>
+                <CircularProgressPercentage>
+                  {fill.toFixed(2)}%
+                </CircularProgressPercentage>
+              </CircularProgressTextContainer>
+            )}
+          </AnimatedCircularProgress>
+        </CircularProgressContainer>
+        <DetailsCircleContainer>
+          {/* 첫 번째 원 */}
+          <Animated.View
+            style={[
+              styles.circle,
+              {
+                backgroundColor: "#FFD6D1",
+                width: fatAnimationValue,
+                height: fatAnimationValue,
+              },
+            ]}
+          >
+            <Text
               style={{
-                height: 132,
-                width: 132,
+                fontSize: 16,
+                fontWeight: "600",
+                color: "rgba(0, 0, 0, 0.8)",
               }}
-            />
-            <RecordsGoalWeightContainer>
-              <Image
-                source={require("../../assets/goalFlag.png")}
+            >{`${fatPercentage.toFixed(2)}%`}</Text>
+          </Animated.View>
+
+          {/* 두 번째 원 */}
+          <DetailsCircleRow>
+            <Animated.View
+              style={[
+                styles.circle,
+                {
+                  backgroundColor: "#E2F0B5",
+                  width: carbAnimationValue,
+                  height: carbAnimationValue,
+                },
+              ]}
+            >
+              <Text
                 style={{
-                  height: 28,
-                  width: 22,
-                  left: -6,
-                  top: 1.6,
+                  fontSize: 16,
+                  fontWeight: "600",
+                  color: "rgba(0, 0, 0, 0.8)",
+                }}
+              >{`${carbPercentage.toFixed(2)}%`}</Text>
+            </Animated.View>
+            {/* 세 번째 원 */}
+            <Animated.View
+              style={[
+                styles.circle,
+                {
+                  backgroundColor: "#FFEC99",
+                  width: proteinAnimationValue,
+                  height: proteinAnimationValue,
+                },
+              ]}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "600",
+                  color: "rgba(0, 0, 0, 0.8)",
+                }}
+              >{`${proteinPercentage.toFixed(2)}%`}</Text>
+            </Animated.View>
+          </DetailsCircleRow>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              alignItems: "center",
+              width: "100%",
+              top: 12,
+            }}
+          >
+            <View>
+              <Image
+                source={require("../../assets/rectangleCarb.png")}
+                style={{
+                  height: 23,
+                  width: 30,
                 }}
               />
-              <RecordsGoalWeightText>목표 62kg</RecordsGoalWeightText>
-            </RecordsGoalWeightContainer>
-          </RecordsMyWeightImgContainer>
-          <RecordsWeightButtonContainer>
-            <RecordsWeightButton onPress={() => setModalVisible(true)}>
-              <RecordsWeightButtonText>
-                {hasRecorded ? "Modifying Weight" : "Recording Weight"}
-              </RecordsWeightButtonText>
-            </RecordsWeightButton>
-          </RecordsWeightButtonContainer>
-        </RecordsWeightContainer>
-
-        <Modal animationType="slide" transparent={true} visible={modalVisible}>
-          <RecordsWeightModalView>
-            <RecordsModalWeightCloseContainer>
-              <RecordsModalWeightInfoText>
-                {hasRecorded ? "Modifying Weight" : "Recording Weight"}
-              </RecordsModalWeightInfoText>
-              <RecordsModalWeightCloseButton
-                onPress={() => setModalVisible(false)}
+              <Text
+                style={{ fontSize: 19, fontWeight: "400", color: "#84a220" }}
               >
-                <RecordsModalWeightCloseButtonText>
-                  X
-                </RecordsModalWeightCloseButtonText>
-              </RecordsModalWeightCloseButton>
-            </RecordsModalWeightCloseContainer>
-
-            <RecordsWeightModalInput
-              placeholder={hasRecorded ? `${recordedWeight} kg` : "00.0 kg"}
-              keyboardType="numeric"
-              onChangeText={(text) => setWeight(text)}
-              defaultValue={recordedWeight ? recordedWeight.toString() : ""}
-            />
-            {hasRecorded ? (
-              <>
-                <RecordsModalButtonsContainer>
-                  <RecordsModalFixAndDeleteButton
-                    onPress={() => {
-                      updateWeight();
-                      setModalVisible(false);
-                    }}
-                  >
-                    <RecordsModalFixAndDeleteButtonText>
-                      Modify
-                    </RecordsModalFixAndDeleteButtonText>
-                  </RecordsModalFixAndDeleteButton>
-                  <RecordsModalFixAndDeleteButton
-                    onPress={() => {
-                      deleteWeight("user3", formattedToday);
-                      setModalVisible(false);
-                    }}
-                  >
-                    <RecordsModalFixAndDeleteButtonText>
-                      Delete
-                    </RecordsModalFixAndDeleteButtonText>
-                  </RecordsModalFixAndDeleteButton>
-                </RecordsModalButtonsContainer>
-              </>
-            ) : (
-              <RecordsModalWeightButton
-                onPress={() => {
-                  addOrModifyWeight();
-                  setModalVisible(false);
+                Carb
+              </Text>
+            </View>
+            <View>
+              <Image
+                source={require("../../assets/rectangleProtein.png")}
+                style={{
+                  height: 23,
+                  width: 30,
                 }}
+              />
+              <Text
+                style={{ fontSize: 19, fontWeight: "400", color: "#dfc552" }}
               >
-                <RecordsModalWeightButtonText>
-                  Finish Record
-                </RecordsModalWeightButtonText>
-              </RecordsModalWeightButton>
-            )}
-          </RecordsWeightModalView>
-        </Modal>
-      </MyRecordsTodaysWeightContainer>
-    </MyRecordsDailyNutritionContainer>
+                Protein
+              </Text>
+            </View>
+            <View>
+              <Image
+                source={require("../../assets/rectangleFat.png")}
+                style={{
+                  height: 23,
+                  width: 30,
+                }}
+              />
+              <Text
+                style={{ fontSize: 19, fontWeight: "400", color: "#e88174" }}
+              >
+                Fat
+              </Text>
+            </View>
+          </View>
+        </DetailsCircleContainer>
+        <MyRecordsTodaysWeightContainer>
+          <TodaysWeightTextContainer>
+            <TodaysWeightText>Today's Recorded Weight : </TodaysWeightText>
+            <TodaysWeightKg>
+              {recordedWeight ? parseFloat(recordedWeight).toFixed(1) : "00.0"}{" "}
+              Kg
+            </TodaysWeightKg>
+          </TodaysWeightTextContainer>
+          <FaintLine></FaintLine>
+          <WeightChartText>Recorded Weight for the last 7 days</WeightChartText>
+          <LineChart
+            data={chartData}
+            width={Dimensions.get("window").width - 56}
+            height={186}
+            yAxisSuffix="kg"
+            yAxisInterval={7}
+            yAxisLabel=""
+            chartConfig={{
+              backgroundColor: "#FFF4EC",
+              backgroundGradientFrom: "#FFF4EC",
+              backgroundGradientTo: "#FFF4EC",
+              decimalPlaces: 1,
+              color: (opacity = 1) => "#E46C0A",
+              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              propsForBackgroundLines: {
+                strokeWidth: 0.6,
+              },
+            }}
+            bezier
+            style={{
+              marginVertical: 12,
+              marginLeft: 2, // 왼쪽 마진
+              marginRight: 12, // 오른쪽 마진
+            }}
+          />
+          <RecordsWeightContainer>
+            <RecordsMyWeightImgContainer>
+              <RecordsMyWeightText>Today's My Weight?</RecordsMyWeightText>
+              <RecordsKgText>
+                {recordedWeight
+                  ? parseFloat(recordedWeight).toFixed(1)
+                  : "00.0"}{" "}
+                kg
+              </RecordsKgText>
+              <Image
+                source={require("../../assets/avatar.png")}
+                style={{
+                  height: 132,
+                  width: 132,
+                }}
+              />
+              <RecordsGoalWeightContainer>
+                <Image
+                  source={require("../../assets/goalFlag.png")}
+                  style={{
+                    height: 28,
+                    width: 22,
+                    left: -6,
+                    top: 1.6,
+                  }}
+                />
+                <RecordsGoalWeightText>목표 62kg</RecordsGoalWeightText>
+              </RecordsGoalWeightContainer>
+            </RecordsMyWeightImgContainer>
+            <RecordsWeightButtonContainer>
+              <RecordsWeightButton onPress={() => setModalVisible(true)}>
+                <RecordsWeightButtonText>
+                  {hasRecorded ? "Modifying Weight" : "Recording Weight"}
+                </RecordsWeightButtonText>
+              </RecordsWeightButton>
+            </RecordsWeightButtonContainer>
+          </RecordsWeightContainer>
+
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+          >
+            <RecordsWeightModalView>
+              <RecordsModalWeightCloseContainer>
+                <RecordsModalWeightInfoText>
+                  {hasRecorded ? "Modifying Weight" : "Recording Weight"}
+                </RecordsModalWeightInfoText>
+                <RecordsModalWeightCloseButton
+                  onPress={() => setModalVisible(false)}
+                >
+                  <RecordsModalWeightCloseButtonText>
+                    X
+                  </RecordsModalWeightCloseButtonText>
+                </RecordsModalWeightCloseButton>
+              </RecordsModalWeightCloseContainer>
+
+              <RecordsWeightModalInput
+                placeholder={hasRecorded ? `${recordedWeight} kg` : "00.0 kg"}
+                keyboardType="numeric"
+                onChangeText={(text) => setWeight(text)}
+                defaultValue={recordedWeight ? recordedWeight.toString() : ""}
+              />
+              {hasRecorded ? (
+                <>
+                  <RecordsModalButtonsContainer>
+                    <RecordsModalFixAndDeleteButton
+                      onPress={() => {
+                        updateWeight();
+                        setModalVisible(false);
+                      }}
+                    >
+                      <RecordsModalFixAndDeleteButtonText>
+                        Modify
+                      </RecordsModalFixAndDeleteButtonText>
+                    </RecordsModalFixAndDeleteButton>
+                    <RecordsModalFixAndDeleteButton
+                      onPress={() => {
+                        deleteWeight("user3", formattedToday);
+                        setModalVisible(false);
+                      }}
+                    >
+                      <RecordsModalFixAndDeleteButtonText>
+                        Delete
+                      </RecordsModalFixAndDeleteButtonText>
+                    </RecordsModalFixAndDeleteButton>
+                  </RecordsModalButtonsContainer>
+                </>
+              ) : (
+                <RecordsModalWeightButton
+                  onPress={() => {
+                    addOrModifyWeight();
+                    setModalVisible(false);
+                  }}
+                >
+                  <RecordsModalWeightButtonText>
+                    Finish Record
+                  </RecordsModalWeightButtonText>
+                </RecordsModalWeightButton>
+              )}
+            </RecordsWeightModalView>
+          </Modal>
+        </MyRecordsTodaysWeightContainer>
+      </MyRecordsDailyNutritionContainer>
+    </View>
   );
 };
 
@@ -639,5 +666,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 1,
+  },
+  mainImg: {
+    marginTop: "10%",
+    marginBottom: "-6%",
+    paddingHorizontal: "4%",
+    width: "100%",
+    height: "35%",
   },
 });

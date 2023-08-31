@@ -61,7 +61,7 @@ const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
       (item) => item.nFoodName.trim() === keyword.trim()
     );
     if (!foundItem) {
-      setError("Please select the food on the list🥹");
+      setError("Please select the food on the list");
       return;
     }
     if (fromPage === "RecordScreen") {
@@ -155,7 +155,7 @@ const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
 const styles = StyleSheet.create({
   modalScreen: {
     flex: 1,
-    marginTop: "11%",
+    marginTop: "12%",
     backgroundColor: "rgba(255,255,255,0.6)",
     borderRadius: 30,
     padding: 15,
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
   errorMSG: {
     color: "red",
     fontWeight: "bold",
-    right: 10,
+    right: 16,
   },
   modalSearchButton: {
     fontSize: 20,

@@ -26,31 +26,63 @@ import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = ({ navigation }) => {
   const { mealType, mealList } = useMealContext();
-  // console.log(mealType);
-  // console.log("컨택스트API => 레코드메인 ", mealData);
+  // console.log("밀컨택스트API : ", mealList);
+
+  //서버에 넘김 임시 Date
+  const mealDate = new Date();
+  const formattedDate = mealDate.toISOString().slice(0, 19).replace("T", " ");
+
+  // console.log(formattedDate); // "2023-08-31 08:36:40"
 
   //Server 통신을 위한 URI 수정
   const uri = "http://213.35.96.167";
 
   //식단 기록 post 요청
   const submitMealListToServer = () => {
+    //서버로 보내기전 데이터 포멧팅
     const updatedMealList = mealList.map((meal) => {
       const { nNO, nSize, ...rest } = meal; // nNO와 nSize를 제거
+
+      // 'n'을 'r'로 바꾼 새로운 객체 생성
+      const rKeysObject = Object.fromEntries(
+        Object.entries(rest).map(([key, value]) => [
+          key.replace(/^n/, "r"),
+          value,
+        ])
+      );
       return {
-        ...rest,
-        nMealType: mealType, //mealType 추가
+        ...rKeysObject,
+        rMealDate: formattedDate,
+        rMealType: mealType, //mealType 추가
       };
     });
-    console.log("업데이트 밀리스트:", updatedMealList);
+    console.log("Save버튼 누른후 제출전 :", updatedMealList);
 
-    // axios
-    //   .post(`${uri}/api/meal`, mealList)
-    //   .then((response) => {
-    //     console.log("MealData submitted successfully:", response.data);
-    //   })
-    //   .catch(() => {
-    //     console.log("Error", "Failed to submit");
-    //   });
+    axios
+      .post(`${uri}/api/meal`, updatedMealList)
+      .then((response) => {
+        console.log("MealData submitted successfully:", response.data);
+      })
+      .catch(() => {
+        console.log("Error", "Failed to submit");
+      });
+  };
+
+  //mealList가 없을 경우 Save버튼을 누름녀 서버에 Delete 요청을 보냄
+  const deleteMealListOnServer = () => {
+    axios
+      .delete(`${uri}/api/meal`, {
+        params: {
+          rMealDate: mealDate,
+          rMealType: mealType,
+        },
+      })
+      .then((response) => {
+        console.log("MealData deleted successfully:", response.data);
+      })
+      .catch(() => {
+        console.log("Error", "Failed to delete");
+      });
   };
 
   //ImgModal
@@ -59,12 +91,10 @@ const RecordMain = ({ navigation }) => {
     setImgModalVisible(!imgModalVisible);
   };
   const { photoUri, setPhotoUri, photoId } = usePhotoContext();
-  // console.log(photoUri);
 
   // 사진 파일 삭제 로직
-  console.log(photoUri);
-  console.log(photoId);
-
+  // console.log(photoUri);
+  // console.log(photoId);
   const deleteFile = () => {
     axios
       .delete(`${uri}/api/file/delete`, {
@@ -160,10 +190,6 @@ const RecordMain = ({ navigation }) => {
   //Current Date
   const currentDate = getFormatedDate(new Date(), "YYYY/MM/DD");
   const currentTime = getFormatedDate(new Date(), "h:m");
-
-  //서버에 넘김 임시 Date
-  const date = new Date();
-  const isoDate = date.toISOString();
 
   //change date format
   const transformDate = (inputDate) => {
@@ -305,13 +331,19 @@ const RecordMain = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                // submitMealToServer();
-                uploadImage(photoUri, "user1", mealType);
-                navigation.navigate("RecordScreen");
+                if (mealList.length === 0) {
+                  deleteMealListOnServer();
+                } else {
+                  submitMealListToServer();
+                  // uploadImage(photoUri, "user1", mealType);
+                  // navigation.navigate("RecordScreen");
+                }
               }}
             >
               <View style={styles.buttonBox2}>
-                <Text style={styles.buttonText}> Save </Text>
+                <Text style={styles.buttonText}>
+                  {mealList.length === 0 ? "Update" : "Save"}
+                </Text>
               </View>
             </TouchableOpacity>
           </View>
