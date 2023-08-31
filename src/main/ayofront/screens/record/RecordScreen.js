@@ -9,8 +9,13 @@ import {
 } from "react-native";
 import MealCard1 from "../../components/record/MealCard1";
 import SearchModal from "../../components/record/SearchModal";
+import axios from "axios";
+import Constants from "expo-constants";
 import { useMealContext } from "../../store/MealContext";
 import { usePhotoContext } from "../../store/image_context";
+
+const { debuggerHost } = Constants.manifest2.extra.expoGo;
+const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
 function RecordScreen({ route }) {
   //Search Modal
@@ -29,27 +34,23 @@ function RecordScreen({ route }) {
     setSearchModalVisible(false);
   };
 
-  // // recordMain.js 에서 보내는 openModal 요청 받기
-  // useEffect(() => {
-  //   if (route.params?.shouldOpenModal) {
-  //     openModal();
-  //     route.params.shouldOpenModal = false;
-  //   }
-  // }, [route.params?.shouldOpenModal]);
-
   // 로컬에 있는 사진 파일 GET요청
-  const [imgUri, setImgUri] = useState([]);
-  const { photoUri, setPhotoUri } = usePhotoContext();
-
+  const [img, setImgs] = useState([]);
+  const { setPhotoUri, setPhotoId } = usePhotoContext();
   const getImg = async () => {
     await axios
-      .get(`${uri}/api/file/get-image/user2`)
+      .get(`${uri}/api/file/get-image/user1`)
       .then((response) => {
-        const newImgUris = response.data.map((item) => item.fImg);
-        setImgUri((prevImgUris) => [...prevImgUris, ...newImgUris]);
+        const newImgs = response.data.map((item) => ({
+          fNo: item.fNo,
+          fImg: item.fImg,
+          fType: item.fType,
+        }));
+        console.log(newImgs);
+        setImgs((prevImgs) => [...prevImgs, ...newImgs]);
       })
       .catch(() => {
-        console.log("get error..", error);
+        console.log("get error..");
       });
   };
 
@@ -75,6 +76,9 @@ function RecordScreen({ route }) {
             contentContainerStyle={styles.cardScroll}
           >
             <MealCard1
+              imgUri={
+                img.find((item) => item.fType === "breakfast")?.fImg || null
+              }
               mealType="Breakfast"
               mealTime="10:00"
               carb="55"
@@ -84,9 +88,14 @@ function RecordScreen({ route }) {
               openSearchModal={() => {
                 openSearchModal();
                 setMealType("breakfast");
+                setPhotoUri(
+                  img.find((item) => item.fType === "breakfast")?.fImg
+                );
+                setPhotoId(img.find((item) => item.fType === "breakfast")?.fNo);
               }}
             />
             <MealCard1
+              imgUri={img.find((item) => item.fType === "lunch")?.fImg || null}
               mealType="Lunch"
               mealTime="10:00"
               carb="60"
@@ -96,9 +105,12 @@ function RecordScreen({ route }) {
               openSearchModal={() => {
                 openSearchModal();
                 setMealType("lunch");
+                setPhotoUri(img.find((item) => item.fType === "lunch")?.fImg);
+                setPhotoId(img.find((item) => item.fType === "lunch")?.fNo);
               }}
             />
             <MealCard1
+              imgUri={img.find((item) => item.fType === "dinner")?.fImg || null}
               mealType="Dinner"
               mealTime="10:00"
               carb="65"
@@ -108,9 +120,12 @@ function RecordScreen({ route }) {
               openSearchModal={() => {
                 openSearchModal();
                 setMealType("dinner");
+                setPhotoUri(img.find((item) => item.fType === "dinner")?.fImg);
+                setPhotoId(img.find((item) => item.fType === "dinner")?.fNo);
               }}
             />
             <MealCard1
+              imgUri={img.find((item) => item.fType === "snack")?.fImg || null}
               mealType="Snack"
               mealTime="10:00"
               carb="65"
@@ -120,6 +135,8 @@ function RecordScreen({ route }) {
               openSearchModal={() => {
                 openSearchModal();
                 setMealType("snack");
+                setPhotoUri(img.find((item) => item.fType === "snack")?.fImg);
+                setPhotoId(img.find((item) => item.fType === "snack")?.fNo);
               }}
             />
           </ScrollView>
