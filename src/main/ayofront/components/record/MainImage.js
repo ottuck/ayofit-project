@@ -3,16 +3,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import Constants from "expo-constants";
 import { useEffect, useState } from "react";
-import { usePhotoContext } from "../../store/image_context";
-import { useNavigation } from "@react-navigation/native";
-import RecordScreen from "../../screens/record/RecordScreen";
 
 function MainImage({ navigate }) {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
   const [img, setImgs] = useState([]);
-  const { setPhotoUri, setPhotoId } = usePhotoContext();
   const getImg = async () => {
     await axios
       .get(`${uri}/api/file/get-image/user1`)

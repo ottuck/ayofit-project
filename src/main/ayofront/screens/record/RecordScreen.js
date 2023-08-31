@@ -68,7 +68,6 @@ function RecordScreen() {
       });
   };
 
-
   useEffect(() => {
     // getImg();
     // getMealByDate();
@@ -191,7 +190,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: 350,
-    marginVertical: 62,
+    marginVertical: 50,
     alignSelf: "center",
   },
   headerTitle: {
