@@ -13,7 +13,10 @@ import React, { useState } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
 import Constants from "expo-constants";
-import DatePicker, { getFormatedDate, getToday } from "react-native-modern-datepicker";
+import DatePicker, {
+  getFormatedDate,
+  getToday,
+} from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
 import SearchModal from "../../components/record/SearchModal";
@@ -21,14 +24,14 @@ import { usePhotoContext } from "../../store/image_context";
 import { useMealContext } from "../../store/MealContext";
 import MealCard2 from "../../components/record/MealCard2";
 
-//Server 통신을 위한 URI 수정
-const { debuggerHost } = Constants.manifest2.extra.expoGo;
-const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-
-const RecordMain = () => {
-  const { mealList, mealType } = useMealContext();
-  console.log("컨택스트API => 레코드 메인 ", mealList);
+const RecordMain = ({ navigation }) => {
+  const { mealType, mealList } = useMealContext();
   // console.log(mealType);
+  // console.log("컨택스트API => 레코드메인 ", mealData);
+
+  //Server 통신을 위한 URI 수정
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
   //식단 기록 post 요청
   const submitMealListToServer = () => {
@@ -56,11 +59,28 @@ const RecordMain = () => {
   const toggleImgModal = () => {
     setImgModalVisible(!imgModalVisible);
   };
-  const { photoUri, setPhotoUri } = usePhotoContext();
+  const { photoUri, setPhotoUri, photoId } = usePhotoContext();
   // console.log(photoUri);
-  const deletePhoto = () => {
-    console.log(photoUri);
-    setPhotoUri(null);
+
+  // 사진 파일 삭제 로직
+  console.log(photoUri);
+  console.log(photoId);
+
+  const deleteFile = () => {
+    axios
+      .delete(`${uri}/api/file/delete`, {
+        params: {
+          fNo: photoId,
+          fUrl: photoUri,
+        },
+      })
+      .then((response) => {
+        console.log("PhotoFile deleted successfully:", response.data);
+        setPhotoUri(null);
+      })
+      .catch(() => {
+        console.log("Failed to delete");
+      });
   };
 
   //Search Modal
@@ -223,7 +243,7 @@ const RecordMain = () => {
             {/* imagePiker 사진 입력 부분 작업중 */}
             <View style={styles.cardImageContainer}>
               {photoUri ? (
-                <TouchableOpacity onPress={deletePhoto} style={{ zIndex: 10 }}>
+                <TouchableOpacity onPress={deleteFile} style={{ zIndex: 10 }}>
                   <AntDesign
                     name="closecircle"
                     style={styles.photoDeleteButton}
@@ -288,8 +308,9 @@ const RecordMain = () => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                submitMealListToServer();
-                // uploadImage(photoUri, "user1", mealType);
+                // submitMealToServer();
+                uploadImage(photoUri, "user1", mealType);
+                navigation.navigate("RecordScreen");
               }}
             >
               <View style={styles.buttonBox2}>

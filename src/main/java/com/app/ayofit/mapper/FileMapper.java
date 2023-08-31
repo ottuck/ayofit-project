@@ -16,4 +16,6 @@ public interface FileMapper {
 
 	int saveFile(@Param("uuid") String uuid, @Param("userId")String userId, @Param("mealType") String mealType);
 
+	void deleteFile(@Param("fNo")int fNo);
+
 }
