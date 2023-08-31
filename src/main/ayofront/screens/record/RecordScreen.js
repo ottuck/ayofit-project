@@ -17,7 +17,7 @@ import { usePhotoContext } from "../../store/image_context";
 const { debuggerHost } = Constants.manifest2.extra.expoGo;
 const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
-function RecordScreen({ route }) {
+function RecordScreen() {
   //Search Modal
   const [searchModalVisible, setSearchModalVisible] = useState(false);
   const openSearchModal = () => {

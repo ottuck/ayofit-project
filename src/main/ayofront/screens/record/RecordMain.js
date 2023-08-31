@@ -26,11 +26,11 @@ import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = ({ navigation }) => {
   const { mealType, mealList } = useMealContext();
-  // console.log("컨택스트API => 레코드메인 ", mealList);
-  
+  // console.log("밀컨택스트API : ", mealList);
+
   //서버에 넘김 임시 Date
   const mealDate = new Date();
-  console.log(mealDate);
+  // console.log(mealDate);
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -48,14 +48,14 @@ const RecordMain = ({ navigation }) => {
       );
       return {
         ...rKeysObject,
-        rMealType: mealType, //mealType 추가
-        rMealDate: mealDate // mealDate 추가
+        rMealDate: mealDate,
+        rMealType: mealType //mealType 추가
       };
     });
-    console.log("Save버튼 누른후 밀리스트:", updatedMealList);
-    
+    console.log("Save버튼 누른후 제출전 :", updatedMealList);
+
     axios
-      .post(`${uri}/api/meal`, mealList)
+      .post(`${uri}/api/meal`, updatedMealList)
       .then((response) => {
         console.log("MealData submitted successfully:", response.data);
       })
@@ -63,6 +63,23 @@ const RecordMain = ({ navigation }) => {
         console.log("Error", "Failed to submit");
       });
   };
+
+  //mealList가 없을 경우 Save버튼을 누름녀 서버에 Delete 요청을 보냄
+  const deleteMealListOnServer = () => {
+    axios
+      .delete(`${uri}/api/meal`, {
+        params: {
+          rMealDate: mealDate, 
+          rMealType: mealType,
+        },
+      })
+      .then((response) => {
+        console.log("MealData deleted successfully:", response.data);
+      })
+      .catch(() => {
+        console.log("Error", "Failed to delete");
+      });
+  }
 
   //ImgModal
   const [imgModalVisible, setImgModalVisible] = useState(false);
@@ -310,13 +327,19 @@ const RecordMain = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                submitMealListToServer();
-                // uploadImage(photoUri, "user1", mealType);
-                // navigation.navigate("RecordScreen");
+                if (mealList.length === 0) {
+                  deleteMealListOnServer();
+                } else {
+                  submitMealListToServer();
+                  // uploadImage(photoUri, "user1", mealType);
+                  // navigation.navigate("RecordScreen");
+                }
               }}
             >
               <View style={styles.buttonBox2}>
-                <Text style={styles.buttonText}> Save </Text>
+                <Text style={styles.buttonText}>
+                  {mealList.length === 0 ? 'Update' : 'Save'}  
+                </Text>
               </View>
             </TouchableOpacity>
           </View>
