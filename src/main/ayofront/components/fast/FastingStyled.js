@@ -3,7 +3,7 @@ import styled from "styled-components/native"
 //-------------------MainPage-----------------------------//
 export const MainBtn = styled.TouchableOpacity`
  border-radius : 20px;
- width : 200px;
+ width : 300px;
  height : 60px;
  align-items: center;
  justify-content: center;
@@ -13,7 +13,7 @@ export const MainText = styled.Text`
  color : black;
  text-shadow: 2px 3px 5px #f8d5bc;
  opacity: 0.8;
- font-size : 22px;
+ font-size : 26px;
  font-weight : 400
 `;
 export const FirstMainPage = styled.View`
@@ -171,6 +171,7 @@ height : 100px;
 export const PlanEndText = styled.Text`
 font-size : 20px;
 line-height : 28px;
+text-shadow: 2px 3px 5px #f6c099;
 `;
 export const PlanConfirmV = styled.View`
 height: 130px;
@@ -210,7 +211,8 @@ margin-right : 10px;
 `;
 export const ConfirmTimeText = styled.Text`
 align-self: center;
-font-size: 15px;
+font-size: 20px;
+font-weight: 400;
 color : white;
 top: 50px;
 margin-right : 10px;
@@ -307,13 +309,11 @@ background-color: #E46C0A;
 border-radius : 50px;
 align-items: center;
 justify-content: center;
-border : 1px solid #FFE9D8;
 height : 50px;
 width : 100px;
 right : -120px;
 margin-bottom : 30px;
 bottom: 40px;
-border: 5px solid #160c02;
 `;
 export const TimerHomeBT = styled.Text`
 font-size : 20px;
@@ -490,9 +490,14 @@ export const FastHeader = styled.TouchableOpacity`
 margin-top:55px;
 margin-left : 20px;
 `;
+export const FastHeaderR = styled.TouchableOpacity`
+margin-top:55px;
+margin-left : 20px;
+`;
 export const FastHeaderT = styled.Text`
 font-size: 25px;
-color: white;
+font-weight: 600;
+color: white; 
 `;
 //--------------------HeaderCom2-------------------//
 export const FastTotalHeader2 = styled.View`
@@ -502,11 +507,19 @@ flex-direction: row; /* 가로로 정렬 */
 align-items: flex-start; /* 왼쪽에 붙이는 정렬 */
 `;
 export const FastHeader2 = styled.TouchableOpacity`
-margin-top:55px;
+margin-top: 55px;
+margin-left : 40px;
+left: -30px;
+`;
+export const FastHeader2R = styled.TouchableOpacity`
+margin-top: 55px;
 margin-left : 20px;
-left: -40px;
+left: -30px;
 `;
 export const FastHeaderT2 = styled.Text`
 font-size: 25px;
+font-weight: 600;
 color: white;
+`;
+export const BackBtnTouch = styled.TouchableOpacity`
 `;
