@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   Image,
   ImageBackground,
@@ -10,51 +9,49 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-//axios
-import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
-import { BlurView } from "expo-blur";
 import Constants from "expo-constants";
-import DatePicker from "react-native-modern-datepicker";
+import DatePicker, {
+  getFormatedDate,
+  getToday,
+} from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
+import SearchModal from "../../components/record/SearchModal";
 import { usePhotoContext } from "../../store/image_context";
+import { useMealContext } from "../../store/MealContext";
 import MealCard2 from "../../components/record/MealCard2";
 
-const RecordMain = ({ route, navigation }) => {
+const RecordMain = ({ navigation }) => {
+  const { mealType, mealList } = useMealContext();
+  // console.log(mealType);
+  // console.log("컨택스트API => 레코드메인 ", mealData);
+
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
-  //전달 받은 음식 정보를 차곡차곡 foodInfos 배열에 저장한다
-  const { foodInfo } = route.params;
-  const [foodInfos, setFoodInfos] = useState([]);
-  useEffect(() => {
-    if (foodInfo) {
-      setFoodInfos((prevFoodInfos) => [...prevFoodInfos, foodInfo]);
-    }
-  }, []);
-  // console.log(foodInfos);
-
   //식단 기록 post 요청
-  const submitFoodToServer = () => {
-    axios
-      .post(`${uri}/api/meal`, foodInfo)
-      .then((response) => {
-        console.log("foodData submitted successfully:", response.data);
-      })
-      .catch(() => {
-        console.log("Error", "Failed to submit");
-      });
-  };
+  const submitMealListToServer = () => {
+    const updatedMealList = mealList.map((meal) => {
+      const { nNO, nSize, ...rest } = meal; // nNO와 nSize를 제거
+      return {
+        ...rest,
+        nMealType: mealType //mealType 추가
+      };
+    });
+    console.log("업데이트 밀리스트:", updatedMealList);
 
-  //Modal
-  const [modalVisible, setModalVisible] = useState(false);
-  const openModal = () => {
-    setModalVisible(true);
-  };
-  const closeModal = () => {
-    setModalVisible(false);
+    // axios
+    //   .post(`${uri}/api/meal`, mealList)
+    //   .then((response) => {
+    //     console.log("MealData submitted successfully:", response.data);
+    //   })
+    //   .catch(() => {
+    //     console.log("Error", "Failed to submit");
+    //   });
   };
 
   //ImgModal
@@ -62,35 +59,117 @@ const RecordMain = ({ route, navigation }) => {
   const toggleImgModal = () => {
     setImgModalVisible(!imgModalVisible);
   };
-  const { photoUri, setPhotoUri } = usePhotoContext();
-  const deletePhoto = () => {
-    setPhotoUri(null);
+  const { photoUri, setPhotoUri, photoId } = usePhotoContext();
+  // console.log(photoUri);
+
+  // 사진 파일 삭제 로직
+  console.log(photoUri);
+  console.log(photoId);
+
+  const deleteFile = () => {
+    axios
+      .delete(`${uri}/api/file/delete`, {
+        params: {
+          fNo: photoId,
+          fUrl: photoUri,
+        },
+      })
+      .then((response) => {
+        console.log("PhotoFile deleted successfully:", response.data);
+        setPhotoUri(null);
+      })
+      .catch(() => {
+        console.log("Failed to delete");
+      });
   };
 
-  // DateTimePicker
+  //Search Modal
+  const [searchModalVisible, setSearchModalVisible] = useState(false);
+  const openSearchModal = () => {
+    setSearchModalVisible(true);
+  };
+  const closeSearchModal = () => {
+    setSearchModalVisible(false);
+  };
+
+  //DatePicker Modal
+  const [DatePickerModalVisible, setDatePickerModalVisible] = useState(false);
+  const openDatePickerModal = () => {
+    setDatePickerModalVisible(true);
+  };
+  const closeDatePickerModal = () => {
+    setDatePickerModalVisible(false);
+  };
+
+  // 사진 등록 POST 요청
+  const uploadImage = async (imageUri, userId, mealType) => {
+    const formData = new FormData();
+    formData.append("file", {
+      uri: imageUri,
+      name: "image.jpg",
+      type: "image/jpeg",
+    });
+
+    formData.append("userId", userId);
+    formData.append("mealType", mealType);
+
+    try {
+      const response = await fetch(uri + "/api/file/files", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const responseData = await response;
+      console.log(responseData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // 즐겨찾기 로직
+  const [isLiked, setIsLiked] = useState(false);
+
+  const handleLikedPress = () => {
+    setIsLiked(!isLiked);
+  };
+
+  //DateTimePicker
   const [mode, setMode] = useState("time");
   const [pickerDate, setPickerDate] = useState("");
   const [pickerTime, setPickerTime] = useState("");
 
-  const showDatepicker = () => {
+  const useDatepicker = () => {
     setMode("calendar");
-    openModal();
+    openDatePickerModal();
   };
-  const showTimepicker = () => {
+  const useTimepicker = () => {
     setMode("time");
-    openModal();
+    openDatePickerModal();
   };
   const savePickerDate = (selectedDate) => {
     setPickerDate(selectedDate);
-    closeModal();
+    closeDatePickerModal();
   };
   const savePickerTime = (selectedTime) => {
     setPickerTime(selectedTime);
-    closeModal();
+    closeDatePickerModal();
   };
 
-  //pickerDate formatting
-  const transformPickerDate = (inputDate) => {
+  //Current Date
+  const currentDate = getFormatedDate(new Date(), "YYYY/MM/DD");
+  const currentTime = getFormatedDate(new Date(), "h:m");
+
+
+  //서버에 넘김 임시 Date
+  const date = new Date();
+  const isoDate = date.toISOString();
+
+
+  //change date format
+  const transformDate = (inputDate) => {
     if (!inputDate) {
       return null;
     }
@@ -112,50 +191,35 @@ const RecordMain = ({ route, navigation }) => {
     const monthName = months[parseInt(month, 10) - 1];
     return `${monthName} ${day}, ${year}`;
   };
-  const formattedPickerDate = transformPickerDate(pickerDate);
+  const formattedPickerDate = transformDate(pickerDate);
+  const formattedCurrentDate = transformDate(currentDate);
 
-  //pickerTime formatting
-  const transformPickerDateTime = (inputTime) => {
+  //change time format
+  const transformDateTime = (inputTime) => {
     if (!inputTime) {
-      return { ampm2: null, formattedPickerTime: null };
+      return { ampm: null, formattedTime: null };
     }
     const [hour, minute] = inputTime.split(":");
     const numericHour = parseInt(hour, 10);
-    let ampm2 = "am";
+    let ampm = "AM";
     let formattedHour = numericHour;
-
     if (numericHour >= 12) {
-      ampm2 = "pm";
+      ampm = "PM";
       if (numericHour > 12) {
         formattedHour = numericHour - 12;
       }
     }
     return {
-      ampm2: ampm2.toUpperCase(),
-      formattedPickerTime: `${formattedHour}:${minute}`,
+      ampm: ampm,
+      formattedTime: `${String(formattedHour).padStart(2, "0")}:${String(
+        minute
+      ).padStart(2, "0")}`,
     };
   };
-  const { ampm2, formattedPickerTime } = transformPickerDateTime(pickerTime);
-
-  //current date & time => ContextAPI 넣기 고려
-  const today = new Date();
-  const [todayDateUTC, _todayTimeUTC] = today.toISOString().split("T");
-  const [hour, minute] = _todayTimeUTC.split(":");
-  const todayTimeUTC = `${hour}:${minute}`;
-  //current date formatting
-  const formattedDate = today.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-  //current time formatting
-  const koreanTimeInAMPM = today.toLocaleTimeString("en-US", {
-    timeZone: "Asia/Seoul",
-    hour12: true,
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  const [currentTime, ampm1] = koreanTimeInAMPM.split(" ");
+  const { ampm: ampm2, formattedTime: formattedPickerTime } =
+    transformDateTime(pickerTime);
+  const { ampm: ampm1, formattedTime: formattedCurrentTime } =
+    transformDateTime(currentTime);
 
   //Rendering page
   return (
@@ -165,11 +229,11 @@ const RecordMain = ({ route, navigation }) => {
           source={require("../../images/background-img.png")}
           style={styles.backgroundImage}
         >
-          <TouchableOpacity onPress={showDatepicker}>
+          <TouchableOpacity onPress={useDatepicker}>
             <View style={styles.headerContainer}>
               <Text style={styles.headerTitle}>
                 {formattedPickerDate === null
-                  ? formattedDate
+                  ? formattedCurrentDate
                   : formattedPickerDate}
               </Text>
             </View>
@@ -179,7 +243,7 @@ const RecordMain = ({ route, navigation }) => {
             {/* imagePiker 사진 입력 부분 작업중 */}
             <View style={styles.cardImageContainer}>
               {photoUri ? (
-                <TouchableOpacity onPress={deletePhoto} style={{ zIndex: 10 }}>
+                <TouchableOpacity onPress={deleteFile} style={{ zIndex: 10 }}>
                   <AntDesign
                     name="closecircle"
                     style={styles.photoDeleteButton}
@@ -203,43 +267,52 @@ const RecordMain = ({ route, navigation }) => {
                 visible={imgModalVisible}
                 transparent={true}
               >
-                <View style={styles.modalContainer}>
-                  <View style={{ alignItems: "flex-end" }}>
-                    <TouchableOpacity onPress={toggleImgModal}>
-                      <AntDesign
-                        name="close"
-                        style={styles.imgModalCloseButton}
-                      />
-                    </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ flex: 1 }}
+                  onPress={toggleImgModal} // 모달 바깥을 클릭하면 모달 닫힘
+                >
+                  <View style={styles.modalContainer}>
+                    <View style={{ alignItems: "flex-end" }}>
+                      <TouchableOpacity onPress={toggleImgModal}>
+                        <AntDesign
+                          name="close"
+                          style={styles.imgModalCloseButton}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    <CameraPicker onClose={toggleImgModal}>
+                      <View style={styles.cameraPickerBox}>
+                        <Feather name="camera" style={styles.cameraImg} />
+                        <Text style={{ fontWeight: "bold" }}>Take a photo</Text>
+                      </View>
+                    </CameraPicker>
+                    <ImagePicker onClose={toggleImgModal}>
+                      <View style={styles.PhotoPickerBox}>
+                        <Feather name="image" style={styles.galleryImg} />
+                        <Text style={{ fontWeight: "bold" }}>
+                          Photo Gallery
+                        </Text>
+                      </View>
+                    </ImagePicker>
                   </View>
-                  <CameraPicker onClose={toggleImgModal}>
-                    <View style={styles.cameraPickerBox}>
-                      <Feather name="camera" style={styles.cameraImg} />
-                      <Text style={{ fontWeight: "bold" }}>Take a photo</Text>
-                    </View>
-                  </CameraPicker>
-                  <ImagePicker onClose={toggleImgModal}>
-                    <View style={styles.PhotoPickerBox}>
-                      <Feather name="image" style={styles.galleryImg} />
-                      <Text style={{ fontWeight: "bold" }}>Photo Gallery</Text>
-                    </View>
-                  </ImagePicker>
-                </View>
+                </TouchableOpacity>
               </Modal>
             </View>
           </View>
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("RecordScreen", { shouldOpenModal: true })
-              }
-            >
+            <TouchableOpacity onPress={openSearchModal}>
               <View style={styles.buttonBox1}>
                 <Text style={styles.buttonText}> Add More </Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={submitFoodToServer}>
+            <TouchableOpacity
+              onPress={() => {
+                // submitMealToServer();
+                uploadImage(photoUri, "user1", mealType);
+                navigation.navigate("RecordScreen");
+              }}
+            >
               <View style={styles.buttonBox2}>
                 <Text style={styles.buttonText}> Save </Text>
               </View>
@@ -250,42 +323,54 @@ const RecordMain = ({ route, navigation }) => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.recordScroll}
           >
-            <MealCard2
-              foodInfo={foodInfo}
-              showTimepicker={showTimepicker}
-              formattedPickerTime={formattedPickerTime}
-              ampm2={ampm2}
-              ampm1={ampm1}
-              currentTime={currentTime}
-            />
+            {mealList.map((mealInfo, index) => (
+              <MealCard2
+                key={index}
+                mealInfo={mealInfo}
+                useTimepicker={useTimepicker}
+                formattedCurrentTime={formattedCurrentTime}
+                formattedPickerTime={formattedPickerTime}
+                ampm1={ampm1}
+                ampm2={ampm2}
+              />
+            ))}
+
           </ScrollView>
 
           {/* DateTimePicker */}
           <Modal
             animationType="slide"
-            visible={modalVisible}
+            visible={DatePickerModalVisible}
             transparent={true}
           >
             <View style={{ marginTop: "50%" }}>
-              <TouchableOpacity onPress={closeModal}>
+              <TouchableOpacity onPress={closeDatePickerModal}>
                 <AntDesign name="close" style={styles.modalCloseButton} />
               </TouchableOpacity>
               <DatePicker
                 style={styles.datePicker}
                 mode={mode}
                 minuteInterval={10}
-                onTimeChange={savePickerTime}
+                selected={getToday()}
                 selectorStartingYear={2023}
                 onDateChange={savePickerDate}
-                selected={todayDateUTC}
+                onTimeChange={savePickerTime}
               />
             </View>
           </Modal>
+
+          {/* SearchModal */}
+          <SearchModal
+            fromPage="RecordMain"
+            searchModalVisible={searchModalVisible}
+            closeSearchModal={closeSearchModal}
+          />
         </ImageBackground>
       </View>
     </SafeAreaView>
   );
 };
+
 export default RecordMain;
 
 const styles = StyleSheet.create({
@@ -389,6 +474,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
+    marginBottom: 15
   },
   buttonBox1: {
     height: 40,
@@ -421,10 +507,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
-  //식단 기록 컨테이너
   recordScroll: {
     alignItems: "center",
   },
+  //TimePicker
   blurViewBox: {
     overflow: "hidden",
     borderRadius: 20,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,29 +7,31 @@ import {
   Modal,
   TextInput,
   FlatList,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { BlurView } from 'expo-blur';
-import { AntDesign } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { BlurView } from "expo-blur";
+import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 //axios
 import axios from "axios";
 import Constants from "expo-constants";
+import { useMealContext } from "../../store/MealContext";
 
-const SearchModal = ({ modalVisible, closeModal }) => {
-  const navigation = useNavigation();
+const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
+  // mealData를 set할 Context
+  const { addItemToMealList } = useMealContext();
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
   //Debounce를 적용한 SearchAPI 호출
-  const [keyword, setKeyword] = useState('');   //검색 키워드
-  const [list, setList] = useState([]);   //검색어가 포함된 데이터 리스트
+  const [keyword, setKeyword] = useState(""); //검색 키워드
+  const [list, setList] = useState([]); //검색어가 포함된 데이터 리스트
 
   useEffect(() => {
-    if (keyword === '') {
-      return; // 초기값일 때는 요청을 보내지 않음
+    if (keyword === "") {
+      return; // 초기값일때(=페이지에 들어왔을때)는 요청을 보내지 않음
     }
 
     const getList = () => {
@@ -39,13 +41,12 @@ const SearchModal = ({ modalVisible, closeModal }) => {
         .then((response) => {
           setList(response.data);
         })
-        .catch(() => {
-        });
+        .catch(() => {});
     };
 
     const debounce = setTimeout(() => {
       getList();
-    }, 200);  //keyword가 입력되고 0.x초 후 실행되게 지연시킴
+    }, 100); //keyword가 입력되고 0.x초 후 실행되게 지연시킴
 
     return () => {
       clearTimeout(debounce);
@@ -53,40 +54,63 @@ const SearchModal = ({ modalVisible, closeModal }) => {
   }, [keyword]);
 
   //최종 검색어 제출, Validation : keyword와 list의 값이 일치하지 않으면 제출못하게 막고 error 표시
-  const [error, setError] = useState('');
+  const navigation = useNavigation();
+  const [error, setError] = useState("");
+
   const submitSearchResult = () => {
-    const foundItem = list.find(item => item.nFoodName.trim() === keyword.trim());
-    if (!foundItem || "") {
-      setError('리스트에서 음식을 고른 후 제출해주세요🥹');
+    const foundItem = list.find(
+      (item) => item.nFoodName.trim() === keyword.trim()
+    );
+    if (!foundItem) {
+      setError("Please select the food on the list🥹");
       return;
     }
-    navigation.push('RecordMain', { foodInfo: list });
-    closeModal();
+    if (fromPage === "RecordScreen") {
+      // console.log(foundItem);
+      addItemToMealList(foundItem); //ContextAPI에 저장하고 이동
+      navigation.navigate("RecordMain");
+    }
+    if (fromPage === "RecordMain") {
+      addItemToMealList(foundItem);
+    }
+    setKeyword("");
+    closeSearchModal();
   };
 
   //검색어 하이라이트 색상 적용
   const highlightKeyword = (text, keyword) => {
-    const parts = text.split(new RegExp(`(${keyword})`, 'gi')); //JS의 RegExp은 정규표현식 사용 'gi'는 옵션
+    const parts = text.split(new RegExp(`(${keyword})`, "gi")); //JS의 RegExp은 정규표현식 사용 'gi'는 옵션
     return (
       <Text style={{ fontSize: 18 }}>
-        {parts.map((part, i) => (
-          part.toLowerCase() === keyword.toLowerCase()
-            ? <Text key={i} style={{ color: 'red', fontWeight: 'bold' }}>{part}</Text>
-            : part
-        ))}
+        {parts.map((part, i) =>
+          part.toLowerCase() === keyword.toLowerCase() ? (
+            <Text key={i} style={{ color: "red", fontWeight: "bold" }}>
+              {part}
+            </Text>
+          ) : (
+            part
+          )
+        )}
       </Text>
     );
   };
 
   return (
-    <Modal animationType="slide" visible={modalVisible} transparent={true} >
+    <Modal
+      animationType="slide"
+      visible={searchModalVisible}
+      transparent={true}
+    >
       <BlurView style={{ flex: 1 }}>
         <View style={styles.modalScreen}>
-          <TouchableOpacity onPress={closeModal} >
+          <TouchableOpacity onPress={closeSearchModal}>
             <AntDesign name="close" style={styles.modalCloseButton} />
           </TouchableOpacity>
           <View style={styles.modalSearchContainer}>
-            <TouchableOpacity onPress={submitSearchResult}>
+            <TouchableOpacity
+              onPress={submitSearchResult}
+              style={{ zIndex: 1 }}
+            >
               <FontAwesome5 name="search" style={styles.modalSearchButton} />
             </TouchableOpacity>
             <View style={styles.modalTextInputBox}>
@@ -98,11 +122,11 @@ const SearchModal = ({ modalVisible, closeModal }) => {
                 onChangeText={setKeyword}
                 value={keyword}
                 onSubmitEditing={submitSearchResult}
-                onFocus={() => setError('')}
+                onFocus={() => setError("")}
               />
-              <Text style={{ color: 'red', fontWeight: 'bold' }}>{error}</Text>
+              <Text style={styles.errorMSG}>{error}</Text>
             </View>
-            <TouchableOpacity onPress={() => setKeyword('')}>
+            <TouchableOpacity onPress={() => setKeyword("")}>
               <AntDesign name="closecircleo" style={styles.clearButton} />
             </TouchableOpacity>
           </View>
@@ -112,14 +136,16 @@ const SearchModal = ({ modalVisible, closeModal }) => {
             style={styles.searchScrollView}
             keyExtractor={(item, index) => item.nNo || String(index)}
             //FlatList Rendering
-            renderItem={({ item }) =>
+            renderItem={({ item }) => (
               <TouchableOpacity
-                style={{ marginVertical: '3%', fontSize: 18 }}
-                onPress={() => { setKeyword(item.nFoodName) }}
+                style={{ marginVertical: "3%", fontSize: 18 }}
+                onPress={() => {
+                  setKeyword(item.nFoodName);
+                }}
               >
                 {highlightKeyword(item.nFoodName, keyword)}
               </TouchableOpacity>
-            }
+            )}
           />
         </View>
       </BlurView>
@@ -130,53 +156,60 @@ const SearchModal = ({ modalVisible, closeModal }) => {
 const styles = StyleSheet.create({
   modalScreen: {
     flex: 1,
-    marginTop: '11%',
-    backgroundColor: 'rgba(255,255,255,0.6)',
+    marginTop: "11%",
+    backgroundColor: "rgba(255,255,255,0.6)",
     borderRadius: 30,
     padding: 15,
   },
   modalCloseButton: {
     margin: 10,
-    left: '90%',
+    left: "90%",
     fontSize: 25,
-    color: 'rgba(0, 0, 0, 0.1)',
+    color: "rgba(0, 0, 0, 0.1)",
   },
   modalSearchContainer: {
-    alignItems: 'center',
-    width: '100%',
-    position: 'relative',
+    alignItems: "center",
+    width: "100%",
+    position: "relative",
   },
   modalTextInputBox: {
-    width: '80%',
+    width: "80%",
     height: 45,
-    borderColor: 'rgba(0, 0, 0, 0.3)',
+    borderColor: "rgba(0, 0, 0, 0.3)",
     borderWidth: 1,
     borderRadius: 10,
     paddingLeft: 50,
   },
   modalTextInput: {
-    width: '80%',
+    width: "80%",
     height: 45,
     fontSize: 16,
   },
+  errorMSG: {
+    color: "red",
+    fontWeight: "bold",
+    right: 10,
+  },
   modalSearchButton: {
     fontSize: 20,
-    color: 'orange',
-    position: 'absolute',
-    right: '30%',
+    color: "orange",
+    position: "absolute",
+    right: "30%",
     top: 13,
-    zIndex: 1
+    zIndex: 1,
   },
   clearButton: {
     fontSize: 20,
-    color: 'rgba(0, 0, 0, 0.2)',
-    position: 'absolute',
-    left: '32%',
+    color: "rgba(0, 0, 0, 0.2)",
+    position: "absolute",
+    left: "32%",
     bottom: 12,
   },
   //FlatList
   searchScrollView: {
-    height: '80%', marginTop: '5%', marginLeft: '10%'
+    height: "80%",
+    marginTop: "5%",
+    marginLeft: "10%",
   },
 });
 
