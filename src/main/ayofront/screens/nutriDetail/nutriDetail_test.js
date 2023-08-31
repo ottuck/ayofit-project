@@ -45,9 +45,6 @@ import { useIsFocused } from "@react-navigation/native";
 import SwipeDownToSave from "../../components/pedometer/SwipeDownToSave";
 
 function NutriDetailScreen() {
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const scrollViewRef = React.createRef();

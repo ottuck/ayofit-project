@@ -4,16 +4,34 @@
 <mapper namespace="com.app.ayofit.mapper.LoginMapper">
 
 	<select id="checkLogin" resultType="AccountDTO">
-		select l_id, l_email, l_password, l_name, l_info, l_google, a_age, a_gender, a_height, a_weight, a_activity
+		select l_id, l_email, l_password, l_name, l_picture, l_type, l_info, a_type, a_age, a_gender, a_height, a_weight, a_activity
 		from login, accounts
 		where l_info = a_id
 		and l_email = #{reqEmail}
 		and l_password = #{reqPassword}
+		and l_type = 'email'
 	</select>
 
+	<insert id="setEmptyInfo">
+		insert into accounts values (#{infoUuid}, 0, 0, 'empty', 0, 0, 'empty')
+	</insert>
+
 	<insert id="setUser">
-		insert into login (l_id, l_email, l_password, l_name)
-		values (#{uuid}, #{reqEmail}, #{reqPassword}, #{reqName})
+		insert into login (l_id, l_email, l_password, l_name, l_type, l_info)
+		values (#{idUuid}, #{reqEmail}, #{reqPassword}, #{reqName}, 'email', #{infoUuid})
+	</insert>
+
+	<select id="checkGoogle" resultType="AccountDTO">
+		select l_id, l_email, l_password, l_name, l_picture, l_type, l_info, a_type, a_age, a_gender, a_height, a_weight, a_activity
+		from login, accounts
+		where l_info = a_id
+		and l_type = 'google'
+		and l_password = #{reqId}
+	</select>
+
+	<insert id="setGoogle">
+		insert into login
+		values (#{idUuid}, #{reqEmail}, #{reqId}, #{reqName}, #{reqPicture}, 'google', #{infoUuid})
 	</insert>
 
 </mapper>

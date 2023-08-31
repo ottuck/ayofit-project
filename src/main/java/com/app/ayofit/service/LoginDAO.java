@@ -1,6 +1,5 @@
 package com.app.ayofit.service;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,9 +21,9 @@ public class LoginDAO {
     public LoginDTO checkLogin(Map<String, Object> requestData) {
         String reqEmail = (String) requestData.get("email");
         String reqPassword = (String) requestData.get("password");
-        List<AccountDTO> user = loginMapper.checkLogin(reqEmail, reqPassword);
+        AccountDTO user = loginMapper.checkLogin(reqEmail, reqPassword);
 
-        if (user.size() != 0) {
+        if (user.getL_id() != null) {
             return new LoginDTO("SUCCESS", "Sign in successful", user);
         } else {
             return new LoginDTO("FAILED", "Email or password is incorrect", null);
@@ -32,14 +31,40 @@ public class LoginDAO {
     }
 
     public LoginDTO setUser(Map<String, Object> requestData) {
-        String uuid = UUID.randomUUID().toString().split("-")[0];
+        String[] uuid = UUID.randomUUID().toString().split("-");
+        String idUuid = uuid[0];
+        String infoUuid = uuid[1];
         String reqName = (String) requestData.get("name");
         String reqEmail = (String) requestData.get("email");
         String reqPassword = (String) requestData.get("password");
-        if (loginMapper.setUser(uuid, reqName, reqEmail, reqPassword) == 1) {
-            return new LoginDTO("SUCCESS", "Sign up successful", null);
+
+        if (loginMapper.setEmptyInfo(infoUuid) == 1
+                && loginMapper.setUser(idUuid, reqName, reqEmail, reqPassword, infoUuid) == 1) {
+            return new LoginDTO("SUCCESS", "Sign up successful", new AccountDTO(infoUuid));
         } else {
             return new LoginDTO("FAILED", "Sign up failed", null);
+        }
+    }
+
+    public LoginDTO checkGoogle(Map<String, Object> requestData) {
+        String[] uuid = UUID.randomUUID().toString().split("-");
+        String idUuid = uuid[0];
+        String infoUuid = uuid[1];
+        String reqId = (String) requestData.get("id");
+        String reqEmail = (String) requestData.get("email");
+        String reqName = (String) requestData.get("name");
+        String reqPicture = (String) requestData.get("picture");
+        AccountDTO user = loginMapper.checkGoogle(reqId);
+
+        if (user.getL_id() != null) {
+            return new LoginDTO("SUCCESS", "Sign in successful", user);
+        } else {
+            if (loginMapper.setEmptyInfo(infoUuid) == 1
+                    && loginMapper.setGoogle(idUuid, reqId, reqEmail, reqName, reqPicture, infoUuid) != 1) {
+                return new LoginDTO("FAILED", "Google login canceled", null);
+            } else {
+                return new LoginDTO("SUCCESS", "Sign in successful", loginMapper.checkGoogle(reqId));
+            }
         }
     }
 

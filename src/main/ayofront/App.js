@@ -72,8 +72,6 @@ function MainTabsScreen() {
 }
 
 export default function App() {
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [completedOnboarding, setCompletedOnboarding] = useState(false);
 
@@ -126,30 +124,19 @@ export default function App() {
               <NavigationContainer style={styles.navigationContainer}>
                 <PedometerProvider>
                   <Stack.Navigator>
-                    {/* /* 인증해야되서 주석 처리 해둠
-              <Stack.Screen
-                name="AccountInfo"
-                component={AccountInfo}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="AccountNutri"
-                component={AccountNutri}
-                options={{ headerShown: false }}
-              /> */}
-                    {/* {userInfo ? ( */}
+                    {userInfo ? (
                       <Stack.Screen
                         name="MainTabs"
                         component={MainTabsScreen}
                         options={{ headerShown: false }}
                       />
-                    {/* ) : (
+                    ) : (
                       <Stack.Screen
                         name="LoginStack"
                         component={LoginStack}
                         options={{ headerShown: false }}
                       />
-                    )} */}
+                    )}
                   </Stack.Navigator>
                 </PedometerProvider>
               </NavigationContainer>

@@ -22,8 +22,7 @@ const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
   const { addItemToMealList } = useMealContext();
 
   //Server 통신을 위한 URI 수정
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  const uri = "http://213.35.96.167/";
 
   //Debounce를 적용한 SearchAPI 호출
   const [keyword, setKeyword] = useState(""); //검색 키워드

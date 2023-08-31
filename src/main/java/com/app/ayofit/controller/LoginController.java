@@ -28,4 +28,9 @@ public class LoginController {
         return loginDAO.setUser(requestData);
     }
 
+    @PostMapping("google")
+    public LoginDTO checkGoggle(@RequestBody Map<String, Object> requestData) {
+        return loginDAO.checkGoogle(requestData);
+    }
+
 }

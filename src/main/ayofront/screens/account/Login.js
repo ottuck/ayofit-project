@@ -36,8 +36,7 @@ WebBrowser.maybeCompleteAuthSession();
 const { brand, darkLight, primary } = Colors;
 
 const Login = ({ navigation }) => {
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const url = `http://${debuggerHost.split(":").shift()}:8080/api/login`;
+  const uri = "http://213.35.96.167";
   const [hidePassword, setHidePassword] = useState(true);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
@@ -55,14 +54,14 @@ const Login = ({ navigation }) => {
     handleMessage("");
 
     axios
-      .post(url, credentials)
+      .post(`${uri}/api/login`, credentials)
       .then((response) => {
         const result = response.data;
         const { message, status, data } = result;
         if (status !== "SUCCESS") {
           handleMessage(message, status);
         } else {
-          persistLogin({ ...data[0] }, message, status);
+          persistLogin({ ...data }, message, status);
         }
         setSubmitting(false);
       })
@@ -103,8 +102,22 @@ const Login = ({ navigation }) => {
         }
       );
       const user = await response.json();
-      console.log(user);
-      handleMessage("Sign in success", "SUCCESS");
+      axios
+        .post(`${uri}/api/google`, user)
+        .then((response) => {
+          const result = response.data;
+          const { message, status, data } = result;
+          if (status !== "SUCCESS") {
+            handleMessage(message, status);
+          } else {
+            persistLogin({ ...data }, message, status);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          handleMessage("Check your network and try again");
+        })
+        .finally(setGoogleSubmitting(false));
     } catch (error) {
       console.log(error);
       handleMessage("Check your network and try again");

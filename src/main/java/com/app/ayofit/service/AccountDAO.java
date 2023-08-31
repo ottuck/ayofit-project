@@ -1,12 +1,7 @@
 package com.app.ayofit.service;
 
-import java.io.File;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.app.ayofit.mapper.AccountMapper;
 import com.app.ayofit.model.AccountDTO;
