@@ -10,14 +10,27 @@ import com.app.ayofit.model.AccountDTO;
 @Mapper
 public interface LoginMapper {
 
-        List<AccountDTO> checkLogin(
+        AccountDTO checkLogin(
                         @Param("reqEmail") String reqEmail,
                         @Param("reqPassword") String reqPassword);
 
+        int setEmptyInfo(@Param("infoUuid") String infoUuid);
+
         int setUser(
-                        @Param("uuid") String uuid,
+                        @Param("idUuid") String uuid,
                         @Param("reqName") String reqName,
                         @Param("reqEmail") String reqEmail,
-                        @Param("reqPassword") String reqPassword);
+                        @Param("reqPassword") String reqPassword,
+                        @Param("infoUuid") String infoUuid);
+
+        AccountDTO checkGoogle(@Param("reqId") String reqId);
+
+        int setGoogle(
+                        @Param("idUuid") String uuid,
+                        @Param("reqId") String reqId,
+                        @Param("reqEmail") String reqEmail,
+                        @Param("reqName") String reqName,
+                        @Param("reqPicture") String reqPicture,
+                        @Param("infoUuid") String infoUuid);
 
 }

@@ -35,8 +35,7 @@ const RecordMain = ({ navigation }) => {
   // console.log(formattedDate); // "2023-08-31 08:36:40"
 
   //Server 통신을 위한 URI 수정
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  const uri = "http://213.35.96.167";
 
   //식단 기록 post 요청
   const submitMealListToServer = () => {

@@ -10,8 +10,7 @@ import { GlobalStyles } from "../../components/UI/styles";
 import { BlurView } from "expo-blur";
 
 function StepsAnalysisScreen({ route }) {
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  const uri = "http://213.35.96.167";
   const isFocused = useIsFocused();
   useEffect(() => {
     if (!isFocused) {
