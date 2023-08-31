@@ -23,7 +23,7 @@ public class LoginDAO {
         String reqPassword = (String) requestData.get("password");
         AccountDTO user = loginMapper.checkLogin(reqEmail, reqPassword);
 
-        if (user.getL_id() != null) {
+        if (user != null) {
             return new LoginDTO("SUCCESS", "Sign in successful", user);
         } else {
             return new LoginDTO("FAILED", "Email or password is incorrect", null);
@@ -56,7 +56,7 @@ public class LoginDAO {
         String reqPicture = (String) requestData.get("picture");
         AccountDTO user = loginMapper.checkGoogle(reqId);
 
-        if (user.getL_id() != null) {
+        if (user != null) {
             return new LoginDTO("SUCCESS", "Sign in successful", user);
         } else {
             if (loginMapper.setEmptyInfo(infoUuid) == 1

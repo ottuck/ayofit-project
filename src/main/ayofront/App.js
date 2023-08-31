@@ -5,7 +5,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import Constants from "expo-constants";
 import { useEffect, useState } from "react";
 import OnboardingScreen from "./screens/Onboarding";
 import NutriDetailScreen from "./screens/nutriDetail/nutriDetail_test";
@@ -90,10 +89,25 @@ export default function App() {
   const checkLoginCredentials = async () => {
     await AsyncStorage.getItem("@user")
       .then((result) => {
+        const emptyInfo = {
+          a_type: 0,
+          activity: "",
+          age: 0,
+          curWeight: 0,
+          gender: "",
+          height: 0,
+          l_email: "",
+          l_id: "",
+          l_info: "",
+          l_name: "",
+          l_password: "",
+          l_picture: "",
+          l_type: "",
+        };
         if (result !== null) {
           setUserInfo(JSON.parse(result));
         } else {
-          setUserInfo(null);
+          setUserInfo(emptyInfo);
         }
       })
       .catch((error) => console.log(error));
@@ -124,7 +138,7 @@ export default function App() {
               <NavigationContainer style={styles.navigationContainer}>
                 <PedometerProvider>
                   <Stack.Navigator>
-                    {userInfo ? (
+                    {userInfo.l_id !== "" ? (
                       <Stack.Screen
                         name="MainTabs"
                         component={MainTabsScreen}

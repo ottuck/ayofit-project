@@ -10,14 +10,11 @@ import {
 import MealCard1 from "../../components/record/MealCard1";
 import SearchModal from "../../components/record/SearchModal";
 import axios from "axios";
-import Constants from "expo-constants";
 import { useMealContext } from "../../store/MealContext";
 import { usePhotoContext } from "../../store/image_context";
 
-const { debuggerHost } = Constants.manifest2.extra.expoGo;
-const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-
 function RecordScreen() {
+  const uri = "http://213.35.96.167";
   //Search Modal
   const [searchModalVisible, setSearchModalVisible] = useState(false);
   const openSearchModal = () => {

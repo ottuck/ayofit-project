@@ -17,12 +17,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
 import axios from "axios";
-import Constants from "expo-constants";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+
+import { LoginContext } from "../../store/LoginContext";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 function MyPage({ navigation }) {
+  const { userInfo, setUserInfo } = useContext(LoginContext);
   const uri = "http://213.35.96.167";
 
   const [goals, setGoals] = useState({});
@@ -86,7 +88,7 @@ function MyPage({ navigation }) {
         <Text style={styles.profile}>'s Profile</Text>
       </View>
       <View style={styles.profileImgContainer}>
-        <Image style={styles.profileImg} />
+        <Image style={styles.profileImg} source={{ uri: userInfo.l_picture }} />
       </View>
       <View style={styles.myGoalsContainer}>
         <View style={styles.myGoals}>

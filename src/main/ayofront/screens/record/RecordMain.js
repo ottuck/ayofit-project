@@ -12,7 +12,6 @@ import {
 import React, { useState } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
-import Constants from "expo-constants";
 import DatePicker, {
   getFormatedDate,
   getToday,

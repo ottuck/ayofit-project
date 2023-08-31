@@ -8,8 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import RecordScreen from "../../screens/record/RecordScreen";
 
 function MainImage({ navigate }) {
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  const uri = "http://213.35.96.167";
 
   const [img, setImgs] = useState([]);
   const { setPhotoUri, setPhotoId } = usePhotoContext();
