@@ -25,9 +25,9 @@ import { useMealContext } from "../../store/MealContext";
 import SearchModal from "../../components/record/SearchModal";
 import MealCard2 from "../../components/record/MealCard2";
 
-const RecordMain = (route) => {
+const RecordMain = ({ route, navigation }) => {
   const { mealType } = useMealContext();
-  console.log(mealType);
+  // console.log(mealType);
   // console.log("컨택스트API => 레코드메인 ", mealData);
 
   // 콘솔 로그일때 컨텍스트 ㅁPIdp wkfTKdkslkfor문 돌려보기
@@ -53,11 +53,28 @@ const RecordMain = (route) => {
   const toggleImgModal = () => {
     setImgModalVisible(!imgModalVisible);
   };
-  const { photoUri, setPhotoUri } = usePhotoContext();
+  const { photoUri, setPhotoUri, photoId } = usePhotoContext();
+  // console.log(photoUri);
+
+  // 사진 파일 삭제 로직
   console.log(photoUri);
-  const deletePhoto = () => {
-    console.log(photoUri);
-    setPhotoUri(null);
+  console.log(photoId);
+
+  const deleteFile = () => {
+    axios
+      .delete(`${uri}/api/file/delete`, {
+        params: {
+          fNo: photoId,
+          fUrl: photoUri,
+        },
+      })
+      .then((response) => {
+        console.log("PhotoFile deleted successfully:", response.data);
+        setPhotoUri(null);
+      })
+      .catch(() => {
+        console.log("Failed to delete");
+      });
   };
 
   //Search Modal
@@ -213,7 +230,7 @@ const RecordMain = (route) => {
             {/* imagePiker 사진 입력 부분 작업중 */}
             <View style={styles.cardImageContainer}>
               {photoUri ? (
-                <TouchableOpacity onPress={deletePhoto} style={{ zIndex: 10 }}>
+                <TouchableOpacity onPress={deleteFile} style={{ zIndex: 10 }}>
                   <AntDesign
                     name="closecircle"
                     style={styles.photoDeleteButton}
@@ -280,6 +297,7 @@ const RecordMain = (route) => {
               onPress={() => {
                 // submitMealToServer();
                 uploadImage(photoUri, "user1", mealType);
+                navigation.navigate("RecordScreen");
               }}
             >
               <View style={styles.buttonBox2}>

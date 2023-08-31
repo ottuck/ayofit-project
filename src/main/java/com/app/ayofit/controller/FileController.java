@@ -6,12 +6,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,16 +59,14 @@ public class FileController {
 
 		return new ResponseEntity<>(imgs, HttpStatus.OK);
 	}
-
-//	@GetMapping("/get-image/{userId}")
-//	public ResponseEntity<String> getImageUrl(@PathVariable("userId") String userId) {
-//		// userId를 기반으로 이미지 URL 생성
-//		String fileName = userId + ".jpg";
-//		String imageUrl = imageUrlGenerator.generateImageUrl(fileName);
-//		System.out.println(imageUrl);
-//		System.out.println("==== 여기 옴");
-//
-//		return new ResponseEntity<>(imageUrl, HttpStatus.OK);
-//	}
+	
+	@DeleteMapping("/delete")
+	public ResponseEntity<String> deleteFile (@RequestParam("fNo") int fNo, @RequestParam("fUrl") String fUrl){
+		System.out.println(fNo);
+		System.out.println(fUrl);
+		fireBaseService.deleteFile(fNo,fUrl);
+		return new ResponseEntity<>("delete", HttpStatus.OK);
+	}
+	
 
 }

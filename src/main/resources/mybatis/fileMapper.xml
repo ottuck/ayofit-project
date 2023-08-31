@@ -7,16 +7,13 @@
 		insert into record_img values (record_img_seq.nextval, #{userId}, #{uuid}, sysdate, #{mealType})
 	</insert>
 
-
-
-
-	<insert id="uploadImg">
-		insert into record_img values (record_img_seq.nextval, #{fDTO.fId}, #{fDTO.fImg}, sysdate)
-	</insert>
-	
 	<select id="getImg" resultType="FileDTO">
-		select r_i_no as fNo, r_i_id as fId, r_img as fImg, r_img_date as fDate
-		from record_img where r_i_id = #{userId}
+		select r_i_no as fNo, r_i_id as fId, r_img as fImg, r_img_date as fDate, r_img_type as fType
+		from record_img where r_i_id = #{userId} and trunc(r_img_date) = trunc(sysdate)
 	</select>
+	
+	<delete id="deleteFile">
+		delete from record_img where r_i_no = #{fNo}
+	</delete>
 	
 </mapper>
