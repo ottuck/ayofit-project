@@ -1029,7 +1029,7 @@ const DetailsComponent = () => {
           left: -3,
         }}
       >
-        <GoalNutriRatioViewText>나의 목표</GoalNutriRatioViewText>
+        <GoalNutriRatioViewText>My Goals</GoalNutriRatioViewText>
         <Image
           source={require("../../assets/dateRight.png")}
           style={{

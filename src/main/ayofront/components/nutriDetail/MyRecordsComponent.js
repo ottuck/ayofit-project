@@ -553,7 +553,7 @@ const MyRecordsComponent = () => {
                   top: 1.6,
                 }}
               />
-              <RecordsGoalWeightText>목표 62kg</RecordsGoalWeightText>
+              <RecordsGoalWeightText> Goal 62kg</RecordsGoalWeightText>
             </RecordsGoalWeightContainer>
           </RecordsMyWeightImgContainer>
           <RecordsWeightButtonContainer>
