@@ -34,15 +34,24 @@ const RecordMain = ({ navigation }) => {
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
   //식단 기록 post 요청
-  const submitMealToServer = () => {
-    axios
-      .post(`${uri}/api/meal`, mealData)
-      .then((response) => {
-        console.log("MealData submitted successfully:", response.data);
-      })
-      .catch(() => {
-        console.log("Error", "Failed to submit");
-      });
+  const submitMealListToServer = () => {
+    const updatedMealList = mealList.map((meal) => {
+      const { nNO, nSize, ...rest } = meal; // nNO와 nSize를 제거
+      return {
+        ...rest,
+        nMealType: mealType //mealType 추가
+      };
+    });
+    console.log("업데이트 밀리스트:", updatedMealList);
+
+    // axios
+    //   .post(`${uri}/api/meal`, mealList)
+    //   .then((response) => {
+    //     console.log("MealData submitted successfully:", response.data);
+    //   })
+    //   .catch(() => {
+    //     console.log("Error", "Failed to submit");
+    //   });
   };
 
   //ImgModal
@@ -152,6 +161,12 @@ const RecordMain = ({ navigation }) => {
   //Current Date
   const currentDate = getFormatedDate(new Date(), "YYYY/MM/DD");
   const currentTime = getFormatedDate(new Date(), "h:m");
+
+
+  //서버에 넘김 임시 Date
+  const date = new Date();
+  const isoDate = date.toISOString();
+
 
   //change date format
   const transformDate = (inputDate) => {
@@ -308,8 +323,7 @@ const RecordMain = ({ navigation }) => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.recordScroll}
           >
-            {/* <Text>{mealList[0].nFoodName}</Text> */}
-            {/* {mealList.map((mealInfo, index) => (
+            {mealList.map((mealInfo, index) => (
               <MealCard2
                 key={index}
                 mealInfo={mealInfo}
@@ -319,16 +333,8 @@ const RecordMain = ({ navigation }) => {
                 ampm1={ampm1}
                 ampm2={ampm2}
               />
-            ))} */}
+            ))}
 
-            {/* <MealCard2
-              mealList={mealList}
-              useTimepicker={useTimepicker}
-              formattedCurrentTime={formattedCurrentTime}
-              formattedPickerTime={formattedPickerTime}
-              ampm1={ampm1}
-              ampm2={ampm2}
-            /> */}
           </ScrollView>
 
           {/* DateTimePicker */}
@@ -468,6 +474,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
+    marginBottom: 15
   },
   buttonBox1: {
     height: 40,
