@@ -20,6 +20,7 @@ import axios from "axios";
 import Constants from "expo-constants";
 import FastHeaderCom from "../components/fast/FastHeaderCom";
 import FastHeaderCom2 from "../components/fast/FastHeaderCom2";
+import { WhiteBalance } from "expo-camera";
 
 
 
@@ -59,16 +60,16 @@ let HourMinutes = `${nowHours}:${nowminutes}`
 //---------------------StackPage-----------------------------------------//
 const FastMainPage = ({ navigation }) => (
     <>   
-    <StatusBar translucent backgroundColor="transparent" />
         <ImageBackground
     source={require("../images/FastImage/FastBackground.png")}
     resizeMode="cover"
     style={styles.backgroundMain}
     >
+    <StatusBar translucent backgroundColor="transparent" />
         <FastHeaderCom navigation={navigation} />
     <FirstMainPage>
     <MainBtn onPress={() => navigation.navigate("FastingMethod")}>
-        <MainText style={{ fontFamily: 'OpenSans_800ExtraBold_Italic', fontSize: 20 }}>+ Set up your plan</MainText>
+        <MainText style={{ fontFamily: 'OpenSans_800ExtraBold_Italic' }}>+ Set up your plan</MainText>
     </MainBtn>
 </FirstMainPage>
 </ImageBackground>
@@ -138,7 +139,7 @@ const FastMethod = ({ navigation }) => {
 <MethodScrollView>
 <MethodContainer>  
 <MethodTitle>
-    Please choose a method<Ionicons name="checkmark" size={28} color="black" />
+    Please choose a method<Ionicons name="checkmark" size={28} color="white" />
 </MethodTitle>
 <MethodCTouch onPress={() => selectMethod(12)}>
 <MethodLeftContent>
@@ -151,7 +152,7 @@ const FastMethod = ({ navigation }) => {
 <MethodCTextS2>relaxing</MethodCTextS2>
 </MethodRightContent>
 </MethodCTouch>
-<MethodCTouch onPress={() => selectMethod(14)}>
+<MethodCTouch onPress={() => selectMethod(14)}> 
 <MethodLeftContent>
 <MethodCText>14H</MethodCText>
 <MethodCTextS>fasting</MethodCTextS>
@@ -294,7 +295,7 @@ return(
  <Image source={require('../images/FastImage/FastTimerimo.png')} style={styles.timerImo} />
 </PlanMethodCTouch>
 <PlanEndView>
- <PlanEndText style={{ fontFamily: 'OpenSans_600SemiBold_Italic', fontSize: 20 }}>
+ <PlanEndText style={{ fontFamily: 'OpenSans_700Bold_Italic', fontSize: 20 }}>
     It ends at  {"\n"}
     {totalDateTime || currnetDateTime}
 </PlanEndText>
@@ -385,7 +386,7 @@ return(
     resizeMode="cover"
     style={styles.backgroundMain}
     >
-<FastHeaderCom navigation={navigation} />
+<FastHeaderCom2 navigation={navigation} />
 <ConfirmScroll>
 <ConfirmContainer>
     <ConfirmHeader>
@@ -530,7 +531,7 @@ function MyTimer({ navigation}) {
             <CountdownCircleTimer
     isPlaying={isPlaying}
     duration={totalSeconds}
-    colors={["#6de06f", "#36f233", "#f26717", "#A30000"]}
+    colors={["#FFDD94", "#36f233", "#f26717", "#c23616"]}
     colorsTime={[totalSeconds, (totalSeconds * 0.7), (totalSeconds * 0.3), 0]}
     onComplete={() => ({ shouldRepeat: false})}
     updateInterval={1}
@@ -548,9 +549,10 @@ function MyTimer({ navigation}) {
                 <Text style={{ color:"#fbf7f7", fontSize: 40 }}>
                     {`${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}`}
                 </Text>
+                <Text style={styles.percentInt}>{(remainingTime/totalSeconds)*100}%</Text>
                 {isPlaying && remainingTime === 0 && (
                     <EndTimeText style={{ fontSize: 20, textAlign: 'center' }}>
-                        Time over!
+                        You've done it!
                     </EndTimeText>
                 )}
             </>
@@ -625,6 +627,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         flex:1,
+      },
+      percentInt:{
+        color:'#E46C0A',
+        fontSize:24,
+        marginTop:5,
+        fontFamily: 'OpenSans_800ExtraBold_Italic',
       },
 });
 export default FastStack;
