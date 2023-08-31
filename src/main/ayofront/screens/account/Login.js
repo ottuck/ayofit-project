@@ -29,7 +29,6 @@ import {
 } from "../../components/account/UI/loginStyles";
 import KeyboardAvoidWrapper from "../../components/keyboardAvoidingWrapper";
 import { LoginContext } from "../../store/LoginContext";
-import Constants from "expo-constants";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -58,7 +57,9 @@ const Login = ({ navigation }) => {
       .then((response) => {
         const result = response.data;
         const { message, status, data } = result;
-        if (status !== "SUCCESS") {
+        if (status === "SETINFO") {
+          navigation.navigate("AccountInfo", { ...data });
+        } else if (status !== "SUCCESS") {
           handleMessage(message, status);
         } else {
           persistLogin({ ...data }, message, status);
@@ -107,7 +108,9 @@ const Login = ({ navigation }) => {
         .then((response) => {
           const result = response.data;
           const { message, status, data } = result;
-          if (status !== "SUCCESS") {
+          if (status === "SETINFO") {
+            navigation.navigate("AccountInfo", { ...data });
+          } else if (status !== "SUCCESS") {
             handleMessage(message, status);
           } else {
             persistLogin({ ...data }, message, status);

@@ -24,6 +24,9 @@ public class LoginDAO {
         AccountDTO user = loginMapper.checkLogin(reqEmail, reqPassword);
 
         if (user != null) {
+            if (user.getA_type() == 0) {
+                return new LoginDTO("SETINFO", "Sign in successful", user);
+            }
             return new LoginDTO("SUCCESS", "Sign in successful", user);
         } else {
             return new LoginDTO("FAILED", "Email or password is incorrect", null);
@@ -57,13 +60,16 @@ public class LoginDAO {
         AccountDTO user = loginMapper.checkGoogle(reqId);
 
         if (user != null) {
+            if (user.getA_type() == 0) {
+                return new LoginDTO("SETINFO", "Sign in successful", user);
+            }
             return new LoginDTO("SUCCESS", "Sign in successful", user);
         } else {
             if (loginMapper.setEmptyInfo(infoUuid) == 1
-                    && loginMapper.setGoogle(idUuid, reqId, reqEmail, reqName, reqPicture, infoUuid) != 1) {
-                return new LoginDTO("FAILED", "Google login canceled", null);
-            } else {
+                    && loginMapper.setGoogle(idUuid, reqId, reqEmail, reqName, reqPicture, infoUuid) == 1) {
                 return new LoginDTO("SUCCESS", "Sign in successful", loginMapper.checkGoogle(reqId));
+            } else {
+                return new LoginDTO("FAILED", "Google login canceled", null);
             }
         }
     }
