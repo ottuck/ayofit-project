@@ -50,13 +50,34 @@ function RecordScreen() {
         setImgs((prevImgs) => [...prevImgs, ...newImgs]);
       })
       .catch(() => {
-        console.log("get error..");
+        console.log("getImg error..");
       });
   };
 
+  //오늘 날짜로 조회하기 때문에 data가 없을 수 있음
+  const [mealListByDate, setMealListByDate] = useState([]);
+  const getMealByDate = async () => {
+    await axios
+      .get(`${uri}/api/meal/${formattedToDayDate}`)
+      .then((response) => {
+        setMealListByDate(response.data);
+        console.log(response.data);
+      })
+      .catch(() => {
+        console.log("getMealByDate error..");
+      });
+  };
+
+
   useEffect(() => {
-    getImg();
+    // getImg();
+    // getMealByDate();
   }, []);
+
+  //서버에 넘길 임시 Date
+  const mealDate = new Date();
+  const formattedToDayDate = mealDate.toISOString().split('T')[0];
+  // console.log(formattedDate); // "2023-08-31"
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -67,7 +88,7 @@ function RecordScreen() {
         >
           <View style={styles.headerContainer}>
             <Text style={styles.headerTitle}> Diet Record</Text>
-            <Text style={styles.headerDate}> 2023.08.29 </Text>
+            <Text style={styles.headerDate}> {formattedToDayDate} </Text>
           </View>
 
           <ScrollView

@@ -28,10 +28,9 @@ const RecordMain = ({ navigation }) => {
   const { mealType, mealList } = useMealContext();
   // console.log("밀컨택스트API : ", mealList);
 
-  //서버에 넘김 임시 Date
+  //서버에 넘길 임시 Date
   const mealDate = new Date();
   const formattedDate = mealDate.toISOString().slice(0, 19).replace("T", " ");
-
   // console.log(formattedDate); // "2023-08-31 08:36:40"
 
   //Server 통신을 위한 URI 수정
@@ -157,13 +156,6 @@ const RecordMain = ({ navigation }) => {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  // 즐겨찾기 로직
-  const [isLiked, setIsLiked] = useState(false);
-
-  const handleLikedPress = () => {
-    setIsLiked(!isLiked);
   };
 
   //DateTimePicker
@@ -336,8 +328,8 @@ const RecordMain = ({ navigation }) => {
                   deleteMealListOnServer();
                 } else {
                   submitMealListToServer();
-                  // uploadImage(photoUri, "user1", mealType);
-                  // navigation.navigate("RecordScreen");
+                  uploadImage(photoUri, "user1", mealType);
+                  navigation.navigate("RecordScreen");
                 }
               }}
             >
