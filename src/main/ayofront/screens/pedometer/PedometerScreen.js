@@ -51,8 +51,10 @@ function PedometerScreen() {
     setRefreshing(true);
     await updateStepsOnServer(steps);
     setRefreshing(false);
+    console.log("Steps updated on the server.");
   };
 
+  // for saving current steps when leaving step counter tab
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -72,7 +74,7 @@ function PedometerScreen() {
             pDate: formattedDate,
           });
 
-          // console.log("Steps updated on the server.");
+          console.log("Steps updated on the server.");
         } catch (error) {
           // console.error("Failed to update steps on the server:", error);
         }

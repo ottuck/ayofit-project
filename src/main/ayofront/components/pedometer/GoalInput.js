@@ -77,6 +77,7 @@ const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
 const styles = StyleSheet.create({
   inputContainer: {
     alignItems: "center",
+    flex: 1,
   },
   input: {
     marginTop: 20,
