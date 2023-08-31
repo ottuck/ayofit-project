@@ -43,7 +43,8 @@ public class LoginDAO {
 
         if (loginMapper.setEmptyInfo(infoUuid) == 1
                 && loginMapper.setUser(idUuid, reqName, reqEmail, reqPassword, infoUuid) == 1) {
-            return new LoginDTO("SUCCESS", "Sign up successful", new AccountDTO(infoUuid));
+            return new LoginDTO("SUCCESS", "Sign up successful",
+                    new AccountDTO(idUuid, reqEmail, reqPassword, reqName, infoUuid));
         } else {
             return new LoginDTO("FAILED", "Sign up failed", null);
         }

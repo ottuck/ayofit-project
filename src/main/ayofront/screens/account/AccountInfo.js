@@ -14,10 +14,11 @@ import IconButton from "../../components/account/UI/IconButton";
 import Button from "../../components/account/UI/Button";
 import { useAccountsContext } from "../../store/accounts_context";
 import axios from "axios";
-import Constants from "expo-constants";
-import { useEffect } from "react";
+import { useContext } from "react";
+import { LoginContext } from "../../store/LoginContext";
 
 function AccountInfo({ navigation }) {
+  const { userInfo, setUserInfo } = useContext(LoginContext);
   const uri = "http://213.35.96.167";
 
   const registerAccountInfo = () => {

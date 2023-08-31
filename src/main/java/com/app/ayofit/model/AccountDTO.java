@@ -16,7 +16,11 @@ public class AccountDTO {
 	private double curWeight;
 	private String activity;
 
-	public AccountDTO(String l_info) {
+	public AccountDTO(String l_id, String l_email, String l_password, String l_name, String l_info) {
+		this.l_id = l_id;
+		this.l_email = l_email;
+		this.l_password = l_password;
+		this.l_name = l_name;
 		this.l_info = l_info;
 	}
 
