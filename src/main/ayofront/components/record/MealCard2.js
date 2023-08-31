@@ -1,84 +1,116 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons, AntDesign } from '@expo/vector-icons';
-import { BlurView } from 'expo-blur';
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
 import { useMealContext } from "../../store/MealContext";
 
-const MealCard2 = ({ useTimepicker, formattedCurrentTime, formattedPickerTime, ampm1, ampm2, mealInfo }) => {
-  const { deleteToMealByNO } = useMealContext();
+const MealCard2 = ({
+  useTimepicker,
+  formattedCurrentTime,
+  formattedPickerTime,
+  ampm1,
+  ampm2,
+  mealInfo,
+}) => {
+  const { deleteToMealByNO, setFavoriteMeals, favoriteMeals } =
+    useMealContext();
   // console.log(mealInfo.nNO);
+
+  // 즐겨찾기 로직
+  const [isLiked, setIsLiked] = useState(false);
+
+  const handleLikedPress = (no) => {
+    setIsLiked(!isLiked);
+    if (isLiked) {
+      setFavoriteMeals(no);
+    } else {
+      setFavoriteMeals(null);
+    }
+    console.log(favoriteMeals);
+  };
 
   return (
     <View style={styles.blurViewBox}>
       <BlurView>
-          <View style={styles.foodRecordContainer}>
-            <View style={styles.recordIconContainer}>
-              <TouchableOpacity>
+        <View style={styles.foodRecordContainer}>
+          <View style={styles.recordIconContainer}>
+            <TouchableOpacity onPress={handleLikedPress(mealInfo.nNO)}>
+              {isLiked ? (
+                <Ionicons
+                  name="heart"
+                  size={23}
+                  color="rgba(228, 108, 10, 1);"
+                />
+              ) : (
                 <Ionicons name="heart-outline" style={styles.likeButton} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => deleteToMealByNO(mealInfo.nNO)}>
-                <AntDesign name="close" style={styles.recordDeleteButton} />
-              </TouchableOpacity>
-            </View>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => deleteToMealByNO(mealInfo.nNO)}>
+              <AntDesign name="close" style={styles.recordDeleteButton} />
+            </TouchableOpacity>
+          </View>
 
-            <View style={styles.recordMidContainer}>
-              <View style={styles.textWrapper}>
-                <Text style={styles.foodName} numberOfLines={1} ellipsizeMode="clip">
-                  {mealInfo.nFoodName}
+          <View style={styles.recordMidContainer}>
+            <View style={styles.textWrapper}>
+              <Text
+                style={styles.foodName}
+                numberOfLines={1}
+                ellipsizeMode="clip"
+              >
+                {mealInfo.nFoodName}
+              </Text>
+              <Text style={styles.foodKcal}>{mealInfo.nKcal} Kcal</Text>
+            </View>
+            <TouchableOpacity onPress={useTimepicker}>
+              <View style={styles.recordTimeContainer}>
+                <Text style={styles.recordTime1}>
+                  {ampm2 === null ? ampm1 : ampm2}
                 </Text>
-                <Text style={styles.foodKcal}>
-                  {mealInfo.nKcal} Kcal
+                <Text style={styles.recordTime2}>
+                  {formattedPickerTime === null
+                    ? formattedCurrentTime
+                    : formattedPickerTime}
                 </Text>
               </View>
-              <TouchableOpacity onPress={useTimepicker}>
-                <View style={styles.recordTimeContainer}>
-                  <Text style={styles.recordTime1}>
-                    {ampm2 === null ? ampm1 : ampm2}
-                  </Text>
-                  <Text style={styles.recordTime2}>
-                    {formattedPickerTime === null ? formattedCurrentTime : formattedPickerTime}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+            </TouchableOpacity>
+          </View>
 
-            <View style={styles.foodNutrientContainer}>
-              <View style={styles.foodNutrientBox}>
-                <Text style={styles.foodNutrient}>Carb</Text>
-                <Text style={styles.foodNutrient}>
-                  {mealInfo.nCarbohydrate === null ? "-" : mealInfo.nCarbohydrate}
-                </Text>
-              </View>
-              <View style={styles.foodNutrientBox}>
-                <Text style={styles.foodNutrient}>Protein</Text>
-                <Text style={styles.foodNutrient}>
-                  {mealInfo.nProtein === null ? "-" : mealInfo.nProtein}
-                </Text>
-              </View>
-              <View style={styles.foodNutrientBox}>
-                <Text style={styles.foodNutrient}>Fat</Text>
-                <Text style={styles.foodNutrient}>
-                  {mealInfo.nFat === null ? "-" : mealInfo.nFat}
-                </Text>
-              </View>
+          <View style={styles.foodNutrientContainer}>
+            <View style={styles.foodNutrientBox}>
+              <Text style={styles.foodNutrient}>Carb</Text>
+              <Text style={styles.foodNutrient}>
+                {mealInfo.nCarbohydrate === null ? "-" : mealInfo.nCarbohydrate}
+              </Text>
             </View>
-          </View>  
+            <View style={styles.foodNutrientBox}>
+              <Text style={styles.foodNutrient}>Protein</Text>
+              <Text style={styles.foodNutrient}>
+                {mealInfo.nProtein === null ? "-" : mealInfo.nProtein}
+              </Text>
+            </View>
+            <View style={styles.foodNutrientBox}>
+              <Text style={styles.foodNutrient}>Fat</Text>
+              <Text style={styles.foodNutrient}>
+                {mealInfo.nFat === null ? "-" : mealInfo.nFat}
+              </Text>
+            </View>
+          </View>
+        </View>
       </BlurView>
     </View>
-
   );
 };
 
 const styles = StyleSheet.create({
   //식단 기록 컨테이너
   blurViewBox: {
-    overflow: 'hidden',
+    overflow: "hidden",
     borderRadius: 30,
     height: 170,
     marginVertical: 10,
   },
   foodRecordContainer: {
-    alignSelf: 'center',
+    alignSelf: "center",
     width: 350,
     padding: 15,
     backgroundColor: "rgba(255,255,255,0.6)",
@@ -94,7 +126,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   recordTimeContainer: {
-    flexDirection: "row", alignItems: "baseline"
+    flexDirection: "row",
+    alignItems: "baseline",
   },
   recordTime1: {
     color: "#E46C0A",
@@ -108,8 +141,8 @@ const styles = StyleSheet.create({
     fontSize: 34,
   },
   textWrapper: {
-    width: '55%',
-    overflow: 'hidden',
+    width: "55%",
+    overflow: "hidden",
   },
   foodName: {
     fontWeight: "bold",
@@ -152,8 +185,6 @@ const styles = StyleSheet.create({
     fontSize: 23,
     color: "rgba(0, 0, 0, 0.3)",
   },
-
 });
-
 
 export default MealCard2;

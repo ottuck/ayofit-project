@@ -154,13 +154,6 @@ const RecordMain = ({ navigation }) => {
     }
   };
 
-  // 즐겨찾기 로직
-  const [isLiked, setIsLiked] = useState(false);
-
-  const handleLikedPress = () => {
-    setIsLiked(!isLiked);
-  };
-
   //DateTimePicker
   const [mode, setMode] = useState("time");
   const [pickerDate, setPickerDate] = useState("");
@@ -331,8 +324,8 @@ const RecordMain = ({ navigation }) => {
                   deleteMealListOnServer();
                 } else {
                   submitMealListToServer();
-                  // uploadImage(photoUri, "user1", mealType);
-                  // navigation.navigate("RecordScreen");
+                  uploadImage(photoUri, "user1", mealType);
+                  navigation.navigate("RecordScreen");
                 }
               }}
             >
