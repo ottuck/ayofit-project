@@ -84,14 +84,11 @@ function RecordScreen() {
     getImg();
   }, []);
 
-  // console.log("스크린 페이지 : ");
-  // console.log(breakfastMeals);
-  // console.log(lunchMeals);
-  // console.log(dinnerMeals);
-  // console.log(snackMeals);
-
-
-
+  console.log("스크린 페이지 : ");
+  console.log(breakfastMeals);
+  console.log(lunchMeals);
+  console.log(dinnerMeals);
+  console.log(snackMeals);
 
 
   //서버에 넘길 임시 Date
@@ -116,70 +113,29 @@ function RecordScreen() {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.cardScroll}
           >
-            <MealCard1
-              imgUri={
-                img.find((item) => item.fType === "breakfast")?.fImg || null
-              }
-              mealType="Breakfast"
-              mealTime="10:00"
-              carb="55"
-              protein="16.4"
-              fat="21.5"
-              totalCalories="487"
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("breakfast");
-                setPhotoUri(
-                  img.find((item) => item.fType === "breakfast")?.fImg
-                );
-                setPhotoId(img.find((item) => item.fType === "breakfast")?.fNo);
-              }}
-            />
-            <MealCard1
-              imgUri={img.find((item) => item.fType === "lunch")?.fImg || null}
-              mealType="Lunch"
-              mealTime="10:00"
-              carb="60"
-              protein="18"
-              fat="20"
-              totalCalories="500"
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("lunch");
-                setPhotoUri(img.find((item) => item.fType === "lunch")?.fImg);
-                setPhotoId(img.find((item) => item.fType === "lunch")?.fNo);
-              }}
-            />
-            <MealCard1
-              imgUri={img.find((item) => item.fType === "dinner")?.fImg || null}
-              mealType="Dinner"
-              mealTime="10:00"
-              carb="65"
-              protein="19"
-              fat="23"
-              totalCalories="550"
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("dinner");
-                setPhotoUri(img.find((item) => item.fType === "dinner")?.fImg);
-                setPhotoId(img.find((item) => item.fType === "dinner")?.fNo);
-              }}
-            />
-            <MealCard1
-              imgUri={img.find((item) => item.fType === "snack")?.fImg || null}
-              mealType="Snack"
-              mealTime="10:00"
-              carb="65"
-              protein="19"
-              fat="23"
-              totalCalories="550"
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("snack");
-                setPhotoUri(img.find((item) => item.fType === "snack")?.fImg);
-                setPhotoId(img.find((item) => item.fType === "snack")?.fNo);
-              }}
-            />
+            {[
+              { mealType: "Breakfast", meals: breakfastMeals },
+              { mealType: "Lunch", meals: lunchMeals },
+              { mealType: "Dinner", meals: dinnerMeals },
+              { mealType: "Snack", meals: snackMeals },
+            ].map((cardData, index) => (
+              <MealCard1
+                key={index}
+                imgUri={img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg || null}
+                mealType={cardData.mealType}
+                mealTime="10:00" //임시값
+                carb={cardData.meals.totalCarbohydrate} 
+                protein={cardData.meals.totalProtein} 
+                fat={cardData.meals.totalFat} 
+                totalCalories={cardData.meals.totalCalories} 
+                openSearchModal={() => {
+                  openSearchModal();
+                  setMealType(cardData.mealType.toLowerCase());
+                  setPhotoUri(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg);
+                  setPhotoId(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo);
+                }}
+              />
+            ))}
           </ScrollView>
 
           <SearchModal
