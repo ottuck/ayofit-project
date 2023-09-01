@@ -87,23 +87,18 @@ export default function App() {
     setCompletedOnboarding(true);
   };
 
+  console.log(userInfo);
+
   const checkLoginCredentials = async () => {
     await AsyncStorage.getItem("@user")
       .then((result) => {
         const emptyInfo = {
-          a_type: 0,
-          activity: "",
-          age: 0,
-          curWeight: 0,
-          gender: "",
-          height: 0,
-          l_email: "",
-          l_id: "",
-          l_info: "",
-          l_name: "",
-          l_password: "",
-          l_picture: "",
-          l_type: "",
+          id: "",
+          email: "",
+          pasword: "",
+          name: "",
+          picture: "",
+          type: "",
         };
         if (result !== null) {
           setUserInfo(JSON.parse(result));

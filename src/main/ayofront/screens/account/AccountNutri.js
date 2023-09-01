@@ -15,6 +15,7 @@ import { useAccountsContext } from "../../store/accounts_context";
 import axios from "axios";
 import Constants from "expo-constants";
 import { LoginContext } from "../../store/LoginContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function AccountNutri({ navigation, route }) {
   const { id } = route.params;
@@ -29,15 +30,20 @@ function AccountNutri({ navigation, route }) {
   const registerAccountGoal = () => {
     axios
       .post(`${uri}/api/account/${id}/goal`, accountInfos)
-      .then(async (response) => {
+      .then(() => {
         console.log("User info submitted successfully:");
-        await AsyncStorage.setItem("@user", JSON.stringify(route.params))
-          .then(() => {
-            setUserInfo(route.params);
+        axios
+          .post(`${uri}/api/account/${id}/confirm`)
+          .then(async () => {
+            await AsyncStorage.setItem("@user", JSON.stringify(route.params))
+              .then(() => {
+                setUserInfo(route.params);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
           })
-          .catch((error) => {
-            console.log(error);
-          });
+          .catch((error) => console.log(error));
       })
       .catch(() => {
         Alert.alert("Error", "Failed to submit user info. Please try again.");

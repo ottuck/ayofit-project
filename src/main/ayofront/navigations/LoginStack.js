@@ -3,7 +3,7 @@ import { Colors } from "../components/account/UI/loginStyles";
 import Login from "../screens/account/Login";
 import Signup from "../screens/account/Signup";
 import AccountInfo from "../screens/account/AccountInfo";
-import AccountNutri from "../screens/account/AccUpdateNutri";
+import AccountNutri from "../screens/account/AccountNutri";
 
 const { primary, tertiary } = Colors;
 

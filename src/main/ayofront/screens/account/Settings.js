@@ -9,19 +9,12 @@ function Settings() {
     await AsyncStorage.removeItem("@user")
       .then(() => {
         const emptyInfo = {
-          a_type: 0,
-          activity: "",
-          age: 0,
-          curWeight: 0,
-          gender: "",
-          height: 0,
-          l_email: "",
-          l_id: "",
-          l_info: "",
-          l_name: "",
-          l_password: "",
-          l_picture: "",
-          l_type: "",
+          id: "",
+          email: "",
+          pasword: "",
+          name: "",
+          picture: "",
+          type: "",
         };
         setUserInfo(emptyInfo);
       })

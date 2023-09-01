@@ -24,6 +24,7 @@ public class AccountDAO {
 	}
 
 	public boolean regAccountGoal(String userId, GoalDTO gDTO) {
+		System.out.println(gDTO);
 		if (aMapper.regAccountGoal(userId, gDTO) == 1) {
 			return true;
 		} else {
@@ -65,6 +66,10 @@ public class AccountDAO {
 		} else {
 			return false;
 		}
+	}
+
+	public boolean confirmInfo(String userId) {
+		return aMapper.confirmInfo(userId) == 1 ? true : false;
 	}
 
 }

@@ -8,7 +8,8 @@
 	</insert>
 	
 	<insert id="regAccountGoal">
-		insert into goal values (goal_seq.nextval, #{userId}, #{gDTO.calorie}, #{gDTO.tarWeight}, #{gDTO.carb}, #{gDTO.protein}, #{gDTO.fat})
+		insert into goal
+		values (goal_seq.nextval, #{userId}, #{gDTO.calorie}, #{gDTO.tarWeight}, #{gDTO.carb}, #{gDTO.protein}, #{gDTO.fat}, CURRENT_DATE)
 	</insert>
 	
 	<insert id="regAccountWeight">
@@ -33,6 +34,12 @@
 	
 	<update id="updateAccountGoal">
 		update goal set g_weight=#{gDTO.tarWeight}, g_kcal=#{gDTO.calorie}, g_carbohydrate=#{gDTO.carb}, g_protein=#{gDTO.protein}, g_fat=#{gDTO.fat} where g_id=#{userId}
+	</update>
+
+	<update id="confirmInfo">
+		update login
+		set l_info = 1
+		where l_id = #{userId}
 	</update>
 	
 </mapper>
