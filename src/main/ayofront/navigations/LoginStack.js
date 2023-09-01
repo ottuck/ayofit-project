@@ -29,12 +29,12 @@ const LoginStack = () => {
       <Stack.Screen
         name="AccountInfo"
         component={AccountInfo}
-        options={{ headerShown: false }}
+        //options={{ headerShown: false }}
       />
       <Stack.Screen
         name="AccountNutri"
         component={AccountNutri}
-        options={{ headerShown: false }}
+        //options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

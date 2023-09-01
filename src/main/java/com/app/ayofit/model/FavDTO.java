@@ -4,17 +4,17 @@ public class FavDTO {
 	
 	private int favNo;
 	private String favId;
-	private int recordMealNo;
+	private int nutritionNo;
 	
 	public FavDTO() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public FavDTO(int favNo, String favId, int recordMealNo) {
+	public FavDTO(int favNo, String favId, int nutritionNo) {
 		super();
 		this.favNo = favNo;
 		this.favId = favId;
-		this.recordMealNo = recordMealNo;
+		this.nutritionNo = nutritionNo;
 	}
 
 	public int getFavNo() {
@@ -33,17 +33,18 @@ public class FavDTO {
 		this.favId = favId;
 	}
 
-	public int getRecordMealNo() {
-		return recordMealNo;
+	public int getNutritionNo() {
+		return nutritionNo;
 	}
 
-	public void setRecordMealNo(int recordMealNo) {
-		this.recordMealNo = recordMealNo;
+	public void setNutritionNo(int nutritionNo) {
+		this.nutritionNo = nutritionNo;
 	}
 
 	@Override
 	public String toString() {
-		return "FavDTO [favNo=" + favNo + ", favId=" + favId + ", recordMealNo=" + recordMealNo + "]";
+		return "FavDTO [favNo=" + favNo + ", favId=" + favId + ", nutritionNo=" + nutritionNo + "]";
 	}
+	
 	
 }

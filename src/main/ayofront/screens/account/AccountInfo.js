@@ -15,17 +15,19 @@ import Button from "../../components/account/UI/Button";
 import { useAccountsContext } from "../../store/accounts_context";
 import axios from "axios";
 import Constants from "expo-constants";
-import { useEffect } from "react";
 
-function AccountInfo({ navigation }) {
-  const uri = "http://213.35.96.167";
+function AccountInfo({ navigation, route }) {
+  const { id } = route.params;
+
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}`;
 
   const registerAccountInfo = () => {
     axios
-      .post(`${uri}/api/account/user1`, accountInfos)
+      .post(`${uri}/api/account/${id}`, accountInfos)
       .then((response) => {
         console.log("User info submitted successfully:", response.data);
-        navigation.navigate("AccountNutri");
+        navigation.navigate("AccountNutri", { ...route.params });
       })
       .catch(() => {
         Alert.alert("Error", "Failed to submit user info. Please try again.");
@@ -34,7 +36,7 @@ function AccountInfo({ navigation }) {
 
   const registerAccountcurWeight = () => {
     axios
-      .post(`${uri}/api/account/user1/weight`, accountInfos)
+      .post(`${uri}/api/account/${id}/weight`, accountInfos)
       .then((response) => {
         console.log("User weight submitted successfully:", response.data);
       })

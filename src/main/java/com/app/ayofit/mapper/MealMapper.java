@@ -10,6 +10,7 @@ import com.app.ayofit.model.MealDTO;
 public interface MealMapper {
 
 	List<MealDTO> getAllMeal();
+	List<MealDTO> getMealByDate();
 	int regMeal(MealDTO meal);
 	int delMeal(String mealDate, String mealType);
 }

@@ -30,7 +30,8 @@
       "package": "com.app.ayofit"
     },
     "web": {
-      "favicon": "./images/ayofit-favicon.png"
+      "favicon": "./images/ayofit-favicon.png",
+      "bundler": "metro"
     },
     "plugins": [
       [
@@ -40,6 +41,11 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "3e992d95-daff-40e0-bee2-dc6a81c98e7b"
+      }
+    }
   }
 }

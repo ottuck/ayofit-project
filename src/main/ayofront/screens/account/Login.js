@@ -36,7 +36,8 @@ WebBrowser.maybeCompleteAuthSession();
 const { brand, darkLight, primary } = Colors;
 
 const Login = ({ navigation }) => {
-  const uri = "http://213.35.96.167";
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}`;
   const [hidePassword, setHidePassword] = useState(true);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
@@ -58,7 +59,9 @@ const Login = ({ navigation }) => {
       .then((response) => {
         const result = response.data;
         const { message, status, data } = result;
-        if (status !== "SUCCESS") {
+        if (status === "SETINFO") {
+          navigation.navigate("AccountInfo", { ...data });
+        } else if (status !== "SUCCESS") {
           handleMessage(message, status);
         } else {
           persistLogin({ ...data }, message, status);
@@ -107,7 +110,9 @@ const Login = ({ navigation }) => {
         .then((response) => {
           const result = response.data;
           const { message, status, data } = result;
-          if (status !== "SUCCESS") {
+          if (status === "SETINFO") {
+            navigation.navigate("AccountInfo", { ...data });
+          } else if (status !== "SUCCESS") {
             handleMessage(message, status);
           } else {
             persistLogin({ ...data }, message, status);

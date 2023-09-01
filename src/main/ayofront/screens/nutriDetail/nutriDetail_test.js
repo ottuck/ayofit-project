@@ -7,7 +7,6 @@ import {
   Animated,
   Image,
   FlatList,
-  RefreshControl,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ScrollView } from "react-native";
@@ -43,6 +42,7 @@ import { PedometerContext, daysOfWeek } from "../../store/PedometerContext";
 import ProgressBarArea from "../../components/pedometer/HomePedometerArea";
 import HomePedometerArea from "../../components/pedometer/HomePedometerArea";
 import { useIsFocused } from "@react-navigation/native";
+import SwipeDownToSave from "../../components/pedometer/SwipeDownToSave";
 
 function NutriDetailScreen() {
   const navigation = useNavigation();
@@ -109,7 +109,7 @@ function NutriDetailScreen() {
 
   return (
     <ScrollView style={{ flex: 1 }} ref={scrollViewRef}>
-      <HomeSafeAreaView>
+      <HomeSafeAreaView style={{ paddingTop: "5%" }}>
         <StatusBar barStyle="dark-content" />
         <HomeUserContainer>
           <View>

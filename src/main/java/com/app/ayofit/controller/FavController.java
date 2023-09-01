@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.ayofit.model.FavDTO;
@@ -20,10 +22,17 @@ public class FavController {
 	@Autowired
 	private FavDAO fDAO;
 	
-	@GetMapping("{userId}")
-	public ResponseEntity<List<FavDTO>> getFavorites (@PathVariable("userId") String userId) {
-		List<FavDTO> favorites = fDAO.getFavorites(userId);
+	@GetMapping("")
+	public ResponseEntity<List<FavDTO>> getFavorites (@RequestParam("userId") String userId, @RequestParam("nNos") List<Integer> nNos) {
+		List<FavDTO> favorites = fDAO.getFavorites(userId, nNos);
 		return new ResponseEntity<>(favorites, HttpStatus.OK);
+	}
+	
+	@PostMapping("")
+	public ResponseEntity<String> regFavorites(@RequestParam("nNos") List<Integer> nNos){
+		System.out.println(nNos);
+		fDAO.regFavorites(nNos);
+		return ResponseEntity.ok("favorites registered successfully");
 	}
 	
 }

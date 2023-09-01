@@ -5,7 +5,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import Constants from "expo-constants";
 import { useEffect, useState } from "react";
 import OnboardingScreen from "./screens/Onboarding";
 import NutriDetailScreen from "./screens/nutriDetail/nutriDetail_test";
@@ -22,6 +21,7 @@ import { Platform } from "react-native";
 import PedometerStack from "./navigations/PedometerStack";
 import LoginStack from "./navigations/LoginStack";
 import { LoginContext } from "./store/LoginContext";
+import { MealProvider } from "./store/MealContext";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -90,10 +90,25 @@ export default function App() {
   const checkLoginCredentials = async () => {
     await AsyncStorage.getItem("@user")
       .then((result) => {
+        const emptyInfo = {
+          a_type: 0,
+          activity: "",
+          age: 0,
+          curWeight: 0,
+          gender: "",
+          height: 0,
+          l_email: "",
+          l_id: "",
+          l_info: "",
+          l_name: "",
+          l_password: "",
+          l_picture: "",
+          l_type: "",
+        };
         if (result !== null) {
           setUserInfo(JSON.parse(result));
         } else {
-          setUserInfo(null);
+          setUserInfo(emptyInfo);
         }
       })
       .catch((error) => console.log(error));
@@ -116,31 +131,33 @@ export default function App() {
           }}
         >
           <FontProvider>
-            <PhotoProvider>
-              <StatusBar
-                backgroundColor={GlobalStyles.colors.primary500}
-                barStyle="default"
-              />
-              <NavigationContainer style={styles.navigationContainer}>
-                <PedometerProvider>
-                  <Stack.Navigator>
-                    {userInfo ? (
-                      <Stack.Screen
-                        name="MainTabs"
-                        component={MainTabsScreen}
-                        options={{ headerShown: false }}
-                      />
-                    ) : (
-                      <Stack.Screen
-                        name="LoginStack"
-                        component={LoginStack}
-                        options={{ headerShown: false }}
-                      />
-                    )}
-                  </Stack.Navigator>
-                </PedometerProvider>
-              </NavigationContainer>
-            </PhotoProvider>
+            <MealProvider>
+              <PhotoProvider>
+                <StatusBar
+                  backgroundColor={GlobalStyles.colors.primary500}
+                  barStyle="default"
+                />
+                <NavigationContainer style={styles.navigationContainer}>
+                  <PedometerProvider>
+                    <Stack.Navigator>
+                      {userInfo.id !== "" ? (
+                        <Stack.Screen
+                          name="MainTabs"
+                          component={MainTabsScreen}
+                          options={{ headerShown: false }}
+                        />
+                      ) : (
+                        <Stack.Screen
+                          name="LoginStack"
+                          component={LoginStack}
+                          options={{ headerShown: false }}
+                        />
+                      )}
+                    </Stack.Navigator>
+                  </PedometerProvider>
+                </NavigationContainer>
+              </PhotoProvider>
+            </MealProvider>
           </FontProvider>
         </SafeAreaView>
       </AccountsContextProvider>
