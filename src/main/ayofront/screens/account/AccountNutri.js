@@ -10,20 +10,34 @@ import {
 import { GlobalStyles } from "../../components/UI/styles";
 import Input from "../../components/account/UI/Input";
 import Button from "../../components/account/UI/Button";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useAccountsContext } from "../../store/accounts_context";
 import axios from "axios";
 import Constants from "expo-constants";
+import { LoginContext } from "../../store/LoginContext";
 
-function AccountNutri({ navigation }) {
-  const uri = "http://213.35.96.167";
+function AccountNutri({ navigation, route }) {
+  const { id } = route.params;
+
+  const { userInfo, setUserInfo } = useContext(LoginContext);
+
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}`;
+
+  console.log(route.params);
 
   const registerAccountGoal = () => {
     axios
-      .post(`${uri}/api/account/user1/goal`, accountInfos)
-      .then((response) => {
-        console.log("User info submitted successfully:", response.data);
-        navigation.navigate("MainTabs");
+      .post(`${uri}/api/account/${id}/goal`, accountInfos)
+      .then(async (response) => {
+        console.log("User info submitted successfully:");
+        await AsyncStorage.setItem("@user", JSON.stringify(route.params))
+          .then(() => {
+            setUserInfo(route.params);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .catch(() => {
         Alert.alert("Error", "Failed to submit user info. Please try again.");
@@ -33,7 +47,7 @@ function AccountNutri({ navigation }) {
   const { accountInfos, setAccountInfos } = useAccountsContext();
 
   const goToAccountInfo = () => {
-    navigation.navigate("AccountInfo");
+    navigation.navigate("AccountInfo", { ...route.params });
   };
 
   const dismissKeyboard = () => {

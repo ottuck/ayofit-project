@@ -140,7 +140,7 @@ export default function App() {
                 <NavigationContainer style={styles.navigationContainer}>
                   <PedometerProvider>
                     <Stack.Navigator>
-                      {userInfo.l_id !== "" ? (
+                      {userInfo.id !== "" ? (
                         <Stack.Screen
                           name="MainTabs"
                           component={MainTabsScreen}

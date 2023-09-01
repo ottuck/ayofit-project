@@ -24,7 +24,8 @@ import KeyboardAvoidWrapper from "../../components/keyboardAvoidingWrapper";
 const { brand, darkLight, primary } = Colors;
 
 const Signup = ({ navigation }) => {
-  const uri = "http://213.35.96.167";
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}`;
   const [hidePassword, setHidePassword] = useState(true);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");

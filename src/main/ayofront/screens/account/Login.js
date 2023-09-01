@@ -29,13 +29,15 @@ import {
 } from "../../components/account/UI/loginStyles";
 import KeyboardAvoidWrapper from "../../components/keyboardAvoidingWrapper";
 import { LoginContext } from "../../store/LoginContext";
+import Constants from "expo-constants";
 
 WebBrowser.maybeCompleteAuthSession();
 
 const { brand, darkLight, primary } = Colors;
 
 const Login = ({ navigation }) => {
-  const uri = "http://213.35.96.167";
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}`;
   const [hidePassword, setHidePassword] = useState(true);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
