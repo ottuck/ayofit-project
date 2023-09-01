@@ -25,7 +25,7 @@ import { useMealContext } from "../../store/MealContext";
 import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = ({ navigation }) => {
-  const { mealType, mealList } = useMealContext();
+  const { mealType, mealList, favoriteMeals } = useMealContext();
   // console.log("밀컨택스트API : ", mealList);
 
   //서버에 넘김 임시 Date
@@ -158,6 +158,21 @@ const RecordMain = ({ navigation }) => {
       console.error(error);
     }
   };
+
+  // 즐겨찾기 식단 db에 등록
+  const regFavMeals = () => {
+    axios
+      .post(`${uri}/api/favorites`, favoriteMeals, {
+        params: { userId: "user1" },
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  // console.log(favoriteMeals);
 
   //DateTimePicker
   const [mode, setMode] = useState("time");
@@ -328,9 +343,10 @@ const RecordMain = ({ navigation }) => {
                 if (mealList.length === 0) {
                   deleteMealListOnServer();
                 } else {
-                  submitMealListToServer();
-                  uploadImage(photoUri, "user1", mealType);
-                  navigation.navigate("RecordScreen");
+                  // submitMealListToServer();
+                  // uploadImage(photoUri, "user1", mealType);
+                  regFavMeals();
+                  // navigation.navigate("RecordScreen");
                 }
               }}
             >

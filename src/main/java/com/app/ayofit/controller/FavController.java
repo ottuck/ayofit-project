@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,9 +29,10 @@ public class FavController {
 	}
 	
 	@PostMapping("")
-	public ResponseEntity<String> regFavorites(@RequestParam("nNos") List<Integer> nNos){
-		System.out.println(nNos);
-		fDAO.regFavorites(nNos);
+	public ResponseEntity<String> regFavorites(@RequestBody List<Integer> nNos, @RequestParam("userId") String userId){
+//		System.out.println(nNos);
+//		System.out.println(userId);
+		fDAO.regFavorites(nNos, userId);
 		return ResponseEntity.ok("favorites registered successfully");
 	}
 	

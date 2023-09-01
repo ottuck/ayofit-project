@@ -7,5 +7,9 @@
 		select * from favorites, record_meal
 		where f_r_no = r_no and f_id= #{f_id}
 	</select>
-
+	
+	<insert id="regFavorites">
+		insert into favorites values (favorites_seq.nextval, #{userId}, #{no})
+	</insert>
+		
 </mapper>
