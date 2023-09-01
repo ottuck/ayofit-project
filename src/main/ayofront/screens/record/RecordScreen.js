@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ImageBackground,
   SafeAreaView,
@@ -37,8 +37,8 @@ function RecordScreen() {
   // 로컬에 있는 사진 파일 GET요청
   const [img, setImgs] = useState([]);
   const { setPhotoUri, setPhotoId } = usePhotoContext();
-  const getImg = async () => {
-    await axios
+  const getImg = () => {
+    axios
       .get(`${uri}/api/file/get-image/user1`)
       .then((response) => {
         const newImgs = response.data.map((item) => ({
@@ -46,7 +46,7 @@ function RecordScreen() {
           fImg: item.fImg,
           fType: item.fType,
         }));
-        console.log(newImgs);
+        // console.log(newImgs);
         setImgs((prevImgs) => [...prevImgs, ...newImgs]);
       })
       .catch(() => {
@@ -54,37 +54,45 @@ function RecordScreen() {
       });
   };
 
-  //식단 GET 요청 : 오늘 날짜로 조회하기 때문에 data가 없을 수 있음
   const [breakfastMeals, setBreakfastMeals] = useState([]);
   const [lunchMeals, setLunchMeals] = useState([]);
   const [dinnerMeals, setDinnerMeals] = useState([]);
   const [snackMeals, setSnackMeals] = useState([]);
-  const getMealListByMealType = async () => {
-    // console.log(formattedToDayDate)
-    await axios
+
+  const getMealListByMealType = () => {
+    axios
       .get(`${uri}/api/meal/type`,
-      { params: {
-        userID : "user1", 
-        date : formattedToDayDate,
-      }})
+        {
+          params: {
+            userID: "user1",
+            date: formattedToDayDate,
+          }
+        })
       .then((response) => {
         setBreakfastMeals(response.data[0]);
         setLunchMeals(response.data[1]);
         setDinnerMeals(response.data[2]);
         setSnackMeals(response.data[3]);
-        console.log(breakfastMeals);
-        console.log(lunchMeals);
-        console.log(dinnerMeals);
-        console.log(snackMeals);
       })
       .catch(() => {
         console.log("getMealByDate error..");
       });
   };
+
   useEffect(() => {
-    // getImg();
     getMealListByMealType();
+    getImg();
   }, []);
+
+  // console.log("스크린 페이지 : ");
+  // console.log(breakfastMeals);
+  // console.log(lunchMeals);
+  // console.log(dinnerMeals);
+  // console.log(snackMeals);
+
+
+
+
 
   //서버에 넘길 임시 Date
   const mealDate = new Date();
@@ -109,9 +117,15 @@ function RecordScreen() {
             contentContainerStyle={styles.cardScroll}
           >
             <MealCard1
+              imgUri={
+                img.find((item) => item.fType === "breakfast")?.fImg || null
+              }
               mealType="Breakfast"
-              breakfastMeals={breakfastMeals}
-              imgUri={img.find((item) => item.fType === "breakfast")?.fImg || null}
+              mealTime="10:00"
+              carb="55"
+              protein="16.4"
+              fat="21.5"
+              totalCalories="487"
               openSearchModal={() => {
                 openSearchModal();
                 setMealType("breakfast");
@@ -122,9 +136,13 @@ function RecordScreen() {
               }}
             />
             <MealCard1
-              mealType="Lunch"
-              lunchMeals={lunchMeals}
               imgUri={img.find((item) => item.fType === "lunch")?.fImg || null}
+              mealType="Lunch"
+              mealTime="10:00"
+              carb="60"
+              protein="18"
+              fat="20"
+              totalCalories="500"
               openSearchModal={() => {
                 openSearchModal();
                 setMealType("lunch");
@@ -133,9 +151,13 @@ function RecordScreen() {
               }}
             />
             <MealCard1
-              mealType="Dinner"
-              dinnerMeals={dinnerMeals}
               imgUri={img.find((item) => item.fType === "dinner")?.fImg || null}
+              mealType="Dinner"
+              mealTime="10:00"
+              carb="65"
+              protein="19"
+              fat="23"
+              totalCalories="550"
               openSearchModal={() => {
                 openSearchModal();
                 setMealType("dinner");
@@ -144,9 +166,13 @@ function RecordScreen() {
               }}
             />
             <MealCard1
-              mealType="Snack"
-              snackMeals={snackMeals}
               imgUri={img.find((item) => item.fType === "snack")?.fImg || null}
+              mealType="Snack"
+              mealTime="10:00"
+              carb="65"
+              protein="19"
+              fat="23"
+              totalCalories="550"
               openSearchModal={() => {
                 openSearchModal();
                 setMealType("snack");
