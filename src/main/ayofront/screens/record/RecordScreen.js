@@ -55,25 +55,35 @@ function RecordScreen() {
   };
 
   //식단 GET 요청 : 오늘 날짜로 조회하기 때문에 data가 없을 수 있음
-  const [mealListByDate, setMealListByDate] = useState([]);
-  const getMealByDate = async () => {
+  const [breakfastMeals, setBreakfastMeals] = useState([]);
+  const [lunchMeals, setLunchMeals] = useState([]);
+  const [dinnerMeals, setDinnerMeals] = useState([]);
+  const [snackMeals, setSnackMeals] = useState([]);
+  const getMealListByMealType = async () => {
+    // console.log(formattedToDayDate)
     await axios
-      .get(`${uri}/api/meal/${formattedToDayDate}`)
+      .get(`${uri}/api/meal/type`,
+      { params: {
+        userID : "user1", 
+        date : formattedToDayDate,
+      }})
       .then((response) => {
-        setMealListByDate(response.data);
-        console.log('레코드스크린 : ',response.data);
+        setBreakfastMeals(response.data[0]);
+        setLunchMeals(response.data[1]);
+        setDinnerMeals(response.data[2]);
+        setSnackMeals(response.data[3]);
+        console.log(breakfastMeals);
+        console.log(lunchMeals);
+        console.log(dinnerMeals);
+        console.log(snackMeals);
       })
       .catch(() => {
         console.log("getMealByDate error..");
       });
   };
-
-  //서버에서 받은 data를 mealType별로 객체에 담기
-  
-
   useEffect(() => {
     // getImg();
-    getMealByDate();
+    getMealListByMealType();
   }, []);
 
   //서버에 넘길 임시 Date
@@ -100,7 +110,7 @@ function RecordScreen() {
           >
             <MealCard1
               mealType="Breakfast"
-              mealListByDate={mealListByDate}
+              breakfastMeals={breakfastMeals}
               imgUri={img.find((item) => item.fType === "breakfast")?.fImg || null}
               openSearchModal={() => {
                 openSearchModal();
@@ -113,7 +123,7 @@ function RecordScreen() {
             />
             <MealCard1
               mealType="Lunch"
-              mealListByDate={mealListByDate}
+              lunchMeals={lunchMeals}
               imgUri={img.find((item) => item.fType === "lunch")?.fImg || null}
               openSearchModal={() => {
                 openSearchModal();
@@ -124,7 +134,7 @@ function RecordScreen() {
             />
             <MealCard1
               mealType="Dinner"
-              mealListByDate={mealListByDate}
+              dinnerMeals={dinnerMeals}
               imgUri={img.find((item) => item.fType === "dinner")?.fImg || null}
               openSearchModal={() => {
                 openSearchModal();
@@ -135,7 +145,7 @@ function RecordScreen() {
             />
             <MealCard1
               mealType="Snack"
-              mealListByDate={mealListByDate}
+              snackMeals={snackMeals}
               imgUri={img.find((item) => item.fType === "snack")?.fImg || null}
               openSearchModal={() => {
                 openSearchModal();

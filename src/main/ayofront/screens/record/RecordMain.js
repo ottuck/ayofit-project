@@ -26,7 +26,7 @@ import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = ({ navigation }) => {
   const { mealType, mealList } = useMealContext();
-  console.log("밀컨택스트API : ", mealList);
+  // console.log("밀컨택스트API : ", mealList);
 
   //서버에 넘길 임시 Date
   const mealDate = new Date();
@@ -49,11 +49,11 @@ const RecordMain = ({ navigation }) => {
       );
       return {
         ...rKeysObject,
-        rMealDate: mealDate,
+        rMealDate: formattedDate,
         rMealType: mealType //mealType 추가
       };
     });
-    console.log("Save버튼 누른후 제출전 :", updatedMealList);
+    // console.log("Save버튼 누른후 제출전 :", updatedMealList);
 
     axios
       .post(`${uri}/api/meal`, updatedMealList)
@@ -61,7 +61,7 @@ const RecordMain = ({ navigation }) => {
         console.log("MealData submitted successfully:", response.data);
       })
       .catch(() => {
-        console.log("Error", "Failed to submit");
+        console.log("MealData Error", "Failed to submit");
       });
   };
 

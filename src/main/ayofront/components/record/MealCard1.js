@@ -11,7 +11,10 @@ import { Feather } from "@expo/vector-icons"; // 또는 사용하는 아이콘 �
 
 const MealCard1 = ({
   mealType,
-  mealListByDate,
+  breakfastMeals,
+  lunchMeals,
+  dinnerMeals,
+  snackMeals,
   openSearchModal,
   imgUri,
 }) => {
@@ -38,7 +41,7 @@ const MealCard1 = ({
             <Text style={styles.TotalValue}>Total calories : </Text>
           </View>
           <View>
-            <Text style={styles.mealTime}>{mealListByDate.rMealDate}</Text>
+            <Text style={styles.mealTime}> </Text>
             <Text style={styles.nutrientValue}> g</Text>
             <Text style={styles.nutrientValue}> g</Text>
             <Text style={styles.nutrientValue}> g</Text>
