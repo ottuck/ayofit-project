@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#FFB172"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.app.ayofit"
@@ -24,9 +22,7 @@
         "foregroundImage": "./images/ayofit-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ],
+      "permissions": ["android.permission.RECORD_AUDIO"],
       "package": "com.app.ayofit"
     },
     "web": {
@@ -41,11 +37,6 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "3e992d95-daff-40e0-bee2-dc6a81c98e7b"
-      }
-    }
+    ]
   }
 }
