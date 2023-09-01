@@ -11,12 +11,12 @@ import { Feather } from "@expo/vector-icons"; // 또는 사용하는 아이콘 �
 
 const MealCard1 = ({
   mealType,
-  breakfastMeals,
-  lunchMeals,
-  dinnerMeals,
-  snackMeals,
   openSearchModal,
   imgUri,
+  carb,
+  protein,
+  fat,
+  totalCalories,
 }) => {
   return (
     <View style={styles.cardContainer}>
@@ -34,18 +34,18 @@ const MealCard1 = ({
       <View style={{ width: "90%" }}>
         <View style={styles.textContainer}>
           <View>
-            <Text style={styles.mealType}>{mealType} : </Text>
-            <Text style={styles.nutrientText}>Carb : </Text>
-            <Text style={styles.nutrientText}>Protein : </Text>
-            <Text style={styles.nutrientText}>Fat : </Text>
-            <Text style={styles.TotalValue}>Total calories : </Text>
+            <Text style={styles.mealType}>{mealType} :</Text>
+            <Text style={styles.nutrientText}>Carb :</Text>
+            <Text style={styles.nutrientText}>Protein :</Text>
+            <Text style={styles.nutrientText}>Fat :</Text>
+            <Text style={styles.TotalValue}>Total calories :</Text>
           </View>
           <View>
-            <Text style={styles.mealTime}> </Text>
-            <Text style={styles.nutrientValue}> g</Text>
-            <Text style={styles.nutrientValue}> g</Text>
-            <Text style={styles.nutrientValue}> g</Text>
-            <Text style={styles.TotalValue}> kcal</Text>
+            <Text style={styles.mealTime}></Text>
+            <Text style={styles.nutrientValue}>{carb} g</Text>
+            <Text style={styles.nutrientValue}>{protein} g</Text>
+            <Text style={styles.nutrientValue}>{fat} g</Text>
+            <Text style={styles.TotalValue}>{totalCalories} kcal</Text>
           </View>
         </View>
       </View>
