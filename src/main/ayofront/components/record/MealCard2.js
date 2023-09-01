@@ -19,8 +19,12 @@ const MealCard2 = ({
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
   // 즐겨찾기 로직
-  const { addFavoriteMeal, removeFavoriteMeal, favoriteMeals } =
-    useMealContext();
+  const {
+    addFavoriteMeal,
+    removeFavoriteMeal,
+    favoriteMeals,
+    deleteToMealByNO,
+  } = useMealContext();
   const [isLiked, setIsLiked] = useState(favoriteMeals.includes(mealInfo.nNO));
 
   const handleLikedPress = (no) => {

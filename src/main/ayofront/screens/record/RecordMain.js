@@ -172,7 +172,7 @@ const RecordMain = ({ navigation }) => {
         console.error(error);
       });
   };
-  // console.log(favoriteMeals);
+  console.log(favoriteMeals);
 
   //DateTimePicker
   const [mode, setMode] = useState("time");
@@ -343,10 +343,10 @@ const RecordMain = ({ navigation }) => {
                 if (mealList.length === 0) {
                   deleteMealListOnServer();
                 } else {
-                  // submitMealListToServer();
-                  // uploadImage(photoUri, "user1", mealType);
+                  submitMealListToServer();
                   regFavMeals();
-                  // navigation.navigate("RecordScreen");
+                  uploadImage(photoUri, "user1", mealType);
+                  navigation.navigate("RecordScreen");
                 }
               }}
             >

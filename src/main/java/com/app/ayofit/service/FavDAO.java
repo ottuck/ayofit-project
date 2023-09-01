@@ -16,7 +16,7 @@ public class FavDAO {
 		this.fMapper = fMapper;
 	}
 
-	public List<FavDTO> getFavorites(String userId, List<Integer> nNos) {
+	public List<FavDTO> getFavorites(String userId) {
 		
 		return fMapper.getFavoirtes(userId);
 	}
@@ -28,6 +28,14 @@ public class FavDAO {
 				System.out.println("db 등록 성공!");
 			}
 			
+		}
+		
+	}
+
+	public void deleteFavorites(int no) {
+		
+		if(fMapper.deleteFavorites(no) == 1) {
+			System.out.println("db 삭제 성공!");
 		}
 		
 	}

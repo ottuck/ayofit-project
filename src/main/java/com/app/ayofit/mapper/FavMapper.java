@@ -14,4 +14,6 @@ public interface FavMapper {
 
 	int regFavorites(@Param("no") Integer no, @Param("userId") String userId);
 
+	int deleteFavorites(int no);
+
 }
