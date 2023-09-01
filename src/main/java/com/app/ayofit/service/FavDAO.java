@@ -16,9 +16,14 @@ public class FavDAO {
 		this.fMapper = fMapper;
 	}
 
-	public List<FavDTO> getFavorites(String userId) {
+	public List<FavDTO> getFavorites(String userId, List<Integer> nNos) {
 		
 		return fMapper.getFavoirtes(userId);
+	}
+
+	public void regFavorites(List<Integer> nNos) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

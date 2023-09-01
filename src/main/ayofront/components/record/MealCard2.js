@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useMealContext } from "../../store/MealContext";
+
+import axios from "axios";
+import Constants from "expo-constants";
 
 const MealCard2 = ({
   useTimepicker,
@@ -12,29 +15,43 @@ const MealCard2 = ({
   ampm2,
   mealInfo,
 }) => {
-  const { deleteToMealByNO, setFavoriteMeals, favoriteMeals } =
-    useMealContext();
-  // console.log(mealInfo.nNO);
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
   // 즐겨찾기 로직
-  const [isLiked, setIsLiked] = useState(false);
+  const { addFavoriteMeal, removeFavoriteMeal, favoriteMeals } =
+    useMealContext();
+  const [isLiked, setIsLiked] = useState(favoriteMeals.includes(mealInfo.nNO));
 
   const handleLikedPress = (no) => {
     setIsLiked(!isLiked);
     if (isLiked) {
-      setFavoriteMeals(no);
+      removeFavoriteMeal(no);
     } else {
-      setFavoriteMeals(null);
+      addFavoriteMeal(no);
     }
-    console.log(favoriteMeals);
   };
+  // console.log(favoriteMeals);
+
+  const regFavMeals = () => {
+    axios
+      .post(`${uri}/api/favorites`, { nNos: favoriteMeals })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    regFavMeals();
+  }, [favoriteMeals]);
 
   return (
     <View style={styles.blurViewBox}>
       <BlurView>
         <View style={styles.foodRecordContainer}>
           <View style={styles.recordIconContainer}>
-            <TouchableOpacity onPress={handleLikedPress(mealInfo.nNO)}>
+            <TouchableOpacity onPress={() => handleLikedPress(mealInfo.nNO)}>
               {isLiked ? (
                 <Ionicons
                   name="heart"

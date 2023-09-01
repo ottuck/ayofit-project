@@ -22,6 +22,7 @@ import { Platform } from "react-native";
 import PedometerStack from "./navigations/PedometerStack";
 import LoginStack from "./navigations/LoginStack";
 import { LoginContext } from "./store/LoginContext";
+import { MealProvider } from "./store/MealContext";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -118,15 +119,16 @@ export default function App() {
           }}
         >
           <FontProvider>
-            <PhotoProvider>
-              <StatusBar
-                backgroundColor={GlobalStyles.colors.primary500}
-                barStyle="default"
-              />
-              <NavigationContainer style={styles.navigationContainer}>
-                <PedometerProvider>
-                  <Stack.Navigator>
-                    {/* /* 인증해야되서 주석 처리 해둠
+            <MealProvider>
+              <PhotoProvider>
+                <StatusBar
+                  backgroundColor={GlobalStyles.colors.primary500}
+                  barStyle="default"
+                />
+                <NavigationContainer style={styles.navigationContainer}>
+                  <PedometerProvider>
+                    <Stack.Navigator>
+                      {/* /* 인증해야되서 주석 처리 해둠
               <Stack.Screen
                 name="AccountInfo"
                 component={AccountInfo}
@@ -137,23 +139,24 @@ export default function App() {
                 component={AccountNutri}
                 options={{ headerShown: false }}
               /> */}
-                    {/* {userInfo ? ( */}
+                      {/* {userInfo ? ( */}
                       <Stack.Screen
                         name="MainTabs"
                         component={MainTabsScreen}
                         options={{ headerShown: false }}
                       />
-                    {/* ) : (
+                      {/* ) : (
                       <Stack.Screen
                         name="LoginStack"
                         component={LoginStack}
                         options={{ headerShown: false }}
                       />
                     )} */}
-                  </Stack.Navigator>
-                </PedometerProvider>
-              </NavigationContainer>
-            </PhotoProvider>
+                    </Stack.Navigator>
+                  </PedometerProvider>
+                </NavigationContainer>
+              </PhotoProvider>
+            </MealProvider>
           </FontProvider>
         </SafeAreaView>
       </AccountsContextProvider>
