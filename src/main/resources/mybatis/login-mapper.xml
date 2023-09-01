@@ -17,7 +17,7 @@
 	</insert>
 
 	<select id="checkGoogle" resultType="LoginDTO">
-		select *
+		select * l_id as id, l_email as email, l_password as password, l_name as name, l_picture as picture, l_type as type, l_info as info
 		from login
 		where l_type = 'google'
 		and l_password = #{reqId}
