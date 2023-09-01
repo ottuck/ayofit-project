@@ -79,19 +79,19 @@ const MealCard2 = ({
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Carb</Text>
               <Text style={styles.foodNutrient}>
-                {mealInfo.nCarbohydrate === null ? "-" : mealInfo.nCarbohydrate}
+                {mealInfo.nCarbohydrate === 0 ? "-" : mealInfo.nCarbohydrate}
               </Text>
             </View>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Protein</Text>
               <Text style={styles.foodNutrient}>
-                {mealInfo.nProtein === null ? "-" : mealInfo.nProtein}
+                {mealInfo.nProtein === 0 ? "-" : mealInfo.nProtein}
               </Text>
             </View>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Fat</Text>
               <Text style={styles.foodNutrient}>
-                {mealInfo.nFat === null ? "-" : mealInfo.nFat}
+                {mealInfo.nFat === 0 ? "-" : mealInfo.nFat}
               </Text>
             </View>
           </View>
