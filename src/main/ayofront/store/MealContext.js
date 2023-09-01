@@ -22,7 +22,7 @@ export const MealProvider = ({ children }) => {
   };
 
   // Favorites handling
-  const [favoriteMeals, setFavoriteMeals] = useState([]); // Store favorite meal fNo values
+  const [favoriteMeals, setFavoriteMeals] = useState([]);
   const addFavoriteMeal = (fNo) => {
     setFavoriteMeals((prevFavoriteMeals) => [...prevFavoriteMeals, fNo]);
   };
