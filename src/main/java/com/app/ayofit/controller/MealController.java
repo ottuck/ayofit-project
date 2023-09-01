@@ -27,6 +27,11 @@ public class MealController {
 		return mealDAO.getAllMeal();
 	}
 	
+	@GetMapping("{date}")
+	public List<MealDTO> getMealByDate(@PathVariable String date){
+		return mealDAO.getMealByDate();
+	}
+	
 	@PostMapping("")
 	public void regMeal(@RequestBody List<MealDTO> mealList) {
 		mealDAO.regMeal(mealList);

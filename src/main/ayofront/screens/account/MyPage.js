@@ -12,14 +12,13 @@ import {
 import { GlobalStyles } from "../../components/UI/styles";
 import IconButton from "../../components/account/UI/IconButton";
 
-import { Fontisto } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
+import { Fontisto, AntDesign, Ionicons } from "@expo/vector-icons";
 
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 
 import { LoginContext } from "../../store/LoginContext";
+import { useMealContext } from "../../store/MealContext";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -41,9 +40,14 @@ function MyPage({ navigation }) {
       });
   };
 
+  const { favoriteMeals } = useMealContext();
+  console.log(favoriteMeals);
+
   const getFavorites = () => {
     axios
-      .get(`${uri}/api/favorites/user1`)
+      .get(`${uri}/api/favorites`, {
+        params: { userId: "user1", nNos: favoriteMeals },
+      })
       .then((response) => {
         console.log(response.data);
       })
