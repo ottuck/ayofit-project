@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-import { useMealContext, deleteToMealByNO } from "../../store/MealContext";
+import { useMealContext } from "../../store/MealContext";
 
 import axios from "axios";
 import Constants from "expo-constants";
@@ -18,6 +18,8 @@ const MealCard2 = ({
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
+  //삭제 함수 컨택스트에서 가져오기
+  const { deleteToMealByNO } = useMealContext();
   // 즐겨찾기 로직
   const { addFavoriteMeal, removeFavoriteMeal, favoriteMeals } =
     useMealContext();
@@ -45,6 +47,8 @@ const MealCard2 = ({
   useEffect(() => {
     regFavMeals();
   }, [favoriteMeals]);
+
+  
 
   return (
     <View style={styles.blurViewBox}>

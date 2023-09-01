@@ -126,6 +126,7 @@ function RecordScreen({ navigation }) {
             ].map((cardData, index) => {
               const imgData = img.find(item => item.fType === cardData.mealType.toLowerCase());
               const imgUri = imgData ? imgData.fImg : null;
+              //카드를 식별하여 left,right margin을 주기 위한 코드
               const isFirstCard = index === 0;
               const isLastCard = index === 3;
               const cardStyle = [

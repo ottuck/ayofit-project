@@ -65,10 +65,10 @@ const RecordMain = ({ navigation }) => {
       });
   };
 
-  //mealList가 없을 경우 Save버튼을 누름녀 서버에 Delete 요청을 보냄
-  const deleteMealListOnServer = () => {
+  //mealList가 없을 경우 Save버튼을 누르면 서버에 Put 요청을 보냄
+  const updateMealListOnServer = () => {
     axios
-      .delete(`${uri}/api/meal`, {
+      .put(`${uri}/api/meal`, {
         params: {
           rMealDate: mealDate, 
           rMealType: mealType,
@@ -322,7 +322,7 @@ const RecordMain = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => {
                 if (mealList.length === 0) {
-                  deleteMealListOnServer();
+                  updateMealListOnServer();
                 } else {
                   submitMealListToServer();
                   uploadImage(photoUri, "user1", mealType);
