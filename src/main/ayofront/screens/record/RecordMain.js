@@ -58,7 +58,7 @@ const RecordMain = ({ navigation }) => {
     axios
       .post(`${uri}/api/meal`, updatedMealList)
       .then((response) => {
-        console.log("MealData submitted successfully:", response.data);
+        console.log("MealData submitted successfully");
       })
       .catch(() => {
         console.log("MealData Error", "Failed to submit");
@@ -75,7 +75,7 @@ const RecordMain = ({ navigation }) => {
         },
       })
       .then((response) => {
-        console.log("MealData deleted successfully:", response.data);
+        console.log("MealData deleted successfully");
       })
       .catch(() => {
         console.log("Error", "Failed to delete");
@@ -101,7 +101,7 @@ const RecordMain = ({ navigation }) => {
         },
       })
       .then((response) => {
-        console.log("PhotoFile deleted successfully:", response.data);
+        console.log("PhotoFile deleted successfully");
         setPhotoUri(null);
       })
       .catch(() => {
@@ -149,7 +149,7 @@ const RecordMain = ({ navigation }) => {
       });
 
       const responseData = await response;
-      console.log(responseData);
+      // console.log(responseData);
     } catch (error) {
       console.error(error);
     }
