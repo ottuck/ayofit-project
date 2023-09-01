@@ -11,22 +11,24 @@ import { Feather } from "@expo/vector-icons"; // 또는 사용하는 아이콘 �
 
 const MealCard1 = ({
   mealType,
-  openSearchModal,
   imgUri,
   carb,
   protein,
   fat,
   totalCalories,
+  checkCardPress,
+  cardStyle
 }) => {
   return (
-    <View style={styles.cardContainer}>
+    // <View style={styles.cardContainer}>
+    <View style={[styles.cardContainer, ...cardStyle]}>
       <View style={styles.cardImageContainer}>
         {imgUri ? (
-          <Pressable onPress={openSearchModal} style={styles.mealImage}>
+          <Pressable onPress={checkCardPress} style={styles.mealImage}>
             <Image source={{ uri: imgUri }} style={styles.mealImage} />
           </Pressable>
         ) : (
-          <TouchableOpacity onPress={openSearchModal}>
+          <TouchableOpacity onPress={checkCardPress}>
             <Feather name="plus-circle" style={styles.plusIcon} />
           </TouchableOpacity>
         )}
@@ -34,14 +36,14 @@ const MealCard1 = ({
       <View style={{ width: "90%" }}>
         <View style={styles.textContainer}>
           <View>
-            <Text style={styles.mealType}>{mealType} :</Text>
+            <Text style={styles.mealType}>{mealType}</Text>
             <Text style={styles.nutrientText}>Carb :</Text>
             <Text style={styles.nutrientText}>Protein :</Text>
             <Text style={styles.nutrientText}>Fat :</Text>
             <Text style={styles.TotalValue}>Total calories :</Text>
           </View>
           <View>
-            <Text style={styles.mealTime}></Text>
+            <Text style={styles.mealTime}> </Text>
             <Text style={styles.nutrientValue}>{carb} g</Text>
             <Text style={styles.nutrientValue}>{protein} g</Text>
             <Text style={styles.nutrientValue}>{fat} g</Text>
@@ -110,6 +112,7 @@ const styles = StyleSheet.create({
   TotalValue: {
     fontSize: 20,
     fontWeight: "bold",
+    textAlign: "right",
   },
 });
 

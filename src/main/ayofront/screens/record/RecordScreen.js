@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ImageBackground,
   SafeAreaView,
@@ -17,7 +17,7 @@ import { usePhotoContext } from "../../store/image_context";
 const { debuggerHost } = Constants.manifest2.extra.expoGo;
 const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
-function RecordScreen() {
+function RecordScreen({ navigation }) {
   //Search Modal
   const [searchModalVisible, setSearchModalVisible] = useState(false);
   const openSearchModal = () => {
@@ -84,17 +84,22 @@ function RecordScreen() {
     getImg();
   }, []);
 
-  console.log("스크린 페이지 : ");
-  console.log(breakfastMeals);
-  console.log(lunchMeals);
-  console.log(dinnerMeals);
-  console.log(snackMeals);
-
-
   //서버에 넘길 임시 Date
   const mealDate = new Date();
   const formattedToDayDate = mealDate.toISOString().split('T')[0];
   // console.log(formattedDate); // "2023-08-31"
+
+  const handleCardPress = (imgUri, cardData) => {
+    if (imgUri) {
+      navigation.navigate("RecordMain"); // 이미지가 있으면 RecordMain 화면으로 이동
+    } else {
+      openSearchModal(); // 이미지가 없으면 openSearchModal 실행
+      setMealType(cardData.mealType.toLowerCase());
+      setPhotoUri(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg);
+      setPhotoId(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo);
+    }
+  };
+
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -118,24 +123,32 @@ function RecordScreen() {
               { mealType: "Lunch", meals: lunchMeals },
               { mealType: "Dinner", meals: dinnerMeals },
               { mealType: "Snack", meals: snackMeals },
-            ].map((cardData, index) => (
-              <MealCard1
-                key={index}
-                imgUri={img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg || null}
-                mealType={cardData.mealType}
-                mealTime="10:00" //임시값
-                carb={cardData.meals.totalCarbohydrate} 
-                protein={cardData.meals.totalProtein} 
-                fat={cardData.meals.totalFat} 
-                totalCalories={cardData.meals.totalCalories} 
-                openSearchModal={() => {
-                  openSearchModal();
-                  setMealType(cardData.mealType.toLowerCase());
-                  setPhotoUri(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg);
-                  setPhotoId(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo);
-                }}
-              />
-            ))}
+            ].map((cardData, index) => {
+              const imgData = img.find(item => item.fType === cardData.mealType.toLowerCase());
+              const imgUri = imgData ? imgData.fImg : null;
+              const isFirstCard = index === 0;
+              const isLastCard = index === 3;
+              const cardStyle = [
+                styles.cardContainer,
+                isFirstCard && styles.firstCardStyle,
+                isLastCard && styles.lastCardStyle,
+              ];
+
+              return (
+                <MealCard1
+                  key={index}
+                  imgUri={imgUri}
+                  mealType={cardData.mealType}
+                  mealTime="10:00" //임시값
+                  carb={cardData.meals.totalCarbohydrate}
+                  protein={cardData.meals.totalProtein}
+                  fat={cardData.meals.totalFat}
+                  totalCalories={cardData.meals.totalCalories}
+                  checkCardPress={() => handleCardPress(imgUri, cardData)}
+                  cardStyle={cardStyle}
+                />
+              );
+            })}
           </ScrollView>
 
           <SearchModal
@@ -179,55 +192,11 @@ const styles = StyleSheet.create({
     color: "#CECECE",
     fontSize: 17,
   },
-  //카드 디자인
-  cardContainer: {
-    width: 300,
-    height: 430,
-    marginHorizontal: 20,
-    backgroundColor: "white",
-    borderRadius: 15,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
-    justifyContent: "center",
-    alignItems: "center",
+  //조건부 스타일
+  firstCardStyle: {
+    marginLeft: 54,
   },
-  cardImageContainer: {
-    width: 270,
-    height: 270,
-    backgroundColor: "rgba(0, 0, 0, 0.10)",
-    borderRadius: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  plusIcon: {
-    fontSize: 60,
-    color: "rgba(0, 0, 0, 0.10)",
-  },
-  textContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-  },
-  mealTime: {
-    color: "orange",
-    fontWeight: "bold",
-    fontSize: 20,
-  },
-  nutrientText: {
-    fontSize: 17,
-    fontWeight: "bold",
-  },
-  nutrientValue: {
-    fontSize: 17,
-    fontWeight: "bold",
-    textAlign: "right",
-  },
-  TotalValue: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "right",
+  lastCardStyle: {
+    marginRight: 54,
   },
 });
