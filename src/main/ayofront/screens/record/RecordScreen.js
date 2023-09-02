@@ -73,7 +73,7 @@ function RecordScreen({ navigation }) {
         setLunchMeals(response.data[1]);
         setDinnerMeals(response.data[2]);
         setSnackMeals(response.data[3]);
-        // console.log(response.data);
+        // console.log('Sever=>RecordScreen.js:', response.data);
       })
       .catch(() => {
         console.log("getMealByDate error..");

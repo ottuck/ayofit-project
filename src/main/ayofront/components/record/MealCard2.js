@@ -89,19 +89,19 @@ const MealCard2 = ({
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Carb</Text>
               <Text style={styles.foodNutrient}>
-                {mealInfo.nCarbohydrate === 0 ? "-" : mealInfo.nCarbohydrate}
+                {mealInfo.nCarbohydrate === null ? "-" : mealInfo.nCarbohydrate}
               </Text>
             </View>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Protein</Text>
               <Text style={styles.foodNutrient}>
-                {mealInfo.nProtein === 0 ? "-" : mealInfo.nProtein}
+                {mealInfo.nProtein === null ? "-" : mealInfo.nProtein}
               </Text>
             </View>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Fat</Text>
               <Text style={styles.foodNutrient}>
-                {mealInfo.nFat === 0 ? "-" : mealInfo.nFat}
+                {mealInfo.nFat === null ? "-" : mealInfo.nFat}
               </Text>
             </View>
           </View>
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   recordTime2: {
     color: "#E46C0A",
     fontWeight: "bold",
-    fontSize: 34,
+    fontSize: 26,
   },
   textWrapper: {
     width: "55%",

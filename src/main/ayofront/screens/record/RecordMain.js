@@ -26,7 +26,7 @@ import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = ({ navigation }) => {
   const { mealType, mealList, favoriteMeals } = useMealContext();
-  // console.log("밀컨택스트API : ", mealList);
+  console.log("MealContextAPI=>RecordMain : ", mealList);
 
   //서버에 넘길 임시 Date
   const mealDate = new Date();

@@ -45,13 +45,13 @@ const MealCard1 = ({
           <View>
             <Text style={styles.mealTime}> </Text>
             <Text style={styles.nutrientValue}>
-              {carb === 0 ? "-" : Math.floor(carb)} g
+              {carb === null ? "-" : Math.floor(carb)} g
             </Text>
             <Text style={styles.nutrientValue}>
-              {protein === 0 ? "-" : Math.floor(protein)} g
+              {protein === null ? "-" : Math.floor(protein)} g
             </Text>
             <Text style={styles.nutrientValue}>
-              {fat === 0 ? "-" : Math.floor(fat)} g
+              {fat === null ? "-" : Math.floor(fat)} g
             </Text>
             <Text style={styles.carloriesValue}>
               {Math.floor(carb * 4 + protein * 4 + fat * 9)}  kcal
