@@ -18,13 +18,11 @@ const MealCard2 = ({
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
+  //삭제 함수 컨택스트에서 가져오기
+  const { deleteToMealByNO } = useMealContext();
   // 즐겨찾기 로직
-  const {
-    addFavoriteMeal,
-    removeFavoriteMeal,
-    favoriteMeals,
-    deleteToMealByNO,
-  } = useMealContext();
+  const { addFavoriteMeal, removeFavoriteMeal, favoriteMeals } =
+    useMealContext();
   const [isLiked, setIsLiked] = useState(favoriteMeals.includes(mealInfo.nNO));
 
   const handleLikedPress = (no) => {
@@ -91,19 +89,19 @@ const MealCard2 = ({
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Carb</Text>
               <Text style={styles.foodNutrient}>
-                {mealInfo.nCarbohydrate === null ? "-" : mealInfo.nCarbohydrate}
+                {mealInfo.nCarbohydrate === 0 ? "-" : mealInfo.nCarbohydrate}
               </Text>
             </View>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Protein</Text>
               <Text style={styles.foodNutrient}>
-                {mealInfo.nProtein === null ? "-" : mealInfo.nProtein}
+                {mealInfo.nProtein === 0 ? "-" : mealInfo.nProtein}
               </Text>
             </View>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Fat</Text>
               <Text style={styles.foodNutrient}>
-                {mealInfo.nFat === null ? "-" : mealInfo.nFat}
+                {mealInfo.nFat === 0 ? "-" : mealInfo.nFat}
               </Text>
             </View>
           </View>

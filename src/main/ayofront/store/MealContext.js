@@ -15,9 +15,9 @@ export const MealProvider = ({ children }) => {
   const addItemToMealList = (newItem) => {
     setMealList((prevMealList) => [...prevMealList, newItem]);
   };
-  const deleteToMealByNO = (NO) => {
+  const deleteToMealByNO = (nNO) => {
     setMealList((prevMealList) =>
-      prevMealList.filter((item) => item.nNO !== NO)
+      prevMealList.filter((item) => item.nNO !== nNO)
     );
   };
 

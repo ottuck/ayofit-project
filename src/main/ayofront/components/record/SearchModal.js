@@ -41,7 +41,9 @@ const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
         .then((response) => {
           setList(response.data);
         })
-        .catch(() => {});
+        .catch(() => {
+          console.log("getList error..");
+        });
     };
 
     const debounce = setTimeout(() => {
