@@ -28,7 +28,9 @@ import DailyGoalInputScreen from "./DailyGoalInputScreen";
 import SwipeDownToSave from "../../components/pedometer/SwipeDownToSave";
 
 function PedometerScreen() {
-  const uri = "http://213.35.96.167";
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  //const uri = "http://213.35.96.167";
 
   const {
     steps,

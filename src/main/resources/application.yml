@@ -11,9 +11,9 @@ spring:
   #Oracle DB 연결
   datasource:
     #local
-    #url: jdbc:oracle:thin:@C44M4IT64ZKKEISA_medium?TNS_ADMIN=./Wallet_ayofit
+    url: jdbc:oracle:thin:@C44M4IT64ZKKEISA_medium?TNS_ADMIN=./Wallet_ayofit
     #server
-    url: jdbc:oracle:thin:@C44M4IT64ZKKEISA_medium?TNS_ADMIN=/home/ubuntu/Wallet
+    #url: jdbc:oracle:thin:@C44M4IT64ZKKEISA_medium?TNS_ADMIN=/home/ubuntu/Wallet
     username: ADMIN
     password: Soldesk802!!
     driverClassName: oracle.jdbc.OracleDriver
@@ -35,6 +35,3 @@ logging:
 app:
   firebase-configuration-file: ./serviceAccountKey.json
   firebase-bucket: ayofit-57ea5.appspot.com
-
-server:
-  port: 80

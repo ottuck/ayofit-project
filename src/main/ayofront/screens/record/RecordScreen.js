@@ -12,10 +12,11 @@ import SearchModal from "../../components/record/SearchModal";
 import axios from "axios";
 import { useMealContext } from "../../store/MealContext";
 import { usePhotoContext } from "../../store/image_context";
+import Constants from "expo-constants";
 
-const uri = "http://213.35.96.167";
-//const { debuggerHost } = Constants.manifest2.extra.expoGo;
-//const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+// const uri = "http://213.35.96.167";
+const { debuggerHost } = Constants.manifest2.extra.expoGo;
+const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
 function RecordScreen({ navigation }) {
   //Search Modal

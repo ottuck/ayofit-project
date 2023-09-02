@@ -18,7 +18,9 @@ import FastHeaderCom from "../components/fast/FastHeaderCom";
 import { ImageBackground, StyleSheet, Image } from "react-native";
 
 const FastRecord = ({ navigation }) => {
-  const uri = "http://213.35.96.167";
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  //const uri = "http://213.35.96.167";
 
   const [fastData, setFastData] = useState([]);
   useEffect(() => {

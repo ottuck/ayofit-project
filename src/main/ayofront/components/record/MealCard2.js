@@ -15,9 +15,9 @@ const MealCard2 = ({
   ampm2,
   mealInfo,
 }) => {
-  // const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  // const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-  const uri = "http://213.35.96.167";
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  // const uri = "http://213.35.96.167";
 
   //삭제 함수 컨택스트에서 가져오기
   const { deleteToMealByNO } = useMealContext();
@@ -48,8 +48,6 @@ const MealCard2 = ({
   useEffect(() => {
     regFavMeals();
   }, [favoriteMeals]);
-
-  
 
   return (
     <View style={styles.blurViewBox}>
