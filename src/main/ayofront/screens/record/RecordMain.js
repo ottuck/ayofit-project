@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
 import Constants from "expo-constants";
@@ -24,16 +24,9 @@ import { usePhotoContext } from "../../store/image_context";
 import { useMealContext } from "../../store/MealContext";
 import MealCard2 from "../../components/record/MealCard2";
 
-const RecordMain = ({ navigation }) => {
-  const { mealType, mealList, favoriteMeals } = useMealContext();
-  console.log("MealContextAPI=>RecordMain : ", mealList);
-
-  //서버에 넘길 임시 Date
-  const mealDate = new Date();
-  const formattedDate = mealDate.toISOString().slice(0, 19).replace("T", " ");
-  // console.log(formattedDate); // "2023-08-31 08:36:40"
-  const formattedDateForDelete = mealDate.toISOString().slice(0, 10); // "2023-08-31"
-
+const RecordMain = ({ navigation, Route }) => {
+  const { formattedYYMMDD, mealType, mealList, cleanMealList, favoriteMeals } = useMealContext();
+  // console.log("MealContextAPI => RecordMain : ", mealList);
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -47,15 +40,12 @@ const RecordMain = ({ navigation }) => {
 
       //'n'을 'r'로 바꾼 새로운 객체 생성
       const rKeysObject = Object.fromEntries(
-        Object.entries(rest).map(([key, value]) => [
-          key.replace(/^n/, "r"),
-          value,
-        ])
+        Object.entries(rest).map(([key, value]) => [key.replace(/^n/, "r"), value])
       );
       return {
         ...rKeysObject,
-        rMealDate: formattedDateForDelete,
-        rMealType: mealType //mealType 추가
+        rMealDate: formattedYYMMDD,
+        rMealType: mealType 
       };
     });
     console.log("Save버튼 누른후 Server에 제출한값 :", updatedMealList);
@@ -75,7 +65,7 @@ const RecordMain = ({ navigation }) => {
     axios
       .delete(`${uri}/api/meal`, {
         params: {
-          mealDate: formattedDate, 
+          mealDate: formattedToDayDate, 
           mealType: mealType,
         },
       })
@@ -255,6 +245,17 @@ const RecordMain = ({ navigation }) => {
     transformDateTime(pickerTime);
   const { ampm: ampm1, formattedTime: formattedCurrentTime } =
     transformDateTime(currentTime);
+
+  //페이지를 떠날때 발생할 때 mealList를 비우는 작업 수행
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      cleanMealList([]);
+    });
+    // cleanup 함수를 반환하여 컴포넌트가 언마운트되거나 cleanup 필요 시 실행
+    return () => unsubscribe();
+  }, [navigation]);
+
+
 
   //Rendering page
   return (

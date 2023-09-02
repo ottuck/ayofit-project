@@ -18,11 +18,8 @@ const MealCard2 = ({
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
-  //삭제 함수 컨택스트에서 가져오기
-  const { deleteToMealByNO } = useMealContext();
   // 즐겨찾기 로직
-  const { addFavoriteMeal, removeFavoriteMeal, favoriteMeals } =
-    useMealContext();
+  const { deleteToMealByNo, addFavoriteMeal, removeFavoriteMeal, favoriteMeals } = useMealContext();
   const [isLiked, setIsLiked] = useState(favoriteMeals.includes(mealInfo.nNO));
 
   const handleLikedPress = (no) => {
@@ -55,7 +52,7 @@ const MealCard2 = ({
                 <Ionicons name="heart-outline" style={styles.likeButton} />
               )}
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => deleteToMealByNO(mealInfo.nNO)}>
+            <TouchableOpacity onPress={() => deleteToMealByNo(mealInfo.nNO)}>
               <AntDesign name="close" style={styles.recordDeleteButton} />
             </TouchableOpacity>
           </View>

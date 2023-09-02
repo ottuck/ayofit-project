@@ -18,7 +18,6 @@ import Constants from "expo-constants";
 import { useMealContext } from "../../store/MealContext";
 
 const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
-  // mealData를 set할 Context
   const { addItemToMealList } = useMealContext();
 
   //Server 통신을 위한 URI 수정

@@ -18,16 +18,17 @@ const { debuggerHost } = Constants.manifest2.extra.expoGo;
 const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
 function RecordScreen({ navigation }) {
+  const { updateMealType, formattedYYMMDD} = useMealContext();
+
+  // 카드를 클릭할때 mealType 받아서 mealContext에 저장
+  const setMealType = (mealType) => {
+    updateMealType(mealType);
+  };
+
   //Search Modal
   const [searchModalVisible, setSearchModalVisible] = useState(false);
   const openSearchModal = () => {
     setSearchModalVisible(true);
-  };
-
-  // mealType 카드별로 받아서 set
-  const { updateMealType } = useMealContext();
-  const setMealType = (mealType) => {
-    updateMealType(mealType);
   };
 
   const closeSearchModal = () => {
@@ -65,7 +66,7 @@ function RecordScreen({ navigation }) {
         {
           params: {
             userID: "user1",
-            date: formattedToDayDate,
+            date: formattedYYMMDD,
           }
         })
       .then((response) => {
@@ -85,16 +86,11 @@ function RecordScreen({ navigation }) {
     getImg();
   }, []);
 
-  //서버에 넘길 임시 Date
-  const mealDate = new Date();
-  const formattedToDayDate = mealDate.toISOString().split('T')[0];
-  // console.log(formattedDate); // "2023-08-31"
-
   const handleCardPress = (cardData) => {
     if (cardData.meals) {
-      navigation.navigate("RecordMain"); // 이미지가 있으면 RecordMain 화면으로 이동
+      navigation.push("RecordMain"); // 음식 데이터가 있으면 RecordMain 화면으로 이동
     } else {
-      openSearchModal(); // 이미지가 없으면 openSearchModal 실행
+      openSearchModal(); // 없으면 openSearchModal 실행
       setMealType(cardData.mealType.toLowerCase());
       setPhotoUri(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg);
       setPhotoId(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo);
@@ -111,7 +107,7 @@ function RecordScreen({ navigation }) {
         >
           <View style={styles.headerContainer}>
             <Text style={styles.headerTitle}> Diet Record</Text>
-            <Text style={styles.headerDate}> {formattedToDayDate} </Text>
+            <Text style={styles.headerDate}> {formattedYYMMDD} </Text>
           </View>
 
           <ScrollView
@@ -143,7 +139,6 @@ function RecordScreen({ navigation }) {
                   key={index}
                   imgUri={imgUri}
                   mealType={cardData.mealType}
-                  mealTime="10:00" //임시값
                   carb={cardData.meals.totalCarbohydrate}
                   protein={cardData.meals.totalProtein}
                   fat={cardData.meals.totalFat}
