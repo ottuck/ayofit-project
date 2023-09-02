@@ -25,31 +25,32 @@ import { useMealContext } from "../../store/MealContext";
 import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = ({ navigation }) => {
-  const { formattedYYMMDD, mealType, mealList, cleanMealList, favoriteMeals } = useMealContext();
-  // console.log("MealContextAPI => RecordMain : ", mealList);
+  const { formattedYYMMDD, mealType, mealList, addItemToMealList, cleanMealList, favoriteMeals } = useMealContext();
+  console.log("밀컨택스트API :: ", mealList);
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
+  //서버로 보내기전 데이터 포멧팅
+  const updatedMealList = mealList.map((meal) => {
+    // nNO와 nSize를 제거
+    const { nNO, nSize, ...rest } = meal; 
+    //'n'을 'r'로 바꾼 새로운 객체 생성
+    const rKeysObject = Object.fromEntries(
+      Object.entries(rest).map(([key, value]) => [key.replace(/^n/, "r"), value])
+    );
+    //필요한 값 추가
+    return {
+      ...rKeysObject,
+      rMealDate: formattedYYMMDD,
+      rMealType: mealType 
+    };
+  });
+
   //식단 기록 post 요청
   const submitMealListToServer = () => {
-    //서버로 보내기전 데이터 포멧팅
-    const updatedMealList = mealList.map((meal) => {
-      const { nNO, nSize, ...rest } = meal; // nNO와 nSize를 제거
-
-      //'n'을 'r'로 바꾼 새로운 객체 생성
-      const rKeysObject = Object.fromEntries(
-        Object.entries(rest).map(([key, value]) => [key.replace(/^n/, "r"), value])
-      );
-      return {
-        ...rKeysObject,
-        rMealDate: formattedYYMMDD,
-        rMealType: mealType 
-      };
-    });
-    console.log("Save버튼 누른후 Server에 제출한값 :", updatedMealList);
-
+    // console.log("Save버튼 누른후 Server에 제출한값 :", updatedMealList);
     axios
       .post(`${uri}/api/meal`, updatedMealList)
       .then((response) => {
@@ -60,7 +61,31 @@ const RecordMain = ({ navigation }) => {
       });
   };
 
-  //mealList가 없을 경우 Save버튼을 누르면 서버에 Put 요청을 보냄
+
+  //SearchModal을 거치지 않고 페이지로 진입시 Sever에서 해당날자, 식단의 정보를 가져와서 ContextAPI에 저장
+  const getMealByTypeAndDate = () => {
+    axios
+      .get(`${uri}/api/meal/type`,
+        {
+          params: {
+            mealType: mealType,
+            date: formattedYYMMDD,
+          }
+        })
+      .then((response) => {
+        console.log('Sever => RecordMain.js:', response.data);
+        // addItemToMealList(response.data);
+      })
+      .catch(() => {
+        console.log("getMealDataByTypeAndDate error..");
+      });
+  };
+
+  useEffect(() => {
+    getMealByTypeAndDate();
+  }, []);
+
+  //mealList가 없을 경우 Save버튼을 누르면 서버에 Delete 요청을 보냄
   const deleteMealListOnServer = () => {
     axios
       .delete(`${uri}/api/meal`, {

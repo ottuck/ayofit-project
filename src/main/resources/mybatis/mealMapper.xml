@@ -7,29 +7,35 @@
 		SELECT * FROM record_meal
 	</select>
 	
-	<select id="getBreakfastByDate" resultType="NutritionDTO">
+	<select id="getMealByTypeAndDate" resultType="MealDTO">
+		SELECT * FROM record_meal WHERE TRUNC(r_meal_date) = TO_DATE(#{date}, 'YYYY/MM/DD') AND r_meal_type = #{mealType}
+	</select>
+	
+	
+	<select id="getBreakfastTotalNutrition" resultType="NutritionDTO">
 	    SELECT SUM(r_carbohydrate) as totalCarbohydrate, SUM(r_protein) as totalProtein, SUM(r_fat) as totalFat
 	    FROM record_meal
 	    WHERE r_id = #{userID} AND TRUNC(r_meal_date) = TO_DATE(#{date}, 'YYYY/MM/DD') AND r_meal_type = 'breakfast'
 	</select>
 	
-	<select id="getLunchByDate" resultType="NutritionDTO">
+	<select id="getLunchTotalNutrition" resultType="NutritionDTO">
 	    SELECT SUM(r_carbohydrate) as totalCarbohydrate, SUM(r_protein) as totalProtein, SUM(r_fat) as totalFat
 	    FROM record_meal
 	    WHERE r_id = #{userID} AND TRUNC(r_meal_date) = TO_DATE(#{date}, 'YYYY/MM/DD') AND r_meal_type = 'lunch'
 	</select>
 	
-	<select id="getDinnerByDate" resultType="NutritionDTO">
+	<select id="getDinnerTotalNutrition" resultType="NutritionDTO">
 	    SELECT SUM(r_carbohydrate) as totalCarbohydrate, SUM(r_protein) as totalProtein, SUM(r_fat) as totalFat
 	    FROM record_meal
 	    WHERE r_id = #{userID} AND TRUNC(r_meal_date) = TO_DATE(#{date}, 'YYYY/MM/DD') AND r_meal_type = 'dinner'
 	</select>
 	
-	<select id="getSnackByDate" resultType="NutritionDTO">
+	<select id="getSnackTotalNutrition" resultType="NutritionDTO">
 	    SELECT SUM(r_carbohydrate) as totalCarbohydrate, SUM(r_protein) as totalProtein, SUM(r_fat) as totalFat
 	    FROM record_meal
 	    WHERE r_id = #{userID} AND TRUNC(r_meal_date) = TO_DATE(#{date}, 'YYYY/MM/DD') AND r_meal_type = 'snack'
 	</select>
+
 
 	<delete id="delMeal">
 		DELETE FROM record_meal WHERE r_meal_type = #{mealType} AND TRUNC(r_meal_date) = TO_DATE(#{mealDate}, 'YYYY/MM/DD')

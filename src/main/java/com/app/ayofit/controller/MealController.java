@@ -23,9 +23,14 @@ public class MealController {
 	@Autowired
 	private MealDAO mealDAO;
 
+	@GetMapping("/type/total")
+	public List<NutritionDTO> getTotalNutritionForDay(@RequestParam("userID") String userID, @RequestParam("date") String date) {
+		return mealDAO.getTotalNutritionForDay(date, userID);
+	}
+	
 	@GetMapping("/type")
-	public List<NutritionDTO> getMealByMealType(@RequestParam("userID") String userID, @RequestParam("date") String date) {
-		return mealDAO.getAllMealTypesByDate(date, userID);
+	public List<MealDTO> getMealByTypeAndDate(@RequestParam("mealType") String mealType, @RequestParam("date") String date) {
+		return mealDAO.getMealByTypeAndDate(mealType, date);
 	}
 
 	@GetMapping("")
@@ -40,8 +45,6 @@ public class MealController {
 
 	@DeleteMapping("")
 	public void delMeal(@RequestParam("mealDate") String mealDate, @RequestParam("mealType") String mealType) {
-		System.out.println("밀 타입 들어오나? : " + mealType);
-		System.out.println("날자 들어오나? : " + mealDate);
 		mealDAO.delMeal(mealDate, mealType);
 	}
 

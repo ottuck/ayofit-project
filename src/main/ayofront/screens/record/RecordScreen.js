@@ -60,9 +60,9 @@ function RecordScreen({ navigation }) {
   const [dinnerMeals, setDinnerMeals] = useState([]);
   const [snackMeals, setSnackMeals] = useState([]);
 
-  const getMealListByMealType = () => {
+  const getTotalNutritionForDay = () => {
     axios
-      .get(`${uri}/api/meal/type`,
+      .get(`${uri}/api/meal/type/total`,
         {
           params: {
             userID: "user1",
@@ -83,7 +83,7 @@ function RecordScreen({ navigation }) {
   };
 
   useEffect(() => {
-    getMealListByMealType();
+    getTotalNutritionForDay();
     getImg();
   }, []);
 
