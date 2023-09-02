@@ -25,7 +25,7 @@ import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = ({ navigation }) => {
   const { mealType, mealList } = useMealContext();
-  console.log("밀컨택스트API : ", mealList);
+  // console.log("밀컨택스트API => 레코드메인 : ", mealList);
 
   //서버에 넘길 임시 Date
   const mealDate = new Date();
@@ -47,33 +47,33 @@ const RecordMain = ({ navigation }) => {
       );
       return {
         ...rKeysObject,
-        rMealDate: mealDate,
+        rMealDate: formattedDate,
         rMealType: mealType //mealType 추가
       };
     });
-    console.log("Save버튼 누른후 제출전 :", updatedMealList);
+    console.log("Save버튼 누른후 Server에 제출한값 :", updatedMealList);
 
     axios
       .post(`${uri}/api/meal`, updatedMealList)
       .then((response) => {
-        console.log("MealData submitted successfully:", response.data);
+        console.log("MealData submitted successfully");
       })
       .catch(() => {
-        console.log("Error", "Failed to submit");
+        console.log("MealData Error", "Failed to submit");
       });
   };
 
-  //mealList가 없을 경우 Save버튼을 누름녀 서버에 Delete 요청을 보냄
+  //mealList가 없을 경우 Save버튼을 누르면 서버에 Put 요청을 보냄
   const deleteMealListOnServer = () => {
     axios
       .delete(`${uri}/api/meal`, {
         params: {
-          rMealDate: mealDate, 
-          rMealType: mealType,
+          mealDate: mealDate, 
+          mealType: mealType,
         },
       })
       .then((response) => {
-        console.log("MealData deleted successfully:", response.data);
+        console.log("MealData deleted successfully");
       })
       .catch(() => {
         console.log("Error", "Failed to delete");
@@ -99,7 +99,7 @@ const RecordMain = ({ navigation }) => {
         },
       })
       .then((response) => {
-        console.log("PhotoFile deleted successfully:", response.data);
+        console.log("PhotoFile deleted successfully");
         setPhotoUri(null);
       })
       .catch(() => {
@@ -147,7 +147,7 @@ const RecordMain = ({ navigation }) => {
       });
 
       const responseData = await response;
-      console.log(responseData);
+      // console.log(responseData);
     } catch (error) {
       console.error(error);
     }
@@ -330,7 +330,7 @@ const RecordMain = ({ navigation }) => {
             >
               <View style={styles.buttonBox2}>
                 <Text style={styles.buttonText}>
-                  {mealList.length === 0 ? 'Update' : 'Save'}  
+                  {mealList.length === 0 ? 'Delete' : 'Save'}  
                 </Text>
               </View>
             </TouchableOpacity>

@@ -4,16 +4,36 @@
 <mapper namespace="com.app.ayofit.mapper.MealMapper">
 
 	<select id="getAllMeal" resultType="MealDTO">
-		select * from record_meal
+		SELECT * FROM record_meal
 	</select>
 	
-	<select id="getMealByDate" resultType="MealDTO">
-		SELECT * FROM record_meal WHERE TRUNC(r_meal_date) = TO_DATE('2023-08-31', 'YYYY-MM-DD')
+	<select id="getBreakfastByDate" resultType="NutritionDTO">
+	    SELECT SUM(r_carbohydrate) as totalCarbohydrate, SUM(r_protein) as totalProtein, SUM(r_fat) as totalFat
+	    FROM record_meal
+	    WHERE r_id = #{userID} AND TRUNC(r_meal_date) = TO_DATE(#{date}, 'YYYY-MM-DD') AND r_meal_type = 'breakfast'
 	</select>
 	
-	<insert id="regMeal">
-		insert into record_meal
-		values (
+	<select id="getLunchByDate" resultType="NutritionDTO">
+	    SELECT SUM(r_carbohydrate) as totalCarbohydrate, SUM(r_protein) as totalProtein, SUM(r_fat) as totalFat
+	    FROM record_meal
+	    WHERE r_id = #{userID} AND TRUNC(r_meal_date) = TO_DATE(#{date}, 'YYYY-MM-DD') AND r_meal_type = 'lunch'
+	</select>
+	
+	<select id="getDinnerByDate" resultType="NutritionDTO">
+	    SELECT SUM(r_carbohydrate) as totalCarbohydrate, SUM(r_protein) as totalProtein, SUM(r_fat) as totalFat
+	    FROM record_meal
+	    WHERE r_id = #{userID} AND TRUNC(r_meal_date) = TO_DATE(#{date}, 'YYYY-MM-DD') AND r_meal_type = 'dinner'
+	</select>
+	
+	<select id="getSnackByDate" resultType="NutritionDTO">
+	    SELECT SUM(r_carbohydrate) as totalCarbohydrate, SUM(r_protein) as totalProtein, SUM(r_fat) as totalFat
+	    FROM record_meal
+	    WHERE r_id = #{userID} AND TRUNC(r_meal_date) = TO_DATE(#{date}, 'YYYY-MM-DD') AND r_meal_type = 'snack'
+	</select>
+	
+	<insert id="regMeal"> 
+		INSERT INTO record_meal
+		VALUES (
 			record_meal_seq.nextval,
 			'user1',
 			#{rFoodName},
@@ -26,7 +46,7 @@
 	</insert>
 	
 	<delete id="deleteMeal">
-		delete record_meal where r_meal_type = #{rMealType} and r_meal_date = #{rMealDate}
+		DELETE record_meal WHERE r_meal_type = #{mealType} AND TRUNC(r_meal_date) = TO_DATE(#{mealDate}, 'DD/MM/YY')
 	</delete>
 	
 </mapper>

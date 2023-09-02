@@ -11,19 +11,23 @@ import { Feather } from "@expo/vector-icons"; // 또는 사용하는 아이콘 �
 
 const MealCard1 = ({
   mealType,
-  mealListByDate,
-  openSearchModal,
   imgUri,
+  carb,
+  protein,
+  fat,
+  checkCardPress,
+  cardStyle
 }) => {
   return (
-    <View style={styles.cardContainer}>
+    // <View style={styles.cardContainer}>
+    <View style={[styles.cardContainer, ...cardStyle]}>
       <View style={styles.cardImageContainer}>
         {imgUri ? (
-          <Pressable onPress={openSearchModal} style={styles.mealImage}>
+          <Pressable onPress={checkCardPress} style={styles.mealImage}>
             <Image source={{ uri: imgUri }} style={styles.mealImage} />
           </Pressable>
         ) : (
-          <TouchableOpacity onPress={openSearchModal}>
+          <TouchableOpacity onPress={checkCardPress}>
             <Feather name="plus-circle" style={styles.plusIcon} />
           </TouchableOpacity>
         )}
@@ -31,18 +35,27 @@ const MealCard1 = ({
       <View style={{ width: "90%" }}>
         <View style={styles.textContainer}>
           <View>
-            <Text style={styles.mealType}>{mealType} : </Text>
-            <Text style={styles.nutrientText}>Carb : </Text>
-            <Text style={styles.nutrientText}>Protein : </Text>
-            <Text style={styles.nutrientText}>Fat : </Text>
-            <Text style={styles.TotalValue}>Total calories : </Text>
+            <Text style={styles.mealType}>{mealType}</Text>
+            <Text style={styles.nutrientText}>Carb :</Text>
+            <Text style={styles.nutrientText}>Protein :</Text>
+            <Text style={styles.nutrientText}>Fat :</Text>
+            <Text style={styles.carloriesText}>Calories :</Text>
           </View>
           <View>
-            <Text style={styles.mealTime}>{mealListByDate.rMealDate}</Text>
-            <Text style={styles.nutrientValue}> g</Text>
-            <Text style={styles.nutrientValue}> g</Text>
-            <Text style={styles.nutrientValue}> g</Text>
-            <Text style={styles.TotalValue}> kcal</Text>
+            <Text style={styles.mealTime}> </Text>
+            <Text style={styles.nutrientValue}>
+              {carb === 0 ? "-" : carb} g
+            </Text>
+            <Text style={styles.nutrientValue}>
+              {protein === 0 ? "-" : protein} g
+            </Text>
+            <Text style={styles.nutrientValue}>
+              {fat === 0 ? "-" : fat} g
+
+            </Text>
+            <Text style={styles.carloriesValue}>
+              {carb * 4 + protein * 4 + fat * 9}  kcal
+            </Text>
           </View>
         </View>
       </View>
@@ -104,9 +117,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "right",
   },
-  TotalValue: {
+  carloriesText: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  carloriesValue: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "right",
   },
 });
 

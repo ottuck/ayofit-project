@@ -13,33 +13,36 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.ayofit.model.MealDTO;
+import com.app.ayofit.model.NutritionDTO;
 import com.app.ayofit.service.MealDAO;
 
 @RestController
 @RequestMapping("api/meal")
 public class MealController {
-	
+
 	@Autowired
 	private MealDAO mealDAO;
-	
+
+	@GetMapping("/type")
+	public List<NutritionDTO> getMealByMealType(@RequestParam("userID") String userID, @RequestParam("date") String date) {
+		System.out.println(userID + "??s??");
+		System.out.println(date + "!!!!");
+		return mealDAO.getAllMealTypesByDate(date, userID);
+	}
+
 	@GetMapping("")
-	public List<MealDTO> getAllMeal(){
+	public List<MealDTO> getAllMeal() {
 		return mealDAO.getAllMeal();
 	}
-	
-	@GetMapping("{date}")
-	public List<MealDTO> getMealByDate(@PathVariable String date){
-		return mealDAO.getMealByDate();
-	}
-	
+
 	@PostMapping("")
 	public void regMeal(@RequestBody List<MealDTO> mealList) {
 		mealDAO.regMeal(mealList);
 	}
-	
+
 	@DeleteMapping("")
-	public void delMeal(@RequestParam("rMealDate") String mealDate, @RequestParam("rMealType") String mealType) {
+	public void delMeal(@RequestParam("mealDate") String mealDate, @RequestParam("mealType") String mealType) {
 		mealDAO.delMeal(mealDate, mealType);
 	}
-	
+
 }

@@ -13,8 +13,11 @@ import axios from "axios";
 import { useMealContext } from "../../store/MealContext";
 import { usePhotoContext } from "../../store/image_context";
 
-function RecordScreen() {
-  const uri = "http://213.35.96.167";
+const uri = "http://213.35.96.167";
+//const { debuggerHost } = Constants.manifest2.extra.expoGo;
+//const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+
+function RecordScreen({ navigation }) {
   //Search Modal
   const [searchModalVisible, setSearchModalVisible] = useState(false);
   const openSearchModal = () => {
@@ -34,8 +37,8 @@ function RecordScreen() {
   // 로컬에 있는 사진 파일 GET요청
   const [img, setImgs] = useState([]);
   const { setPhotoUri, setPhotoId } = usePhotoContext();
-  const getImg = async () => {
-    await axios
+  const getImg = () => {
+    axios
       .get(`${uri}/api/file/get-image/user1`)
       .then((response) => {
         const newImgs = response.data.map((item) => ({
@@ -43,7 +46,7 @@ function RecordScreen() {
           fImg: item.fImg,
           fType: item.fType,
         }));
-        console.log(newImgs);
+        // console.log(newImgs);
         setImgs((prevImgs) => [...prevImgs, ...newImgs]);
       })
       .catch(() => {
@@ -51,32 +54,55 @@ function RecordScreen() {
       });
   };
 
-  //식단 GET 요청 : 오늘 날짜로 조회하기 때문에 data가 없을 수 있음
-  const [mealListByDate, setMealListByDate] = useState([]);
-  const getMealByDate = async () => {
-    await axios
-      .get(`${uri}/api/meal/${formattedToDayDate}`)
+  const [breakfastMeals, setBreakfastMeals] = useState([]);
+  const [lunchMeals, setLunchMeals] = useState([]);
+  const [dinnerMeals, setDinnerMeals] = useState([]);
+  const [snackMeals, setSnackMeals] = useState([]);
+
+  const getMealListByMealType = () => {
+    axios
+      .get(`${uri}/api/meal/type`, {
+        params: {
+          userID: "user1",
+          date: formattedToDayDate,
+        },
+      })
       .then((response) => {
-        setMealListByDate(response.data);
-        console.log('레코드스크린 : ',response.data);
+        setBreakfastMeals(response.data[0]);
+        setLunchMeals(response.data[1]);
+        setDinnerMeals(response.data[2]);
+        setSnackMeals(response.data[3]);
+        // console.log(response.data);
       })
       .catch(() => {
         console.log("getMealByDate error..");
       });
   };
 
-  //서버에서 받은 data를 mealType별로 객체에 담기
-  
-
   useEffect(() => {
-    // getImg();
-    getMealByDate();
+    getMealListByMealType();
+    getImg();
   }, []);
 
   //서버에 넘길 임시 Date
   const mealDate = new Date();
-  const formattedToDayDate = mealDate.toISOString().split('T')[0];
+  const formattedToDayDate = mealDate.toISOString().split("T")[0];
   // console.log(formattedDate); // "2023-08-31"
+
+  const handleCardPress = (imgUri, cardData) => {
+    if (imgUri) {
+      navigation.navigate("RecordMain"); // 이미지가 있으면 RecordMain 화면으로 이동
+    } else {
+      openSearchModal(); // 이미지가 없으면 openSearchModal 실행
+      setMealType(cardData.mealType.toLowerCase());
+      setPhotoUri(
+        img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg
+      );
+      setPhotoId(
+        img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo
+      );
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -95,52 +121,39 @@ function RecordScreen() {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.cardScroll}
           >
-            <MealCard1
-              mealType="Breakfast"
-              mealListByDate={mealListByDate}
-              imgUri={img.find((item) => item.fType === "breakfast")?.fImg || null}
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("breakfast");
-                setPhotoUri(
-                  img.find((item) => item.fType === "breakfast")?.fImg
-                );
-                setPhotoId(img.find((item) => item.fType === "breakfast")?.fNo);
-              }}
-            />
-            <MealCard1
-              mealType="Lunch"
-              mealListByDate={mealListByDate}
-              imgUri={img.find((item) => item.fType === "lunch")?.fImg || null}
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("lunch");
-                setPhotoUri(img.find((item) => item.fType === "lunch")?.fImg);
-                setPhotoId(img.find((item) => item.fType === "lunch")?.fNo);
-              }}
-            />
-            <MealCard1
-              mealType="Dinner"
-              mealListByDate={mealListByDate}
-              imgUri={img.find((item) => item.fType === "dinner")?.fImg || null}
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("dinner");
-                setPhotoUri(img.find((item) => item.fType === "dinner")?.fImg);
-                setPhotoId(img.find((item) => item.fType === "dinner")?.fNo);
-              }}
-            />
-            <MealCard1
-              mealType="Snack"
-              mealListByDate={mealListByDate}
-              imgUri={img.find((item) => item.fType === "snack")?.fImg || null}
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("snack");
-                setPhotoUri(img.find((item) => item.fType === "snack")?.fImg);
-                setPhotoId(img.find((item) => item.fType === "snack")?.fNo);
-              }}
-            />
+            {[
+              { mealType: "Breakfast", meals: breakfastMeals },
+              { mealType: "Lunch", meals: lunchMeals },
+              { mealType: "Dinner", meals: dinnerMeals },
+              { mealType: "Snack", meals: snackMeals },
+            ].map((cardData, index) => {
+              const imgData = img.find(
+                (item) => item.fType === cardData.mealType.toLowerCase()
+              );
+              const imgUri = imgData ? imgData.fImg : null;
+              //카드를 식별하여 left,right margin을 주기 위한 코드
+              const isFirstCard = index === 0;
+              const isLastCard = index === 3;
+              const cardStyle = [
+                styles.cardContainer,
+                isFirstCard && styles.firstCardStyle,
+                isLastCard && styles.lastCardStyle,
+              ];
+
+              return (
+                <MealCard1
+                  key={index}
+                  imgUri={imgUri}
+                  mealType={cardData.mealType}
+                  mealTime="10:00" //임시값
+                  carb={cardData.meals.totalCarbohydrate}
+                  protein={cardData.meals.totalProtein}
+                  fat={cardData.meals.totalFat}
+                  checkCardPress={() => handleCardPress(imgUri, cardData)}
+                  cardStyle={cardStyle}
+                />
+              );
+            })}
           </ScrollView>
 
           <SearchModal
@@ -184,55 +197,11 @@ const styles = StyleSheet.create({
     color: "#CECECE",
     fontSize: 17,
   },
-  //카드 디자인
-  cardContainer: {
-    width: 300,
-    height: 430,
-    marginHorizontal: 20,
-    backgroundColor: "white",
-    borderRadius: 15,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
-    justifyContent: "center",
-    alignItems: "center",
+  //조건부 스타일
+  firstCardStyle: {
+    marginLeft: 54,
   },
-  cardImageContainer: {
-    width: 270,
-    height: 270,
-    backgroundColor: "rgba(0, 0, 0, 0.10)",
-    borderRadius: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  plusIcon: {
-    fontSize: 60,
-    color: "rgba(0, 0, 0, 0.10)",
-  },
-  textContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-  },
-  mealTime: {
-    color: "orange",
-    fontWeight: "bold",
-    fontSize: 20,
-  },
-  nutrientText: {
-    fontSize: 17,
-    fontWeight: "bold",
-  },
-  nutrientValue: {
-    fontSize: 17,
-    fontWeight: "bold",
-    textAlign: "right",
-  },
-  TotalValue: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "right",
+  lastCardStyle: {
+    marginRight: 54,
   },
 });
