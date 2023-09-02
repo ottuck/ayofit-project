@@ -27,8 +27,8 @@ function AccUpdateNutri({ navigation }) {
         console.log("User info submitted successfully:", response.data);
         navigation.navigate("MyPage");
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed to submit user info. Please try again.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 

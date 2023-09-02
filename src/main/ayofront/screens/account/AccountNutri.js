@@ -40,8 +40,8 @@ function AccountNutri({ navigation, route }) {
           })
           .catch((error) => console.log(error));
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed to submit user info. Please try again.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 

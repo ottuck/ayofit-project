@@ -30,8 +30,8 @@ function AccountInfo({ navigation, route }) {
         console.log("User info submitted successfully:", response.data);
         navigation.navigate("AccountNutri", { ...route.params });
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed to submit user info. Please try again.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 
@@ -41,8 +41,8 @@ function AccountInfo({ navigation, route }) {
       .then((response) => {
         console.log("User weight submitted successfully:", response.data);
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed to submit user weight. Please try again.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 

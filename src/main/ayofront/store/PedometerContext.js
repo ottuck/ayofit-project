@@ -12,9 +12,11 @@ import { Animated, Easing } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PedometerContext = createContext();
+import { LoginContext } from "./LoginContext";
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export const PedometerProvider = ({ children }) => {
+  const { userInfo, setUserInfo } = useContext(LoginContext);
   // ---------- Consts ----------
 
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -73,7 +75,7 @@ export const PedometerProvider = ({ children }) => {
 
   const updateStepsOnServer = async (updatedSteps) => {
     if (updatedSteps !== 0) {
-      const userId = "user4";
+      const userId = userInfo.id;
       const currentDate = new Date();
 
       const formattedDate = `${currentDate.getFullYear()}-${(
@@ -114,7 +116,7 @@ export const PedometerProvider = ({ children }) => {
   // ---------- useEffects ----------
 
   useEffect(() => {
-    const userId = "user4"; // Set the user ID here
+    const userId = userInfo.id; // Set the user ID here
     const currentDate = new Date();
 
     const formattedDate = `${currentDate.getFullYear()}-${(

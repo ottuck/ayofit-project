@@ -34,7 +34,7 @@ const MealCard2 = ({
       addFavoriteMeal(no);
     }
   };
-  // console.log(favoriteMeals);
+  console.log(favoriteMeals);
 
   const regFavMeals = () => {
     axios
@@ -45,9 +45,9 @@ const MealCard2 = ({
       .catch((error) => console.log(error));
   };
 
-  useEffect(() => {
-    regFavMeals();
-  }, [favoriteMeals]);
+  // useEffect(() => {
+  //   regFavMeals();
+  // }, [favoriteMeals]);
 
   return (
     <View style={styles.blurViewBox}>

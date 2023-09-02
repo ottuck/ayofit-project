@@ -19,8 +19,10 @@ import { useNavigation } from "@react-navigation/native";
 import { PedometerContext } from "../../store/PedometerContext";
 import SwipeButton from "rn-swipe-button";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { LoginContext } from "../../store/LoginContext";
 
 function DailyGoalInputScreen() {
+  const { userInfo, setUserInfo } = useContext(LoginContext);
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   // const uri = "http://213.35.96.167";
@@ -38,7 +40,7 @@ function DailyGoalInputScreen() {
       return;
     }
     try {
-      const userId = "user4";
+      const userId = userInfo.id;
 
       await axios.post(`${uri}/api/pedometer/add-goal`, {
         pId: userId,

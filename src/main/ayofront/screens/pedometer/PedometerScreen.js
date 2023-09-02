@@ -16,6 +16,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import axios from "axios";
+import { LoginContext } from "../../store/LoginContext";
 
 import { PedometerContext, daysOfWeek } from "../../store/PedometerContext";
 import { GlobalStyles } from "../../components/UI/styles";
@@ -28,6 +29,7 @@ import DailyGoalInputScreen from "./DailyGoalInputScreen";
 import SwipeDownToSave from "../../components/pedometer/SwipeDownToSave";
 
 function PedometerScreen() {
+  const { userInfo, setUserInfo } = useContext(LoginContext);
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   //const uri = "http://213.35.96.167";
@@ -64,7 +66,7 @@ function PedometerScreen() {
 
       async function updateStepsOnServer() {
         try {
-          const userId = "user4"; // 현재 사용자 ID
+          const userId = userInfo.id; // 현재 사용자 ID
           // console.log(userId);
           // console.log(steps);
           // console.log(formattedDate);
