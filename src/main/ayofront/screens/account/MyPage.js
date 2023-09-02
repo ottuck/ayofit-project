@@ -22,8 +22,6 @@ import { LoginContext } from "../../store/LoginContext";
 import { useMealContext } from "../../store/MealContext";
 import FavMeal from "../../components/record/FavMeal";
 
-import Constants from "expo-constants";
-
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 function MyPage({ navigation }) {
