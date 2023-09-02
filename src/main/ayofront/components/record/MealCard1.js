@@ -18,6 +18,7 @@ const MealCard1 = ({
   checkCardPress,
   cardStyle
 }) => {
+
   return (
     // <View style={styles.cardContainer}>
     <View style={[styles.cardContainer, ...cardStyle]}>
@@ -44,17 +45,16 @@ const MealCard1 = ({
           <View>
             <Text style={styles.mealTime}> </Text>
             <Text style={styles.nutrientValue}>
-              {carb === 0 ? "-" : carb} g
+              {carb === 0 ? "-" : Math.floor(carb)} g
             </Text>
             <Text style={styles.nutrientValue}>
-              {protein === 0 ? "-" : protein} g
+              {protein === 0 ? "-" : Math.floor(protein)} g
             </Text>
             <Text style={styles.nutrientValue}>
-              {fat === 0 ? "-" : fat} g
-
+              {fat === 0 ? "-" : Math.floor(fat)} g
             </Text>
             <Text style={styles.carloriesValue}>
-              {carb * 4 + protein * 4 + fat * 9}  kcal
+              {Math.floor(carb * 4 + protein * 4 + fat * 9)}  kcal
             </Text>
           </View>
         </View>

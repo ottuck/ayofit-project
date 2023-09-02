@@ -45,8 +45,8 @@
 		)
 	</insert>
 	
-	<delete id="deleteMeal">
-		DELETE record_meal WHERE r_meal_type = #{mealType} AND TRUNC(r_meal_date) = TO_DATE(#{mealDate}, 'DD/MM/YY')
+	<delete id="delMeal">
+		DELETE record_meal WHERE r_meal_type = #{mealType} AND TRUNC(r_meal_date) = TO_DATE(#{mealDate}, 'YY/MM/DD')
 	</delete>
 	
 </mapper>
