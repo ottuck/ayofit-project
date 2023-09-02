@@ -72,9 +72,6 @@ function MainTabsScreen() {
 }
 
 export default function App() {
-  const [showOnboarding, setShowOnboarding] = useState(true);
-  const [completedOnboarding, setCompletedOnboarding] = useState(false);
-
   const { width, height } = Dimensions.get("window");
   const desiredImageAspectRatio = 9 / 16;
 
@@ -83,22 +80,19 @@ export default function App() {
 
   const [userInfo, setUserInfo] = useState();
 
-  const handleOnboardingComplete = () => {
-    setCompletedOnboarding(true);
-  };
-
   console.log(userInfo);
 
   const checkLoginCredentials = async () => {
     await AsyncStorage.getItem("@user")
       .then((result) => {
         const emptyInfo = {
-          id: "",
-          email: "",
-          pasword: "",
-          name: "",
-          picture: "",
-          type: "",
+          id: null,
+          email: null,
+          pasword: null,
+          name: null,
+          picture: null,
+          type: null,
+          info: null,
         };
         if (result !== null) {
           setUserInfo(JSON.parse(result));
@@ -112,10 +106,6 @@ export default function App() {
   useEffect(() => {
     checkLoginCredentials();
   }, []);
-
-  if (showOnboarding && !completedOnboarding) {
-    return <OnboardingScreen onComplete={handleOnboardingComplete} />;
-  }
 
   return (
     <LoginContext.Provider value={{ userInfo, setUserInfo }}>
@@ -135,7 +125,7 @@ export default function App() {
                 <NavigationContainer style={styles.navigationContainer}>
                   <PedometerProvider>
                     <Stack.Navigator>
-                      {userInfo.id !== "" ? (
+                      {userInfo?.id ? (
                         <Stack.Screen
                           name="MainTabs"
                           component={MainTabsScreen}

@@ -35,6 +35,3 @@ logging:
 app:
   firebase-configuration-file: ./serviceAccountKey.json
   firebase-bucket: ayofit-57ea5.appspot.com
-
-server:
-  port: 80

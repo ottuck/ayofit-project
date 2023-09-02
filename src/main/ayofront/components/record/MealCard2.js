@@ -17,7 +17,10 @@ const MealCard2 = ({
 }) => {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  // const uri = "http://213.35.96.167";
 
+  //삭제 함수 컨택스트에서 가져오기
+  const { deleteToMealByNO } = useMealContext();
   // 즐겨찾기 로직
   const { addFavoriteMeal, removeFavoriteMeal, favoriteMeals } =
     useMealContext();

@@ -23,7 +23,8 @@ function AccountNutri({ navigation, route }) {
   const { userInfo, setUserInfo } = useContext(LoginContext);
 
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}`;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  // const uri = "http://213.35.96.167";
 
   console.log(route.params);
 
@@ -34,14 +35,8 @@ function AccountNutri({ navigation, route }) {
         console.log("User info submitted successfully:");
         axios
           .post(`${uri}/api/account/${id}/confirm`)
-          .then(async () => {
-            await AsyncStorage.setItem("@user", JSON.stringify(route.params))
-              .then(() => {
-                setUserInfo(route.params);
-              })
-              .catch((error) => {
-                console.log(error);
-              });
+          .then(() => {
+            navigation.navigate("OnboardingScreen", { ...route.params });
           })
           .catch((error) => console.log(error));
       })
@@ -51,10 +46,6 @@ function AccountNutri({ navigation, route }) {
   };
 
   const { accountInfos, setAccountInfos } = useAccountsContext();
-
-  const goToAccountInfo = () => {
-    navigation.navigate("AccountInfo", { ...route.params });
-  };
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -135,9 +126,6 @@ function AccountNutri({ navigation, route }) {
           </View>
         </View>
         <View style={styles.btnContainer}>
-          <Button style={styles.prevBtn} onPress={goToAccountInfo}>
-            Prev
-          </Button>
           <Button
             style={styles.confirmBtn}
             onPress={() => {

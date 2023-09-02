@@ -22,10 +22,11 @@ import SearchModal from "../../components/record/SearchModal";
 import { usePhotoContext } from "../../store/image_context";
 import { useMealContext } from "../../store/MealContext";
 import MealCard2 from "../../components/record/MealCard2";
+import Constants from "expo-constants";
 
 const RecordMain = ({ navigation }) => {
   const { mealType, mealList } = useMealContext();
-  console.log("밀컨택스트API : ", mealList);
+  // console.log("밀컨택스트API => 레코드메인 : ", mealList);
 
   //서버에 넘길 임시 Date
   const mealDate = new Date();
@@ -33,7 +34,9 @@ const RecordMain = ({ navigation }) => {
   // console.log(formattedDate); // "2023-08-31 08:36:40"
 
   //Server 통신을 위한 URI 수정
-  const uri = "http://213.35.96.167";
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  //const uri = "http://213.35.96.167";
 
   //식단 기록 post 요청
   const submitMealListToServer = () => {
@@ -43,42 +46,45 @@ const RecordMain = ({ navigation }) => {
 
       // 'n'을 'r'로 바꾼 새로운 객체 생성
       const rKeysObject = Object.fromEntries(
-        Object.entries(rest).map(([key, value]) => [key.replace(/^n/, 'r'), value])
+        Object.entries(rest).map(([key, value]) => [
+          key.replace(/^n/, "r"),
+          value,
+        ])
       );
       return {
         ...rKeysObject,
-        rMealDate: mealDate,
-        rMealType: mealType //mealType 추가
+        rMealDate: formattedDate,
+        rMealType: mealType, //mealType 추가
       };
     });
-    console.log("Save버튼 누른후 제출전 :", updatedMealList);
+    console.log("Save버튼 누른후 Server에 제출한값 :", updatedMealList);
 
     axios
       .post(`${uri}/api/meal`, updatedMealList)
       .then((response) => {
-        console.log("MealData submitted successfully:", response.data);
+        console.log("MealData submitted successfully");
       })
       .catch(() => {
-        console.log("Error", "Failed to submit");
+        console.log("MealData Error", "Failed to submit");
       });
   };
 
-  //mealList가 없을 경우 Save버튼을 누름녀 서버에 Delete 요청을 보냄
+  //mealList가 없을 경우 Save버튼을 누르면 서버에 Put 요청을 보냄
   const deleteMealListOnServer = () => {
     axios
       .delete(`${uri}/api/meal`, {
         params: {
-          rMealDate: mealDate, 
-          rMealType: mealType,
+          mealDate: mealDate,
+          mealType: mealType,
         },
       })
       .then((response) => {
-        console.log("MealData deleted successfully:", response.data);
+        console.log("MealData deleted successfully");
       })
       .catch(() => {
         console.log("Error", "Failed to delete");
       });
-  }
+  };
 
   //ImgModal
   const [imgModalVisible, setImgModalVisible] = useState(false);
@@ -99,7 +105,7 @@ const RecordMain = ({ navigation }) => {
         },
       })
       .then((response) => {
-        console.log("PhotoFile deleted successfully:", response.data);
+        console.log("PhotoFile deleted successfully");
         setPhotoUri(null);
       })
       .catch(() => {
@@ -147,7 +153,7 @@ const RecordMain = ({ navigation }) => {
       });
 
       const responseData = await response;
-      console.log(responseData);
+      // console.log(responseData);
     } catch (error) {
       console.error(error);
     }
@@ -330,7 +336,7 @@ const RecordMain = ({ navigation }) => {
             >
               <View style={styles.buttonBox2}>
                 <Text style={styles.buttonText}>
-                  {mealList.length === 0 ? 'Update' : 'Save'}  
+                  {mealList.length === 0 ? "Delete" : "Save"}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -351,7 +357,6 @@ const RecordMain = ({ navigation }) => {
                 ampm2={ampm2}
               />
             ))}
-
           </ScrollView>
 
           {/* DateTimePicker */}
@@ -491,7 +496,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginBottom: 15
+    marginBottom: 15,
   },
   buttonBox1: {
     height: 40,
