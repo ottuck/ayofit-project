@@ -22,8 +22,9 @@ function AccountNutri({ navigation, route }) {
 
   const { userInfo, setUserInfo } = useContext(LoginContext);
 
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}`;
+  // const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  // const uri = `http://${debuggerHost.split(":").shift()}`;
+  const uri = "http://213.35.96.167";
 
   console.log(route.params);
 

@@ -36,8 +36,10 @@ WebBrowser.maybeCompleteAuthSession();
 const { brand, darkLight, primary } = Colors;
 
 const Login = ({ navigation }) => {
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}`;
+  // const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  // const uri = `http://${debuggerHost.split(":").shift()}`;
+  const uri = "http://192.168.100.52";
+
   const [hidePassword, setHidePassword] = useState(true);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
