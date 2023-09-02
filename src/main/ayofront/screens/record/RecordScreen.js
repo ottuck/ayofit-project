@@ -90,8 +90,8 @@ function RecordScreen({ navigation }) {
   const formattedToDayDate = mealDate.toISOString().split('T')[0];
   // console.log(formattedDate); // "2023-08-31"
 
-  const handleCardPress = (imgUri, cardData) => {
-    if (imgUri) {
+  const handleCardPress = (cardData) => {
+    if (cardData.meals) {
       navigation.navigate("RecordMain"); // 이미지가 있으면 RecordMain 화면으로 이동
     } else {
       openSearchModal(); // 이미지가 없으면 openSearchModal 실행
@@ -135,6 +135,8 @@ function RecordScreen({ navigation }) {
                 isFirstCard && styles.firstCardStyle,
                 isLastCard && styles.lastCardStyle,
               ];
+              // 클로저를 사용하여 cardData를 전달
+              const handlePress = () => handleCardPress(cardData);
 
               return (
                 <MealCard1
@@ -145,7 +147,7 @@ function RecordScreen({ navigation }) {
                   carb={cardData.meals.totalCarbohydrate}
                   protein={cardData.meals.totalProtein}
                   fat={cardData.meals.totalFat}
-                  checkCardPress={() => handleCardPress(imgUri, cardData)}
+                  checkCardPress={handlePress} // 클로저를 사용한 함수 전달
                   cardStyle={cardStyle}
                 />
               );
