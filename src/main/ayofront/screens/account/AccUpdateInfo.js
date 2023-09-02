@@ -28,8 +28,8 @@ function AccUpdateInfo({ navigation }) {
         console.log(response.data);
         setAccountInfos(response.data);
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 
@@ -43,8 +43,8 @@ function AccUpdateInfo({ navigation }) {
           tarWeight: response.data,
         });
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 
@@ -55,8 +55,8 @@ function AccUpdateInfo({ navigation }) {
         console.log("User info submitted successfully:", response.data);
         navigation.navigate("AccUpdateNutri");
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed to update user info. Please try again.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 

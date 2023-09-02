@@ -33,22 +33,11 @@ const MealCard2 = ({
       addFavoriteMeal(no);
     }
   };
-  // console.log(favoriteMeals);
+  console.log(favoriteMeals);
 
-  const regFavMeals = () => {
-    axios
-      .post(`${uri}/api/favorites`, { nNos: favoriteMeals })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => console.log(error));
-  };
-
-  useEffect(() => {
-    regFavMeals();
-  }, [favoriteMeals]);
-
-  
+  // useEffect(() => {
+  //   regFavMeals();
+  // }, [favoriteMeals]);
 
   return (
     <View style={styles.blurViewBox}>

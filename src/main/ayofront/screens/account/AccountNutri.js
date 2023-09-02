@@ -26,8 +26,8 @@ function AccountNutri({ navigation }) {
         console.log("User info submitted successfully:", response.data);
         navigation.navigate("MainTabs");
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed to submit user info. Please try again.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 
