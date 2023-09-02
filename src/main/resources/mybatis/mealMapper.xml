@@ -38,7 +38,7 @@
 			'user1',
 			#{rFoodName},
 			#{rMealType},
-			TO_DATE(#{rMealDate}, 'YYYY-MM-DD HH24:MI:SS'),
+			TO_DATE(#{rMealDate},'YYYY-MM-DD HH24:MI:SS'),
 			#{rCarbohydrate},
 			#{rProtein}, 
 			#{rFat}
@@ -46,7 +46,7 @@
 	</insert>
 	
 	<delete id="delMeal">
-		DELETE record_meal WHERE r_meal_type = #{mealType} AND TRUNC(r_meal_date) = TO_DATE(#{mealDate}, 'YY/MM/DD')
+		DELETE FROM record_meal WHERE r_meal_type = #{rMealType} AND TRUNC(r_meal_date) = TO_DATE(#{rMealDate}, 'YYYY/MM/DD')
 	</delete>
 	
 </mapper>

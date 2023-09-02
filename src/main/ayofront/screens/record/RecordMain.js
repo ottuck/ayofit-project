@@ -32,6 +32,8 @@ const RecordMain = ({ navigation }) => {
   const mealDate = new Date();
   const formattedDate = mealDate.toISOString().slice(0, 19).replace("T", " ");
   // console.log(formattedDate); // "2023-08-31 08:36:40"
+  const formattedDateForDelete = mealDate.toISOString().slice(0, 10); // "2023-08-31"
+
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -43,13 +45,13 @@ const RecordMain = ({ navigation }) => {
     const updatedMealList = mealList.map((meal) => {
       const { nNO, nSize, ...rest } = meal; // nNO와 nSize를 제거
 
-      // 'n'을 'r'로 바꾼 새로운 객체 생성
+      //'n'을 'r'로 바꾼 새로운 객체 생성
       const rKeysObject = Object.fromEntries(
         Object.entries(rest).map(([key, value]) => [key.replace(/^n/, 'r'), value])
       );
       return {
         ...rKeysObject,
-        rMealDate: formattedDate,
+        rMealDate: formattedDateForDelete,
         rMealType: mealType //mealType 추가
       };
     });
@@ -70,7 +72,7 @@ const RecordMain = ({ navigation }) => {
     axios
       .delete(`${uri}/api/meal`, {
         params: {
-          mealDate: mealDate, 
+          mealDate: formattedDate, 
           mealType: mealType,
         },
       })

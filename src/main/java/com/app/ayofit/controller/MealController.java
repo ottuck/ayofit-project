@@ -25,8 +25,6 @@ public class MealController {
 
 	@GetMapping("/type")
 	public List<NutritionDTO> getMealByMealType(@RequestParam("userID") String userID, @RequestParam("date") String date) {
-		System.out.println(userID + "??s??");
-		System.out.println(date + "!!!!");
 		return mealDAO.getAllMealTypesByDate(date, userID);
 	}
 
