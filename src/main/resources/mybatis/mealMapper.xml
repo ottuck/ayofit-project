@@ -4,7 +4,7 @@
 <mapper namespace="com.app.ayofit.mapper.MealMapper">
 
 	<select id="getAllMeal" resultType="MealDTO">
-		select * from record_meal
+		SELECT * FROM record_meal
 	</select>
 	
 	<select id="getBreakfastByDate" resultType="NutritionDTO">
@@ -31,9 +31,9 @@
 	    WHERE r_id = #{userID} AND TRUNC(r_meal_date) = TO_DATE(#{date}, 'YYYY-MM-DD') AND r_meal_type = 'snack'
 	</select>
 	
-	<insert id="regMeal">
-		insert into record_meal
-		values (
+	<insert id="regMeal"> 
+		INSERT INTO record_meal
+		VALUES (
 			record_meal_seq.nextval,
 			'user1',
 			#{rFoodName},
@@ -46,7 +46,7 @@
 	</insert>
 	
 	<delete id="deleteMeal">
-		delete record_meal where r_meal_type = #{rMealType} and r_meal_date = #{rMealDate}
+		DELETE record_meal WHERE r_meal_type = #{mealType} AND TRUNC(r_meal_date) = TO_DATE(#{mealDate}, 'DD/MM/YY')
 	</delete>
 	
 </mapper>

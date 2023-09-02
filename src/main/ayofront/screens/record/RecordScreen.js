@@ -73,6 +73,7 @@ function RecordScreen({ navigation }) {
         setLunchMeals(response.data[1]);
         setDinnerMeals(response.data[2]);
         setSnackMeals(response.data[3]);
+        // console.log(response.data);
       })
       .catch(() => {
         console.log("getMealByDate error..");
@@ -144,7 +145,6 @@ function RecordScreen({ navigation }) {
                   carb={cardData.meals.totalCarbohydrate}
                   protein={cardData.meals.totalProtein}
                   fat={cardData.meals.totalFat}
-                  totalCalories={cardData.meals.totalCalories}
                   checkCardPress={() => handleCardPress(imgUri, cardData)}
                   cardStyle={cardStyle}
                 />

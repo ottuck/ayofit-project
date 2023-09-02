@@ -15,7 +15,6 @@ const MealCard1 = ({
   carb,
   protein,
   fat,
-  totalCalories,
   checkCardPress,
   cardStyle
 }) => {
@@ -40,14 +39,23 @@ const MealCard1 = ({
             <Text style={styles.nutrientText}>Carb :</Text>
             <Text style={styles.nutrientText}>Protein :</Text>
             <Text style={styles.nutrientText}>Fat :</Text>
-            <Text style={styles.TotalValue}>Total calories :</Text>
+            <Text style={styles.carloriesText}>Calories :</Text>
           </View>
           <View>
             <Text style={styles.mealTime}> </Text>
-            <Text style={styles.nutrientValue}>{carb} g</Text>
-            <Text style={styles.nutrientValue}>{protein} g</Text>
-            <Text style={styles.nutrientValue}>{fat} g</Text>
-            <Text style={styles.TotalValue}>{totalCalories} kcal</Text>
+            <Text style={styles.nutrientValue}>
+              {carb === 0 ? "-" : carb} g
+            </Text>
+            <Text style={styles.nutrientValue}>
+              {protein === 0 ? "-" : protein} g
+            </Text>
+            <Text style={styles.nutrientValue}>
+              {fat === 0 ? "-" : fat} g
+
+            </Text>
+            <Text style={styles.carloriesValue}>
+              {carb * 4 + protein * 4 + fat * 9}  kcal
+            </Text>
           </View>
         </View>
       </View>
@@ -109,7 +117,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "right",
   },
-  TotalValue: {
+  carloriesText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  carloriesValue: {
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "right",

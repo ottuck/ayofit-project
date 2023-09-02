@@ -26,7 +26,7 @@ import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = ({ navigation }) => {
   const { mealType, mealList } = useMealContext();
-  // console.log("밀컨택스트API : ", mealList);
+  // console.log("밀컨택스트API => 레코드메인 : ", mealList);
 
   //서버에 넘길 임시 Date
   const mealDate = new Date();
@@ -53,7 +53,7 @@ const RecordMain = ({ navigation }) => {
         rMealType: mealType //mealType 추가
       };
     });
-    // console.log("Save버튼 누른후 제출전 :", updatedMealList);
+    console.log("Save버튼 누른후 Server에 제출한값 :", updatedMealList);
 
     axios
       .post(`${uri}/api/meal`, updatedMealList)
@@ -66,12 +66,12 @@ const RecordMain = ({ navigation }) => {
   };
 
   //mealList가 없을 경우 Save버튼을 누르면 서버에 Put 요청을 보냄
-  const updateMealListOnServer = () => {
+  const deleteMealListOnServer = () => {
     axios
-      .put(`${uri}/api/meal`, {
+      .delete(`${uri}/api/meal`, {
         params: {
-          rMealDate: mealDate, 
-          rMealType: mealType,
+          mealDate: mealDate, 
+          mealType: mealType,
         },
       })
       .then((response) => {
@@ -322,7 +322,7 @@ const RecordMain = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => {
                 if (mealList.length === 0) {
-                  updateMealListOnServer();
+                  deleteMealListOnServer();
                 } else {
                   submitMealListToServer();
                   uploadImage(photoUri, "user1", mealType);
@@ -332,7 +332,7 @@ const RecordMain = ({ navigation }) => {
             >
               <View style={styles.buttonBox2}>
                 <Text style={styles.buttonText}>
-                  {mealList.length === 0 ? 'Update' : 'Save'}  
+                  {mealList.length === 0 ? 'Delete' : 'Save'}  
                 </Text>
               </View>
             </TouchableOpacity>

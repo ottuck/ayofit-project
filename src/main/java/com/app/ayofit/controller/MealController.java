@@ -41,7 +41,7 @@ public class MealController {
 	}
 
 	@DeleteMapping("")
-	public void delMeal(@RequestParam("rMealDate") String mealDate, @RequestParam("rMealType") String mealType) {
+	public void delMeal(@RequestParam("mealDate") String mealDate, @RequestParam("mealType") String mealType) {
 		mealDAO.delMeal(mealDate, mealType);
 	}
 
