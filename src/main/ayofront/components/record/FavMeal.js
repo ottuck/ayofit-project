@@ -4,15 +4,25 @@ import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import Constants from "expo-constants";
 import { useMealContext } from "../../store/MealContext";
+import { useState } from "react";
 
 const FavMeal = ({ mealInfo }) => {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
-  const { removeFavoriteMeal } = useMealContext();
-  const deleteFavMeals = (no) => {
+  const {
+    removeFavoriteMeal,
+    favoriteMeals,
+    dbFavorites,
+    deleteToDbFavorites,
+  } = useMealContext();
+  const handleDelete = (no) => {
+    deleteToDbFavorites(no);
+  };
+  // console.log(dbFavorites);
+
+  const deleteDBFavMeals = (no) => {
     console.log(no);
-    removeFavoriteMeal(no);
     axios
       .delete(`${uri}/api/favorites`, { params: { fNo: no } })
       .then((response) => {
@@ -29,7 +39,8 @@ const FavMeal = ({ mealInfo }) => {
         {/* 삭제 버튼 */}
         <TouchableOpacity
           onPress={() => {
-            deleteFavMeals(mealInfo.favNo);
+            handleDelete(mealInfo.favNo);
+            deleteDBFavMeals(mealInfo.favNo);
           }}
         >
           <AntDesign name="close" style={styles.recordDeleteButton} />

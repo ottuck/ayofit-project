@@ -32,6 +32,15 @@ export const MealProvider = ({ children }) => {
     );
   };
 
+  const [dbFavorites, setDbFavorites] = useState([]);
+  const addToDbFavorites = (newFavorite) => {
+    setDbFavorites((prevFavorites) => [...prevFavorites, newFavorite]);
+  };
+  const deleteToDbFavorites = (NO) => {
+    setDbFavorites((prevDbFavorites) =>
+      prevDbFavorites.filter((item) => item.favNo !== NO)
+    );
+  };
   return (
     <MealContext.Provider
       value={{
@@ -44,6 +53,10 @@ export const MealProvider = ({ children }) => {
         setFavoriteMeals,
         addFavoriteMeal,
         removeFavoriteMeal,
+        dbFavorites,
+        setDbFavorites,
+        addToDbFavorites,
+        deleteToDbFavorites,
       }}
     >
       {children}

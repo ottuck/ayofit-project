@@ -44,7 +44,7 @@ public class FavController {
 		
 		fDAO.deleteFavorites(no);
 		
-		return ResponseEntity.ok("favorites registered successfully");
+		return ResponseEntity.ok("favorites deleted successfully");
 	}
 	
 }

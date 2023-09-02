@@ -35,6 +35,7 @@ const MealCard2 = ({
       addFavoriteMeal(no);
     }
   };
+  console.log(favoriteMeals);
 
   // useEffect(() => {
   //   regFavMeals();

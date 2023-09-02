@@ -16,7 +16,7 @@ import { Fontisto, AntDesign, Ionicons } from "@expo/vector-icons";
 
 import axios from "axios";
 import Constants from "expo-constants";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMealContext } from "../../store/MealContext";
 import FavMeal from "../../components/record/FavMeal";
 
@@ -35,13 +35,12 @@ function MyPage({ navigation }) {
         console.log(response.data);
         setGoals(response.data);
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 
-  const { favoriteMeals, setFavoriteMeals } = useMealContext();
-  // console.log(favoriteMeals);
+  const { favoriteMeals, dbFavorites, setDbFavorites } = useMealContext();
 
   const getFavorites = () => {
     axios
@@ -49,16 +48,19 @@ function MyPage({ navigation }) {
         params: { userId: "user1" },
       })
       .then((response) => {
-        // console.log(response.data);
-        setFavoriteMeals(response.data);
+        // console.log(dbFavorites);
+        setDbFavorites(response.data);
       })
-      .catch(() => {
-        Alert.alert("favorites", "failed.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 
   useEffect(() => {
     getAccountGoals();
+  }, []);
+
+  useEffect(() => {
     getFavorites();
   }, []);
 
@@ -161,7 +163,7 @@ function MyPage({ navigation }) {
           contentContainerStyle={styles.recordScroll}
         >
           {/* FavMeal 컴포넌트를 사용 */}
-          {favoriteMeals.map((meal) => (
+          {dbFavorites.map((meal) => (
             <FavMeal key={meal.favNo} mealInfo={meal} />
           ))}
         </ScrollView>

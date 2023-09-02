@@ -159,6 +159,9 @@ const RecordMain = ({ navigation }) => {
     }
   };
 
+  console.log(favoriteMeals);
+
+  const { dbFavorites, setFavoriteMeals } = useMealContext();
   // 즐겨찾기 식단 db에 등록
   const regFavMeals = () => {
     axios
@@ -172,7 +175,6 @@ const RecordMain = ({ navigation }) => {
         console.error(error);
       });
   };
-  console.log(favoriteMeals);
 
   //DateTimePicker
   const [mode, setMode] = useState("time");
