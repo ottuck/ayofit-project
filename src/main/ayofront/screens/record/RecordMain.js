@@ -25,8 +25,8 @@ import { useMealContext } from "../../store/MealContext";
 import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = ({ navigation }) => {
-  const { mealType, mealList } = useMealContext();
-  // console.log("밀컨택스트API => 레코드메인 : ", mealList);
+  const { mealType, mealList, favoriteMeals } = useMealContext();
+  // console.log("밀컨택스트API : ", mealList);
 
   //서버에 넘길 임시 Date
   const mealDate = new Date();
@@ -47,7 +47,10 @@ const RecordMain = ({ navigation }) => {
 
       //'n'을 'r'로 바꾼 새로운 객체 생성
       const rKeysObject = Object.fromEntries(
-        Object.entries(rest).map(([key, value]) => [key.replace(/^n/, 'r'), value])
+        Object.entries(rest).map(([key, value]) => [
+          key.replace(/^n/, "r"),
+          value,
+        ])
       );
       return {
         ...rKeysObject,
@@ -82,7 +85,7 @@ const RecordMain = ({ navigation }) => {
       .catch(() => {
         console.log("Error", "Failed to delete");
       });
-  }
+  };
 
   //ImgModal
   const [imgModalVisible, setImgModalVisible] = useState(false);
@@ -155,6 +158,23 @@ const RecordMain = ({ navigation }) => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  console.log(favoriteMeals);
+
+  const { dbFavorites, setFavoriteMeals } = useMealContext();
+  // 즐겨찾기 식단 db에 등록
+  const regFavMeals = () => {
+    axios
+      .post(`${uri}/api/favorites`, favoriteMeals, {
+        params: { userId: "user1" },
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   //DateTimePicker
@@ -327,6 +347,7 @@ const RecordMain = ({ navigation }) => {
                   deleteMealListOnServer();
                 } else {
                   submitMealListToServer();
+                  regFavMeals();
                   uploadImage(photoUri, "user1", mealType);
                   navigation.navigate("RecordScreen");
                 }
@@ -334,7 +355,7 @@ const RecordMain = ({ navigation }) => {
             >
               <View style={styles.buttonBox2}>
                 <Text style={styles.buttonText}>
-                  {mealList.length === 0 ? 'Delete' : 'Save'}  
+                  {mealList.length === 0 ? "Delete" : "Save"}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -355,7 +376,6 @@ const RecordMain = ({ navigation }) => {
                 ampm2={ampm2}
               />
             ))}
-
           </ScrollView>
 
           {/* DateTimePicker */}
@@ -495,7 +515,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginBottom: 15
+    marginBottom: 15,
   },
   buttonBox1: {
     height: 40,

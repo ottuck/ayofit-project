@@ -28,8 +28,8 @@ function AccountInfo({ navigation }) {
         console.log("User info submitted successfully:", response.data);
         navigation.navigate("AccountNutri");
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed to submit user info. Please try again.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 
@@ -39,8 +39,8 @@ function AccountInfo({ navigation }) {
       .then((response) => {
         console.log("User weight submitted successfully:", response.data);
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed to submit user weight. Please try again.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 
