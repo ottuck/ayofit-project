@@ -70,11 +70,12 @@ function RecordScreen({ navigation }) {
           }
         })
       .then((response) => {
-        setBreakfastMeals(response.data[0]);
-        setLunchMeals(response.data[1]);
-        setDinnerMeals(response.data[2]);
-        setSnackMeals(response.data[3]);
-        // console.log('Sever=>RecordScreen.js:', response.data);
+        const modifiedData = response.data.map(item => item === null ? 0 : item);
+        setBreakfastMeals(modifiedData[0]);
+        setLunchMeals(modifiedData[1]);
+        setDinnerMeals(modifiedData[2]);
+        setSnackMeals(modifiedData[3]);
+        // console.log('Sever => RecordScreen.js:', modifiedData);
       })
       .catch(() => {
         console.log("getMealByDate error..");
@@ -87,13 +88,14 @@ function RecordScreen({ navigation }) {
   }, []);
 
   const handleCardPress = (cardData) => {
+    setMealType(cardData.mealType.toLowerCase());
+    setPhotoUri(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg);
+    setPhotoId(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo);
+    
     if (cardData.meals) {
       navigation.push("RecordMain"); // 음식 데이터가 있으면 RecordMain 화면으로 이동
     } else {
       openSearchModal(); // 없으면 openSearchModal 실행
-      setMealType(cardData.mealType.toLowerCase());
-      setPhotoUri(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg);
-      setPhotoId(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo);
     }
   };
 
@@ -159,7 +161,7 @@ function RecordScreen({ navigation }) {
     </SafeAreaView>
   );
 }
-export default RecordScreen;
+export default RecordScreen
 
 const styles = StyleSheet.create({
   safeArea: {

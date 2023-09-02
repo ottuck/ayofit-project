@@ -24,7 +24,7 @@ import { usePhotoContext } from "../../store/image_context";
 import { useMealContext } from "../../store/MealContext";
 import MealCard2 from "../../components/record/MealCard2";
 
-const RecordMain = ({ navigation, Route }) => {
+const RecordMain = ({ navigation }) => {
   const { formattedYYMMDD, mealType, mealList, cleanMealList, favoriteMeals } = useMealContext();
   // console.log("MealContextAPI => RecordMain : ", mealList);
 
@@ -65,7 +65,7 @@ const RecordMain = ({ navigation, Route }) => {
     axios
       .delete(`${uri}/api/meal`, {
         params: {
-          mealDate: formattedToDayDate, 
+          mealDate: formattedYYMMDD, 
           mealType: mealType,
         },
       })

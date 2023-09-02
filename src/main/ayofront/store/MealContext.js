@@ -9,6 +9,7 @@ export const MealProvider = ({ children }) => {
   const updateMealType = (newMealType) => {
     setMealType(newMealType);
   };
+  console.log('이건 컨텍스트 밀타입 : ', mealType);
 
   //MealCard2 handling
   const [mealList, setMealList] = useState([]);

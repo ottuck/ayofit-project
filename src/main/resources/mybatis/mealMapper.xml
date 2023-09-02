@@ -30,6 +30,10 @@
 	    FROM record_meal
 	    WHERE r_id = #{userID} AND TRUNC(r_meal_date) = TO_DATE(#{date}, 'YYYY/MM/DD') AND r_meal_type = 'snack'
 	</select>
+
+	<delete id="delMeal">
+		DELETE FROM record_meal WHERE r_meal_type = #{mealType} AND TRUNC(r_meal_date) = TO_DATE(#{mealDate}, 'YYYY/MM/DD')
+	</delete>
 	
 	<insert id="regMeal"> 
 		INSERT INTO record_meal
@@ -44,9 +48,5 @@
 			#{rFat}
 		)
 	</insert>
-	
-	<delete id="delMeal">
-		DELETE FROM record_meal WHERE r_meal_type = #{rMealType} AND TRUNC(r_meal_date) = TO_DATE(#{rMealDate}, 'YYYY/MM/DD')
-	</delete>
 	
 </mapper>

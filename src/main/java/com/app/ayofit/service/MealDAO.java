@@ -37,6 +37,8 @@ public class MealDAO {
 	    System.out.println(mealTypeList);
 	    return mealTypeList;
 	}
+	
+
 
 	public boolean regMeal(List<MealDTO> mealList) {
 		int successCount = 0; // 성공한 삽입 연산의 개수를 추적
@@ -61,6 +63,8 @@ public class MealDAO {
 	}
 
 	public boolean delMeal(String mealDate, String mealType) {
+		System.out.println("밀 타입 들어오나? : " + mealType);
+		System.out.println("날자 들어오나? : " + mealDate);
 		 return mealMapper.delMeal(mealDate, mealType) == 1;
 	}
 
