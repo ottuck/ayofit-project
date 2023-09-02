@@ -23,7 +23,7 @@ function AccountNutri({ navigation, route }) {
   const { userInfo, setUserInfo } = useContext(LoginContext);
 
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}`;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   // const uri = "http://213.35.96.167";
 
   console.log(route.params);
@@ -35,14 +35,8 @@ function AccountNutri({ navigation, route }) {
         console.log("User info submitted successfully:");
         axios
           .post(`${uri}/api/account/${id}/confirm`)
-          .then(async () => {
-            await AsyncStorage.setItem("@user", JSON.stringify(route.params))
-              .then(() => {
-                setUserInfo(route.params);
-              })
-              .catch((error) => {
-                console.log(error);
-              });
+          .then(() => {
+            navigation.navigate("OnboardingScreen", { ...route.params });
           })
           .catch((error) => console.log(error));
       })

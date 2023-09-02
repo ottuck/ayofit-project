@@ -9,12 +9,13 @@ function Settings() {
     await AsyncStorage.removeItem("@user")
       .then(() => {
         const emptyInfo = {
-          id: "",
-          email: "",
-          pasword: "",
-          name: "",
-          picture: "",
-          type: "",
+          id: null,
+          email: null,
+          pasword: null,
+          name: null,
+          picture: null,
+          type: null,
+          info: null,
         };
         setUserInfo(emptyInfo);
       })

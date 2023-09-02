@@ -4,6 +4,7 @@ import Login from "../screens/account/Login";
 import Signup from "../screens/account/Signup";
 import AccountInfo from "../screens/account/AccountInfo";
 import AccountNutri from "../screens/account/AccountNutri";
+import OnboardingScreen from "../screens/Onboarding";
 
 const { primary, tertiary } = Colors;
 
@@ -29,12 +30,17 @@ const LoginStack = () => {
       <Stack.Screen
         name="AccountInfo"
         component={AccountInfo}
-        //options={{ headerShown: false }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="AccountNutri"
         component={AccountNutri}
-        //options={{ headerShown: false }}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="OnboardingScreen"
+        component={OnboardingScreen}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
