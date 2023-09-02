@@ -10,10 +10,11 @@ import {
 import MealCard1 from "../../components/record/MealCard1";
 import SearchModal from "../../components/record/SearchModal";
 import axios from "axios";
-import Constants from "expo-constants";
 import { useMealContext } from "../../store/MealContext";
 import { usePhotoContext } from "../../store/image_context";
+import Constants from "expo-constants";
 
+// const uri = "http://213.35.96.167";
 const { debuggerHost } = Constants.manifest2.extra.expoGo;
 const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
@@ -61,13 +62,12 @@ function RecordScreen({ navigation }) {
 
   const getMealListByMealType = () => {
     axios
-      .get(`${uri}/api/meal/type`,
-        {
-          params: {
-            userID: "user1",
-            date: formattedToDayDate,
-          }
-        })
+      .get(`${uri}/api/meal/type`, {
+        params: {
+          userID: "user1",
+          date: formattedToDayDate,
+        },
+      })
       .then((response) => {
         setBreakfastMeals(response.data[0]);
         setLunchMeals(response.data[1]);
@@ -87,7 +87,7 @@ function RecordScreen({ navigation }) {
 
   //서버에 넘길 임시 Date
   const mealDate = new Date();
-  const formattedToDayDate = mealDate.toISOString().split('T')[0];
+  const formattedToDayDate = mealDate.toISOString().split("T")[0];
   // console.log(formattedDate); // "2023-08-31"
 
   const handleCardPress = (imgUri, cardData) => {
@@ -96,11 +96,14 @@ function RecordScreen({ navigation }) {
     } else {
       openSearchModal(); // 이미지가 없으면 openSearchModal 실행
       setMealType(cardData.mealType.toLowerCase());
-      setPhotoUri(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg);
-      setPhotoId(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo);
+      setPhotoUri(
+        img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg
+      );
+      setPhotoId(
+        img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo
+      );
     }
   };
-
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -125,7 +128,9 @@ function RecordScreen({ navigation }) {
               { mealType: "Dinner", meals: dinnerMeals },
               { mealType: "Snack", meals: snackMeals },
             ].map((cardData, index) => {
-              const imgData = img.find(item => item.fType === cardData.mealType.toLowerCase());
+              const imgData = img.find(
+                (item) => item.fType === cardData.mealType.toLowerCase()
+              );
               const imgUri = imgData ? imgData.fImg : null;
               //카드를 식별하여 left,right margin을 주기 위한 코드
               const isFirstCard = index === 0;

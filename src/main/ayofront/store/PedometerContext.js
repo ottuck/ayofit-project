@@ -19,6 +19,7 @@ export const PedometerProvider = ({ children }) => {
 
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  // const uri = "http://213.35.96.167";
 
   const [todayData, setTodayData] = useState(null);
 
@@ -85,7 +86,7 @@ export const PedometerProvider = ({ children }) => {
         .padStart(2, "0")}`;
 
       try {
-        await axios.put(`${uri}/api/pedometer/update-step-goal`, {
+        await axios.put(`${uri}/api/pedometer/update-daily-step`, {
           pId: userId,
           pDate: formattedDate,
           pStepCnt: updatedSteps,
@@ -102,6 +103,12 @@ export const PedometerProvider = ({ children }) => {
   const handleStepsUpdate = async (updatedSteps) => {
     setSteps(updatedSteps);
     await updateStepsOnServer(updatedSteps);
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await updateStepsOnServer(steps);
+    setRefreshing(false);
   };
 
   // ---------- useEffects ----------
@@ -233,7 +240,6 @@ export const PedometerProvider = ({ children }) => {
         daysAchieved,
         setDaysAchieved,
         formattedDate,
-        debuggerHost,
         uri,
         axios,
         Accelerometer,
@@ -244,6 +250,7 @@ export const PedometerProvider = ({ children }) => {
         formattedDateRef,
         todayData,
         setTodayData,
+        onRefresh,
       }}
     >
       {children}

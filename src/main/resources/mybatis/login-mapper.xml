@@ -3,17 +3,29 @@
 
 <mapper namespace="com.app.ayofit.mapper.LoginMapper">
 
-	<select id="checkLogin" resultType="AccountDTO">
-		select l_id, l_email, l_password, l_name, l_info, l_google, a_age, a_gender, a_height, a_weight, a_activity
-		from login, accounts
-		where l_info = a_id
-		and l_email = #{reqEmail}
+	<select id="checkLogin" resultType="LoginDTO">
+		select l_id as id, l_email as email, l_password as password, l_name as name, l_picture as picture, l_type as type, l_info as info
+		from login
+		where l_email = #{reqEmail}
 		and l_password = #{reqPassword}
+		and l_type = 'email'
 	</select>
 
 	<insert id="setUser">
-		insert into login (l_id, l_email, l_password, l_name)
-		values (#{uuid}, #{reqEmail}, #{reqPassword}, #{reqName})
+		insert into login (l_id, l_email, l_password, l_name, l_type, l_info)
+		values (#{uuid}, #{reqEmail}, #{reqPassword}, #{reqName}, 'email', 0)
+	</insert>
+
+	<select id="checkGoogle" resultType="LoginDTO">
+		select l_id as id, l_email as email, l_password as password, l_name as name, l_picture as picture, l_type as type, l_info as info
+		from login
+		where l_type = 'google'
+		and l_password = #{reqId}
+	</select>
+
+	<insert id="setGoogle">
+		insert into login
+		values (#{uuid}, #{reqEmail}, #{reqId}, #{reqName}, #{reqPicture}, 'google', 0)
 	</insert>
 
 </mapper>

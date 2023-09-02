@@ -1,46 +1,103 @@
 package com.app.ayofit.model;
 
-import java.util.List;
-
 public class LoginDTO {
 
-    private String status;
-    private String message;
-    private List<AccountDTO> data;
+    private String id;
+    private String email;
+    private String pasword;
+    private String name;
+    private String picture;
+    private String type;
+    private int info;
 
-    public LoginDTO(String status, String message, List<AccountDTO> data) {
-        this.status = status;
-        this.message = message;
-        this.data = data;
+    public LoginDTO() {
     }
 
-    public String getStatus() {
-        return status;
+    public LoginDTO(String id, String email, String pasword, String name) {
+        this.id = id;
+        this.email = email;
+        this.pasword = pasword;
+        this.name = name;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public LoginDTO(String id, String email, String pasword, String name, String picture) {
+        this.id = id;
+        this.email = email;
+        this.pasword = pasword;
+        this.name = name;
+        this.picture = picture;
     }
 
-    public String getMessage() {
-        return message;
+    public LoginDTO(String id, String email, String pasword, String name, String picture, String type, int info) {
+        this.id = id;
+        this.email = email;
+        this.pasword = pasword;
+        this.name = name;
+        this.picture = picture;
+        this.type = type;
+        this.info = info;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public String getId() {
+        return id;
     }
 
-    public List<AccountDTO> getData() {
-        return data;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setData(List<AccountDTO> data) {
-        this.data = data;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPasword() {
+        return pasword;
+    }
+
+    public void setPasword(String pasword) {
+        this.pasword = pasword;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getInfo() {
+        return info;
+    }
+
+    public void setInfo(int info) {
+        this.info = info;
     }
 
     @Override
     public String toString() {
-        return "LoginDTO [status=" + status + ", message=" + message + ", data=" + data + "]";
+        return "LoginDTO [id=" + id + ", email=" + email + ", pasword=" + pasword + ", name=" + name + ", picture="
+                + picture + ", type=" + type + ", info=" + info + "]";
     }
 
 }

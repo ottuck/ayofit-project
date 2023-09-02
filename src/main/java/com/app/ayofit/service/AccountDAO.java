@@ -1,12 +1,6 @@
 package com.app.ayofit.service;
 
-import java.io.File;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.app.ayofit.mapper.AccountMapper;
 import com.app.ayofit.model.AccountDTO;
@@ -15,8 +9,11 @@ import com.app.ayofit.model.GoalDTO;
 @Service
 public class AccountDAO {
 
-	@Autowired
 	private AccountMapper aMapper;
+
+	public AccountDAO(AccountMapper aMapper) {
+		this.aMapper = aMapper;
+	}
 
 	public boolean regAccountInfos(String userId, AccountDTO aDTO) {
 		if (aMapper.regAccountInfos(userId, aDTO) == 1) {
@@ -27,6 +24,7 @@ public class AccountDAO {
 	}
 
 	public boolean regAccountGoal(String userId, GoalDTO gDTO) {
+		System.out.println(gDTO);
 		if (aMapper.regAccountGoal(userId, gDTO) == 1) {
 			return true;
 		} else {
@@ -68,6 +66,10 @@ public class AccountDAO {
 		} else {
 			return false;
 		}
+	}
+
+	public boolean confirmInfo(String userId) {
+		return aMapper.confirmInfo(userId) == 1 ? true : false;
 	}
 
 }

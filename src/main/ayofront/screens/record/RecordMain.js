@@ -12,7 +12,6 @@ import {
 import React, { useState } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
-import Constants from "expo-constants";
 import DatePicker, {
   getFormatedDate,
   getToday,
@@ -23,6 +22,7 @@ import SearchModal from "../../components/record/SearchModal";
 import { usePhotoContext } from "../../store/image_context";
 import { useMealContext } from "../../store/MealContext";
 import MealCard2 from "../../components/record/MealCard2";
+import Constants from "expo-constants";
 
 const RecordMain = ({ navigation }) => {
   const { mealType, mealList, favoriteMeals } = useMealContext();
@@ -36,6 +36,7 @@ const RecordMain = ({ navigation }) => {
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  //const uri = "http://213.35.96.167";
 
   //식단 기록 post 요청
   const submitMealListToServer = () => {

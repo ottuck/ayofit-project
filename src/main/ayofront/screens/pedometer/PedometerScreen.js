@@ -30,6 +30,7 @@ import SwipeDownToSave from "../../components/pedometer/SwipeDownToSave";
 function PedometerScreen() {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  //const uri = "http://213.35.96.167";
 
   const {
     steps,
@@ -51,8 +52,10 @@ function PedometerScreen() {
     setRefreshing(true);
     await updateStepsOnServer(steps);
     setRefreshing(false);
+    console.log("Steps updated on the server.");
   };
 
+  // for saving current steps when leaving step counter tab
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -72,7 +75,7 @@ function PedometerScreen() {
             pDate: formattedDate,
           });
 
-          // console.log("Steps updated on the server.");
+          console.log("Steps updated on the server.");
         } catch (error) {
           // console.error("Failed to update steps on the server:", error);
         }
@@ -95,16 +98,14 @@ function PedometerScreen() {
         >
           <View>
             <SwipeDownToSave />
-            <View style={styles.dayContainerWrapper}>
-              <View style={styles.daysContainer}>
-                {daysOfWeek.map((day, index) => (
-                  <PedometerDailyCircles
-                    key={index}
-                    day={day}
-                    isAchieved={daysAchieved[index]}
-                  />
-                ))}
-              </View>
+            <View style={styles.daysContainer}>
+              {daysOfWeek.map((day, index) => (
+                <PedometerDailyCircles
+                  key={index}
+                  day={day}
+                  isAchieved={daysAchieved[index]}
+                />
+              ))}
             </View>
             <TouchableOpacity
               style={styles.analysisButton}
@@ -155,17 +156,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: GlobalStyles.colors.primary100,
-    paddingTop: "10%",
-  },
-  dayContainerWrapper: {
-    flexDirection: "row",
+    paddingTop: "5%",
   },
   daysContainer: {
     flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     marginVertical: 10,
-    marginHorizontal: 14,
+    paddingHorizontal: 14,
+    width: "100%",
   },
   analysisButton: {
     backgroundColor: GlobalStyles.colors.primary500,

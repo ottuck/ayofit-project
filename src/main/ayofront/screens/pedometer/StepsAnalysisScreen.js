@@ -3,15 +3,16 @@ import { View, Text, StyleSheet, Platform } from "react-native";
 import { FoodCaloriesData } from "../../components/pedometer/FoodCaloriesData";
 import { PedometerContext } from "../../store/PedometerContext";
 import { useIsFocused } from "@react-navigation/native";
-import Constants from "expo-constants";
 import axios from "axios";
 import { Image } from "react-native";
 import { GlobalStyles } from "../../components/UI/styles";
 import { BlurView } from "expo-blur";
+import Constants from "expo-constants";
 
 function StepsAnalysisScreen({ route }) {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  // const uri = "http://213.35.96.167";
   const isFocused = useIsFocused();
   useEffect(() => {
     if (!isFocused) {
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
   },
 
   infoText: {
-    fontSize: 16,
+    fontSize: 18,
     marginBottom: 10,
     textAlign: "center",
     color: "black",
