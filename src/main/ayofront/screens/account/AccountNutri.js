@@ -53,10 +53,6 @@ function AccountNutri({ navigation, route }) {
 
   const { accountInfos, setAccountInfos } = useAccountsContext();
 
-  const goToAccountInfo = () => {
-    navigation.navigate("AccountInfo", { ...route.params });
-  };
-
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
@@ -136,9 +132,6 @@ function AccountNutri({ navigation, route }) {
           </View>
         </View>
         <View style={styles.btnContainer}>
-          <Button style={styles.prevBtn} onPress={goToAccountInfo}>
-            Prev
-          </Button>
           <Button
             style={styles.confirmBtn}
             onPress={() => {
