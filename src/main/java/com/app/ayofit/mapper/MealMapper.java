@@ -17,7 +17,7 @@ public interface MealMapper {
 	List<NutritionDTO> getLunchTotalNutrition(@Param("date") String date, @Param("userID") String userID);
 	List<NutritionDTO> getDinnerTotalNutrition(@Param("date") String date, @Param("userID") String userID);
 	List<NutritionDTO> getSnackTotalNutrition(@Param("date") String date, @Param("userID") String userID);
-	int regMeal(MealDTO meal, String userId);
+	int regMeal(@Param("mDTO") MealDTO meal, @Param("userId") String userId);
 	int delMeal(@Param("mealDate") String mealDate, @Param("mealType") String mealType);
 	
 }
