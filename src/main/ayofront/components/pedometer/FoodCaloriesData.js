@@ -1,6 +1,6 @@
 export const FoodCaloriesData = {
   green_olive: {
-    calories: 4,
+    calories: 2,
     weight: 3,
     portion: "1 piece",
     image: require("../../assets/pedometer-analysis/green_olive.png"),
