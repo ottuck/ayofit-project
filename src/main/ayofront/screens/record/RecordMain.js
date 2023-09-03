@@ -62,29 +62,6 @@ const RecordMain = ({ navigation }) => {
   };
 
 
-  // //SearchModal을 거치지 않고 페이지로 진입시 Sever에서 해당날자 식단을 가져와서 MealContext에 저장
-  // const getMealByTypeAndDate = () => {
-  //   axios
-  //     .get(`${uri}/api/meal/type`,
-  //       {
-  //         params: {
-  //           mealType: mealType,
-  //           date: formattedYYMMDD,
-  //         }
-  //       })
-  //     .then((response) => {
-  //       console.log('GET서버 => RecordMain.js:', response.data);
-  //       addItemToMealList(response.data);
-  //     })
-  //     .catch(() => {
-  //       console.log("getMealDataByTypeAndDate error..");
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   getMealByTypeAndDate();
-  // }, []);
-
   //mealList가 없을 경우 Save버튼을 누르면 서버에 Delete 요청을 보냄
   const deleteMealListOnServer = () => {
     axios

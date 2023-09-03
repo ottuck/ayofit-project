@@ -112,7 +112,7 @@ function RecordScreen({ navigation }) {
     setPhotoId(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo);
     
     if (cardData.meals) {
-      cleanMealList([]);
+      cleanMealList();
       getMealByTypeAndDate();
       navigation.push("RecordMain"); // 음식 데이터가 있으면 RecordMain 화면으로 이동
     } else {
