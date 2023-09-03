@@ -1,15 +1,12 @@
 package com.app.ayofit.controller;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.text.ParseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,16 +24,16 @@ import com.app.ayofit.service.RecordWeightDAO;
 public class RecordWeightController {
 
     @Autowired
-    private RecordWeightDAO recordWeightDao; 
+    private RecordWeightDAO recordWeightDao;
 
     @GetMapping("/user/{rId}")
     public List<RecordWeightDTO> getWeightsByUserId(@PathVariable String rId) {
         return recordWeightDao.getWeightsByUserId(rId);
     }
-    
+
     @GetMapping("/{rId}/{rWeightDate}")
     public RecordWeightDTO getWeightByDateAndId(@PathVariable String rId, @PathVariable String rWeightDate) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date;
         try {
             date = sdf.parse(rWeightDate);
@@ -50,22 +47,24 @@ public class RecordWeightController {
     public List<Map<String, Object>> getDailyForUser(@PathVariable String rId, @PathVariable String formattedToday) {
         return recordWeightDao.getDailyForUser(rId, formattedToday);
     }
-    
+
     @GetMapping("/weekly-averages/{rId}/{formattedToday}")
-    public List<Map<String, Object>> getWeeklyAveragesForUser(@PathVariable String rId, @PathVariable String formattedToday) {
-    	return recordWeightDao.getWeeklyAveragesForUser(rId, formattedToday);
+    public List<Map<String, Object>> getWeeklyAveragesForUser(@PathVariable String rId,
+            @PathVariable String formattedToday) {
+        return recordWeightDao.getWeeklyAveragesForUser(rId, formattedToday);
     }
-    
+
     @GetMapping("/monthly-averages/{rId}/{formattedToday}")
-    public List<Map<String, Object>> getMonthlyAveragesForUser(@PathVariable String rId, @PathVariable String formattedToday) {
+    public List<Map<String, Object>> getMonthlyAveragesForUser(@PathVariable String rId,
+            @PathVariable String formattedToday) {
         return recordWeightDao.getMonthlyAveragesForUser(rId, formattedToday);
     }
-    
+
     @PostMapping
     public void addWeight(@RequestBody RecordWeightDTO record) {
-    	recordWeightDao.addWeight(record);
+        recordWeightDao.addWeight(record);
     }
-    
+
     @PutMapping("/update")
     public void updateWeight(@RequestBody RecordWeightDTO record) {
         recordWeightDao.updateWeight(record);
@@ -73,7 +72,7 @@ public class RecordWeightController {
 
     @DeleteMapping("/{rId}/{rWeightDate}")
     public void delete(@PathVariable String rId, @PathVariable String rWeightDate) {
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date;
         try {
             date = sdf.parse(rWeightDate);
@@ -82,8 +81,7 @@ public class RecordWeightController {
         }
         System.out.println(date);
         System.out.println(rId);
-    	recordWeightDao.delete(rId, date);
+        recordWeightDao.delete(rId, date);
     }
-    
-}
 
+}

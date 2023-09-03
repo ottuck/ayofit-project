@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   ImageBackground,
   SafeAreaView,
@@ -10,15 +10,18 @@ import {
 import MealCard1 from "../../components/record/MealCard1";
 import SearchModal from "../../components/record/SearchModal";
 import axios from "axios";
-import Constants from "expo-constants";
 import { useMealContext } from "../../store/MealContext";
 import { usePhotoContext } from "../../store/image_context";
+import Constants from "expo-constants";
+import { LoginContext } from "../../store/LoginContext";
 
+// const uri = "http://213.35.96.167";
 const { debuggerHost } = Constants.manifest2.extra.expoGo;
 const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
 function RecordScreen({ navigation }) {
   const { mealType, addItemToMealList, updateMealType, formattedYYMMDD, cleanMealList} = useMealContext();
+  const { userInfo, setUserInfo } = useContext(LoginContext);
 
   // 카드를 클릭할때 mealType 받아서 mealContext에 저장
   const setMealType = (mealType) => {
@@ -40,7 +43,7 @@ function RecordScreen({ navigation }) {
   const { setPhotoUri, setPhotoId } = usePhotoContext();
   const getImg = () => {
     axios
-      .get(`${uri}/api/file/get-image/user1`)
+      .get(`${uri}/api/file/get-image/${userInfo.id}`)
       .then((response) => {
         const newImgs = response.data.map((item) => ({
           fNo: item.fNo,
@@ -62,15 +65,16 @@ function RecordScreen({ navigation }) {
 
   const getTotalNutritionForDay = () => {
     axios
-      .get(`${uri}/api/meal/type/total`,
-        {
-          params: {
-            userID: "user1",
-            date: formattedYYMMDD,
-          }
-        })
+      .get(`${uri}/api/meal/type/total`, {
+        params: {
+          userID: userInfo.id,
+          date: formattedYYMMDD,
+        },
+      })
       .then((response) => {
-        const modifiedData = response.data.map(item => item === null ? 0 : item);
+        const modifiedData = response.data.map((item) =>
+          item === null ? 0 : item
+        );
         setBreakfastMeals(modifiedData[0]);
         setLunchMeals(modifiedData[1]);
         setDinnerMeals(modifiedData[2]);
@@ -108,9 +112,13 @@ function RecordScreen({ navigation }) {
 
   const handleCardPress = (cardData) => {
     setMealType(cardData.mealType.toLowerCase());
-    setPhotoUri(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg);
-    setPhotoId(img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo);
-    
+    setPhotoUri(
+      img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg
+    );
+    setPhotoId(
+      img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo
+    );
+
     if (cardData.meals) {
       cleanMealList();
       getMealByTypeAndDate();
@@ -120,7 +128,6 @@ function RecordScreen({ navigation }) {
       openSearchModal(); // 음식 데이터가 없으면 openSearchModal 실행
     }
   };
-
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -145,7 +152,9 @@ function RecordScreen({ navigation }) {
               { mealType: "Dinner", meals: dinnerMeals },
               { mealType: "Snack", meals: snackMeals },
             ].map((cardData, index) => {
-              const imgData = img.find(item => item.fType === cardData.mealType.toLowerCase());
+              const imgData = img.find(
+                (item) => item.fType === cardData.mealType.toLowerCase()
+              );
               const imgUri = imgData ? imgData.fImg : null;
               //카드를 식별하여 left,right margin을 주기 위한 코드
               const isFirstCard = index === 0;
@@ -183,7 +192,7 @@ function RecordScreen({ navigation }) {
     </SafeAreaView>
   );
 }
-export default RecordScreen
+export default RecordScreen;
 
 const styles = StyleSheet.create({
   safeArea: {

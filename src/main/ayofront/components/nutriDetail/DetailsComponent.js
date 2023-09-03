@@ -7,7 +7,7 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Constants from "expo-constants";
 import { Dimensions } from "react-native";
@@ -52,10 +52,14 @@ import {
 } from "../../components/nutriDetail/StyledComponents";
 import DateCalendar from "./DateCalendar";
 import WeightCalendar from "./WeightCalendar";
+import { LoginContext } from "../../store/LoginContext";
 
 const DetailsComponent = () => {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  //const uri = "http://213.35.96.167";
+
+  const { userInfo, setUserInfo } = useContext(LoginContext);
 
   const [selectedDateMeals, setSelectedDateMeals] = useState([]);
   const [resetDate, setResetDate] = useState(false);
@@ -455,7 +459,7 @@ const DetailsComponent = () => {
     setDailyNutrition([]);
 
     axios
-      .get(`${uri}/api/nutrition/daily/user1/${specificDate}`)
+      .get(`${uri}/api/nutrition/daily/${userInfo.id}/${specificDate}`)
       .then((response) => {
         if (response.data[0] !== null) {
           const data = response.data[0];
@@ -477,7 +481,7 @@ const DetailsComponent = () => {
     setWeeklyTotalFat(0);
     setWeeklyNutrition([]);
     axios
-      .get(`${uri}/api/nutrition/weekly/user1/${startDate}/${endDate}`)
+      .get(`${uri}/api/nutrition/weekly/${userInfo.id}/${startDate}/${endDate}`)
       .then((response) => {
         if (response.data[0] !== null) {
           const data = response.data[0];
@@ -499,7 +503,9 @@ const DetailsComponent = () => {
     setMonthlyTotalFat(0);
     setMonthlyNutrition([]);
     axios
-      .get(`${uri}/api/nutrition/monthly/user1/${startDate}/${endDate}`)
+      .get(
+        `${uri}/api/nutrition/monthly/${userInfo.id}/${startDate}/${endDate}`
+      )
       .then((response) => {
         if (response.data[0] !== null) {
           const data = response.data[0];
@@ -516,8 +522,8 @@ const DetailsComponent = () => {
     getTodayNutrition();
     getWeeklyNutrition();
     getMonthNutrition();
-    fetchWeightByDateAndId("user3", formattedToday);
-    fetchAllWeightsByUserId("user3");
+    fetchWeightByDateAndId(userInfo.id, formattedToday);
+    fetchAllWeightsByUserId(userInfo.id);
   }, []);
 
   let totalNutrients =
@@ -603,15 +609,15 @@ const DetailsComponent = () => {
     let endpoint = "";
     switch (mode) {
       case "daily":
-        endpoint = `${uri}/api/nutrition/daily/user1/${formattedToday}`;
+        endpoint = `${uri}/api/nutrition/daily/${userInfo.id}/${formattedToday}`;
         console.log(endpoint);
         break;
       case "weekly":
-        endpoint = `${uri}/api/nutrition/weekly/user1/${weekStartDate}/${formattedToday}`;
+        endpoint = `${uri}/api/nutrition/weekly/${userInfo.id}/${weekStartDate}/${formattedToday}`;
         console.log(endpoint);
         break;
       case "monthly":
-        endpoint = `${uri}/api/nutrition/monthly/user1/${formattedMonth}/${formattedToday}`;
+        endpoint = `${uri}/api/nutrition/monthly/${userInfo.id}/${formattedMonth}/${formattedToday}`;
         console.log(endpoint);
         break;
       default:
@@ -879,7 +885,7 @@ const DetailsComponent = () => {
             onPress={() => {
               if (calendarMode !== "Weekly") {
                 setCalendarMode("Weekly");
-                fetchWeeklyAveragesByUserId("user3", formattedToday);
+                fetchWeeklyAveragesByUserId(userInfo.id, formattedToday);
                 createWeeklyChartData();
               }
               setResetWeightDate((prev) => !prev); // 날짜 초기화
@@ -896,7 +902,7 @@ const DetailsComponent = () => {
               if (calendarMode !== "Monthly") {
                 setCalendarMode("Monthly");
                 const formattedMonthly = new Date().toISOString().split("T")[0];
-                fetchMonthlyAveragesByUserId("user3", formattedMonthly);
+                fetchMonthlyAveragesByUserId(userInfo.id, formattedMonthly);
               }
               setResetWeightDate((prev) => !prev); // 날짜 초기화
             }}
@@ -916,13 +922,13 @@ const DetailsComponent = () => {
           // 새로운 날짜가 선택될 때마다 이 callback이 호출됨.
           if (calendarMode === "Daily") {
             const formattedDaily = newDate.toISOString().split("T")[0];
-            fetchDailyWeightsByUserId("user3", formattedDaily);
+            fetchDailyWeightsByUserId(userInfo.id, formattedDaily);
           } else if (calendarMode === "Weekly") {
             const formattedWeekly = newDate.toISOString().split("T")[0];
-            fetchWeeklyAveragesByUserId("user3", formattedWeekly);
+            fetchWeeklyAveragesByUserId(userInfo.id, formattedWeekly);
           } else if (calendarMode === "Monthly") {
             const formattedMonthly = newDate.toISOString().split("T")[0];
-            fetchMonthlyAveragesByUserId("user3", formattedMonthly);
+            fetchMonthlyAveragesByUserId(userInfo.id, formattedMonthly);
           }
         }}
       />
@@ -945,11 +951,11 @@ const DetailsComponent = () => {
           />
           <WeightChartTopText>My weight changes</WeightChartTopText>
           <Image
-            source={require("../../assets/weightChart.png")}
+            source={require("../../assets/combinedChart.png")}
             style={{
-              width: 49,
-              height: 46,
-              top: 9.6,
+              width: 46,
+              height: 50,
+              top: 12,
             }}
           />
         </WeightChartTop>
@@ -1029,7 +1035,7 @@ const DetailsComponent = () => {
           left: -3,
         }}
       >
-        <GoalNutriRatioViewText>나의 목표</GoalNutriRatioViewText>
+        <GoalNutriRatioViewText>My Goals</GoalNutriRatioViewText>
         <Image
           source={require("../../assets/dateRight.png")}
           style={{
@@ -1044,15 +1050,15 @@ const DetailsComponent = () => {
 
       <GoalNutriRatioContainer>
         <GoalNutriRatioView>
-          <GoalNutriRatioViewText>체중</GoalNutriRatioViewText>
+          <GoalNutriRatioViewText>Weight</GoalNutriRatioViewText>
           <GoalNutriRatioViewText>65kg</GoalNutriRatioViewText>
         </GoalNutriRatioView>
         <GoalNutriRatioView>
-          <GoalNutriRatioViewText>칼로리</GoalNutriRatioViewText>
+          <GoalNutriRatioViewText>Calorie</GoalNutriRatioViewText>
           <GoalNutriRatioViewText>1953 kcal</GoalNutriRatioViewText>
         </GoalNutriRatioView>
         <GoalNutriRatioView>
-          <GoalNutriRatioViewText>탄단지</GoalNutriRatioViewText>
+          <GoalNutriRatioViewText>MacroRatio</GoalNutriRatioViewText>
           <GoalNutriRatioViewText>50 : 30 : 20</GoalNutriRatioViewText>
         </GoalNutriRatioView>
       </GoalNutriRatioContainer>

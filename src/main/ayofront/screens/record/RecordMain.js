@@ -1,3 +1,7 @@
+import { AntDesign, Feather } from "@expo/vector-icons";
+import axios from "axios";
+import Constants from "expo-constants";
+import React, { useContext, useState } from "react";
 import {
   Image,
   ImageBackground,
@@ -9,42 +13,52 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import { AntDesign, Feather } from "@expo/vector-icons";
-import axios from "axios";
-import Constants from "expo-constants";
 import DatePicker, {
   getFormatedDate,
   getToday,
 } from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
-import SearchModal from "../../components/record/SearchModal";
-import { usePhotoContext } from "../../store/image_context";
-import { useMealContext } from "../../store/MealContext";
 import MealCard2 from "../../components/record/MealCard2";
+import SearchModal from "../../components/record/SearchModal";
+import { LoginContext } from "../../store/LoginContext";
+import { useMealContext } from "../../store/MealContext";
+import { usePhotoContext } from "../../store/image_context";
 
 const RecordMain = ({ navigation }) => {
-  const { formattedYYMMDD, mealType, mealList, addItemToMealList, cleanMealList, favoriteMeals } = useMealContext();
+
   console.log("밀컨택스트 안 : ", mealList);
+  const { userInfo, setUserInfo } = useContext(LoginContext);
+
+  const {
+    formattedYYMMDD,
+    mealType,
+    mealList,
+    favoriteMeals,
+  } = useMealContext();
+  console.log("밀컨택스트API :: ", mealList);
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  //const uri = "http://213.35.96.167";
 
   //서버로 보내기전 데이터 포멧팅
   const updatedMealList = mealList.map((meal) => {
     // nNO와 nSize를 제거
-    const { nNO, nSize, ...rest } = meal; 
+    const { nNO, nSize, ...rest } = meal;
     //'n'을 'r'로 바꾼 새로운 객체 생성
     const rKeysObject = Object.fromEntries(
-      Object.entries(rest).map(([key, value]) => [key.replace(/^n/, "r"), value])
+      Object.entries(rest).map(([key, value]) => [
+        key.replace(/^n/, "r"),
+        value,
+      ])
     );
     //필요한 값 추가
     return {
       ...rKeysObject,
       rMealDate: formattedYYMMDD,
-      rMealType: mealType 
+      rMealType: mealType,
     };
   });
 
@@ -52,7 +66,9 @@ const RecordMain = ({ navigation }) => {
   const submitMealListToServer = () => {
     // console.log("Save버튼 누른후 Server에 제출한값 :", updatedMealList);
     axios
-      .post(`${uri}/api/meal`, updatedMealList)
+      .post(`${uri}/api/meal`, updatedMealList, {
+        params: { userId: userInfo.id },
+      })
       .then((response) => {
         console.log("MealData submitted successfully");
       })
@@ -61,13 +77,12 @@ const RecordMain = ({ navigation }) => {
       });
   };
 
-
   //mealList가 없을 경우 Save버튼을 누르면 서버에 Delete 요청을 보냄
   const deleteMealListOnServer = () => {
     axios
       .delete(`${uri}/api/meal`, {
         params: {
-          mealDate: formattedYYMMDD, 
+          mealDate: formattedYYMMDD,
           mealType: mealType,
         },
       })
@@ -159,7 +174,7 @@ const RecordMain = ({ navigation }) => {
   const regFavMeals = () => {
     axios
       .post(`${uri}/api/favorites`, favoriteMeals, {
-        params: { userId: "user1" },
+        params: { userId: userInfo.id },
       })
       .then((response) => {
         console.log(response.data);
@@ -342,7 +357,7 @@ const RecordMain = ({ navigation }) => {
                 } else {
                   submitMealListToServer();
                   regFavMeals();
-                  uploadImage(photoUri, "user1", mealType);
+                  uploadImage(photoUri, userInfo.id, mealType);
                   navigation.navigate("RecordScreen");
                 }
               }}

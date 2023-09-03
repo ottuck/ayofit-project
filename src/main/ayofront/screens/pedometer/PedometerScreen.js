@@ -13,6 +13,7 @@ import {
   View
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { LoginContext } from "../../store/LoginContext";
 
 import { GlobalStyles } from "../../components/UI/styles";
 import CongratulationsMessage from "../../components/pedometer/CongratulationsMessage";
@@ -25,8 +26,10 @@ import { PedometerContext, daysOfWeek } from "../../store/PedometerContext";
 import DailyGoalInputScreen from "./DailyGoalInputScreen";
 
 function PedometerScreen() {
+  const { userInfo, setUserInfo } = useContext(LoginContext);
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  //const uri = "http://213.35.96.167";
 
   const {
     steps,
@@ -48,8 +51,10 @@ function PedometerScreen() {
     setRefreshing(true);
     await updateStepsOnServer(steps);
     setRefreshing(false);
+    console.log("Steps updated on the server.");
   };
 
+  // for saving current steps when leaving step counter tab
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -58,7 +63,7 @@ function PedometerScreen() {
 
       async function updateStepsOnServer() {
         try {
-          const userId = "user4"; // 현재 사용자 ID
+          const userId = userInfo.id; // 현재 사용자 ID
           // console.log(userId);
           // console.log(steps);
           // console.log(formattedDate);
@@ -69,7 +74,7 @@ function PedometerScreen() {
             pDate: formattedDate,
           });
 
-          // console.log("Steps updated on the server.");
+          console.log("Steps updated on the server.");
         } catch (error) {
           // console.error("Failed to update steps on the server:", error);
         }
@@ -92,16 +97,14 @@ function PedometerScreen() {
         >
           <View>
             <SwipeDownToSave />
-            <View style={styles.dayContainerWrapper}>
-              <View style={styles.daysContainer}>
-                {daysOfWeek.map((day, index) => (
-                  <PedometerDailyCircles
-                    key={index}
-                    day={day}
-                    isAchieved={daysAchieved[index]}
-                  />
-                ))}
-              </View>
+            <View style={styles.daysContainer}>
+              {daysOfWeek.map((day, index) => (
+                <PedometerDailyCircles
+                  key={index}
+                  day={day}
+                  isAchieved={daysAchieved[index]}
+                />
+              ))}
             </View>
             <TouchableOpacity
               style={styles.analysisButton}
@@ -160,9 +163,10 @@ const styles = StyleSheet.create({
   daysContainer: {
     flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     marginVertical: 10,
-    marginHorizontal: 14,
+    paddingHorizontal: 14,
+    width: "100%",
   },
   analysisButton: {
     backgroundColor: GlobalStyles.colors.primary500,

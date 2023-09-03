@@ -9,11 +9,11 @@ import com.app.ayofit.model.GoalDTO;
 @Mapper
 public interface AccountMapper {
 
-	int regAccountInfos(@Param("userId")String userId, @Param("aDTO")AccountDTO aDTO);
+	int regAccountInfos(@Param("userId") String userId, @Param("aDTO") AccountDTO aDTO);
 
-	int regAccountGoal(@Param("userId")String userId, @Param("gDTO")GoalDTO gDTO);
+	int regAccountGoal(@Param("userId") String userId, @Param("gDTO") GoalDTO gDTO);
 
-	int regAccountWeight(@Param("userId")String userId, @Param("aDTO")AccountDTO aDTO);
+	int regAccountWeight(@Param("userId") String userId, @Param("aDTO") AccountDTO aDTO);
 
 	GoalDTO getAccountGoals(String userId);
 
@@ -21,9 +21,10 @@ public interface AccountMapper {
 
 	double getAccountTarWeight(String userId);
 
-	int updateAccountInfos(@Param("userId")String userId, @Param("aDTO")AccountDTO aDTO);
+	int updateAccountInfos(@Param("userId") String userId, @Param("aDTO") AccountDTO aDTO);
 
-	int updateAccountGoal(@Param("userId")String userId, @Param("gDTO")GoalDTO gDTO);
+	int updateAccountGoal(@Param("userId") String userId, @Param("gDTO") GoalDTO gDTO);
 
+	int confirmInfo(@Param("userId") String userId);
 
 }

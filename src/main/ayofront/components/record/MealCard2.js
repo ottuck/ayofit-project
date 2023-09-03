@@ -17,6 +17,7 @@ const MealCard2 = ({
 }) => {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  // const uri = "http://213.35.96.167";
 
   // 즐겨찾기 로직
   const { deleteToMealByNo, addFavoriteMeal, removeFavoriteMeal, favoriteMeals } = useMealContext();
@@ -31,6 +32,15 @@ const MealCard2 = ({
     }
   };
   console.log(favoriteMeals);
+
+  const regFavMeals = () => {
+    axios
+      .post(`${uri}/api/favorites`, { nNos: favoriteMeals })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
 
   // useEffect(() => {
   //   regFavMeals();

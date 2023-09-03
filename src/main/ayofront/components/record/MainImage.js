@@ -2,16 +2,20 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import Constants from "expo-constants";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { LoginContext } from "../../store/LoginContext";
 
 function MainImage({ navigate }) {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  // const uri = "http://213.35.96.167";
+
+  const { userInfo, setUserInfo } = useContext(LoginContext);
 
   const [img, setImgs] = useState([]);
   const getImg = async () => {
     await axios
-      .get(`${uri}/api/file/get-image/user1`)
+      .get(`${uri}/api/file/get-image/${userInfo.id}`)
       .then((response) => {
         const newImgs = response.data.map((item) => ({
           fNo: item.fNo,

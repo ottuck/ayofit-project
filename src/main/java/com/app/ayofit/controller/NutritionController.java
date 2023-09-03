@@ -1,13 +1,8 @@
 package com.app.ayofit.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,27 +26,25 @@ public class NutritionController {
 		List<NutritionDTO> info = nutritionService.getDailyNutrition(userId, date);
 		return new ResponseEntity<>(info, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/weekly/{userId}/{startDate}/{endDate}")
-    public ResponseEntity<List<NutritionDTO>> getWeeklyNutrition(
-        @PathVariable String userId,
-        @PathVariable String startDate,
-        @PathVariable String endDate
-    ) {
+	public ResponseEntity<List<NutritionDTO>> getWeeklyNutrition(
+			@PathVariable String userId,
+			@PathVariable String startDate,
+			@PathVariable String endDate) {
 		System.out.println(startDate);
 		System.out.println(endDate);
-        List<NutritionDTO> info = nutritionService.getWeeklyNutrition(userId, startDate, endDate);
-        return new ResponseEntity<>(info, HttpStatus.OK);
-    }
-	
+		List<NutritionDTO> info = nutritionService.getWeeklyNutrition(userId, startDate, endDate);
+		return new ResponseEntity<>(info, HttpStatus.OK);
+	}
+
 	@GetMapping("/monthly/{userId}/{startDate}/{endDate}")
 	public ResponseEntity<List<NutritionDTO>> getMonthlyNutrition(
-	    @PathVariable String userId,
-	    @PathVariable String startDate,
-	    @PathVariable String endDate
-	) {
-	    List<NutritionDTO> info = nutritionService.getMonthlyNutrition(userId, startDate, endDate);
-	    return new ResponseEntity<>(info, HttpStatus.OK);
+			@PathVariable String userId,
+			@PathVariable String startDate,
+			@PathVariable String endDate) {
+		List<NutritionDTO> info = nutritionService.getMonthlyNutrition(userId, startDate, endDate);
+		return new ResponseEntity<>(info, HttpStatus.OK);
 	}
 
 }

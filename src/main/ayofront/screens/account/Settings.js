@@ -8,7 +8,16 @@ function Settings() {
   const ClearLogin = async () => {
     await AsyncStorage.removeItem("@user")
       .then(() => {
-        setUserInfo(null);
+        const emptyInfo = {
+          id: null,
+          email: null,
+          pasword: null,
+          name: null,
+          picture: null,
+          type: null,
+          info: null,
+        };
+        setUserInfo(emptyInfo);
       })
       .catch((error) => console.log(error));
   };

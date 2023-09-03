@@ -15,15 +15,18 @@ import Button from "../../components/account/UI/Button";
 import { useAccountsContext } from "../../store/accounts_context";
 import axios from "axios";
 import Constants from "expo-constants";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { LoginContext } from "../../store/LoginContext";
 
 function AccUpdateInfo({ navigation }) {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  // const uri = "http://213.35.96.167";
+  const { userInfo, setUserInfo } = useContext(LoginContext);
 
   const getAccountInfos = () => {
     axios
-      .get(`${uri}/api/account/user1`)
+      .get(`${uri}/api/account/${userInfo.id}`)
       .then((response) => {
         console.log(response.data);
         setAccountInfos(response.data);
@@ -35,7 +38,7 @@ function AccUpdateInfo({ navigation }) {
 
   const getAccountTarWeight = () => {
     axios
-      .get(`${uri}/api/account/user1/weight`)
+      .get(`${uri}/api/account/${userInfo.id}/weight`)
       .then((response) => {
         console.log(response.data);
         setAccountInfos({
@@ -50,7 +53,7 @@ function AccUpdateInfo({ navigation }) {
 
   const updateAccInfos = () => {
     axios
-      .put(`${uri}/api/account/user1`, accountInfos)
+      .put(`${uri}/api/account/${userInfo.id}`, accountInfos)
       .then((response) => {
         console.log("User info submitted successfully:", response.data);
         navigation.navigate("AccUpdateNutri");

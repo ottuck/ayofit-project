@@ -9,8 +9,10 @@ import {
 } from "react-native";
 import axios from "axios";
 import { GlobalStyles } from "../UI/styles";
+import { LoginContext } from "../../store/LoginContext";
 
 const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
+  const { userInfo, setUserInfo } = useContext(LoginContext);
   const [newGoal, setNewGoal] = useState("");
   const [showWarning, setShowWarning] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -31,7 +33,7 @@ const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
     }
     axios
       .put(`${apiEndpoint}/api/pedometer/update-step-goal`, {
-        pId: "user4",
+        pId: userInfo.id,
         pDate: new Date(today),
         pStepGoal: parseInt(newGoal),
       })
@@ -77,6 +79,7 @@ const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
 const styles = StyleSheet.create({
   inputContainer: {
     alignItems: "center",
+    flex: 1,
   },
   input: {
     marginTop: 20,

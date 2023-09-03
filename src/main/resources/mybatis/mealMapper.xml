@@ -45,13 +45,13 @@
 		INSERT INTO record_meal
 		VALUES (
 			record_meal_seq.nextval,
-			'user1',
-			#{rFoodName},
-			#{rMealType},
-			TO_DATE(#{rMealDate},'YYYY-MM-DD HH24:MI:SS'),
-			#{rCarbohydrate},
-			#{rProtein}, 
-			#{rFat}
+			#{userId},
+			#{mDTO.rFoodName},
+			#{mDTO.rMealType},
+			TO_DATE(#{mDTO.rMealDate},'YYYY-MM-DD HH24:MI:SS'),
+			#{mDTO.rCarbohydrate},
+			#{mDTO.rProtein}, 
+			#{mDTO.rFat}
 		)
 	</insert>
 	

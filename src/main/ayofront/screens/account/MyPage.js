@@ -16,21 +16,26 @@ import { Fontisto, AntDesign, Ionicons } from "@expo/vector-icons";
 
 import axios from "axios";
 import Constants from "expo-constants";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+
+import { LoginContext } from "../../store/LoginContext";
 import { useMealContext } from "../../store/MealContext";
 import FavMeal from "../../components/record/FavMeal";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 function MyPage({ navigation }) {
+  const { userInfo, setUserInfo } = useContext(LoginContext);
+
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  //const uri = "http://213.35.96.167";
 
   const [goals, setGoals] = useState({});
 
   const getAccountGoals = () => {
     axios
-      .get(`${uri}/api/account/user1/goal`)
+      .get(`${uri}/api/account/${userInfo.id}/goal`)
       .then((response) => {
         console.log(response.data);
         setGoals(response.data);
@@ -45,7 +50,7 @@ function MyPage({ navigation }) {
   const getFavorites = () => {
     axios
       .get(`${uri}/api/favorites`, {
-        params: { userId: "user1" },
+        params: { userId: userInfo.id },
       })
       .then((response) => {
         // console.log(dbFavorites);
@@ -93,10 +98,7 @@ function MyPage({ navigation }) {
         <Text style={styles.profile}>'s Profile</Text>
       </View>
       <View style={styles.profileImgContainer}>
-        <Image
-          style={styles.profileImg}
-          source={require("../../assets/femaleAvatar.png")}
-        />
+        <Image style={styles.profileImg} source={{ uri: userInfo.l_picture }} />
       </View>
       <View style={styles.myGoalsContainer}>
         <View style={styles.myGoals}>
