@@ -20,7 +20,6 @@ import axios from "axios";
 import Constants from "expo-constants";
 import FastHeaderCom from "../components/fast/FastHeaderCom";
 import FastHeaderCom2 from "../components/fast/FastHeaderCom2";
-import { WhiteBalance } from "expo-camera";
 
 
 
@@ -320,8 +319,8 @@ const FastConfirm = ({ navigation }) => {
                 },
                 ConfirmStartTime : ConfirmStartTime,
                 ConfirmEndTime : ConfirmEndTime,
-                StartDate1 : date4,
-                EndDate1 : date2,
+                StartDate1 : StartDate1,
+                EndDate1 : EndDate1,
             });
     };
 const route = useRoute();
@@ -364,6 +363,10 @@ const [hours3, minutes3] = currentTimeEnd.split(':').map(str => parseInt(str, 10
 const date4 = new Date(year, month - 1, day, hours, minutes);
 const date2 = new Date(year2, month2 - 1, day2, hours2, minutes2);
 const date3 = new Date(year3, month3 - 1, day3, hours3, minutes3);
+
+const StartDate1 = date4.toISOString();
+const EndDate1 = date2.toISOString();
+
 const options = {
     year: 'numeric',
     month: 'long',
@@ -438,7 +441,7 @@ function MyTimer({ navigation}) {
     const uri = `http://${debuggerHost.split(":").shift()}:8080/api/fast`;
 
     const route = useRoute();
-    const StartDate1 = route.params.StartDate1;
+    const StartDate12 = route.params.StartDate1;
     const EndDate1 = route.params.EndDate1;
     const ConfirmStartTime = route.params.ConfirmStartTime;
     const ConfirmEndTime = route.params.ConfirmEndTime;
@@ -460,7 +463,7 @@ function MyTimer({ navigation}) {
     }
     const currentTimerTime = new Date();
     
-    const parsedStartTime = new Date(StartDate1);
+    const parsedStartTime = new Date(StartDate12);
     const parsedStartTime2 = new Date(EndDate1);
     const formattedStartTime = formatOracleDate(parsedStartTime);
     const formattedEndTime = formatOracleDate(parsedStartTime2);
@@ -505,7 +508,7 @@ function MyTimer({ navigation}) {
                             console.error('Error sending data:', error);
                         }
     
-                        navigate("FastMainPage");
+                        navigation.navigate("FastMainPage");
                     },
                 },
             ],
@@ -529,36 +532,36 @@ function MyTimer({ navigation}) {
             </TimerHomeBtn>
             <TimerAddView>
             <CountdownCircleTimer
-    isPlaying={isPlaying}
-    duration={totalSeconds}
-    colors={["#FFDD94", "#36f233", "#f26717", "#c23616"]}
-    colorsTime={[totalSeconds, (totalSeconds * 0.7), (totalSeconds * 0.3), 0]}
-    onComplete={() => ({ shouldRepeat: false})}
-    updateInterval={1}
-    strokeWidth={19}
-    size={285}
+  isPlaying={isPlaying}
+  duration={totalSeconds}
+  colors={["#89D5C9", "#D0E6A5", "#FFDD94", "#e25b45"]}
+  colorsTime={[totalSeconds, (totalSeconds * 0.7), (totalSeconds * 0.3), 0]}
+  onComplete={() => ({ shouldRepeat: false })}
+  updateInterval={1}
+  strokeWidth={19}
+  size={285}
 >
-    {({ remainingTime, color }) => {
-        const { hours, minutes, seconds } = secondsToHMS(remainingTime);
-        setRemainingTime(remainingTime); // remainingTime 상태 업데이트
-        return (
-            <>
-                <Text style={{ color:"#fbf7f7", fontSize: 18 }}>
-                    Elapsed Time
-                </Text>
-                <Text style={{ color:"#fbf7f7", fontSize: 40 }}>
-                    {`${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}`}
-                </Text>
-                <Text style={styles.percentInt}>{(remainingTime/totalSeconds)*100}%</Text>
-                {isPlaying && remainingTime === 0 && (
-                    <EndTimeText style={{ fontSize: 20, textAlign: 'center' }}>
-                        You've done it!
-                    </EndTimeText>
-                )}
-            </>
-            );
-    }}
+  {({ remainingTime, color }) => {
+    const { hours, minutes, seconds } = secondsToHMS(remainingTime);
+    return (
+      <>
+        <Text style={{ color: "#fbf7f7", fontSize: 18 }}>
+          Elapsed Time
+        </Text>
+        <Text style={{ color: "#fbf7f7", fontSize: 40 }}>
+          {`${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}`}
+        </Text>
+        <Text style={styles.percentInt}>{(((totalSeconds - remainingTime) / totalSeconds) * 100).toFixed(1)}%</Text>
+        {isPlaying && remainingTime === 0 && (
+          <EndTimeText style={{ fontSize: 20, textAlign: 'center' }}>
+            You've done it!
+          </EndTimeText>
+        )}
+      </>
+    );
+  }}
 </CountdownCircleTimer>
+
 </TimerAddView>
 <TimerMView>
     <TimerStart>
