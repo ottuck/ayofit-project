@@ -20,7 +20,13 @@ const { debuggerHost } = Constants.manifest2.extra.expoGo;
 const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
 function RecordScreen({ navigation }) {
-  const { mealType, addItemToMealList, updateMealType, formattedYYMMDD, cleanMealList} = useMealContext();
+  const {
+    mealType,
+    addItemToMealList,
+    updateMealType,
+    formattedYYMMDD,
+    cleanMealList,
+  } = useMealContext();
   const { userInfo, setUserInfo } = useContext(LoginContext);
 
   // 카드를 클릭할때 mealType 받아서 mealContext에 저장
@@ -38,8 +44,8 @@ function RecordScreen({ navigation }) {
     setSearchModalVisible(false);
   };
 
-  // 로컬에 있는 사진 파일 GET요청
   const [img, setImgs] = useState([]);
+
   const { setPhotoUri, setPhotoId } = usePhotoContext();
   const getImg = () => {
     axios
@@ -89,20 +95,20 @@ function RecordScreen({ navigation }) {
   useEffect(() => {
     getTotalNutritionForDay();
     getImg();
-  }, []);
+    console.log("!!!!");
+  }, [img]);
 
   //SearchModal을 거치지 않고 mealMain페이지로 진입시 Sever에서 해당 날자 식단을 가져와서 MealContext에 저장
   const getMealByTypeAndDate = () => {
     axios
-      .get(`${uri}/api/meal/type`,
-        {
-          params: {
-            mealType: mealType,
-            date: formattedYYMMDD,
-          }
-        })
+      .get(`${uri}/api/meal/type`, {
+        params: {
+          mealType: mealType,
+          date: formattedYYMMDD,
+        },
+      })
       .then((response) => {
-        console.log('GET서버 => RecordMain.js:', response.data);
+        console.log("GET서버 => RecordMain.js:", response.data);
         addItemToMealList(response.data);
       })
       .catch(() => {
