@@ -41,6 +41,7 @@ public class MealController {
 
 	@PostMapping("")
 	public void regMeal(@RequestBody List<MealDTO> mealList, @RequestParam("userId") String userId) {
+		System.out.println(userId);
 		mealDAO.regMeal(mealList,userId);
 	}
 

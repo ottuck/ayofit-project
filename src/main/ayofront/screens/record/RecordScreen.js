@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   ImageBackground,
   SafeAreaView,
@@ -13,12 +13,14 @@ import axios from "axios";
 import { useMealContext } from "../../store/MealContext";
 import { usePhotoContext } from "../../store/image_context";
 import Constants from "expo-constants";
+import { LoginContext } from "../../store/LoginContext";
 
 // const uri = "http://213.35.96.167";
 const { debuggerHost } = Constants.manifest2.extra.expoGo;
 const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
 function RecordScreen({ navigation }) {
+  const { userInfo, setUserInfo } = useContext(LoginContext);
   const { updateMealType, formattedYYMMDD } = useMealContext();
 
   // 카드를 클릭할때 mealType 받아서 mealContext에 저장
