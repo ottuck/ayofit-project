@@ -696,13 +696,22 @@ const styles = StyleSheet.create({
     fontWeight: 10,
   },
   timerImo: {
-    left: -14,
+    position:"absolute",
+    right:10,
+    width:30,
+    height:30,
   },
   dateImo: {
-    left: -40,
+    position:"absolute",
+    right:10,
+    width:30,
+    height:30,
   },
   Howto: {
-    left: 100,
+    position:"absolute",
+    right:10,
+    width:30,
+    height:30,
   },
   backgroundMain: {
     justifyContent: "center",
