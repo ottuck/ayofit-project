@@ -26,7 +26,7 @@ import MealCard2 from "../../components/record/MealCard2";
 
 const RecordMain = ({ navigation }) => {
   const { formattedYYMMDD, mealType, mealList, addItemToMealList, cleanMealList, favoriteMeals } = useMealContext();
-  console.log("밀컨택스트API :: ", mealList);
+  console.log("밀컨택스트 안 : ", mealList);
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -62,28 +62,28 @@ const RecordMain = ({ navigation }) => {
   };
 
 
-  //SearchModal을 거치지 않고 페이지로 진입시 Sever에서 해당날자, 식단의 정보를 가져와서 ContextAPI에 저장
-  const getMealByTypeAndDate = () => {
-    axios
-      .get(`${uri}/api/meal/type`,
-        {
-          params: {
-            mealType: mealType,
-            date: formattedYYMMDD,
-          }
-        })
-      .then((response) => {
-        console.log('Sever => RecordMain.js:', response.data);
-        // addItemToMealList(response.data);
-      })
-      .catch(() => {
-        console.log("getMealDataByTypeAndDate error..");
-      });
-  };
+  // //SearchModal을 거치지 않고 페이지로 진입시 Sever에서 해당날자 식단을 가져와서 MealContext에 저장
+  // const getMealByTypeAndDate = () => {
+  //   axios
+  //     .get(`${uri}/api/meal/type`,
+  //       {
+  //         params: {
+  //           mealType: mealType,
+  //           date: formattedYYMMDD,
+  //         }
+  //       })
+  //     .then((response) => {
+  //       console.log('GET서버 => RecordMain.js:', response.data);
+  //       addItemToMealList(response.data);
+  //     })
+  //     .catch(() => {
+  //       console.log("getMealDataByTypeAndDate error..");
+  //     });
+  // };
 
-  useEffect(() => {
-    getMealByTypeAndDate();
-  }, []);
+  // useEffect(() => {
+  //   getMealByTypeAndDate();
+  // }, []);
 
   //mealList가 없을 경우 Save버튼을 누르면 서버에 Delete 요청을 보냄
   const deleteMealListOnServer = () => {
@@ -271,16 +271,6 @@ const RecordMain = ({ navigation }) => {
   const { ampm: ampm1, formattedTime: formattedCurrentTime } =
     transformDateTime(currentTime);
 
-  //페이지를 떠날때 발생할 때 mealList를 비우는 작업 수행
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('blur', () => {
-      cleanMealList([]);
-    });
-    // cleanup 함수를 반환하여 컴포넌트가 언마운트되거나 cleanup 필요 시 실행
-    return () => unsubscribe();
-  }, [navigation]);
-
-
 
   //Rendering page
   return (
@@ -371,6 +361,7 @@ const RecordMain = ({ navigation }) => {
               onPress={() => {
                 if (mealList.length === 0) {
                   deleteMealListOnServer();
+                  navigation.navigate("RecordScreen");
                 } else {
                   submitMealListToServer();
                   regFavMeals();
