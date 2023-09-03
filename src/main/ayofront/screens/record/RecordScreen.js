@@ -41,7 +41,7 @@ function RecordScreen({ navigation }) {
   const { setPhotoUri, setPhotoId } = usePhotoContext();
   const getImg = () => {
     axios
-      .get(`${uri}/api/file/get-image/user1`)
+      .get(`${uri}/api/file/get-image/${userInfo.id}`)
       .then((response) => {
         const newImgs = response.data.map((item) => ({
           fNo: item.fNo,
@@ -65,7 +65,7 @@ function RecordScreen({ navigation }) {
     axios
       .get(`${uri}/api/meal/type/total`, {
         params: {
-          userID: "user1",
+          userID: userInfo.id,
           date: formattedYYMMDD,
         },
       })

@@ -46,7 +46,7 @@ public class MealDAO {
 		 return mealMapper.delMeal(mealDate, mealType) == 1;
 	}
 
-	public boolean regMeal(List<MealDTO> mealList) {
+	public boolean regMeal(List<MealDTO> mealList, String userId) {
 		int successCount = 0; // 성공한 삽입 연산의 개수를 추적
 		for (MealDTO meal : mealList) {
 			if (meal.getrCarbohydrate() == null) {
@@ -60,7 +60,7 @@ public class MealDAO {
 			}
 			System.out.println(meal);
 			// 여기에서 DB에 삽입 (하나씩)
-			if (mealMapper.regMeal(meal) == 1) {
+			if (mealMapper.regMeal(meal,userId) == 1) {
 				successCount++;
 			}
 		}

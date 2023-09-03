@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
 import DatePicker, {
@@ -23,9 +23,20 @@ import { usePhotoContext } from "../../store/image_context";
 import { useMealContext } from "../../store/MealContext";
 import MealCard2 from "../../components/record/MealCard2";
 import Constants from "expo-constants";
+import { LoginContext } from "../../store/LoginContext";
 
 const RecordMain = ({ navigation }) => {
-  const { formattedYYMMDD, mealType, mealList, addItemToMealList, cleanMealList, favoriteMeals } = useMealContext();
+  const { userInfo, setUserInfo } = useContext(LoginContext);
+
+  //서버에 넘길 임시 Date
+  const {
+    formattedYYMMDD,
+    mealType,
+    mealList,
+    addItemToMealList,
+    cleanMealList,
+    favoriteMeals,
+  } = useMealContext();
   console.log("밀컨택스트API :: ", mealList);
 
   //Server 통신을 위한 URI 수정
@@ -36,16 +47,19 @@ const RecordMain = ({ navigation }) => {
   //서버로 보내기전 데이터 포멧팅
   const updatedMealList = mealList.map((meal) => {
     // nNO와 nSize를 제거
-    const { nNO, nSize, ...rest } = meal; 
+    const { nNO, nSize, ...rest } = meal;
     //'n'을 'r'로 바꾼 새로운 객체 생성
     const rKeysObject = Object.fromEntries(
-      Object.entries(rest).map(([key, value]) => [key.replace(/^n/, "r"), value])
+      Object.entries(rest).map(([key, value]) => [
+        key.replace(/^n/, "r"),
+        value,
+      ])
     );
     //필요한 값 추가
     return {
       ...rKeysObject,
       rMealDate: formattedYYMMDD,
-      rMealType: mealType 
+      rMealType: mealType,
     };
   });
 
@@ -53,7 +67,9 @@ const RecordMain = ({ navigation }) => {
   const submitMealListToServer = () => {
     // console.log("Save버튼 누른후 Server에 제출한값 :", updatedMealList);
     axios
-      .post(`${uri}/api/meal`, updatedMealList)
+      .post(`${uri}/api/meal`, updatedMealList, {
+        params: { userId: userInfo.id },
+      })
       .then((response) => {
         console.log("MealData submitted successfully");
       })
@@ -62,19 +78,17 @@ const RecordMain = ({ navigation }) => {
       });
   };
 
-
   //SearchModal을 거치지 않고 페이지로 진입시 Sever에서 해당날자, 식단의 정보를 가져와서 ContextAPI에 저장
   const getMealByTypeAndDate = () => {
     axios
-      .get(`${uri}/api/meal/type`,
-        {
-          params: {
-            mealType: mealType,
-            date: formattedYYMMDD,
-          }
-        })
+      .get(`${uri}/api/meal/type`, {
+        params: {
+          mealType: mealType,
+          date: formattedYYMMDD,
+        },
+      })
       .then((response) => {
-        console.log('Sever => RecordMain.js:', response.data);
+        console.log("Sever => RecordMain.js:", response.data);
         // addItemToMealList(response.data);
       })
       .catch(() => {
@@ -91,7 +105,7 @@ const RecordMain = ({ navigation }) => {
     axios
       .delete(`${uri}/api/meal`, {
         params: {
-          mealDate: formattedYYMMDD, 
+          mealDate: formattedYYMMDD,
           mealType: mealType,
         },
       })
@@ -183,7 +197,7 @@ const RecordMain = ({ navigation }) => {
   const regFavMeals = () => {
     axios
       .post(`${uri}/api/favorites`, favoriteMeals, {
-        params: { userId: "user1" },
+        params: { userId: userInfo.id },
       })
       .then((response) => {
         console.log(response.data);
@@ -274,14 +288,12 @@ const RecordMain = ({ navigation }) => {
 
   //페이지를 떠날때 발생할 때 mealList를 비우는 작업 수행
   useEffect(() => {
-    const unsubscribe = navigation.addListener('blur', () => {
+    const unsubscribe = navigation.addListener("blur", () => {
       cleanMealList([]);
     });
     // cleanup 함수를 반환하여 컴포넌트가 언마운트되거나 cleanup 필요 시 실행
     return () => unsubscribe();
   }, [navigation]);
-
-
 
   //Rendering page
   return (
@@ -375,7 +387,7 @@ const RecordMain = ({ navigation }) => {
                 } else {
                   submitMealListToServer();
                   regFavMeals();
-                  uploadImage(photoUri, "user1", mealType);
+                  uploadImage(photoUri, userInfo.id, mealType);
                   navigation.navigate("RecordScreen");
                 }
               }}
