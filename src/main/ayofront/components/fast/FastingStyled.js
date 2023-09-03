@@ -128,7 +128,6 @@ font-weight : 500;
 margin-top : 30px;
 margin-left : 35px;
 line-height : 25px;
-
 `;
 export const PlanMethodCTouch = styled.TouchableOpacity`
 align-items: center;
@@ -142,6 +141,7 @@ margin-top : 10px;
 margin-left : 40px;
 margin-right : 20px;
 flex-direction : row;
+position: relative;
 `;
 export const PlanMethodCView = styled.View`
 align-items: center;
@@ -155,6 +155,7 @@ margin-top : 10px;
 margin-left : 40px;
 margin-right : 20px;
 flex-direction : row;
+position: relative;
 `;
 export const PlanMethodC = styled.Text`
 font-size: 20px;

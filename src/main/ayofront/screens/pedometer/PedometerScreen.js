@@ -1,32 +1,29 @@
-import React, { useContext, useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
-  ScrollView,
-  RefreshControl,
-  TouchableOpacity,
-  Text,
-} from "react-native";
-import Constants from "expo-constants";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { SimpleLineIcons } from "@expo/vector-icons";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import Constants from "expo-constants";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  Keyboard,
+  Platform,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View
+} from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { LoginContext } from "../../store/LoginContext";
 
-import { PedometerContext, daysOfWeek } from "../../store/PedometerContext";
 import { GlobalStyles } from "../../components/UI/styles";
-import PedometerProgressRing from "../../components/pedometer/PedometerProgressRing";
-import PedometerDailyCircles from "../../components/pedometer/PedometerDailyCheck";
 import CongratulationsMessage from "../../components/pedometer/CongratulationsMessage";
 import DistanceCaloriesBox from "../../components/pedometer/DistanceCaloriesBox";
 import GoalInput from "../../components/pedometer/GoalInput";
-import DailyGoalInputScreen from "./DailyGoalInputScreen";
+import PedometerDailyCircles from "../../components/pedometer/PedometerDailyCheck";
+import PedometerProgressRing from "../../components/pedometer/PedometerProgressRing";
 import SwipeDownToSave from "../../components/pedometer/SwipeDownToSave";
+import { PedometerContext, daysOfWeek } from "../../store/PedometerContext";
+import DailyGoalInputScreen from "./DailyGoalInputScreen";
 
 function PedometerScreen() {
   const { userInfo, setUserInfo } = useContext(LoginContext);
@@ -158,7 +155,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: GlobalStyles.colors.primary100,
-    paddingTop: "5%",
+    paddingTop: Platform.OS === "ios" ? "15%" : "10%"
+  },
+  dayContainerWrapper: {
+    flexDirection: "row",
   },
   daysContainer: {
     flex: 1,
