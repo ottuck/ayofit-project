@@ -230,7 +230,7 @@ const Login = ({ navigation }) => {
                   </StyledButton>
                 )}
                 <ExtraView>
-                  <ExtraText>Don't have an account already? </ExtraText>
+                  <ExtraText>Don't have an account? </ExtraText>
                   <TextLink onPress={() => navigation.navigate("Signup")}>
                     <TextLinkContent> Sign up!</TextLinkContent>
                   </TextLink>
