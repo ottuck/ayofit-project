@@ -128,7 +128,6 @@ font-weight : 500;
 margin-top : 30px;
 margin-left : 35px;
 line-height : 25px;
-
 `;
 export const PlanMethodCTouch = styled.TouchableOpacity`
 align-items: center;

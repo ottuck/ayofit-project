@@ -80,7 +80,6 @@ import axios from "axios";
 import Constants from "expo-constants";
 import FastHeaderCom from "../components/fast/FastHeaderCom";
 import FastHeaderCom2 from "../components/fast/FastHeaderCom2";
-import { WhiteBalance } from "expo-camera";
 
 //-------------------------------current Time------------------------------//
 let nowDate = new Date();
@@ -379,25 +378,25 @@ const FastPlan = ({ navigation }) => {
 };
 
 const FastConfirm = ({ navigation }) => {
-  const selectTimer = (seletedValue) => {
-    const stringFormat = `${seletedValue} - ${24 - seletedValue}`;
-    navigation.navigate("MyTimer", {
-      seletedValue: {
-        number: seletedValue,
-        string: stringFormat,
-      },
-      ConfirmStartTime: ConfirmStartTime,
-      ConfirmEndTime: ConfirmEndTime,
-      StartDate1: date4,
-      EndDate1: date2,
-    });
-  };
-  const route = useRoute();
-  const confirmTime = route.params.seletedValue;
-  const ConfirmDate = route.params.seletedDate;
-  const ConfirmTime2 = route.params.selectedTime;
-  const totalDateTime = route.params.totalDateTime;
-  const currnetDateTime = route.params.currnetDateTime;
+    const selectTimer = (seletedValue) => {
+        const stringFormat = `${seletedValue} - ${24 - seletedValue}`;  
+            navigation.navigate("MyTimer", {
+                seletedValue: {
+                    number: seletedValue,
+                    string: stringFormat,
+                },
+                ConfirmStartTime : ConfirmStartTime,
+                ConfirmEndTime : ConfirmEndTime,
+                StartDate1 : StartDate1,
+                EndDate1 : EndDate1,
+            });
+    };
+const route = useRoute();
+const confirmTime = route.params.seletedValue;
+const ConfirmDate = route.params.seletedDate;
+const ConfirmTime2 = route.params.selectedTime;
+const totalDateTime = route.params.totalDateTime;
+const currnetDateTime = route.params.currnetDateTime;
 
   //  console.log('끝나는 시간 :' + totalDateTime);
 
@@ -439,6 +438,11 @@ const FastConfirm = ({ navigation }) => {
   const date4 = new Date(year, month - 1, day, hours, minutes);
   const date2 = new Date(year2, month2 - 1, day2, hours2, minutes2);
   const date3 = new Date(year3, month3 - 1, day3, hours3, minutes3);
+
+
+  const StartDate1 = date4.toISOString();
+  const EndDate1 = date2.toISOString();
+
   const options = {
     year: "numeric",
     month: "long",
@@ -514,7 +518,7 @@ function secondsToHMS(seconds) {
   return { hours, minutes, seconds: remainingSeconds };
 }
 
-function MyTimer({ navigation: { navigate } }) {
+function MyTimer({ navigation }) {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   //const uri = "http://213.35.96.167";
@@ -551,6 +555,44 @@ function MyTimer({ navigation: { navigate } }) {
   const StartCurrentTime = timerStartTime - timerCurrent;
   const SCTime = parseInt(StartCurrentTime);
 
+      const handleStopTimer = () => {
+        Alert.alert(
+            'Stop Timer',
+            'Are you sure?',
+            [
+                {
+                    text: 'cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Stop',
+                    onPress: async () => {
+                        const elapsedTimeValue = totalSeconds - remainingTime;
+    
+                        setElapsedTime(elapsedTimeValue); // 사용된 시간 계산 및 저장
+    
+                        const dataToSend = {
+                            confirmStartTime: formattedStartTime,
+                            confirmEndTime: formattedEndTime,
+                            elapsedTime: elapsedTimeValue,
+                        };
+    
+                        try {
+                            await axios.post(`${uri}`, dataToSend);
+                            setFastDateSend(true);
+                            console.log('사용 시간:', elapsedTimeValue);
+                        } catch (error) {
+                            console.error('Error sending data:', error);
+                        }
+    
+                        navigation.navigate("FastMainPage");
+                    },
+                },
+            ],
+        );
+    };
+    
+        const totalSeconds = timerTime.number * 3600;
   if (SCTime >= 0) {
     setTimeout(() => {
       setIsPlaying(true);
@@ -566,68 +608,63 @@ function MyTimer({ navigation: { navigate } }) {
       resizeMode="cover"
       style={styles.backgroundMain}
     >
-      <TimerContainer>
-        <TimerHomeBtn onPress={() => navigation.navigate("FastMainPage")}>
-          <TimerHomeBT>
-            Reset <Entypo name="trash" size={24} color="white" />
-          </TimerHomeBT>
-        </TimerHomeBtn>
-        <TimerAddView>
-          <CountdownCircleTimer
-            isPlaying={isPlaying}
-            duration={totalSeconds}
-            colors={["#FFDD94", "#36f233", "#f26717", "#c23616"]}
-            colorsTime={[
-              totalSeconds,
-              totalSeconds * 0.7,
-              totalSeconds * 0.3,
-              0,
-            ]}
-            onComplete={() => ({ shouldRepeat: false })}
-            updateInterval={1}
-            strokeWidth={19}
-            size={285}
-          >
-            {({ remainingTime, color }) => {
-              const { hours, minutes, seconds } = secondsToHMS(remainingTime);
-              setRemainingTime(remainingTime); // remainingTime 상태 업데이트
-              return (
-                <>
-                  <Text style={{ color: "#fbf7f7", fontSize: 18 }}>
-                    Elapsed Time
-                  </Text>
-                  <Text style={{ color: "#fbf7f7", fontSize: 40 }}>
-                    {`${formatNumber(hours)}:${formatNumber(
-                      minutes
-                    )}:${formatNumber(seconds)}`}
-                  </Text>
-                  <Text style={styles.percentInt}>
-                    {(remainingTime / totalSeconds) * 100}%
-                  </Text>
-                  {isPlaying && remainingTime === 0 && (
-                    <EndTimeText style={{ fontSize: 20, textAlign: "center" }}>
-                      You've done it!
-                    </EndTimeText>
-                  )}
-                </>
-              );
-            }}
-          </CountdownCircleTimer>
-        </TimerAddView>
-        <TimerMView>
-          <TimerStart>
-            <TimerSText>Start : {ConfirmStartTime}</TimerSText>
-          </TimerStart>
-          <TimerEnd>
-            <TimerEText>End : {ConfirmEndTime}</TimerEText>
-          </TimerEnd>
-          <TimerStop>
-            <TimerStopText onPress={handleStopTimer}>STOP</TimerStopText>
-          </TimerStop>
-        </TimerMView>
-      </TimerContainer>
-    </ImageBackground>
-  );
+        <TimerContainer>
+            <TimerHomeBtn onPress={() => navigation.navigate("FastMainPage")}>
+            <TimerHomeBT>Reset <Entypo name="trash" size={24} color="white" /></TimerHomeBT> 
+            </TimerHomeBtn>
+            <TimerAddView>
+            <CountdownCircleTimer
+  isPlaying={isPlaying}
+  duration={totalSeconds}
+  colors={["#89D5C9", "#D0E6A5", "#FFDD94", "#e25b45"]}
+  colorsTime={[totalSeconds, (totalSeconds * 0.7), (totalSeconds * 0.3), 0]}
+  onComplete={() => ({ shouldRepeat: false })}
+  updateInterval={1}
+  strokeWidth={19}
+  size={285}
+>
+  {({ remainingTime, color }) => {
+    const { hours, minutes, seconds } = secondsToHMS(remainingTime);
+    return (
+      <>
+        <Text style={{ color: "#fbf7f7", fontSize: 18 }}>
+          Elapsed Time
+        </Text>
+        <Text style={{ color: "#fbf7f7", fontSize: 40 }}>
+          {`${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}`}
+        </Text>
+        <Text style={styles.percentInt}>{(((totalSeconds - remainingTime) / totalSeconds) * 100).toFixed(1)}%</Text>
+        {isPlaying && remainingTime === 0 && (
+          <EndTimeText style={{ fontSize: 20, textAlign: 'center' }}>
+            You've done it!
+          </EndTimeText>
+        )}
+      </>
+    );
+  }}
+</CountdownCircleTimer>
+
+</TimerAddView>
+<TimerMView>
+    <TimerStart>
+        <TimerSText>
+            Start  : {ConfirmStartTime}
+        </TimerSText>
+    </TimerStart>
+    <TimerEnd>
+        <TimerEText>
+        End   :  {ConfirmEndTime}
+        </TimerEText>
+    </TimerEnd>
+    <TimerStop>
+        <TimerStopText onPress={handleStopTimer}>
+        STOP
+        </TimerStopText>
+    </TimerStop>
+</TimerMView>
+        </TimerContainer>
+        </ImageBackground>
+    );
 }
 
 const NativeStack = createNativeStackNavigator();
