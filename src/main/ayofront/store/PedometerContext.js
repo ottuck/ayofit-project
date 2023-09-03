@@ -75,7 +75,7 @@ export const PedometerProvider = ({ children }) => {
 
   const updateStepsOnServer = async (updatedSteps) => {
     if (updatedSteps !== 0) {
-      const userId = userInfo.id;
+      const userId = userInfo?.id;
       const currentDate = new Date();
 
       const formattedDate = `${currentDate.getFullYear()}-${(
@@ -116,7 +116,7 @@ export const PedometerProvider = ({ children }) => {
   // ---------- useEffects ----------
 
   useEffect(() => {
-    const userId = userInfo.id; // Set the user ID here
+    const userId = userInfo?.id; // Set the user ID here
     const currentDate = new Date();
 
     const formattedDate = `${currentDate.getFullYear()}-${(
