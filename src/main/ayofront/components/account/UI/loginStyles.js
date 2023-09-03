@@ -37,7 +37,7 @@ const { primary, secondary, tertiary, darkLight, brand, green, red } = Colors;
 export const LoginContainer = styled.View`
   flex: 1;
   padding-top: ${StatusBarHeight + 35}px;
-  height: ${height};
+  height: ${height}px;
   background-color: ${primary500};
 
   ${(props) =>
