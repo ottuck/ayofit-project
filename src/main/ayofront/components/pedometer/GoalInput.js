@@ -5,11 +5,14 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
+  Keyboard,
 } from "react-native";
 import axios from "axios";
 import { GlobalStyles } from "../UI/styles";
+import { LoginContext } from "../../store/LoginContext";
 
 const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
+  const { userInfo, setUserInfo } = useContext(LoginContext);
   const [newGoal, setNewGoal] = useState("");
   const [showWarning, setShowWarning] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -30,7 +33,7 @@ const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
     }
     axios
       .put(`${apiEndpoint}/api/pedometer/update-step-goal`, {
-        pId: "user4",
+        pId: userInfo.id,
         pDate: new Date(today),
         pStepGoal: parseInt(newGoal),
       })
@@ -39,6 +42,7 @@ const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
         onGoalChange(parseInt(newGoal));
         setNewGoal("");
         setShowWarning(false);
+        Keyboard.dismiss();
       })
       .catch((error) => {
         console.error("Update Failed:", error);
@@ -59,6 +63,8 @@ const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
         maxLength={10}
         placeholderTextColor={GlobalStyles.colors.primary200}
         selectionColor={GlobalStyles.colors.donutChartGreen}
+        returnKeyType="done"
+        onSubmitEditing={updateGoal}
       />
       {showWarning && (
         <Text style={styles.warningText}>Set your step target here</Text>
@@ -73,6 +79,7 @@ const GoalInput = ({ goal, onGoalChange, apiEndpoint, today }) => {
 const styles = StyleSheet.create({
   inputContainer: {
     alignItems: "center",
+    flex: 1,
   },
   input: {
     marginTop: 20,

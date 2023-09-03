@@ -29,12 +29,17 @@ import {
 } from "../../components/account/UI/loginStyles";
 import KeyboardAvoidWrapper from "../../components/keyboardAvoidingWrapper";
 import { LoginContext } from "../../store/LoginContext";
+import Constants from "expo-constants";
 
 WebBrowser.maybeCompleteAuthSession();
 
 const { brand, darkLight, primary } = Colors;
 
 const Login = ({ navigation }) => {
+  const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  // const uri = "http://213.35.96.167";
+
   const [hidePassword, setHidePassword] = useState(true);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
@@ -50,16 +55,18 @@ const Login = ({ navigation }) => {
 
   const handleLogin = (credentials, setSubmitting) => {
     handleMessage("");
-    const url = `http://213.35.96.167/api/login`;
+
     axios
-      .post(url, credentials)
+      .post(`${uri}/api/login`, credentials)
       .then((response) => {
         const result = response.data;
         const { message, status, data } = result;
-        if (status !== "SUCCESS") {
+        if (status === "SETINFO") {
+          navigation.navigate("AccountInfo", { ...data });
+        } else if (status !== "SUCCESS") {
           handleMessage(message, status);
         } else {
-          persistLogin({ ...data[0] }, message, status);
+          persistLogin({ ...data }, message, status);
         }
         setSubmitting(false);
       })
@@ -100,8 +107,24 @@ const Login = ({ navigation }) => {
         }
       );
       const user = await response.json();
-      console.log(user);
-      handleMessage("Sign in success", "SUCCESS");
+      axios
+        .post(`${uri}/api/google`, user)
+        .then((response) => {
+          const result = response.data;
+          const { message, status, data } = result;
+          if (status === "SETINFO") {
+            navigation.navigate("AccountInfo", { ...data });
+          } else if (status !== "SUCCESS") {
+            handleMessage(message, status);
+          } else {
+            persistLogin({ ...data }, message, status);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          handleMessage("Check your network and try again");
+        })
+        .finally(setGoogleSubmitting(false));
     } catch (error) {
       console.log(error);
       handleMessage("Check your network and try again");
@@ -110,8 +133,8 @@ const Login = ({ navigation }) => {
     }
   };
 
-  const persistLogin = (credentials, message, status) => {
-    AsyncStorage.setItem("@user", JSON.stringify(credentials))
+  const persistLogin = async (credentials, message, status) => {
+    await AsyncStorage.setItem("@user", JSON.stringify(credentials))
       .then(() => {
         handleMessage(message, status);
         setUserInfo(credentials);

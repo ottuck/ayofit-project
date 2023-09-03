@@ -1,31 +1,22 @@
 package com.app.ayofit.model;
 
 public class AccountDTO {
-	private String gender;
+
 	private int age;
+	private String gender;
 	private double height;
 	private double curWeight;
 	private String activity;
-	
+
 	public AccountDTO() {
-		// TODO Auto-generated constructor stub
 	}
 
-	public AccountDTO(String gender, int age, double height, double curWeight, String activity) {
-		super();
-		this.gender = gender;
+	public AccountDTO(int age, String gender, double height, double curWeight, String activity) {
 		this.age = age;
+		this.gender = gender;
 		this.height = height;
 		this.curWeight = curWeight;
 		this.activity = activity;
-	}
-
-	public String getGender() {
-		return gender;
-	}
-
-	public void setGender(String gender) {
-		this.gender = gender;
 	}
 
 	public int getAge() {
@@ -34,6 +25,14 @@ public class AccountDTO {
 
 	public void setAge(int age) {
 		this.age = age;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	public double getHeight() {
@@ -62,8 +61,8 @@ public class AccountDTO {
 
 	@Override
 	public String toString() {
-		return "AccountDTO [gender=" + gender + ", age=" + age + ", height=" + height + ", curWeight=" + curWeight
+		return "AccountDTO [age=" + age + ", gender=" + gender + ", height=" + height + ", curWeight=" + curWeight
 				+ ", activity=" + activity + "]";
 	}
-		
+
 }

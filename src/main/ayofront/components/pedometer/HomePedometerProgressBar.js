@@ -18,16 +18,18 @@ const HomePedometerProgressBar = React.memo(() => {
 
   return (
     <StepProgressContainer>
-      <FontAwesome5
-        name="running"
-        size={36}
-        color={GlobalStyles.colors.primary500}
-        style={{
-          alignSelf: "flex-start",
-          left: `${Math.min(((steps * 0.8) / goal) * 100 + 5, 83)}%`,
-        }}
-      />
-      <StepProgressBar progress={steps / goal} width={326} height={6.2} />
+      <View>
+        <FontAwesome5
+          name="running"
+          size={36}
+          color={GlobalStyles.colors.primary500}
+          style={{
+            alignSelf: "flex-start",
+            left: `${Math.min(((steps * 0.8) / goal) * 100 - 5, 75.5)}%`,
+          }}
+        />
+        <StepProgressBar progress={steps / goal} width={326} height={6.2} />
+      </View>
       <StepProgressText>
         <StepKcalText>{calculateCaloriesBurned(steps)} kcal</StepKcalText>
         <Text>

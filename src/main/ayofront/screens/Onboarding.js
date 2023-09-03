@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import {
   Image,
   Dimensions,
@@ -8,13 +8,28 @@ import {
 } from "react-native";
 import Onboarding from "react-native-onboarding-swiper";
 import { GlobalStyles } from "../components/UI/styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LoginContext } from "../store/LoginContext";
 
-const OnboardingScreen = ({ onComplete }) => {
+const OnboardingScreen = ({ navigation, route }) => {
+  const { userInfo, setUserInfo } = useContext(LoginContext);
+  const [completedOnboarding, setCompletedOnboarding] = useState(false);
   const { width, height } = Dimensions.get("window");
   const desiredImageAspectRatio = 9 / 16;
 
   const imageWidth = width;
   const imageHeight = imageWidth / desiredImageAspectRatio;
+
+  const handleOnboardingComplete = async () => {
+    setCompletedOnboarding(true);
+    await AsyncStorage.setItem("@user", JSON.stringify(route.params))
+      .then(() => {
+        setUserInfo(route.params);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <SafeAreaView
@@ -73,8 +88,8 @@ const OnboardingScreen = ({ onComplete }) => {
           },
         ]}
         showSkip={true}
-        onSkip={onComplete}
-        onDone={onComplete}
+        onSkip={handleOnboardingComplete}
+        onDone={handleOnboardingComplete}
       />
     </SafeAreaView>
   );

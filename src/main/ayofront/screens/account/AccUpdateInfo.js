@@ -15,27 +15,30 @@ import Button from "../../components/account/UI/Button";
 import { useAccountsContext } from "../../store/accounts_context";
 import axios from "axios";
 import Constants from "expo-constants";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import { LoginContext } from "../../store/LoginContext";
 
 function AccUpdateInfo({ navigation }) {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  // const uri = "http://213.35.96.167";
+  const { userInfo, setUserInfo } = useContext(LoginContext);
 
   const getAccountInfos = () => {
     axios
-      .get(`${uri}/api/account/user1`)
+      .get(`${uri}/api/account/${userInfo.id}`)
       .then((response) => {
         console.log(response.data);
         setAccountInfos(response.data);
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 
   const getAccountTarWeight = () => {
     axios
-      .get(`${uri}/api/account/user1/weight`)
+      .get(`${uri}/api/account/${userInfo.id}/weight`)
       .then((response) => {
         console.log(response.data);
         setAccountInfos({
@@ -43,20 +46,20 @@ function AccUpdateInfo({ navigation }) {
           tarWeight: response.data,
         });
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 
   const updateAccInfos = () => {
     axios
-      .put(`${uri}/api/account/user1`, accountInfos)
+      .put(`${uri}/api/account/${userInfo.id}`, accountInfos)
       .then((response) => {
         console.log("User info submitted successfully:", response.data);
         navigation.navigate("AccUpdateNutri");
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed to update user info. Please try again.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 
@@ -140,8 +143,7 @@ function AccUpdateInfo({ navigation }) {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           <View style={styles.top}>
-            <Text style={styles.topText}>Tell us about your goals</Text>
-            <Text style={styles.topText}>to get started.</Text>
+            <Text style={styles.topText}>Edit Your Account Information</Text>
           </View>
           <View style={styles.genderContainer}>
             <Text style={styles.text}>Gender</Text>

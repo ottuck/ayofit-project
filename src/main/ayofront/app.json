@@ -14,16 +14,20 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.app.ayofit"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./images/ayofit-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": ["android.permission.RECORD_AUDIO"],
+      "package": "com.app.ayofit"
     },
     "web": {
-      "favicon": "./images/ayofit-favicon.png"
+      "favicon": "./images/ayofit-favicon.png",
+      "bundler": "metro"
     },
     "plugins": [
       [

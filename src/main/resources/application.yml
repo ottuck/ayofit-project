@@ -3,10 +3,17 @@ spring:
   output:
     ansi:
       enabled: always
+  servlet:
+    multipart:
+      max-file-size: 10MB # 원하는 파일 최대 크기 설정 (예: 10MB)
+      max-request-size: 10MB # 최대 요청 크기 설정 (일반적으로 max-file-size와 같게 설정)
 
   #Oracle DB 연결
   datasource:
-    url: jdbc:oracle:thin:@C44M4IT64ZKKEISA_high?TNS_ADMIN=./Wallet_ayofit
+    #local
+    url: jdbc:oracle:thin:@C44M4IT64ZKKEISA_medium?TNS_ADMIN=./Wallet_ayofit
+    #server
+    #url: jdbc:oracle:thin:@C44M4IT64ZKKEISA_medium?TNS_ADMIN=/home/ubuntu/Wallet
     username: ADMIN
     password: Soldesk802!!
     driverClassName: oracle.jdbc.OracleDriver
@@ -24,3 +31,7 @@ logging:
     #"[org.springframework.security]": TRACE
     "[com.app.ayofit]": DEBUG
     "[com.app.ayofit.mapper]": TRACE
+
+app:
+  firebase-configuration-file: ./serviceAccountKey.json
+  firebase-bucket: ayofit-57ea5.appspot.com

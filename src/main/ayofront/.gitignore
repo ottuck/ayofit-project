@@ -2,6 +2,8 @@
 
 # dependencies
 node_modules/
+cache/
+
 
 # Expo
 .expo/
@@ -34,3 +36,7 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# prebuild
+/android
+/ios

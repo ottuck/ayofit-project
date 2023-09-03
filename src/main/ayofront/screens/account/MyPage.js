@@ -6,36 +6,67 @@ import {
   Dimensions,
   Pressable,
   Alert,
+  ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import { GlobalStyles } from "../../components/UI/styles";
 import IconButton from "../../components/account/UI/IconButton";
-import { Fontisto } from "@expo/vector-icons";
+
+import { Fontisto, AntDesign, Ionicons } from "@expo/vector-icons";
+
 import axios from "axios";
 import Constants from "expo-constants";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+
+import { LoginContext } from "../../store/LoginContext";
+import { useMealContext } from "../../store/MealContext";
+import FavMeal from "../../components/record/FavMeal";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 function MyPage({ navigation }) {
+  const { userInfo, setUserInfo } = useContext(LoginContext);
+
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  //const uri = "http://213.35.96.167";
 
   const [goals, setGoals] = useState({});
 
   const getAccountGoals = () => {
     axios
-      .get(`${uri}/api/account/user1/goal`)
+      .get(`${uri}/api/account/${userInfo.id}/goal`)
       .then((response) => {
         console.log(response.data);
         setGoals(response.data);
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed.");
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const { favoriteMeals, dbFavorites, setDbFavorites } = useMealContext();
+
+  const getFavorites = () => {
+    axios
+      .get(`${uri}/api/favorites`, {
+        params: { userId: userInfo.id },
+      })
+      .then((response) => {
+        // console.log(dbFavorites);
+        setDbFavorites(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
       });
   };
 
   useEffect(() => {
     getAccountGoals();
+  }, []);
+
+  useEffect(() => {
+    getFavorites();
   }, []);
 
   const goToAccountInfo = () => {
@@ -67,7 +98,7 @@ function MyPage({ navigation }) {
         <Text style={styles.profile}>'s Profile</Text>
       </View>
       <View style={styles.profileImgContainer}>
-        <Image style={styles.profileImg} />
+        <Image style={styles.profileImg} source={{ uri: userInfo.l_picture }} />
       </View>
       <View style={styles.myGoalsContainer}>
         <View style={styles.myGoals}>
@@ -87,7 +118,7 @@ function MyPage({ navigation }) {
           <View>
             <Fontisto
               name="angle-right"
-              size={14}
+              size={13}
               color={GlobalStyles.colors.primary500}
             />
           </View>
@@ -127,6 +158,17 @@ function MyPage({ navigation }) {
             </Text>
           </View>
         </View>
+
+        {/*  즐겨찾기 컨테이너 */}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.recordScroll}
+        >
+          {/* FavMeal 컴포넌트를 사용 */}
+          {dbFavorites.map((meal) => (
+            <FavMeal key={meal.favNo} mealInfo={meal} />
+          ))}
+        </ScrollView>
       </View>
     </View>
   );
@@ -169,17 +211,17 @@ const styles = StyleSheet.create({
     borderWidth: 8,
   },
   myGoalsContainer: {
-    flex: 2,
+    flex: 1,
     marginVertical: "5%",
     justifyContent: "space-evenly",
     alignItems: "center",
   },
   myGoals: {
     width: "80%",
-    height: "10%",
+    height: "15%",
     flexDirection: "row",
     justifyContent: "flex-start",
-    alignItems: "baseline",
+    alignItems: "center",
   },
   text: { color: "rgb(255,255,255)", fontSize: 18, fontWeight: "600" },
   myGoalsItem: {
@@ -187,7 +229,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: "80%",
-    height: "25%",
+    height: "18%",
     backgroundColor: "background: rgba(228, 108, 10, 0.5)",
     borderRadius: 28,
     paddingHorizontal: "5%",
@@ -197,5 +239,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     width: "80%",
+  },
+
+  //식단 기록 컨테이너
+  recordScroll: {
+    alignItems: "center",
   },
 });

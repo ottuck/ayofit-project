@@ -4,9 +4,12 @@ const PhotoContext = createContext();
 
 export const PhotoProvider = ({ children }) => {
   const [photoUri, setPhotoUri] = useState();
+  const [photoId, setPhotoId] = useState();
 
   return (
-    <PhotoContext.Provider value={{ photoUri, setPhotoUri }}>
+    <PhotoContext.Provider
+      value={{ photoUri, setPhotoUri, photoId, setPhotoId }}
+    >
       {children}
     </PhotoContext.Provider>
   );

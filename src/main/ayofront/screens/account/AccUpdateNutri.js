@@ -10,24 +10,28 @@ import {
 import { GlobalStyles } from "../../components/UI/styles";
 import Input from "../../components/account/UI/Input";
 import Button from "../../components/account/UI/Button";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useAccountsContext } from "../../store/accounts_context";
 import axios from "axios";
 import Constants from "expo-constants";
+import { LoginContext } from "../../store/LoginContext";
 
 function AccUpdateNutri({ navigation }) {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  // const uri = "http://213.35.96.167";
+
+  const { userInfo, setUserInfo } = useContext(LoginContext);
 
   const updateAccGoal = () => {
     axios
-      .put(`${uri}/api/account/user1/goal`, accountInfos)
+      .put(`${uri}/api/account/${userInfo.id}/goal`, accountInfos)
       .then((response) => {
         console.log("User info submitted successfully:", response.data);
         navigation.navigate("MyPage");
       })
-      .catch(() => {
-        Alert.alert("Error", "Failed to submit user info. Please try again.");
+      .catch((error) => {
+        console.error(error);
       });
   };
 
@@ -60,8 +64,7 @@ function AccUpdateNutri({ navigation }) {
     <TouchableNativeFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
         <View style={styles.top}>
-          <Text style={styles.topText}>Tell us about your goals</Text>
-          <Text style={styles.topText}>to get started.</Text>
+          <Text style={styles.topText}>Edit Your Account Information</Text>
         </View>
         <View style={styles.calorieContainer}>
           <Input

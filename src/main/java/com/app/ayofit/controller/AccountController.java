@@ -16,51 +16,54 @@ import com.app.ayofit.service.AccountDAO;
 @RestController
 @RequestMapping("/api/account")
 public class AccountController {
-	
+
 	@Autowired
 	private AccountDAO aDAO;
-	
+
 	@PostMapping("/{userId}")
 	public void regAccountInfos(@PathVariable String userId, @RequestBody AccountDTO aDTO) {
 		aDAO.regAccountInfos(userId, aDTO);
 	}
-	
+
 	@PostMapping("/{userId}/goal")
 	public void regAccountGoal(@PathVariable String userId, @RequestBody GoalDTO gDTO) {
+		System.out.println(gDTO);
 		aDAO.regAccountGoal(userId, gDTO);
 	}
-	
+
 	@PostMapping("/{userId}/weight")
 	public void regAccountWeight(@PathVariable String userId, @RequestBody AccountDTO aDTO) {
-		aDAO.regAccountWeight(userId,aDTO);
-	}	
-	
+		aDAO.regAccountWeight(userId, aDTO);
+	}
+
 	@GetMapping("/{userId}/goal")
 	public GoalDTO getAccountGoals(@PathVariable String userId) {
-		System.out.println(userId);
 		return aDAO.getAccountGoals(userId);
 	}
-	
+
 	@GetMapping("/{userId}")
 	public AccountDTO getAccountInfos(@PathVariable String userId) {
 		return aDAO.getAccountInfos(userId);
 	}
-	
+
 	@GetMapping("/{userId}/weight")
 	public double getAccountTarWeight(@PathVariable String userId) {
 		return aDAO.getAccountTarWeight(userId);
 	}
 
 	@PutMapping("/{userId}")
-	public boolean updateAccountInfos(@PathVariable String userId,  @RequestBody AccountDTO aDTO) {
-		return aDAO.updateAccountInfos(userId,aDTO);
+	public boolean updateAccountInfos(@PathVariable String userId, @RequestBody AccountDTO aDTO) {
+		return aDAO.updateAccountInfos(userId, aDTO);
 	}
-	
+
 	@PutMapping("/{userId}/goal")
 	public boolean updateAccountGoal(@PathVariable String userId, @RequestBody GoalDTO gDTO) {
-		return	aDAO.updateAccountGoal(userId, gDTO);
+		return aDAO.updateAccountGoal(userId, gDTO);
 	}
-	
-	
-	
+
+	@PostMapping("/{userId}/confirm")
+	public boolean confirmInfo(@PathVariable String userId) {
+		return aDAO.confirmInfo(userId);
+	}
+
 }
