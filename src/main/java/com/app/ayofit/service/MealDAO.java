@@ -19,15 +19,19 @@ public class MealDAO {
 	public List<MealDTO> getAllMeal() {
 		return mealMapper.getAllMeal();
 	}
+	
+	public List<MealDTO> getMealByTypeAndDate(String date, String mealType) {
+		return mealMapper.getMealByTypeAndDate(date, mealType);
+	}
 
-	public List<NutritionDTO> getAllMealTypesByDate(String date, String userID) {
+	public List<NutritionDTO> getTotalNutritionForDay(String date, String userID) {
 		
 	    List<NutritionDTO> mealTypeList = new ArrayList<>();
 	    
-	    List<NutritionDTO> breakfastList = mealMapper.getBreakfastByDate(date, userID);
-	    List<NutritionDTO> launchList = mealMapper.getLunchByDate(date, userID);
-	    List<NutritionDTO> dinnerList = mealMapper.getDinnerByDate(date, userID);
-	    List<NutritionDTO> snackList = mealMapper.getSnackByDate(date, userID);
+	    List<NutritionDTO> breakfastList = mealMapper.getBreakfastTotalNutrition(date, userID);
+	    List<NutritionDTO> launchList = mealMapper.getLunchTotalNutrition(date, userID);
+	    List<NutritionDTO> dinnerList = mealMapper.getDinnerTotalNutrition(date, userID);
+	    List<NutritionDTO> snackList = mealMapper.getSnackTotalNutrition(date, userID);
 	    
 	    mealTypeList.addAll(breakfastList);
 	    mealTypeList.addAll(launchList);
@@ -36,6 +40,10 @@ public class MealDAO {
 	    
 	    System.out.println(mealTypeList);
 	    return mealTypeList;
+	}
+	
+	public boolean delMeal(String mealDate, String mealType) {
+		 return mealMapper.delMeal(mealDate, mealType) == 1;
 	}
 
 	public boolean regMeal(List<MealDTO> mealList) {
@@ -59,9 +67,6 @@ public class MealDAO {
 		// 모든 삽입이 성공했다면 true를 반환
 		return successCount == mealList.size();
 	}
-
-	public boolean delMeal(String mealDate, String mealType) {
-		 return mealMapper.delMeal(mealDate, mealType) == 1;
-	}
-
+	
+	
 }

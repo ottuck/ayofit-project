@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
 import DatePicker, {
@@ -25,40 +25,33 @@ import MealCard2 from "../../components/record/MealCard2";
 import Constants from "expo-constants";
 
 const RecordMain = ({ navigation }) => {
-  const { mealType, mealList, favoriteMeals } = useMealContext();
-  // console.log("밀컨택스트API : ", mealList);
-
-  //서버에 넘길 임시 Date
-  const mealDate = new Date();
-  const formattedDate = mealDate.toISOString().slice(0, 19).replace("T", " ");
-  // console.log(formattedDate); // "2023-08-31 08:36:40"
+  const { formattedYYMMDD, mealType, mealList, addItemToMealList, cleanMealList, favoriteMeals } = useMealContext();
+  console.log("밀컨택스트API :: ", mealList);
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   //const uri = "http://213.35.96.167";
 
+  //서버로 보내기전 데이터 포멧팅
+  const updatedMealList = mealList.map((meal) => {
+    // nNO와 nSize를 제거
+    const { nNO, nSize, ...rest } = meal; 
+    //'n'을 'r'로 바꾼 새로운 객체 생성
+    const rKeysObject = Object.fromEntries(
+      Object.entries(rest).map(([key, value]) => [key.replace(/^n/, "r"), value])
+    );
+    //필요한 값 추가
+    return {
+      ...rKeysObject,
+      rMealDate: formattedYYMMDD,
+      rMealType: mealType 
+    };
+  });
+
   //식단 기록 post 요청
   const submitMealListToServer = () => {
-    //서버로 보내기전 데이터 포멧팅
-    const updatedMealList = mealList.map((meal) => {
-      const { nNO, nSize, ...rest } = meal; // nNO와 nSize를 제거
-
-      // 'n'을 'r'로 바꾼 새로운 객체 생성
-      const rKeysObject = Object.fromEntries(
-        Object.entries(rest).map(([key, value]) => [
-          key.replace(/^n/, "r"),
-          value,
-        ])
-      );
-      return {
-        ...rKeysObject,
-        rMealDate: formattedDate,
-        rMealType: mealType, //mealType 추가
-      };
-    });
-    console.log("Save버튼 누른후 Server에 제출한값 :", updatedMealList);
-
+    // console.log("Save버튼 누른후 Server에 제출한값 :", updatedMealList);
     axios
       .post(`${uri}/api/meal`, updatedMealList)
       .then((response) => {
@@ -69,12 +62,36 @@ const RecordMain = ({ navigation }) => {
       });
   };
 
-  //mealList가 없을 경우 Save버튼을 누르면 서버에 Put 요청을 보냄
+
+  //SearchModal을 거치지 않고 페이지로 진입시 Sever에서 해당날자, 식단의 정보를 가져와서 ContextAPI에 저장
+  const getMealByTypeAndDate = () => {
+    axios
+      .get(`${uri}/api/meal/type`,
+        {
+          params: {
+            mealType: mealType,
+            date: formattedYYMMDD,
+          }
+        })
+      .then((response) => {
+        console.log('Sever => RecordMain.js:', response.data);
+        // addItemToMealList(response.data);
+      })
+      .catch(() => {
+        console.log("getMealDataByTypeAndDate error..");
+      });
+  };
+
+  useEffect(() => {
+    getMealByTypeAndDate();
+  }, []);
+
+  //mealList가 없을 경우 Save버튼을 누르면 서버에 Delete 요청을 보냄
   const deleteMealListOnServer = () => {
     axios
       .delete(`${uri}/api/meal`, {
         params: {
-          mealDate: mealDate,
+          mealDate: formattedYYMMDD, 
           mealType: mealType,
         },
       })
@@ -254,6 +271,17 @@ const RecordMain = ({ navigation }) => {
     transformDateTime(pickerTime);
   const { ampm: ampm1, formattedTime: formattedCurrentTime } =
     transformDateTime(currentTime);
+
+  //페이지를 떠날때 발생할 때 mealList를 비우는 작업 수행
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      cleanMealList([]);
+    });
+    // cleanup 함수를 반환하여 컴포넌트가 언마운트되거나 cleanup 필요 시 실행
+    return () => unsubscribe();
+  }, [navigation]);
+
+
 
   //Rendering page
   return (

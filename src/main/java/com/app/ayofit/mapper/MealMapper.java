@@ -12,11 +12,12 @@ import com.app.ayofit.model.NutritionDTO;
 public interface MealMapper {
 
 	List<MealDTO> getAllMeal();
-	List<MealDTO> getMealByDate();
-	List<NutritionDTO> getBreakfastByDate(@Param("date") String date, @Param("userID") String userID);
-	List<NutritionDTO> getLunchByDate(@Param("date") String date, @Param("userID") String userID);
-	List<NutritionDTO> getDinnerByDate(@Param("date") String date, @Param("userID") String userID);
-	List<NutritionDTO> getSnackByDate(@Param("date") String date, @Param("userID") String userID);
+	List<MealDTO> getMealByTypeAndDate(@Param("mealType") String mealType, @Param("date") String date);	
+	List<NutritionDTO> getBreakfastTotalNutrition(@Param("date") String date, @Param("userID") String userID);
+	List<NutritionDTO> getLunchTotalNutrition(@Param("date") String date, @Param("userID") String userID);
+	List<NutritionDTO> getDinnerTotalNutrition(@Param("date") String date, @Param("userID") String userID);
+	List<NutritionDTO> getSnackTotalNutrition(@Param("date") String date, @Param("userID") String userID);
 	int regMeal(MealDTO meal);
 	int delMeal(@Param("mealDate") String mealDate, @Param("mealType") String mealType);
+	
 }

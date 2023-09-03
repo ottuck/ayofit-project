@@ -7,7 +7,7 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import { Feather } from "@expo/vector-icons"; // 또는 사용하는 아이콘 라이브러리
+import { Feather } from "@expo/vector-icons";
 
 const MealCard1 = ({
   mealType,
@@ -16,7 +16,7 @@ const MealCard1 = ({
   protein,
   fat,
   checkCardPress,
-  cardStyle
+  cardStyle,
 }) => {
 
   return (
@@ -45,16 +45,18 @@ const MealCard1 = ({
           <View>
             <Text style={styles.mealTime}> </Text>
             <Text style={styles.nutrientValue}>
-              {carb === 0 ? "-" : Math.floor(carb)} g
+              {carb === null || carb === undefined ? "-" : Math.floor(carb)} g
             </Text>
             <Text style={styles.nutrientValue}>
-              {protein === 0 ? "-" : Math.floor(protein)} g
+              {protein === null || protein === undefined ? "-" : Math.floor(protein)} g
             </Text>
             <Text style={styles.nutrientValue}>
-              {fat === 0 ? "-" : Math.floor(fat)} g
+              {fat === null || fat === undefined ? "-" : Math.floor(fat)} g
             </Text>
             <Text style={styles.carloriesValue}>
-              {Math.floor(carb * 4 + protein * 4 + fat * 9)}  kcal
+              {carb === null || protein === null || fat === null || carb === undefined || protein === undefined || fat === undefined
+                ? "- kcal"
+                : Math.floor(carb * 4 + protein * 4 + fat * 9) + " kcal"}
             </Text>
           </View>
         </View>

@@ -19,11 +19,8 @@ const MealCard2 = ({
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   // const uri = "http://213.35.96.167";
 
-  //삭제 함수 컨택스트에서 가져오기
-  const { deleteToMealByNO } = useMealContext();
   // 즐겨찾기 로직
-  const { addFavoriteMeal, removeFavoriteMeal, favoriteMeals } =
-    useMealContext();
+  const { deleteToMealByNo, addFavoriteMeal, removeFavoriteMeal, favoriteMeals } = useMealContext();
   const [isLiked, setIsLiked] = useState(favoriteMeals.includes(mealInfo.nNO));
 
   const handleLikedPress = (no) => {
@@ -65,7 +62,7 @@ const MealCard2 = ({
                 <Ionicons name="heart-outline" style={styles.likeButton} />
               )}
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => deleteToMealByNO(mealInfo.nNO)}>
+            <TouchableOpacity onPress={() => deleteToMealByNo(mealInfo.nNO)}>
               <AntDesign name="close" style={styles.recordDeleteButton} />
             </TouchableOpacity>
           </View>
@@ -99,19 +96,19 @@ const MealCard2 = ({
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Carb</Text>
               <Text style={styles.foodNutrient}>
-                {mealInfo.nCarbohydrate === 0 ? "-" : mealInfo.nCarbohydrate}
+                {mealInfo.nCarbohydrate === null || mealInfo.nCarbohydrate === undefined ? "-" : mealInfo.nCarbohydrate}
               </Text>
             </View>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Protein</Text>
               <Text style={styles.foodNutrient}>
-                {mealInfo.nProtein === 0 ? "-" : mealInfo.nProtein}
+                {mealInfo.nProtein === null || mealInfo.nProtein === undefined ? "-" : mealInfo.nProtein}
               </Text>
             </View>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Fat</Text>
               <Text style={styles.foodNutrient}>
-                {mealInfo.nFat === 0 ? "-" : mealInfo.nFat}
+                {mealInfo.nFat === null || mealInfo.nFat === undefined ? "-" : mealInfo.nFat}
               </Text>
             </View>
           </View>
@@ -158,7 +155,7 @@ const styles = StyleSheet.create({
   recordTime2: {
     color: "#E46C0A",
     fontWeight: "bold",
-    fontSize: 34,
+    fontSize: 26,
   },
   textWrapper: {
     width: "55%",
