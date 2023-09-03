@@ -9,10 +9,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
-import Constants from "expo-constants";
 import DatePicker, {
   getFormatedDate,
   getToday,
@@ -23,35 +22,99 @@ import SearchModal from "../../components/record/SearchModal";
 import { usePhotoContext } from "../../store/image_context";
 import { useMealContext } from "../../store/MealContext";
 import MealCard2 from "../../components/record/MealCard2";
+import Constants from "expo-constants";
+import { LoginContext } from "../../store/LoginContext";
 
 const RecordMain = ({ navigation }) => {
-  const { mealType, mealList } = useMealContext();
-  // console.log(mealType);
-  // console.log("컨택스트API => 레코드메인 ", mealData);
+  const { userInfo, setUserInfo } = useContext(LoginContext);
+
+  //서버에 넘길 임시 Date
+  const {
+    formattedYYMMDD,
+    mealType,
+    mealList,
+    addItemToMealList,
+    cleanMealList,
+    favoriteMeals,
+  } = useMealContext();
+  console.log("밀컨택스트API :: ", mealList);
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  //const uri = "http://213.35.96.167";
+
+  //서버로 보내기전 데이터 포멧팅
+  const updatedMealList = mealList.map((meal) => {
+    // nNO와 nSize를 제거
+    const { nNO, nSize, ...rest } = meal;
+    //'n'을 'r'로 바꾼 새로운 객체 생성
+    const rKeysObject = Object.fromEntries(
+      Object.entries(rest).map(([key, value]) => [
+        key.replace(/^n/, "r"),
+        value,
+      ])
+    );
+    //필요한 값 추가
+    return {
+      ...rKeysObject,
+      rMealDate: formattedYYMMDD,
+      rMealType: mealType,
+    };
+  });
 
   //식단 기록 post 요청
   const submitMealListToServer = () => {
-    const updatedMealList = mealList.map((meal) => {
-      const { nNO, nSize, ...rest } = meal; // nNO와 nSize를 제거
-      return {
-        ...rest,
-        nMealType: mealType //mealType 추가
-      };
-    });
-    console.log("업데이트 밀리스트:", updatedMealList);
+    // console.log("Save버튼 누른후 Server에 제출한값 :", updatedMealList);
+    axios
+      .post(`${uri}/api/meal`, updatedMealList, {
+        params: { userId: userInfo.id },
+      })
+      .then((response) => {
+        console.log("MealData submitted successfully");
+      })
+      .catch(() => {
+        console.log("MealData Error", "Failed to submit");
+      });
+  };
 
-    // axios
-    //   .post(`${uri}/api/meal`, mealList)
-    //   .then((response) => {
-    //     console.log("MealData submitted successfully:", response.data);
-    //   })
-    //   .catch(() => {
-    //     console.log("Error", "Failed to submit");
-    //   });
+  //SearchModal을 거치지 않고 페이지로 진입시 Sever에서 해당날자, 식단의 정보를 가져와서 ContextAPI에 저장
+  const getMealByTypeAndDate = () => {
+    axios
+      .get(`${uri}/api/meal/type`, {
+        params: {
+          mealType: mealType,
+          date: formattedYYMMDD,
+        },
+      })
+      .then((response) => {
+        console.log("Sever => RecordMain.js:", response.data);
+        // addItemToMealList(response.data);
+      })
+      .catch(() => {
+        console.log("getMealDataByTypeAndDate error..");
+      });
+  };
+
+  useEffect(() => {
+    getMealByTypeAndDate();
+  }, []);
+
+  //mealList가 없을 경우 Save버튼을 누르면 서버에 Delete 요청을 보냄
+  const deleteMealListOnServer = () => {
+    axios
+      .delete(`${uri}/api/meal`, {
+        params: {
+          mealDate: formattedYYMMDD,
+          mealType: mealType,
+        },
+      })
+      .then((response) => {
+        console.log("MealData deleted successfully");
+      })
+      .catch(() => {
+        console.log("Error", "Failed to delete");
+      });
   };
 
   //ImgModal
@@ -60,12 +123,10 @@ const RecordMain = ({ navigation }) => {
     setImgModalVisible(!imgModalVisible);
   };
   const { photoUri, setPhotoUri, photoId } = usePhotoContext();
-  // console.log(photoUri);
 
   // 사진 파일 삭제 로직
-  console.log(photoUri);
-  console.log(photoId);
-
+  // console.log(photoUri);
+  // console.log(photoId);
   const deleteFile = () => {
     axios
       .delete(`${uri}/api/file/delete`, {
@@ -75,7 +136,7 @@ const RecordMain = ({ navigation }) => {
         },
       })
       .then((response) => {
-        console.log("PhotoFile deleted successfully:", response.data);
+        console.log("PhotoFile deleted successfully");
         setPhotoUri(null);
       })
       .catch(() => {
@@ -123,17 +184,27 @@ const RecordMain = ({ navigation }) => {
       });
 
       const responseData = await response;
-      console.log(responseData);
+      // console.log(responseData);
     } catch (error) {
       console.error(error);
     }
   };
 
-  // 즐겨찾기 로직
-  const [isLiked, setIsLiked] = useState(false);
+  console.log(favoriteMeals);
 
-  const handleLikedPress = () => {
-    setIsLiked(!isLiked);
+  const { dbFavorites, setFavoriteMeals } = useMealContext();
+  // 즐겨찾기 식단 db에 등록
+  const regFavMeals = () => {
+    axios
+      .post(`${uri}/api/favorites`, favoriteMeals, {
+        params: { userId: userInfo.id },
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   //DateTimePicker
@@ -161,12 +232,6 @@ const RecordMain = ({ navigation }) => {
   //Current Date
   const currentDate = getFormatedDate(new Date(), "YYYY/MM/DD");
   const currentTime = getFormatedDate(new Date(), "h:m");
-
-
-  //서버에 넘김 임시 Date
-  const date = new Date();
-  const isoDate = date.toISOString();
-
 
   //change date format
   const transformDate = (inputDate) => {
@@ -220,6 +285,15 @@ const RecordMain = ({ navigation }) => {
     transformDateTime(pickerTime);
   const { ampm: ampm1, formattedTime: formattedCurrentTime } =
     transformDateTime(currentTime);
+
+  //페이지를 떠날때 발생할 때 mealList를 비우는 작업 수행
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("blur", () => {
+      cleanMealList([]);
+    });
+    // cleanup 함수를 반환하여 컴포넌트가 언마운트되거나 cleanup 필요 시 실행
+    return () => unsubscribe();
+  }, [navigation]);
 
   //Rendering page
   return (
@@ -308,13 +382,20 @@ const RecordMain = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                // submitMealToServer();
-                uploadImage(photoUri, "user1", mealType);
-                navigation.navigate("RecordScreen");
+                if (mealList.length === 0) {
+                  deleteMealListOnServer();
+                } else {
+                  submitMealListToServer();
+                  regFavMeals();
+                  uploadImage(photoUri, userInfo.id, mealType);
+                  navigation.navigate("RecordScreen");
+                }
               }}
             >
               <View style={styles.buttonBox2}>
-                <Text style={styles.buttonText}> Save </Text>
+                <Text style={styles.buttonText}>
+                  {mealList.length === 0 ? "Delete" : "Save"}
+                </Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -334,7 +415,6 @@ const RecordMain = ({ navigation }) => {
                 ampm2={ampm2}
               />
             ))}
-
           </ScrollView>
 
           {/* DateTimePicker */}
@@ -474,7 +554,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginBottom: 15
+    marginBottom: 15,
   },
   buttonBox1: {
     height: 40,

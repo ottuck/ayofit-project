@@ -21,4 +21,23 @@ public class FavDAO {
 		return fMapper.getFavoirtes(userId);
 	}
 
+	public void regFavorites(List<Integer> nNos, String userId) {
+		
+		for (Integer no : nNos) {
+			if (fMapper.regFavorites(no, userId) == 1) {
+				System.out.println("db 등록 성공!");
+			}
+			
+		}
+		
+	}
+
+	public void deleteFavorites(int no) {
+		
+		if(fMapper.deleteFavorites(no) == 1) {
+			System.out.println("db 삭제 성공!");
+		}
+		
+	}
+
 }

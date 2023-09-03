@@ -10,24 +10,26 @@ import {
 import MealCard1 from "../../components/record/MealCard1";
 import SearchModal from "../../components/record/SearchModal";
 import axios from "axios";
-import Constants from "expo-constants";
 import { useMealContext } from "../../store/MealContext";
 import { usePhotoContext } from "../../store/image_context";
+import Constants from "expo-constants";
 
+// const uri = "http://213.35.96.167";
 const { debuggerHost } = Constants.manifest2.extra.expoGo;
 const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
-function RecordScreen({ route }) {
+function RecordScreen({ navigation }) {
+  const { updateMealType, formattedYYMMDD } = useMealContext();
+
+  // 카드를 클릭할때 mealType 받아서 mealContext에 저장
+  const setMealType = (mealType) => {
+    updateMealType(mealType);
+  };
+
   //Search Modal
   const [searchModalVisible, setSearchModalVisible] = useState(false);
   const openSearchModal = () => {
     setSearchModalVisible(true);
-  };
-
-  // mealType 카드별로 받아서 set
-  const { updateMealType } = useMealContext();
-  const setMealType = (mealType) => {
-    updateMealType(mealType);
   };
 
   const closeSearchModal = () => {
@@ -37,26 +39,71 @@ function RecordScreen({ route }) {
   // 로컬에 있는 사진 파일 GET요청
   const [img, setImgs] = useState([]);
   const { setPhotoUri, setPhotoId } = usePhotoContext();
-  const getImg = async () => {
-    await axios
-      .get(`${uri}/api/file/get-image/user1`)
+  const getImg = () => {
+    axios
+      .get(`${uri}/api/file/get-image/${userInfo.id}`)
       .then((response) => {
         const newImgs = response.data.map((item) => ({
           fNo: item.fNo,
           fImg: item.fImg,
           fType: item.fType,
         }));
-        console.log(newImgs);
+        // console.log(newImgs);
         setImgs((prevImgs) => [...prevImgs, ...newImgs]);
       })
       .catch(() => {
-        console.log("get error..");
+        console.log("getImg error..");
+      });
+  };
+
+  const [breakfastMeals, setBreakfastMeals] = useState([]);
+  const [lunchMeals, setLunchMeals] = useState([]);
+  const [dinnerMeals, setDinnerMeals] = useState([]);
+  const [snackMeals, setSnackMeals] = useState([]);
+
+  const getTotalNutritionForDay = () => {
+    axios
+      .get(`${uri}/api/meal/type/total`, {
+        params: {
+          userID: userInfo.id,
+          date: formattedYYMMDD,
+        },
+      })
+      .then((response) => {
+        const modifiedData = response.data.map((item) =>
+          item === null ? 0 : item
+        );
+        setBreakfastMeals(modifiedData[0]);
+        setLunchMeals(modifiedData[1]);
+        setDinnerMeals(modifiedData[2]);
+        setSnackMeals(modifiedData[3]);
+        // console.log('Sever => RecordScreen.js:', modifiedData);
+      })
+      .catch(() => {
+        console.log("getMealByDate error..");
       });
   };
 
   useEffect(() => {
+    getTotalNutritionForDay();
     getImg();
   }, []);
+
+  const handleCardPress = (cardData) => {
+    setMealType(cardData.mealType.toLowerCase());
+    setPhotoUri(
+      img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg
+    );
+    setPhotoId(
+      img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo
+    );
+
+    if (cardData.meals) {
+      navigation.push("RecordMain"); // 음식 데이터가 있으면 RecordMain 화면으로 이동
+    } else {
+      openSearchModal(); // 없으면 openSearchModal 실행
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -67,7 +114,7 @@ function RecordScreen({ route }) {
         >
           <View style={styles.headerContainer}>
             <Text style={styles.headerTitle}> Diet Record</Text>
-            <Text style={styles.headerDate}> 2023.08.29 </Text>
+            <Text style={styles.headerDate}> {formattedYYMMDD} </Text>
           </View>
 
           <ScrollView
@@ -75,70 +122,40 @@ function RecordScreen({ route }) {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.cardScroll}
           >
-            <MealCard1
-              imgUri={
-                img.find((item) => item.fType === "breakfast")?.fImg || null
-              }
-              mealType="Breakfast"
-              mealTime="10:00"
-              carb="55"
-              protein="16.4"
-              fat="21.5"
-              totalCalories="487"
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("breakfast");
-                setPhotoUri(
-                  img.find((item) => item.fType === "breakfast")?.fImg
-                );
-                setPhotoId(img.find((item) => item.fType === "breakfast")?.fNo);
-              }}
-            />
-            <MealCard1
-              imgUri={img.find((item) => item.fType === "lunch")?.fImg || null}
-              mealType="Lunch"
-              mealTime="10:00"
-              carb="60"
-              protein="18"
-              fat="20"
-              totalCalories="500"
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("lunch");
-                setPhotoUri(img.find((item) => item.fType === "lunch")?.fImg);
-                setPhotoId(img.find((item) => item.fType === "lunch")?.fNo);
-              }}
-            />
-            <MealCard1
-              imgUri={img.find((item) => item.fType === "dinner")?.fImg || null}
-              mealType="Dinner"
-              mealTime="10:00"
-              carb="65"
-              protein="19"
-              fat="23"
-              totalCalories="550"
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("dinner");
-                setPhotoUri(img.find((item) => item.fType === "dinner")?.fImg);
-                setPhotoId(img.find((item) => item.fType === "dinner")?.fNo);
-              }}
-            />
-            <MealCard1
-              imgUri={img.find((item) => item.fType === "snack")?.fImg || null}
-              mealType="Snack"
-              mealTime="10:00"
-              carb="65"
-              protein="19"
-              fat="23"
-              totalCalories="550"
-              openSearchModal={() => {
-                openSearchModal();
-                setMealType("snack");
-                setPhotoUri(img.find((item) => item.fType === "snack")?.fImg);
-                setPhotoId(img.find((item) => item.fType === "snack")?.fNo);
-              }}
-            />
+            {[
+              { mealType: "Breakfast", meals: breakfastMeals },
+              { mealType: "Lunch", meals: lunchMeals },
+              { mealType: "Dinner", meals: dinnerMeals },
+              { mealType: "Snack", meals: snackMeals },
+            ].map((cardData, index) => {
+              const imgData = img.find(
+                (item) => item.fType === cardData.mealType.toLowerCase()
+              );
+              const imgUri = imgData ? imgData.fImg : null;
+              //카드를 식별하여 left,right margin을 주기 위한 코드
+              const isFirstCard = index === 0;
+              const isLastCard = index === 3;
+              const cardStyle = [
+                styles.cardContainer,
+                isFirstCard && styles.firstCardStyle,
+                isLastCard && styles.lastCardStyle,
+              ];
+              // 클로저를 사용하여 cardData를 전달
+              const handlePress = () => handleCardPress(cardData);
+
+              return (
+                <MealCard1
+                  key={index}
+                  imgUri={imgUri}
+                  mealType={cardData.mealType}
+                  carb={cardData.meals.totalCarbohydrate}
+                  protein={cardData.meals.totalProtein}
+                  fat={cardData.meals.totalFat}
+                  checkCardPress={handlePress} // 클로저를 사용한 함수 전달
+                  cardStyle={cardStyle}
+                />
+              );
+            })}
           </ScrollView>
 
           <SearchModal
@@ -170,67 +187,23 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: 350,
-    marginVertical: 80,
-    marginHorizontal: 35,
+    marginVertical: 50,
+    alignSelf: "center",
   },
   headerTitle: {
     fontWeight: "500",
-    fontSize: 25,
+    fontSize: 26,
     color: "white",
   },
   headerDate: {
     color: "#CECECE",
     fontSize: 17,
   },
-  //카드 디자인
-  cardContainer: {
-    width: 300,
-    height: 430,
-    marginHorizontal: 20,
-    backgroundColor: "white",
-    borderRadius: 15,
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
-    justifyContent: "center",
-    alignItems: "center",
+  //조건부 스타일
+  firstCardStyle: {
+    marginLeft: 54,
   },
-  cardImageContainer: {
-    width: 270,
-    height: 270,
-    backgroundColor: "rgba(0, 0, 0, 0.10)",
-    borderRadius: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  plusIcon: {
-    fontSize: 60,
-    color: "rgba(0, 0, 0, 0.10)",
-  },
-  textContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-  },
-  mealTime: {
-    color: "orange",
-    fontWeight: "bold",
-    fontSize: 20,
-  },
-  nutrientText: {
-    fontSize: 17,
-    fontWeight: "bold",
-  },
-  nutrientValue: {
-    fontSize: 17,
-    fontWeight: "bold",
-    textAlign: "right",
-  },
-  TotalValue: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "right",
+  lastCardStyle: {
+    marginRight: 54,
   },
 });

@@ -12,13 +12,16 @@ import { Animated, Easing } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PedometerContext = createContext();
+import { LoginContext } from "./LoginContext";
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export const PedometerProvider = ({ children }) => {
+  const { userInfo, setUserInfo } = useContext(LoginContext);
   // ---------- Consts ----------
 
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  // const uri = "http://213.35.96.167";
 
   const [todayData, setTodayData] = useState(null);
 
@@ -72,7 +75,7 @@ export const PedometerProvider = ({ children }) => {
 
   const updateStepsOnServer = async (updatedSteps) => {
     if (updatedSteps !== 0) {
-      const userId = "user4";
+      const userId = userInfo.id;
       const currentDate = new Date();
 
       const formattedDate = `${currentDate.getFullYear()}-${(
@@ -85,7 +88,7 @@ export const PedometerProvider = ({ children }) => {
         .padStart(2, "0")}`;
 
       try {
-        await axios.put(`${uri}/api/pedometer/update-step-goal`, {
+        await axios.put(`${uri}/api/pedometer/update-daily-step`, {
           pId: userId,
           pDate: formattedDate,
           pStepCnt: updatedSteps,
@@ -104,10 +107,16 @@ export const PedometerProvider = ({ children }) => {
     await updateStepsOnServer(updatedSteps);
   };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await updateStepsOnServer(steps);
+    setRefreshing(false);
+  };
+
   // ---------- useEffects ----------
 
   useEffect(() => {
-    const userId = "user4"; // Set the user ID here
+    const userId = userInfo.id; // Set the user ID here
     const currentDate = new Date();
 
     const formattedDate = `${currentDate.getFullYear()}-${(
@@ -233,7 +242,6 @@ export const PedometerProvider = ({ children }) => {
         daysAchieved,
         setDaysAchieved,
         formattedDate,
-        debuggerHost,
         uri,
         axios,
         Accelerometer,
@@ -244,6 +252,7 @@ export const PedometerProvider = ({ children }) => {
         formattedDateRef,
         todayData,
         setTodayData,
+        onRefresh,
       }}
     >
       {children}

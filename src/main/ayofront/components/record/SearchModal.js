@@ -18,12 +18,12 @@ import Constants from "expo-constants";
 import { useMealContext } from "../../store/MealContext";
 
 const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
-  // mealData를 set할 Context
   const { addItemToMealList } = useMealContext();
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  //const uri = "http://213.35.96.167/";
 
   //Debounce를 적용한 SearchAPI 호출
   const [keyword, setKeyword] = useState(""); //검색 키워드
@@ -41,7 +41,9 @@ const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
         .then((response) => {
           setList(response.data);
         })
-        .catch(() => {});
+        .catch(() => {
+          console.log("getList error..");
+        });
     };
 
     const debounce = setTimeout(() => {
@@ -62,7 +64,7 @@ const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
       (item) => item.nFoodName.trim() === keyword.trim()
     );
     if (!foundItem) {
-      setError("Please select the food on the list🥹");
+      setError("Please select the food on the list");
       return;
     }
     if (fromPage === "RecordScreen") {
@@ -156,7 +158,7 @@ const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
 const styles = StyleSheet.create({
   modalScreen: {
     flex: 1,
-    marginTop: "11%",
+    marginTop: "12%",
     backgroundColor: "rgba(255,255,255,0.6)",
     borderRadius: 30,
     padding: 15,
@@ -188,7 +190,7 @@ const styles = StyleSheet.create({
   errorMSG: {
     color: "red",
     fontWeight: "bold",
-    right: 10,
+    right: 16,
   },
   modalSearchButton: {
     fontSize: 20,

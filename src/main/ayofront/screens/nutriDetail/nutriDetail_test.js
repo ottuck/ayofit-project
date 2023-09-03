@@ -7,7 +7,6 @@ import {
   Animated,
   Image,
   FlatList,
-  RefreshControl,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ScrollView } from "react-native";
@@ -43,11 +42,9 @@ import { PedometerContext, daysOfWeek } from "../../store/PedometerContext";
 import ProgressBarArea from "../../components/pedometer/HomePedometerArea";
 import HomePedometerArea from "../../components/pedometer/HomePedometerArea";
 import { useIsFocused } from "@react-navigation/native";
+import SwipeDownToSave from "../../components/pedometer/SwipeDownToSave";
 
 function NutriDetailScreen() {
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const scrollViewRef = React.createRef();
@@ -107,12 +104,12 @@ function NutriDetailScreen() {
   );
   today.setHours(today.getHours() + 9);
   const formattedToday = formatDate(today); // ex)) "Mon, August 21" 형식
-  console.log(today);
-  console.log(formattedToday);
+  // console.log(today);
+  // console.log(formattedToday);
 
   return (
     <ScrollView style={{ flex: 1 }} ref={scrollViewRef}>
-      <HomeSafeAreaView>
+      <HomeSafeAreaView style={{ paddingTop: "5%" }}>
         <StatusBar barStyle="dark-content" />
         <HomeUserContainer>
           <View>
