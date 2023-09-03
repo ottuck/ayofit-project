@@ -70,7 +70,7 @@ export const PedometerProvider = ({ children }) => {
     setCongratulationsVisible(true);
     setTimeout(() => {
       setCongratulationsVisible(false);
-    }, 3000); //
+    }, 5000); //
   };
 
   const updateStepsOnServer = async (updatedSteps) => {
@@ -116,7 +116,7 @@ export const PedometerProvider = ({ children }) => {
   // ---------- useEffects ----------
 
   useEffect(() => {
-    const userId = userInfo?.id; // Set the user ID here
+    const userId = userInfo?.id;
     const currentDate = new Date();
 
     const formattedDate = `${currentDate.getFullYear()}-${(
@@ -134,7 +134,8 @@ export const PedometerProvider = ({ children }) => {
       })
       .then((response) => {
         const weeklyAchievement = response.data;
-        // console.log(response.data);
+        console.log(response.data);
+        console.log(userId);
 
         // Find today's data from weekly achievement
         const todayData = weeklyAchievement.find(
