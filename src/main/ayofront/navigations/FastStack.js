@@ -184,80 +184,82 @@ const FastMethod = ({ navigation }) => {
     });
   };
 
-  <ImageBackground
-    source={require("../images/FastImage/FastBackground.png")}
-    resizeMode="cover"
-    style={styles.backgroundMain}
-  >
-    <FastHeaderCom2 navigation={navigation} />
-    <MethodScrollView>
-      <MethodContainer>
-        <MethodTitle>
-          Please choose a method
-          <Ionicons name="checkmark" size={28} color="white" />
-        </MethodTitle>
-        <MethodCTouch onPress={() => selectMethod(12)}>
-          <MethodLeftContent>
-            <MethodCText>12H</MethodCText>
+  return (
+    <ImageBackground
+      source={require("../images/FastImage/FastBackground.png")}
+      resizeMode="cover"
+      style={styles.backgroundMain}
+    >
+      <FastHeaderCom2 navigation={navigation} />
+      <MethodScrollView>
+        <MethodContainer>
+          <MethodTitle>
+            Please choose a method
+            <Ionicons name="checkmark" size={28} color="white" />
+          </MethodTitle>
+          <MethodCTouch onPress={() => selectMethod(12)}>
+            <MethodLeftContent>
+              <MethodCText>12H</MethodCText>
+              <MethodCTextS>fasting</MethodCTextS>
+            </MethodLeftContent>
+            <FontAwesome5 name="minus" size={24} color="#E46C0A" />
+            <MethodRightContent>
+              <MethodCText2>12H</MethodCText2>
+              <MethodCTextS2>relaxing</MethodCTextS2>
+            </MethodRightContent>
+          </MethodCTouch>
+          <MethodCTouch onPress={() => selectMethod(14)}>
+            <MethodLeftContent>
+              <MethodCText>14H</MethodCText>
+              <MethodCTextS>fasting</MethodCTextS>
+            </MethodLeftContent>
+            <FontAwesome5 name="minus" size={24} color="#E46C0A" />
+            <MethodRightContent>
+              <MethodCText2>10H</MethodCText2>
+              <MethodCTextS2>relaxing</MethodCTextS2>
+            </MethodRightContent>
+          </MethodCTouch>
+          <MethodCTouch onPress={() => selectMethod(16)}>
+            <MethodLeftContent>
+              <MethodCText>16H</MethodCText>
+              <MethodCTextS>fasting</MethodCTextS>
+            </MethodLeftContent>
+            <FontAwesome5 name="minus" size={24} color="#E46C0A" />
+            <MethodRightContent>
+              <MethodCText2>8H</MethodCText2>
+              <MethodCTextS2>relaxing</MethodCTextS2>
+            </MethodRightContent>
+          </MethodCTouch>
+          <MethodCTouch onPress={() => selectMethod(18)}>
+            <MethodLeftContent>
+              <MethodCText>18H</MethodCText>
+              <MethodCTextS>fasting</MethodCTextS>
+            </MethodLeftContent>
+            <FontAwesome5 name="minus" size={24} color="#E46C0A" />
+            <MethodRightContent>
+              <MethodCText2>6H</MethodCText2>
+              <MethodCTextS2>relaxing</MethodCTextS2>
+            </MethodRightContent>
+          </MethodCTouch>
+          <MethodCTouch onPress={() => selectMethod(20)}>
+            <MethodLeftContent>
+              <MethodCText>20H</MethodCText>
+              <MethodCTextS>fasting</MethodCTextS>
+            </MethodLeftContent>
+            <FontAwesome5 name="minus" size={24} color="#E46C0A" />
+            <MethodRightContent>
+              <MethodCText2>4H</MethodCText2>
+              <MethodCTextS2>relaxing</MethodCTextS2>
+            </MethodRightContent>
+          </MethodCTouch>
+          <MethodCEndTouch onPress={() => selectMethod(24)}>
+            <MethodCText>24H</MethodCText>
             <MethodCTextS>fasting</MethodCTextS>
-          </MethodLeftContent>
-          <FontAwesome5 name="minus" size={24} color="#E46C0A" />
-          <MethodRightContent>
-            <MethodCText2>12H</MethodCText2>
-            <MethodCTextS2>relaxing</MethodCTextS2>
-          </MethodRightContent>
-        </MethodCTouch>
-        <MethodCTouch onPress={() => selectMethod(14)}>
-          <MethodLeftContent>
-            <MethodCText>14H</MethodCText>
-            <MethodCTextS>fasting</MethodCTextS>
-          </MethodLeftContent>
-          <FontAwesome5 name="minus" size={24} color="#E46C0A" />
-          <MethodRightContent>
-            <MethodCText2>10H</MethodCText2>
-            <MethodCTextS2>relaxing</MethodCTextS2>
-          </MethodRightContent>
-        </MethodCTouch>
-        <MethodCTouch onPress={() => selectMethod(16)}>
-          <MethodLeftContent>
-            <MethodCText>16H</MethodCText>
-            <MethodCTextS>fasting</MethodCTextS>
-          </MethodLeftContent>
-          <FontAwesome5 name="minus" size={24} color="#E46C0A" />
-          <MethodRightContent>
-            <MethodCText2>8H</MethodCText2>
-            <MethodCTextS2>relaxing</MethodCTextS2>
-          </MethodRightContent>
-        </MethodCTouch>
-        <MethodCTouch onPress={() => selectMethod(18)}>
-          <MethodLeftContent>
-            <MethodCText>18H</MethodCText>
-            <MethodCTextS>fasting</MethodCTextS>
-          </MethodLeftContent>
-          <FontAwesome5 name="minus" size={24} color="#E46C0A" />
-          <MethodRightContent>
-            <MethodCText2>6H</MethodCText2>
-            <MethodCTextS2>relaxing</MethodCTextS2>
-          </MethodRightContent>
-        </MethodCTouch>
-        <MethodCTouch onPress={() => selectMethod(20)}>
-          <MethodLeftContent>
-            <MethodCText>20H</MethodCText>
-            <MethodCTextS>fasting</MethodCTextS>
-          </MethodLeftContent>
-          <FontAwesome5 name="minus" size={24} color="#E46C0A" />
-          <MethodRightContent>
-            <MethodCText2>4H</MethodCText2>
-            <MethodCTextS2>relaxing</MethodCTextS2>
-          </MethodRightContent>
-        </MethodCTouch>
-        <MethodCEndTouch onPress={() => selectMethod(24)}>
-          <MethodCText>24H</MethodCText>
-          <MethodCTextS>fasting</MethodCTextS>
-        </MethodCEndTouch>
-      </MethodContainer>
-    </MethodScrollView>
-  </ImageBackground>;
+          </MethodCEndTouch>
+        </MethodContainer>
+      </MethodScrollView>
+    </ImageBackground>
+  );
 };
 
 const FastPlan = ({ navigation }) => {

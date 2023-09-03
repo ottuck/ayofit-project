@@ -4,7 +4,7 @@ public class LoginDTO {
 
     private String id;
     private String email;
-    private String pasword;
+    private String password;
     private String name;
     private String picture;
     private String type;
@@ -13,25 +13,25 @@ public class LoginDTO {
     public LoginDTO() {
     }
 
-    public LoginDTO(String id, String email, String pasword, String name) {
+    public LoginDTO(String id, String email, String password, String name) {
         this.id = id;
         this.email = email;
-        this.pasword = pasword;
+        this.password = password;
         this.name = name;
     }
 
-    public LoginDTO(String id, String email, String pasword, String name, String picture) {
+    public LoginDTO(String id, String email, String password, String name, String picture) {
         this.id = id;
         this.email = email;
-        this.pasword = pasword;
+        this.password = password;
         this.name = name;
         this.picture = picture;
     }
 
-    public LoginDTO(String id, String email, String pasword, String name, String picture, String type, int info) {
+    public LoginDTO(String id, String email, String password, String name, String picture, String type, int info) {
         this.id = id;
         this.email = email;
-        this.pasword = pasword;
+        this.password = password;
         this.name = name;
         this.picture = picture;
         this.type = type;
@@ -54,12 +54,12 @@ public class LoginDTO {
         this.email = email;
     }
 
-    public String getPasword() {
-        return pasword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasword(String pasword) {
-        this.pasword = pasword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getName() {
@@ -96,7 +96,7 @@ public class LoginDTO {
 
     @Override
     public String toString() {
-        return "LoginDTO [id=" + id + ", email=" + email + ", pasword=" + pasword + ", name=" + name + ", picture="
+        return "LoginDTO [id=" + id + ", email=" + email + ", password=" + password + ", name=" + name + ", picture="
                 + picture + ", type=" + type + ", info=" + info + "]";
     }
 

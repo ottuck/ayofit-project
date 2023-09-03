@@ -22,12 +22,16 @@ public class MealController {
 	@Autowired
 	private MealDAO mealDAO;
 
-	@GetMapping("/type")
-	public List<NutritionDTO> getMealByMealType(@RequestParam("userID") String userID,
+	@GetMapping("/type/total")
+	public List<NutritionDTO> getTotalNutritionForDay(@RequestParam("userID") String userID,
 			@RequestParam("date") String date) {
-		System.out.println(userID + "??s??");
-		System.out.println(date + "!!!!");
-		return mealDAO.getAllMealTypesByDate(date, userID);
+		return mealDAO.getTotalNutritionForDay(date, userID);
+	}
+
+	@GetMapping("/type")
+	public List<MealDTO> getMealByTypeAndDate(@RequestParam("mealType") String mealType,
+			@RequestParam("date") String date) {
+		return mealDAO.getMealByTypeAndDate(mealType, date);
 	}
 
 	@GetMapping("")

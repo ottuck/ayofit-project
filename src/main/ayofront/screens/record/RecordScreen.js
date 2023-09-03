@@ -19,16 +19,17 @@ const { debuggerHost } = Constants.manifest2.extra.expoGo;
 const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
 function RecordScreen({ navigation }) {
+  const { updateMealType, formattedYYMMDD } = useMealContext();
+
+  // 카드를 클릭할때 mealType 받아서 mealContext에 저장
+  const setMealType = (mealType) => {
+    updateMealType(mealType);
+  };
+
   //Search Modal
   const [searchModalVisible, setSearchModalVisible] = useState(false);
   const openSearchModal = () => {
     setSearchModalVisible(true);
-  };
-
-  // mealType 카드별로 받아서 set
-  const { updateMealType } = useMealContext();
-  const setMealType = (mealType) => {
-    updateMealType(mealType);
   };
 
   const closeSearchModal = () => {
@@ -60,20 +61,23 @@ function RecordScreen({ navigation }) {
   const [dinnerMeals, setDinnerMeals] = useState([]);
   const [snackMeals, setSnackMeals] = useState([]);
 
-  const getMealListByMealType = () => {
+  const getTotalNutritionForDay = () => {
     axios
-      .get(`${uri}/api/meal/type`, {
+      .get(`${uri}/api/meal/type/total`, {
         params: {
           userID: userInfo.id,
-          date: formattedToDayDate,
+          date: formattedYYMMDD,
         },
       })
       .then((response) => {
-        setBreakfastMeals(response.data[0]);
-        setLunchMeals(response.data[1]);
-        setDinnerMeals(response.data[2]);
-        setSnackMeals(response.data[3]);
-        // console.log(response.data);
+        const modifiedData = response.data.map((item) =>
+          item === null ? 0 : item
+        );
+        setBreakfastMeals(modifiedData[0]);
+        setLunchMeals(modifiedData[1]);
+        setDinnerMeals(modifiedData[2]);
+        setSnackMeals(modifiedData[3]);
+        // console.log('Sever => RecordScreen.js:', modifiedData);
       })
       .catch(() => {
         console.log("getMealByDate error..");
@@ -81,27 +85,23 @@ function RecordScreen({ navigation }) {
   };
 
   useEffect(() => {
-    getMealListByMealType();
+    getTotalNutritionForDay();
     getImg();
   }, []);
 
-  //서버에 넘길 임시 Date
-  const mealDate = new Date();
-  const formattedToDayDate = mealDate.toISOString().split("T")[0];
-  // console.log(formattedDate); // "2023-08-31"
+  const handleCardPress = (cardData) => {
+    setMealType(cardData.mealType.toLowerCase());
+    setPhotoUri(
+      img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg
+    );
+    setPhotoId(
+      img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo
+    );
 
-  const handleCardPress = (imgUri, cardData) => {
-    if (imgUri) {
-      navigation.navigate("RecordMain"); // 이미지가 있으면 RecordMain 화면으로 이동
+    if (cardData.meals) {
+      navigation.push("RecordMain"); // 음식 데이터가 있으면 RecordMain 화면으로 이동
     } else {
-      openSearchModal(); // 이미지가 없으면 openSearchModal 실행
-      setMealType(cardData.mealType.toLowerCase());
-      setPhotoUri(
-        img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg
-      );
-      setPhotoId(
-        img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo
-      );
+      openSearchModal(); // 없으면 openSearchModal 실행
     }
   };
 
@@ -114,7 +114,7 @@ function RecordScreen({ navigation }) {
         >
           <View style={styles.headerContainer}>
             <Text style={styles.headerTitle}> Diet Record</Text>
-            <Text style={styles.headerDate}> {formattedToDayDate} </Text>
+            <Text style={styles.headerDate}> {formattedYYMMDD} </Text>
           </View>
 
           <ScrollView
@@ -140,17 +140,18 @@ function RecordScreen({ navigation }) {
                 isFirstCard && styles.firstCardStyle,
                 isLastCard && styles.lastCardStyle,
               ];
+              // 클로저를 사용하여 cardData를 전달
+              const handlePress = () => handleCardPress(cardData);
 
               return (
                 <MealCard1
                   key={index}
                   imgUri={imgUri}
                   mealType={cardData.mealType}
-                  mealTime="10:00" //임시값
                   carb={cardData.meals.totalCarbohydrate}
                   protein={cardData.meals.totalProtein}
                   fat={cardData.meals.totalFat}
-                  checkCardPress={() => handleCardPress(imgUri, cardData)}
+                  checkCardPress={handlePress} // 클로저를 사용한 함수 전달
                   cardStyle={cardStyle}
                 />
               );
