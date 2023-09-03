@@ -7,19 +7,18 @@ import { Formik } from "formik";
 import { useEffect, useState, useContext } from "react";
 import { ActivityIndicator, View } from "react-native";
 import {
+  BodyContainer,
   ButtonText,
   Colors,
   ExtraText,
   ExtraView,
-  InnerContainer,
+  HeaderContainer,
   LeftIcon,
-  Line,
+  LoginContainer,
   MsgBox,
-  PageLogo,
   PageTitle,
   RightIcon,
   StyledButton,
-  StyledContainer,
   StyledFormArea,
   StyledInputLabel,
   StyledTextInput,
@@ -30,10 +29,14 @@ import {
 import KeyboardAvoidWrapper from "../../components/keyboardAvoidingWrapper";
 import { LoginContext } from "../../store/LoginContext";
 import Constants from "expo-constants";
+import { GlobalStyles } from "../../components/UI/styles";
 
 WebBrowser.maybeCompleteAuthSession();
 
 const { brand, darkLight, primary } = Colors;
+
+const { whiteOpacity50, primary500, splashOrange, primary200 } =
+  GlobalStyles.colors;
 
 const Login = ({ navigation }) => {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -151,14 +154,12 @@ const Login = ({ navigation }) => {
 
   return (
     <KeyboardAvoidWrapper>
-      <StyledContainer>
-        <InnerContainer>
-          <PageLogo
-            resizeMode="cover"
-            source={require("../../images/ayofit-icon.png")}
-          />
-          <PageTitle>Ayo Fit</PageTitle>
-          <SubTitle>Account Login</SubTitle>
+      <LoginContainer>
+        <HeaderContainer>
+          <PageTitle>Ready to dive in?</PageTitle>
+          <SubTitle>Login now and explore!</SubTitle>
+        </HeaderContainer>
+        <BodyContainer>
           <Formik
             initialValues={{ email: "", password: "" }}
             onSubmit={(values, { setSubmitting }) => {
@@ -181,8 +182,6 @@ const Login = ({ navigation }) => {
                 <MyTextInput
                   label="Email Address"
                   icon="mail"
-                  placeholder="Your Email"
-                  placeholderTextColor={darkLight}
                   onChangeText={handleChange("email")}
                   onBlur={handleBlur("email")}
                   value={values.email}
@@ -191,8 +190,6 @@ const Login = ({ navigation }) => {
                 <MyTextInput
                   label="Password"
                   icon="lock"
-                  placeholder="Your Password"
-                  placeholderTextColor={darkLight}
                   onChangeText={handleChange("password")}
                   onBlur={handleBlur("password")}
                   value={values.password}
@@ -210,11 +207,9 @@ const Login = ({ navigation }) => {
                 )}
                 {isSubmitting && (
                   <StyledButton disabled={true}>
-                    <ActivityIndicator size="small" color={primary} />
+                    <ActivityIndicator size="small" color={primary500} />
                   </StyledButton>
                 )}
-
-                <Line />
 
                 {!googleSubmitting && (
                   <StyledButton
@@ -237,14 +232,14 @@ const Login = ({ navigation }) => {
                 <ExtraView>
                   <ExtraText>Don't have an account already? </ExtraText>
                   <TextLink onPress={() => navigation.navigate("Signup")}>
-                    <TextLinkContent>Sign up</TextLinkContent>
+                    <TextLinkContent> Sign up!</TextLinkContent>
                   </TextLink>
                 </ExtraView>
               </StyledFormArea>
             )}
           </Formik>
-        </InnerContainer>
-      </StyledContainer>
+        </BodyContainer>
+      </LoginContainer>
     </KeyboardAvoidWrapper>
   );
 };
@@ -261,7 +256,7 @@ const MyTextInput = ({
     <View>
       <StyledInputLabel>{label}</StyledInputLabel>
       <LeftIcon>
-        <Octicons name={icon} size={25} color={brand} />
+        <Octicons name={icon} size={25} color={whiteOpacity50} />
       </LeftIcon>
       <StyledTextInput {...props} />
       {isPassword && (
@@ -269,7 +264,7 @@ const MyTextInput = ({
           <Ionicons
             name={hidePassword ? "md-eye-off" : "md-eye"}
             size={25}
-            color={darkLight}
+            color={whiteOpacity50}
           />
         </RightIcon>
       )}
