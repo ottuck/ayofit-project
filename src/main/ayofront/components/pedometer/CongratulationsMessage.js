@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Animated, Easing, StyleSheet, Text } from "react-native";
+import { Animated, Easing, Image, StyleSheet, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { GlobalStyles } from "../../components/UI/styles";
 
@@ -33,7 +33,16 @@ const CongratulationsMessage = ({ isVisible }) => {
         ]}
         style={styles.gradientBackground}
       >
-        <Text style={styles.text}>Congratulations!</Text>
+        <Image
+          source={require("../../assets/confetti-icon.png")}
+          style={{
+            height: 100,
+            width: 100,
+          }}
+        />
+        <Text style={styles.msgTitle}>Congratulations!</Text>
+        <Text style={styles.msgContent}>You've successfully achieved</Text>
+        <Text style={styles.msgContent}>today's step target</Text>
       </LinearGradient>
     </Animated.View>
   ) : null;
@@ -50,17 +59,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: 999,
   },
-  text: {
-    color: "white",
+  msgTitle: {
+    color: GlobalStyles.colors.blackOpacity50,
     fontSize: 32,
     fontWeight: "bold",
   },
+  msgContent: {
+    color: GlobalStyles.colors.blackOpacity50,
+    fontSize: 18,
+    textAlign: "center",
+  },
   gradientBackground: {
-    width: "100%",
-    height: "100%",
+    width: "80%",
+    height: "50%",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 5,
+    borderRadius: 50,
   },
 });
 
