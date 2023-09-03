@@ -1,3 +1,7 @@
+import { AntDesign, Feather } from "@expo/vector-icons";
+import axios from "axios";
+import Constants from "expo-constants";
+import React, { useContext, useState } from "react";
 import {
   Image,
   ImageBackground,
@@ -9,32 +13,27 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useContext, useState, useEffect } from "react";
-import { AntDesign, Feather } from "@expo/vector-icons";
-import axios from "axios";
 import DatePicker, {
   getFormatedDate,
   getToday,
 } from "react-native-modern-datepicker";
 import CameraPicker from "../../components/record/CameraPicker";
 import ImagePicker from "../../components/record/ImagePicker";
-import SearchModal from "../../components/record/SearchModal";
-import { usePhotoContext } from "../../store/image_context";
-import { useMealContext } from "../../store/MealContext";
 import MealCard2 from "../../components/record/MealCard2";
-import Constants from "expo-constants";
+import SearchModal from "../../components/record/SearchModal";
 import { LoginContext } from "../../store/LoginContext";
+import { useMealContext } from "../../store/MealContext";
+import { usePhotoContext } from "../../store/image_context";
 
 const RecordMain = ({ navigation }) => {
+
+  console.log("밀컨택스트 안 : ", mealList);
   const { userInfo, setUserInfo } = useContext(LoginContext);
 
-  //서버에 넘길 임시 Date
   const {
     formattedYYMMDD,
     mealType,
     mealList,
-    addItemToMealList,
-    cleanMealList,
     favoriteMeals,
   } = useMealContext();
   console.log("밀컨택스트API :: ", mealList);
@@ -77,28 +76,6 @@ const RecordMain = ({ navigation }) => {
         console.log("MealData Error", "Failed to submit");
       });
   };
-
-  //SearchModal을 거치지 않고 페이지로 진입시 Sever에서 해당날자, 식단의 정보를 가져와서 ContextAPI에 저장
-  const getMealByTypeAndDate = () => {
-    axios
-      .get(`${uri}/api/meal/type`, {
-        params: {
-          mealType: mealType,
-          date: formattedYYMMDD,
-        },
-      })
-      .then((response) => {
-        console.log("Sever => RecordMain.js:", response.data);
-        // addItemToMealList(response.data);
-      })
-      .catch(() => {
-        console.log("getMealDataByTypeAndDate error..");
-      });
-  };
-
-  useEffect(() => {
-    getMealByTypeAndDate();
-  }, []);
 
   //mealList가 없을 경우 Save버튼을 누르면 서버에 Delete 요청을 보냄
   const deleteMealListOnServer = () => {
@@ -286,14 +263,6 @@ const RecordMain = ({ navigation }) => {
   const { ampm: ampm1, formattedTime: formattedCurrentTime } =
     transformDateTime(currentTime);
 
-  //페이지를 떠날때 발생할 때 mealList를 비우는 작업 수행
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("blur", () => {
-      cleanMealList([]);
-    });
-    // cleanup 함수를 반환하여 컴포넌트가 언마운트되거나 cleanup 필요 시 실행
-    return () => unsubscribe();
-  }, [navigation]);
 
   //Rendering page
   return (
@@ -384,6 +353,7 @@ const RecordMain = ({ navigation }) => {
               onPress={() => {
                 if (mealList.length === 0) {
                   deleteMealListOnServer();
+                  navigation.navigate("RecordScreen");
                 } else {
                   submitMealListToServer();
                   regFavMeals();

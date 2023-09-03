@@ -20,8 +20,8 @@ const { debuggerHost } = Constants.manifest2.extra.expoGo;
 const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
 function RecordScreen({ navigation }) {
+  const { mealType, addItemToMealList, updateMealType, formattedYYMMDD, cleanMealList} = useMealContext();
   const { userInfo, setUserInfo } = useContext(LoginContext);
-  const { updateMealType, formattedYYMMDD } = useMealContext();
 
   // 카드를 클릭할때 mealType 받아서 mealContext에 저장
   const setMealType = (mealType) => {
@@ -91,6 +91,25 @@ function RecordScreen({ navigation }) {
     getImg();
   }, []);
 
+  //SearchModal을 거치지 않고 mealMain페이지로 진입시 Sever에서 해당 날자 식단을 가져와서 MealContext에 저장
+  const getMealByTypeAndDate = () => {
+    axios
+      .get(`${uri}/api/meal/type`,
+        {
+          params: {
+            mealType: mealType,
+            date: formattedYYMMDD,
+          }
+        })
+      .then((response) => {
+        console.log('GET서버 => RecordMain.js:', response.data);
+        addItemToMealList(response.data);
+      })
+      .catch(() => {
+        console.log("getMealDataByTypeAndDate error..");
+      });
+  };
+
   const handleCardPress = (cardData) => {
     setMealType(cardData.mealType.toLowerCase());
     setPhotoUri(
@@ -101,9 +120,12 @@ function RecordScreen({ navigation }) {
     );
 
     if (cardData.meals) {
+      cleanMealList();
+      getMealByTypeAndDate();
       navigation.push("RecordMain"); // 음식 데이터가 있으면 RecordMain 화면으로 이동
     } else {
-      openSearchModal(); // 없으면 openSearchModal 실행
+      cleanMealList();
+      openSearchModal(); // 음식 데이터가 없으면 openSearchModal 실행
     }
   };
 
