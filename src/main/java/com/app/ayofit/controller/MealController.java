@@ -36,8 +36,8 @@ public class MealController {
 	}
 
 	@PostMapping("")
-	public void regMeal(@RequestBody List<MealDTO> mealList) {
-		mealDAO.regMeal(mealList);
+	public void regMeal(@RequestBody List<MealDTO> mealList, @RequestParam("userId") String userId) {
+		mealDAO.regMeal(mealList,userId);
 	}
 
 	@DeleteMapping("")

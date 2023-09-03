@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, Modal, Animated } from "react-native";
 import { ScrollView } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Constants from "expo-constants";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
@@ -46,11 +46,14 @@ import {
 } from "../../components/nutriDetail/StyledComponents";
 import MainImage from "../record/MainImage";
 import { useNavigation } from "@react-navigation/native";
+import { LoginContext } from "../../store/LoginContext";
 
 const MyRecordsComponent = () => {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   //const uri = "http://213.35.96.167";
+
+  const { userInfo, setUserInfo } = useContext(LoginContext);
 
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDateMeals, setSelectedDateMeals] = useState([]);
@@ -91,7 +94,7 @@ const MyRecordsComponent = () => {
 
   const getNutritionData = (date) => {
     axios
-      .get(`${uri}/api/nutrition/daily/user1/${date}`)
+      .get(`${uri}/api/nutrition/daily/${userInfo.id}/${date}`)
       .then((response) => {
         // console.log(response.data);
         setDailyNutrition(response.data);
@@ -186,7 +189,7 @@ const MyRecordsComponent = () => {
     rToday.setHours(rToday.getHours() + 9);
     let formattedRecordToday = rToday.toISOString().split("T")[0];
     const record = {
-      rId: "user3",
+      rId: userInfo.id,
       rWeight: parseFloat(weight),
       rWeightDate: formattedRecordToday,
     };
@@ -202,7 +205,7 @@ const MyRecordsComponent = () => {
           console.log(response.data);
           setHasRecorded(true);
           setRecordedWeight(weight);
-          fetchAllWeightsByUserId("user3");
+          fetchAllWeightsByUserId(userInfo.id);
         })
         .catch((error) => console.log(error));
     }
@@ -215,7 +218,7 @@ const MyRecordsComponent = () => {
         console.log(response.data);
         setHasRecorded(false);
         setRecordedWeight(0);
-        fetchAllWeightsByUserId("user3");
+        fetchAllWeightsByUserId(userInfo.id);
       })
       .catch((error) => console.log(error));
   };
@@ -229,7 +232,7 @@ const MyRecordsComponent = () => {
     rToday.setHours(rToday.getHours() + 9);
     let formattedRecordToday = rToday.toISOString().split("T")[0];
     const record = {
-      rId: "user3",
+      rId: userInfo.id,
       rWeight: parseFloat(weight),
       rWeightDate: formattedRecordToday,
     };
@@ -240,7 +243,7 @@ const MyRecordsComponent = () => {
         console.log(response.data);
         setHasRecorded(true);
         setRecordedWeight(weight);
-        fetchAllWeightsByUserId("user3");
+        fetchAllWeightsByUserId(userInfo.id);
       })
       .catch((error) => console.log(error));
   };
@@ -262,8 +265,8 @@ const MyRecordsComponent = () => {
 
   useEffect(() => {
     getNutritionData(formattedToday);
-    fetchWeightByDateAndId("user3", formattedToday);
-    fetchAllWeightsByUserId("user3");
+    fetchWeightByDateAndId(userInfo.id, formattedToday);
+    fetchAllWeightsByUserId(userInfo.id);
   }, []);
 
   // 각각의 원에 대한 애니메이션 값 상태
@@ -628,7 +631,7 @@ const MyRecordsComponent = () => {
                     </RecordsModalFixAndDeleteButton>
                     <RecordsModalFixAndDeleteButton
                       onPress={() => {
-                        deleteWeight("user3", formattedToday);
+                        deleteWeight(userInfo.id, formattedToday);
                         setModalVisible(false);
                       }}
                     >

@@ -10,19 +10,22 @@ import {
 import { GlobalStyles } from "../../components/UI/styles";
 import Input from "../../components/account/UI/Input";
 import Button from "../../components/account/UI/Button";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useAccountsContext } from "../../store/accounts_context";
 import axios from "axios";
 import Constants from "expo-constants";
+import { LoginContext } from "../../store/LoginContext";
 
 function AccUpdateNutri({ navigation }) {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
   const uri = `http://${debuggerHost.split(":").shift()}:8080`;
   // const uri = "http://213.35.96.167";
 
+  const { userInfo, setUserInfo } = useContext(LoginContext);
+
   const updateAccGoal = () => {
     axios
-      .put(`${uri}/api/account/user1/goal`, accountInfos)
+      .put(`${uri}/api/account/${userInfo.id}/goal`, accountInfos)
       .then((response) => {
         console.log("User info submitted successfully:", response.data);
         navigation.navigate("MyPage");

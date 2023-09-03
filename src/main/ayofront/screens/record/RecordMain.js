@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import axios from "axios";
 import DatePicker, {
@@ -23,10 +23,13 @@ import { usePhotoContext } from "../../store/image_context";
 import { useMealContext } from "../../store/MealContext";
 import MealCard2 from "../../components/record/MealCard2";
 import Constants from "expo-constants";
+import { LoginContext } from "../../store/LoginContext";
 
 const RecordMain = ({ navigation }) => {
   const { mealType, mealList, favoriteMeals } = useMealContext();
   // console.log("밀컨택스트API : ", mealList);
+
+  const { userInfo, setUserInfo } = useContext(LoginContext);
 
   //서버에 넘길 임시 Date
   const mealDate = new Date();
@@ -60,7 +63,9 @@ const RecordMain = ({ navigation }) => {
     console.log("Save버튼 누른후 Server에 제출한값 :", updatedMealList);
 
     axios
-      .post(`${uri}/api/meal`, updatedMealList)
+      .post(`${uri}/api/meal`, updatedMealList, {
+        params: { userId: userInfo.id },
+      })
       .then((response) => {
         console.log("MealData submitted successfully");
       })
@@ -166,7 +171,7 @@ const RecordMain = ({ navigation }) => {
   const regFavMeals = () => {
     axios
       .post(`${uri}/api/favorites`, favoriteMeals, {
-        params: { userId: "user1" },
+        params: { userId: userInfo.id },
       })
       .then((response) => {
         console.log(response.data);
@@ -347,7 +352,7 @@ const RecordMain = ({ navigation }) => {
                 } else {
                   submitMealListToServer();
                   regFavMeals();
-                  uploadImage(photoUri, "user1", mealType);
+                  uploadImage(photoUri, userInfo.id, mealType);
                   navigation.navigate("RecordScreen");
                 }
               }}

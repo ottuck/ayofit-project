@@ -35,7 +35,7 @@ function MyPage({ navigation }) {
 
   const getAccountGoals = () => {
     axios
-      .get(`${uri}/api/account/user1/goal`)
+      .get(`${uri}/api/account/${userInfo.id}/goal`)
       .then((response) => {
         console.log(response.data);
         setGoals(response.data);
@@ -50,7 +50,7 @@ function MyPage({ navigation }) {
   const getFavorites = () => {
     axios
       .get(`${uri}/api/favorites`, {
-        params: { userId: "user1" },
+        params: { userId: userInfo.id },
       })
       .then((response) => {
         // console.log(dbFavorites);
