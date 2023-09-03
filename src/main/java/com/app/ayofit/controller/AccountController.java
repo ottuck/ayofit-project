@@ -43,6 +43,7 @@ public class AccountController {
 
 	@GetMapping("/{userId}")
 	public AccountDTO getAccountInfos(@PathVariable String userId) {
+		System.out.println(userId);
 		return aDAO.getAccountInfos(userId);
 	}
 
