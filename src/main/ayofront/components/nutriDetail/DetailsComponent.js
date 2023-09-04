@@ -210,7 +210,7 @@ const DetailsComponent = () => {
           </Text>
         ),
         label: labelDate,
-        labelWidth: 24,
+        labelWidth: 26,
         frontColor: "#f5d0b1",
       });
     }
@@ -1030,7 +1030,7 @@ const DetailsComponent = () => {
                 ? 23.8
                 : calendarMode === "Weekly"
                 ? 18.2
-                : 17.5
+                : 19
             }
             spacing={
               calendarMode === "Monthly"
