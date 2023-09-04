@@ -22,9 +22,11 @@ const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 function RecordScreen({ navigation }) {
   const {
     mealType,
+    setMealType,
     addItemToMealList,
     updateMealType,
     formattedYYMMDD,
+    addItemToMealListUseFlatMap,
     cleanMealList,
     results,
   } = useMealContext();
@@ -35,12 +37,11 @@ function RecordScreen({ navigation }) {
   const searchMealType = (mealType) => {
     setSearchedMealType(mealType);
   };
-  // console.log(searchedMealType);
 
   // 카드를 클릭할때 mealType 받아서 mealContext에 저장
-  const setMealType = (mealType) => {
-    updateMealType(mealType);
-  };
+  // const setMealType = (mealType) => {
+  //   updateMealType(mealType);
+  // };
 
   //Search Modal
   const [searchModalVisible, setSearchModalVisible] = useState(false);
@@ -95,8 +96,8 @@ function RecordScreen({ navigation }) {
         setSnackMeals(modifiedData[3]);
         // console.log('Sever => RecordScreen.js:', modifiedData);
       })
-      .catch(() => {
-        console.log("getMealByDate error..");
+      .catch((error) => {
+        console.log("getMealByDate error.." + error);
       });
   };
 
@@ -106,8 +107,11 @@ function RecordScreen({ navigation }) {
     getImg();
   }, [imgResults, results]);
 
+  // console.log(mealType);
   //검색창을 안거치고 넘어갈때 렌더링할 데이터 요청하기
   const getMealByTypeAndDate = () => {
+    console.log("axios요청 안");
+    console.log(mealType);
     axios
       .get(`${uri}/api/meal/type`, {
         params: {
@@ -116,6 +120,7 @@ function RecordScreen({ navigation }) {
         },
       })
       .then((response) => {
+        // console.log(response);
         const newData = response.data.map((item) => {
           const nKeysObject = Object.fromEntries(
             Object.entries(item).map(([key, value]) => [
@@ -128,13 +133,16 @@ function RecordScreen({ navigation }) {
         // console.log('GET서버 :', newData);
         addItemToMealListUseFlatMap(newData);
       })
-      .catch(() => {
-        console.log("getMealDataByTypeAndDate error..");
+      .catch((error) => {
+        console.log("getMealDataByTypeAndDate error.." + error);
       });
   };
 
   const handleCardPress = (cardData) => {
-    setMealType(cardData.mealType.toLowerCase());
+    console.log("handleCardPess안");
+    console.log(cardData);
+    setMealType(cardData.mealType);
+    console.log(mealType);
     setPhotoUri(
       img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg
     );
