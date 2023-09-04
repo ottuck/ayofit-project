@@ -30,6 +30,13 @@ function RecordScreen({ navigation }) {
   } = useMealContext();
   const { userInfo, setUserInfo } = useContext(LoginContext);
 
+  //mealType 찾는 다른 함수 고안(카드를 클릭할때 말고 useEffect로 페이지에 들어올때 실행시키기)
+  const [searchedMealType, setSearchedMealType] = useState();
+  const searchMealType = (mealType) => {
+    setSearchedMealType(mealType);
+  };
+  // console.log(searchedMealType);
+
   // 카드를 클릭할때 mealType 받아서 mealContext에 저장
   const setMealType = (mealType) => {
     updateMealType(mealType);
@@ -94,11 +101,12 @@ function RecordScreen({ navigation }) {
   };
 
   useEffect(() => {
+    searchMealType();
     getTotalNutritionForDay();
     getImg();
   }, [imgResults, results]);
 
-  //SearchModal을 거치지 않고 mealMain페이지로 진입시 Sever에서 해당 날자 식단을 가져와서 MealContext에 저장
+  //검색창을 안거치고 넘어갈때 렌더링할 데이터 요청하기
   const getMealByTypeAndDate = () => {
     axios
       .get(`${uri}/api/meal/type`, {
@@ -108,8 +116,17 @@ function RecordScreen({ navigation }) {
         },
       })
       .then((response) => {
-        console.log("GET서버 => RecordMain.js:", response.data);
-        addItemToMealList(response.data);
+        const newData = response.data.map((item) => {
+          const nKeysObject = Object.fromEntries(
+            Object.entries(item).map(([key, value]) => [
+              key.replace(/^r/, "n"),
+              value,
+            ])
+          );
+          return nKeysObject;
+        });
+        // console.log('GET서버 :', newData);
+        addItemToMealListUseFlatMap(newData);
       })
       .catch(() => {
         console.log("getMealDataByTypeAndDate error..");
@@ -128,7 +145,7 @@ function RecordScreen({ navigation }) {
     if (cardData.meals) {
       cleanMealList();
       getMealByTypeAndDate();
-      navigation.push("RecordMain"); // 음식 데이터가 있으면 RecordMain 화면으로 이동
+      navigation.navigate("RecordMain"); // 음식 데이터가 있으면 RecordMain 화면으로 이동
     } else {
       cleanMealList();
       openSearchModal(); // 음식 데이터가 없으면 openSearchModal 실행
@@ -181,6 +198,7 @@ function RecordScreen({ navigation }) {
                   carb={cardData.meals.totalCarbohydrate}
                   protein={cardData.meals.totalProtein}
                   fat={cardData.meals.totalFat}
+                  searchMealType={searchMealType}
                   checkCardPress={handlePress} // 클로저를 사용한 함수 전달
                   cardStyle={cardStyle}
                 />

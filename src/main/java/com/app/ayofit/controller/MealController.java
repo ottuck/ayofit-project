@@ -24,14 +24,19 @@ public class MealController {
 	private MealDAO mealDAO;
 
 	@GetMapping("/type/total")
-	public List<NutritionDTO> getTotalNutritionForDay(@RequestParam("userID") String userID,
+	public List<NutritionDTO> getTotalNutritionForDay(
+			@RequestParam("userID") String userID,
 			@RequestParam("date") String date) {
 		return mealDAO.getTotalNutritionForDay(date, userID);
 	}
 
 	@GetMapping("/type")
-	public List<MealDTO> getMealByTypeAndDate(@RequestParam("mealType") String mealType,
+	public List<MealDTO> getMealByTypeAndDate(
+			@RequestParam("mealType") String mealType,
 			@RequestParam("date") String date) {
+		//앱을 켜고 이 요청을 했을때 mealType이 안들어오는 문제가 있음, RecordScreen에 밀타입이 존재하지 않기 때문에 
+		System.out.println("밀타입 :" + mealType);	
+		System.out.println("날자 :" + date);
 		return mealDAO.getMealByTypeAndDate(mealType, date);
 	}
 
