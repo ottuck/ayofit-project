@@ -85,7 +85,7 @@ const FastRecord = ({ navigation }) => {
                   Using Time : {formatTimeFromSeconds(data.elapsedTime)}
                 </RecordUseTime>
                 <RecordSTime> Start : {data.confirmStartTime}</RecordSTime>
-                <RecordETime> End : {data.confirmEndTime}</RecordETime>
+                <RecordETime> End   : {data.confirmEndTime}</RecordETime>
               </RecordOneView>
             ))}
           </RecordUnderC>

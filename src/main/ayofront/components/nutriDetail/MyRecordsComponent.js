@@ -65,6 +65,7 @@ const MyRecordsComponent = () => {
   const [hasRecorded, setHasRecorded] = useState(false); // 체중 기록 유무 확인
   const [recordedWeight, setRecordedWeight] = useState(0); // 기록된 체중
   const [weightData, setWeightData] = useState([]); // 차트에 몸무게 여러개담는 데이터
+  const [mainviewB, setMainviewB] = useState(true);
 
   let totalCarbohydrate = 0;
   let totalProtein = 0;
@@ -183,6 +184,7 @@ const MyRecordsComponent = () => {
   };
 
   const addOrModifyWeight = () => {
+
     if (!isValidWeight(weight)) {
       alert("Please enter a number from 0.1 to 200.");
       return;
@@ -355,8 +357,18 @@ const MyRecordsComponent = () => {
       });
   };
 
+  const clickweight = () => {
+    console.log("Before Toggle: mainviewB is", mainviewB);
+    setMainviewB(!mainviewB);
+    console.log("After Toggle: mainviewB is", !mainviewB);
+  }
+  const mainTJViewStyle = {
+    ...styles.mainTJView,
+    paddingBottom: !mainviewB ? 1000 : 0
+  };
+
   return (
-    <View>
+    <View style={mainTJViewStyle}>
       <View style={styles.mainImg}>
         <Text style={{ fontSize: 20, fontWeight: "700", marginBottom: "2%" }}>
           Daily Report
@@ -624,6 +636,7 @@ const MyRecordsComponent = () => {
                 </RecordsModalWeightInfoText>
                 <RecordsModalWeightCloseButton
                   onPress={() => setModalVisible(false)}
+                  
                 >
                   <RecordsModalWeightCloseButtonText>
                     X
@@ -665,6 +678,8 @@ const MyRecordsComponent = () => {
               ) : (
                 <RecordsModalWeightButton
                   onPress={() => {
+                    clickweight();
+                    console.log("Recording Weight button clicked");
                     addOrModifyWeight();
                     setModalVisible(false);
                   }}
@@ -685,6 +700,9 @@ const MyRecordsComponent = () => {
 export default MyRecordsComponent;
 
 const styles = StyleSheet.create({
+  mainTJView: {
+    
+  },
   circle: {
     width: 60,
     height: 60,

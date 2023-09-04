@@ -12,7 +12,7 @@ function MainImage({ navigate }) {
   const uri = "http://213.35.96.167";
 
   const { userInfo, setUserInfo } = useContext(LoginContext);
-  const { photoUri } = usePhotoContext();
+  const { imgResults } = usePhotoContext();
 
   const [img, setImgs] = useState([]);
   const getImg = async () => {
@@ -33,7 +33,7 @@ function MainImage({ navigate }) {
 
   useEffect(() => {
     getImg();
-  }, [photoUri]);
+  }, [imgResults]);
 
   return (
     <View style={styles.container}>

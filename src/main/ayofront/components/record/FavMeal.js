@@ -17,6 +17,7 @@ const FavMeal = ({ mealInfo }) => {
     favoriteMeals,
     dbFavorites,
     deleteToDbFavorites,
+    setFavResults,
   } = useMealContext();
   const handleDelete = (no) => {
     deleteToDbFavorites(no);
