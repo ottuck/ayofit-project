@@ -26,6 +26,7 @@ function RecordScreen({ navigation }) {
     updateMealType,
     formattedYYMMDD,
     cleanMealList,
+    results,
   } = useMealContext();
   const { userInfo, setUserInfo } = useContext(LoginContext);
 
@@ -46,7 +47,7 @@ function RecordScreen({ navigation }) {
 
   const [img, setImgs] = useState([]);
 
-  const { setPhotoUri, setPhotoId } = usePhotoContext();
+  const { setPhotoUri, setPhotoId, imgResults } = usePhotoContext();
   const getImg = () => {
     axios
       .get(`${uri}/api/file/get-image/${userInfo.id}`)
@@ -95,8 +96,7 @@ function RecordScreen({ navigation }) {
   useEffect(() => {
     getTotalNutritionForDay();
     getImg();
-    console.log("!!!!");
-  }, [img]);
+  }, [imgResults, results]);
 
   //SearchModal을 거치지 않고 mealMain페이지로 진입시 Sever에서 해당 날자 식단을 가져와서 MealContext에 저장
   const getMealByTypeAndDate = () => {

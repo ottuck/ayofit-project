@@ -26,7 +26,6 @@ import { useMealContext } from "../../store/MealContext";
 import { usePhotoContext } from "../../store/image_context";
 
 const RecordMain = ({ navigation }) => {
-
   console.log("밀컨택스트 안 : ", mealList);
   const { userInfo, setUserInfo } = useContext(LoginContext);
 
@@ -35,6 +34,8 @@ const RecordMain = ({ navigation }) => {
     mealType,
     mealList,
     favoriteMeals,
+    results,
+    setResults,
   } = useMealContext();
   console.log("밀컨택스트API :: ", mealList);
 
@@ -70,6 +71,9 @@ const RecordMain = ({ navigation }) => {
         params: { userId: userInfo.id },
       })
       .then((response) => {
+        // console.log(response.data);
+        setResults(response);
+        // console.log(results);
         console.log("MealData submitted successfully");
       })
       .catch(() => {
@@ -87,6 +91,7 @@ const RecordMain = ({ navigation }) => {
         },
       })
       .then((response) => {
+        setResults(response);
         console.log("MealData deleted successfully");
       })
       .catch(() => {
@@ -99,7 +104,8 @@ const RecordMain = ({ navigation }) => {
   const toggleImgModal = () => {
     setImgModalVisible(!imgModalVisible);
   };
-  const { photoUri, setPhotoUri, photoId } = usePhotoContext();
+  const { photoUri, setPhotoUri, photoId, imgResults, setImgResult } =
+    usePhotoContext();
 
   // 사진 파일 삭제 로직
   // console.log(photoUri);
@@ -114,6 +120,7 @@ const RecordMain = ({ navigation }) => {
       })
       .then((response) => {
         console.log("PhotoFile deleted successfully");
+        setImgResult(response);
         setPhotoUri(null);
       })
       .catch(() => {
@@ -161,7 +168,8 @@ const RecordMain = ({ navigation }) => {
       });
 
       const responseData = await response;
-      // console.log(responseData);
+      // console.log("~~~~~~~~~~>" + responseData);
+      setImgResult(responseData);
     } catch (error) {
       console.error(error);
     }
@@ -262,7 +270,6 @@ const RecordMain = ({ navigation }) => {
     transformDateTime(pickerTime);
   const { ampm: ampm1, formattedTime: formattedCurrentTime } =
     transformDateTime(currentTime);
-
 
   //Rendering page
   return (
