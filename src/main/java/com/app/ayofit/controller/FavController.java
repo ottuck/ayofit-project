@@ -32,19 +32,19 @@ public class FavController {
 	}
 	
 	@PostMapping("")
-	public ResponseEntity<String> regFavorites(@RequestBody List<Integer> nNos, @RequestParam("userId") String userId){
+	public ResponseEntity<Integer> regFavorites(@RequestBody List<Integer> nNos, @RequestParam("userId") String userId){
 //		System.out.println(nNos);
 //		System.out.println(userId);
 		fDAO.regFavorites(nNos, userId);
-		return ResponseEntity.ok("favorites registered successfully");
+		return ResponseEntity.ok(1);
 	}
 	
 	@DeleteMapping("")
-	public ResponseEntity<String> deleteFavorites(@RequestParam("fNo") int no){
+	public ResponseEntity<Integer> deleteFavorites(@RequestParam("fNo") int no){
 		
 		fDAO.deleteFavorites(no);
 		
-		return ResponseEntity.ok("favorites deleted successfully");
+		return ResponseEntity.ok(0);
 	}
 	
 }

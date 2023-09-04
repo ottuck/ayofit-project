@@ -177,7 +177,7 @@ const RecordMain = ({ navigation }) => {
 
   console.log(favoriteMeals);
 
-  const { dbFavorites, setFavoriteMeals } = useMealContext();
+  const { favResults, setFavResults } = useMealContext();
   // 즐겨찾기 식단 db에 등록
   const regFavMeals = () => {
     axios
@@ -186,6 +186,7 @@ const RecordMain = ({ navigation }) => {
       })
       .then((response) => {
         console.log(response.data);
+        setFavResults(response);
       })
       .catch((error) => {
         console.error(error);

@@ -44,7 +44,9 @@ export const MealProvider = ({ children }) => {
       prevDbFavorites.filter((item) => item.favNo !== NO)
     );
   };
+
   const [results, setResults] = useState([]);
+  const [favResults, setFavResults] = useState([]);
 
   //여러 페이지에서 쓸 현재 날자를 DB Date형식에 맞춰 포멧팅 해둠
   const todayDate = new Date();
@@ -99,6 +101,8 @@ export const MealProvider = ({ children }) => {
         deleteToDbFavorites,
         results,
         setResults,
+        favResults,
+        setFavResults,
 
         formattedTodayDateAndTime,
         formattedYYMMDD,
