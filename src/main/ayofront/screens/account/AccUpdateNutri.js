@@ -28,6 +28,7 @@ function AccUpdateNutri({ navigation }) {
       .put(`${uri}/api/account/${userInfo.id}/goal`, accountInfos)
       .then((response) => {
         console.log("User info submitted successfully:", response.data);
+        setAcountResult(response);
         navigation.navigate("MyPage");
       })
       .catch((error) => {
@@ -35,7 +36,8 @@ function AccUpdateNutri({ navigation }) {
       });
   };
 
-  const { accountInfos, setAccountInfos } = useAccountsContext();
+  const { accountInfos, setAccountInfos, accountResult, setAcountResult } =
+    useAccountsContext();
 
   const goToAccUpdateInfo = () => {
     navigation.navigate("AccUpdateInfo");
