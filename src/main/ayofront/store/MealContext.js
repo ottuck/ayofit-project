@@ -95,6 +95,7 @@ export const MealProvider = ({ children }) => {
     <MealContext.Provider
       value={{
         mealType,
+        setMealType,
         updateMealType,
         mealList,
         addItemToMealList,
