@@ -24,10 +24,10 @@ function RecordScreen({ navigation }) {
   const { userInfo, setUserInfo } = useContext(LoginContext);
 
   //mealType 찾는 다른 함수 고안(카드를 클릭할때 말고 useEffect로 페이지에 들어올때 실행시키기)
-  const [searchedMealType, setSearchedMealType] = useState();
-  const searchMealType = (mealType) => {
-    setSearchedMealType(mealType);
-  };
+  // const [searchedMealType, setSearchedMealType] = useState();
+  // const searchMealType = (mealType) => {
+  //   setSearchedMealType(mealType);
+  // };
   // console.log(searchedMealType);
 
   
@@ -95,7 +95,7 @@ function RecordScreen({ navigation }) {
   };
 
   useEffect(() => {
-    searchMealType();
+    // searchMealType();
     getTotalNutritionForDay();
     getImg();
     console.log('유즈이펙트 실행되나 확인');
@@ -194,7 +194,7 @@ function RecordScreen({ navigation }) {
                   carb={cardData.meals.totalCarbohydrate}
                   protein={cardData.meals.totalProtein}
                   fat={cardData.meals.totalFat}
-                  searchMealType={searchMealType}
+                  // searchMealType={searchMealType}
                   checkCardPress={handlePress} // 클로저를 사용한 함수 전달
                   cardStyle={cardStyle}
                 />
