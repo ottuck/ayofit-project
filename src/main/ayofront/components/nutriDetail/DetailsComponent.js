@@ -53,6 +53,7 @@ import {
 import DateCalendar from "./DateCalendar";
 import WeightCalendar from "./WeightCalendar";
 import { LoginContext } from "../../store/LoginContext";
+import { useNavigation } from "@react-navigation/native";
 
 const DetailsComponent = () => {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -60,6 +61,7 @@ const DetailsComponent = () => {
   //const uri = "http://213.35.96.167";
 
   const { userInfo, setUserInfo } = useContext(LoginContext);
+  const navigation = useNavigation();
 
   const [selectedDateMeals, setSelectedDateMeals] = useState([]);
   const [resetDate, setResetDate] = useState(false);
@@ -707,6 +709,7 @@ const DetailsComponent = () => {
 
   useEffect(() => {
     fetchData("daily");
+    getAccountGoals();
   }, []);
 
   useEffect(() => {
@@ -720,6 +723,20 @@ const DetailsComponent = () => {
     weeklyTotalProtein,
     weeklyTotalFat,
   ]);
+
+  const [goals, setGoals] = useState({});
+
+  const getAccountGoals = () => {
+    axios
+      .get(`${uri}/api/account/${userInfo.id}/goal`)
+      .then((response) => {
+        // console.log(response.data);
+        setGoals(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   return (
     <View>
@@ -854,7 +871,13 @@ const DetailsComponent = () => {
 
       <DetailsResetButtonContainer>
         <DetailsResetGoalButton>
-          <DetailsResetButtonText>Reset your goal</DetailsResetButtonText>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("MY PAGE");
+            }}
+          >
+            <DetailsResetButtonText>Reset your goal</DetailsResetButtonText>
+          </TouchableOpacity>
         </DetailsResetGoalButton>
       </DetailsResetButtonContainer>
 
@@ -1035,7 +1058,13 @@ const DetailsComponent = () => {
           left: -3,
         }}
       >
-        <GoalNutriRatioViewText>My Goals</GoalNutriRatioViewText>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("MY PAGE");
+          }}
+        >
+          <GoalNutriRatioViewText>My Goals</GoalNutriRatioViewText>
+        </TouchableOpacity>
         <Image
           source={require("../../assets/dateRight.png")}
           style={{
@@ -1051,15 +1080,17 @@ const DetailsComponent = () => {
       <GoalNutriRatioContainer>
         <GoalNutriRatioView>
           <GoalNutriRatioViewText>Weight</GoalNutriRatioViewText>
-          <GoalNutriRatioViewText>65kg</GoalNutriRatioViewText>
+          <GoalNutriRatioViewText>{goals.tarWeight}kg</GoalNutriRatioViewText>
         </GoalNutriRatioView>
         <GoalNutriRatioView>
           <GoalNutriRatioViewText>Calorie</GoalNutriRatioViewText>
-          <GoalNutriRatioViewText>1953 kcal</GoalNutriRatioViewText>
+          <GoalNutriRatioViewText>{goals.calorie} kcal</GoalNutriRatioViewText>
         </GoalNutriRatioView>
         <GoalNutriRatioView>
           <GoalNutriRatioViewText>MacroRatio</GoalNutriRatioViewText>
-          <GoalNutriRatioViewText>50 : 30 : 20</GoalNutriRatioViewText>
+          <GoalNutriRatioViewText>
+            {goals.carb} : {goals.protein} : {goals.fat}
+          </GoalNutriRatioViewText>
         </GoalNutriRatioView>
       </GoalNutriRatioContainer>
     </View>

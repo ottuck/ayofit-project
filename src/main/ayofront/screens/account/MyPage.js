@@ -35,7 +35,7 @@ function MyPage({ navigation }) {
     axios
       .get(`${uri}/api/account/${userInfo.id}/goal`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setGoals(response.data);
       })
       .catch((error) => {
@@ -43,7 +43,8 @@ function MyPage({ navigation }) {
       });
   };
 
-  const { favoriteMeals, dbFavorites, setDbFavorites } = useMealContext();
+  const { favoriteMeals, dbFavorites, setDbFavorites, favResults } =
+    useMealContext();
 
   const getFavorites = () => {
     axios
@@ -65,7 +66,7 @@ function MyPage({ navigation }) {
 
   useEffect(() => {
     getFavorites();
-  }, []);
+  }, [favResults]);
 
   const goToAccountInfo = () => {
     navigation.navigate("AccUpdateInfo");

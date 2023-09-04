@@ -3,6 +3,7 @@ package com.app.ayofit.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,14 +46,16 @@ public class MealController {
 	}
 
 	@PostMapping("")
-	public void regMeal(@RequestBody List<MealDTO> mealList, @RequestParam("userId") String userId) {
+	public ResponseEntity<Integer> regMeal(@RequestBody List<MealDTO> mealList, @RequestParam("userId") String userId) {
 		System.out.println(userId);
 		mealDAO.regMeal(mealList,userId);
+		return ResponseEntity.ok(1);
 	}
 
 	@DeleteMapping("")
-	public void delMeal(@RequestParam("mealDate") String mealDate, @RequestParam("mealType") String mealType) {
+	public ResponseEntity<Integer> delMeal(@RequestParam("mealDate") String mealDate, @RequestParam("mealType") String mealType) {
 		mealDAO.delMeal(mealDate, mealType);
+		return ResponseEntity.ok(0);
 	}
 
 }

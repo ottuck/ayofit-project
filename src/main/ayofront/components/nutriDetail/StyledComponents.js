@@ -2,7 +2,7 @@ import styled from "styled-components/native";
 import * as Progress from "react-native-progress";
 
 export const HomeSafeAreaView = styled.SafeAreaView`
-  height: 2000px;
+  height: 2080px;
   background-color: #ffe9d8;
 `;
 
@@ -650,7 +650,7 @@ export const GoalNutriRatioView = styled.View`
 
 export const GoalNutriRatioViewText = styled.Text`
   color: #372d23;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
   margin-horizontal: 26px;
 `;

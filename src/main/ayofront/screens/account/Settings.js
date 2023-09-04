@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useContext } from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, StyleSheet } from "react-native";
 import { LoginContext } from "../../store/LoginContext";
 
 function Settings() {
@@ -22,11 +22,18 @@ function Settings() {
       .catch((error) => console.log(error));
   };
   return (
-    <View>
-      <Text>Settings!</Text>
+    <View style={styles.container}>
       <Button title="log out" onPress={() => ClearLogin()}></Button>
     </View>
   );
 }
 
 export default Settings;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: "10%",
+    backgroundColor: "rgba(255, 233, 216, 1)",
+  },
+});

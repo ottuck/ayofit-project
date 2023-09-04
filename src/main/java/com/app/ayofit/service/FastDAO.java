@@ -14,8 +14,8 @@ public class FastDAO {
     @Autowired
     private FastMapper fastMapper;
 
-    public void insertFastData(FastDTO fastDTO) {
-        fastMapper.insertFastData(fastDTO);
+    public void insertFastData(FastDTO fastDTO,String userId) {
+        fastMapper.insertFastData(fastDTO, userId);
     }
 
     public List<FastDTO> getAllFastRecord() {
