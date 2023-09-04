@@ -27,6 +27,7 @@ const FavMeal = ({ mealInfo }) => {
       .delete(`${uri}/api/favorites`, { params: { fNo: no } })
       .then((response) => {
         console.log(response.data);
+        setFavResults(response);
       })
       .catch((error) => {
         console.error(error);

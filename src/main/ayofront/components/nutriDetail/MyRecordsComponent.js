@@ -47,6 +47,7 @@ import {
 import MainImage from "../record/MainImage";
 import { useNavigation } from "@react-navigation/native";
 import { LoginContext } from "../../store/LoginContext";
+import { useAccountsContext } from "../../store/accounts_context";
 
 const MyRecordsComponent = () => {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -54,6 +55,7 @@ const MyRecordsComponent = () => {
   //const uri = "http://213.35.96.167";
 
   const { userInfo, setUserInfo } = useContext(LoginContext);
+  const { accountInfos, setAccountInfos } = useAccountsContext();
 
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedDateMeals, setSelectedDateMeals] = useState([]);
@@ -267,6 +269,7 @@ const MyRecordsComponent = () => {
     getNutritionData(formattedToday);
     fetchWeightByDateAndId(userInfo.id, formattedToday);
     fetchAllWeightsByUserId(userInfo.id);
+    getAccountTarWeight();
   }, []);
 
   // 각각의 원에 대한 애니메이션 값 상태
@@ -336,6 +339,22 @@ const MyRecordsComponent = () => {
   const goToRecordScreen = () => {
     navigation.navigate("DIET RECORD");
   };
+
+  const getAccountTarWeight = () => {
+    axios
+      .get(`${uri}/api/account/${userInfo.id}/weight`)
+      .then((response) => {
+        console.log(response.data);
+        setAccountInfos({
+          ...accountInfos,
+          tarWeight: response.data,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
     <View>
       <View style={styles.mainImg}>
@@ -579,7 +598,9 @@ const MyRecordsComponent = () => {
                     top: 1.6,
                   }}
                 />
-                <RecordsGoalWeightText>목표 62kg</RecordsGoalWeightText>
+                <RecordsGoalWeightText>
+                  Goal {accountInfos.tarWeight}kg
+                </RecordsGoalWeightText>
               </RecordsGoalWeightContainer>
             </RecordsMyWeightImgContainer>
             <RecordsWeightButtonContainer>

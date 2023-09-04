@@ -20,7 +20,14 @@ const { debuggerHost } = Constants.manifest2.extra.expoGo;
 const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
 function RecordScreen({ navigation }) {
-  const { mealType, addItemToMealListUseFlatMap, updateMealType, formattedYYMMDD, cleanMealList } = useMealContext();
+  const {
+    mealType,
+    addItemToMealList,
+    updateMealType,
+    formattedYYMMDD,
+    cleanMealList,
+    results,
+  } = useMealContext();
   const { userInfo, setUserInfo } = useContext(LoginContext);
 
   //mealType 찾는 다른 함수 고안(카드를 클릭할때 말고 useEffect로 페이지에 들어올때 실행시키기)
@@ -30,7 +37,6 @@ function RecordScreen({ navigation }) {
   };
   // console.log(searchedMealType);
 
-  
   // 카드를 클릭할때 mealType 받아서 mealContext에 저장
   const setMealType = (mealType) => {
     updateMealType(mealType);
@@ -46,9 +52,9 @@ function RecordScreen({ navigation }) {
     setSearchModalVisible(false);
   };
 
-  // 로컬에 있는 사진 파일 GET요청
   const [img, setImgs] = useState([]);
-  const { setPhotoUri, setPhotoId } = usePhotoContext();
+
+  const { setPhotoUri, setPhotoId, imgResults } = usePhotoContext();
   const getImg = () => {
     axios
       .get(`${uri}/api/file/get-image/${userInfo.id}`)
@@ -98,8 +104,7 @@ function RecordScreen({ navigation }) {
     searchMealType();
     getTotalNutritionForDay();
     getImg();
-    console.log('유즈이펙트 실행되나 확인');
-  }, []); 
+  }, [imgResults, results]);
 
   //검색창을 안거치고 넘어갈때 렌더링할 데이터 요청하기
   const getMealByTypeAndDate = () => {
@@ -127,7 +132,6 @@ function RecordScreen({ navigation }) {
         console.log("getMealDataByTypeAndDate error..");
       });
   };
-
 
   const handleCardPress = (cardData) => {
     setMealType(cardData.mealType.toLowerCase());

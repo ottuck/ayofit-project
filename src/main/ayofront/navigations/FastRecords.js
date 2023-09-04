@@ -26,7 +26,7 @@ const FastRecord = ({ navigation }) => {
   useEffect(() => {
     // Axios GET 요청 설정
     axios
-      .get(`${uri}`)
+      .get(`${uri}/api/fast`)
       .then((response) => {
         setFastData(response.data);
       })

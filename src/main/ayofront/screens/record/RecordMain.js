@@ -26,10 +26,18 @@ import { useMealContext } from "../../store/MealContext";
 import { usePhotoContext } from "../../store/image_context";
 
 const RecordMain = ({ navigation }) => {
-  const { formattedYYMMDD, mealType, mealList, favoriteMeals } = useMealContext();
-  // console.log("밀컨택스트 => 레코드메인 :", mealList);
-
+  console.log("밀컨택스트 안 : ", mealList);
   const { userInfo, setUserInfo } = useContext(LoginContext);
+
+  const {
+    formattedYYMMDD,
+    mealType,
+    mealList,
+    favoriteMeals,
+    results,
+    setResults,
+  } = useMealContext();
+  console.log("밀컨택스트API :: ", mealList);
 
   //Server 통신을 위한 URI 수정
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -63,6 +71,9 @@ const RecordMain = ({ navigation }) => {
         params: { userId: userInfo.id },
       })
       .then((response) => {
+        // console.log(response.data);
+        setResults(response);
+        // console.log(results);
         console.log("MealData submitted successfully");
       })
       .catch(() => {
@@ -80,6 +91,7 @@ const RecordMain = ({ navigation }) => {
         },
       })
       .then((response) => {
+        setResults(response);
         console.log("MealData deleted successfully");
       })
       .catch(() => {
@@ -92,7 +104,8 @@ const RecordMain = ({ navigation }) => {
   const toggleImgModal = () => {
     setImgModalVisible(!imgModalVisible);
   };
-  const { photoUri, setPhotoUri, photoId } = usePhotoContext();
+  const { photoUri, setPhotoUri, photoId, imgResults, setImgResult } =
+    usePhotoContext();
 
   // 사진 파일 삭제 로직
   // console.log(photoUri);
@@ -107,6 +120,7 @@ const RecordMain = ({ navigation }) => {
       })
       .then((response) => {
         console.log("PhotoFile deleted successfully");
+        setImgResult(response);
         setPhotoUri(null);
       })
       .catch(() => {
@@ -154,7 +168,8 @@ const RecordMain = ({ navigation }) => {
       });
 
       const responseData = await response;
-      // console.log(responseData);
+      // console.log("~~~~~~~~~~>" + responseData);
+      setImgResult(responseData);
     } catch (error) {
       console.error(error);
     }
@@ -162,7 +177,7 @@ const RecordMain = ({ navigation }) => {
 
   // console.log(favoriteMeals);
 
-  const { dbFavorites, setFavoriteMeals } = useMealContext();
+  const { favResults, setFavResults } = useMealContext();
   // 즐겨찾기 식단 db에 등록
   const regFavMeals = () => {
     axios
@@ -171,6 +186,7 @@ const RecordMain = ({ navigation }) => {
       })
       .then((response) => {
         console.log(response.data);
+        setFavResults(response);
       })
       .catch((error) => {
         console.error(error);
@@ -255,7 +271,6 @@ const RecordMain = ({ navigation }) => {
     transformDateTime(pickerTime);
   const { ampm: ampm1, formattedTime: formattedCurrentTime } =
     transformDateTime(currentTime);
-
 
   //Rendering page
   return (
