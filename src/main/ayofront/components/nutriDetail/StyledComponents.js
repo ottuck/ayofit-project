@@ -83,7 +83,7 @@ export const HomeNavButtonContainer = styled.View`
   padding-left: 20px;
   padding-right: 20px;
   top: 22px;
-  left: 42px;
+  left: 52.5px;
   right: 42px;
 `;
 
