@@ -25,7 +25,7 @@ const HomePedometerArea = () => {
         <HomePedometerProgressBar />
       ) : (
         <View style={styles.blurBox}>
-          <Text style={styles.blurText}>🎯 Set Today's Step Goals 🎯</Text>
+          <Text style={styles.blurText}>🎯 Set Today's Step Goal 🎯</Text>
         </View>
       )}
     </TouchableOpacity>

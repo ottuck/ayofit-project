@@ -3,25 +3,34 @@ import { Formik } from "formik";
 import { useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import {
+  BodyContainer,
   ButtonText,
   Colors,
-  InnerContainer,
+  ExtraText,
+  ExtraView,
+  HeaderContainer,
   LeftIcon,
+  LoginContainer,
   MsgBox,
   PageTitle,
   RightIcon,
   StyledButton,
-  StyledContainer,
   StyledFormArea,
   StyledInputLabel,
   StyledTextInput,
   SubTitle,
+  TextLink,
+  TextLinkContent,
 } from "../../components/account/UI/loginStyles";
 import axios from "axios";
 import Constants from "expo-constants";
 import KeyboardAvoidWrapper from "../../components/keyboardAvoidingWrapper";
+import { GlobalStyles } from "../../components/UI/styles";
 
 const { brand, darkLight, primary } = Colors;
+
+const { whiteOpacity50, primary500, splashOrange, primary200 } =
+  GlobalStyles.colors;
 
 const Signup = ({ navigation }) => {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -58,10 +67,12 @@ const Signup = ({ navigation }) => {
 
   return (
     <KeyboardAvoidWrapper>
-      <StyledContainer>
-        <InnerContainer>
-          <PageTitle>Ayo Fit</PageTitle>
-          <SubTitle>Account Sign up</SubTitle>
+      <LoginContainer sign={true}>
+        <HeaderContainer sign={true}>
+          <PageTitle>Sign up</PageTitle>
+          <SubTitle>Start your adventure with us!</SubTitle>
+        </HeaderContainer>
+        <BodyContainer sign={true}>
           <Formik
             initialValues={{
               name: "",
@@ -96,8 +107,6 @@ const Signup = ({ navigation }) => {
                 <MyTextInput
                   label="Name"
                   icon="person"
-                  placeholder="Your Name"
-                  placeholderTextColor={darkLight}
                   onChangeText={handleChange("name")}
                   onBlur={handleBlur("name")}
                   value={values.name}
@@ -105,8 +114,6 @@ const Signup = ({ navigation }) => {
                 <MyTextInput
                   label="Email Address"
                   icon="mail"
-                  placeholder="Your Email"
-                  placeholderTextColor={darkLight}
                   onChangeText={handleChange("email")}
                   onBlur={handleBlur("email")}
                   value={values.email}
@@ -115,8 +122,6 @@ const Signup = ({ navigation }) => {
                 <MyTextInput
                   label="Password"
                   icon="lock"
-                  placeholder="Your Password"
-                  placeholderTextColor={darkLight}
                   onChangeText={handleChange("password")}
                   onBlur={handleBlur("password")}
                   value={values.password}
@@ -128,8 +133,6 @@ const Signup = ({ navigation }) => {
                 <MyTextInput
                   label="Confirm Password"
                   icon="lock"
-                  placeholder="Your Password"
-                  placeholderTextColor={darkLight}
                   onChangeText={handleChange("confirmPassword")}
                   onBlur={handleBlur("confirmPassword")}
                   value={values.confirmPassword}
@@ -146,14 +149,20 @@ const Signup = ({ navigation }) => {
                 )}
                 {isSubmitting && (
                   <StyledButton disabled={true}>
-                    <ActivityIndicator size="small" color={primary} />
+                    <ActivityIndicator size="small" color={primary500} />
                   </StyledButton>
                 )}
+                <ExtraView>
+                  <ExtraText>Already have an account? </ExtraText>
+                  <TextLink onPress={() => navigation.navigate("Login")}>
+                    <TextLinkContent> Log in!</TextLinkContent>
+                  </TextLink>
+                </ExtraView>
               </StyledFormArea>
             )}
           </Formik>
-        </InnerContainer>
-      </StyledContainer>
+        </BodyContainer>
+      </LoginContainer>
     </KeyboardAvoidWrapper>
   );
 };
@@ -170,7 +179,7 @@ const MyTextInput = ({
     <View>
       <StyledInputLabel>{label}</StyledInputLabel>
       <LeftIcon>
-        <Octicons name={icon} size={25} color={brand} />
+        <Octicons name={icon} size={25} color={whiteOpacity50} />
       </LeftIcon>
       <StyledTextInput {...props} />
       {isPassword && (
@@ -178,7 +187,7 @@ const MyTextInput = ({
           <Ionicons
             name={hidePassword ? "md-eye-off" : "md-eye"}
             size={25}
-            color={darkLight}
+            color={whiteOpacity50}
           />
         </RightIcon>
       )}

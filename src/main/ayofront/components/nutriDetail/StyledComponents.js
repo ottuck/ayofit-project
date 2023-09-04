@@ -472,6 +472,7 @@ export const RecordsGoalWeightContainer = styled.View`
   width: 100%;
   margin-top: 10px;
   margin-bottom: -6px;
+  left: 1.2px;
 `;
 
 export const RecordsGoalWeightText = styled.Text`

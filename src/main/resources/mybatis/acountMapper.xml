@@ -21,7 +21,7 @@
 	</select>
 	
 	<select id="getAccountInfos" resultType="AccountDTO">
-		select a_age as age, a_gender as gender, a_height as height, a_weight as cur_weight, a_activity as activity from accounts where a_id =#{userId}
+		select a_age as age, a_gender as gender, a_height as height, a_weight as curWeight, a_activity as activity from accounts where a_login =#{userId}
 	</select>
 	
 	<select id="getAccountTarWeight">
@@ -29,7 +29,7 @@
 	</select>
 	
 	<update id="updateAccountInfos">
-		update accounts set a_age=#{aDTO.age}, a_gender=#{aDTO.gender}, a_height=#{aDTO.height}, a_weight=#{aDTO.curWeight}, a_activity=#{aDTO.activity} where a_id=#{userId}
+		update accounts set a_age=#{aDTO.age}, a_gender=#{aDTO.gender}, a_height=#{aDTO.height}, a_weight=#{aDTO.curWeight}, a_activity=#{aDTO.activity} where a_login=#{userId}
 	</update>
 	
 	<update id="updateAccountGoal">

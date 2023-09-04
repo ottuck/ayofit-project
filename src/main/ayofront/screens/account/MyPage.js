@@ -5,9 +5,7 @@ import {
   Image,
   Dimensions,
   Pressable,
-  Alert,
   ScrollView,
-  TouchableOpacity,
 } from "react-native";
 import { GlobalStyles } from "../../components/UI/styles";
 import IconButton from "../../components/account/UI/IconButton";
@@ -98,7 +96,14 @@ function MyPage({ navigation }) {
         <Text style={styles.profile}>'s Profile</Text>
       </View>
       <View style={styles.profileImgContainer}>
-        <Image style={styles.profileImg} source={{ uri: userInfo.l_picture }} />
+        {userInfo.picture === null ? (
+          <Image
+            style={styles.profileImg}
+            source={require("../../assets/femaleAvatar.png")}
+          />
+        ) : (
+          <Image style={styles.profileImg} source={{ uri: userInfo.picture }} />
+        )}
       </View>
       <View style={styles.myGoalsContainer}>
         <View style={styles.myGoals}>
