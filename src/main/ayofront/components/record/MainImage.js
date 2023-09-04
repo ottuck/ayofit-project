@@ -7,9 +7,9 @@ import { LoginContext } from "../../store/LoginContext";
 import { usePhotoContext } from "../../store/image_context";
 
 function MainImage({ navigate }) {
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-  // const uri = "http://213.35.96.167";
+  // const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  // const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  const uri = "http://213.35.96.167";
 
   const { userInfo, setUserInfo } = useContext(LoginContext);
   const { photoUri } = usePhotoContext();

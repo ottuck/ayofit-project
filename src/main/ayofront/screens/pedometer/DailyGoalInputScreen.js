@@ -23,9 +23,9 @@ import { LoginContext } from "../../store/LoginContext";
 
 function DailyGoalInputScreen() {
   const { userInfo, setUserInfo } = useContext(LoginContext);
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-  // const uri = "http://213.35.96.167";
+  // const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  // const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  const uri = "http://213.35.96.167";
   const navigation = useNavigation();
 
   const [inputGoal, setInputGoal] = useState("");

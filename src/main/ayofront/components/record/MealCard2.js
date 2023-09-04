@@ -15,13 +15,17 @@ const MealCard2 = ({
   ampm2,
   mealInfo,
 }) => {
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-  // const uri = "http://213.35.96.167";
-  
+  // const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  // const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  const uri = "http://213.35.96.167";
 
   // 즐겨찾기 로직
-  const { deleteToMealByNo, addFavoriteMeal, removeFavoriteMeal, favoriteMeals } = useMealContext();
+  const {
+    deleteToMealByNo,
+    addFavoriteMeal,
+    removeFavoriteMeal,
+    favoriteMeals,
+  } = useMealContext();
   const [isLiked, setIsLiked] = useState(favoriteMeals.includes(mealInfo.nNO));
 
   const handleLikedPress = (no) => {
@@ -97,19 +101,26 @@ const MealCard2 = ({
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Carb</Text>
               <Text style={styles.foodNutrient}>
-                {mealInfo.nCarbohydrate === null || mealInfo.nCarbohydrate === undefined ? 0 : mealInfo.nCarbohydrate}
+                {mealInfo.nCarbohydrate === null ||
+                mealInfo.nCarbohydrate === undefined
+                  ? 0
+                  : mealInfo.nCarbohydrate}
               </Text>
             </View>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Protein</Text>
               <Text style={styles.foodNutrient}>
-                {mealInfo.nProtein === null || mealInfo.nProtein === undefined ? 0 : mealInfo.nProtein}
+                {mealInfo.nProtein === null || mealInfo.nProtein === undefined
+                  ? 0
+                  : mealInfo.nProtein}
               </Text>
             </View>
             <View style={styles.foodNutrientBox}>
               <Text style={styles.foodNutrient}>Fat</Text>
               <Text style={styles.foodNutrient}>
-                {mealInfo.nFat === null || mealInfo.nFat === undefined ? 0 : mealInfo.nFat}
+                {mealInfo.nFat === null || mealInfo.nFat === undefined
+                  ? 0
+                  : mealInfo.nFat}
               </Text>
             </View>
           </View>

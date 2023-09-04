@@ -7,8 +7,10 @@ import { useMealContext } from "../../store/MealContext";
 import { useState } from "react";
 
 const FavMeal = ({ mealInfo }) => {
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  // const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  // const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+
+  const uri = "http://213.35.96.167";
 
   const {
     removeFavoriteMeal,

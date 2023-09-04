@@ -15,9 +15,9 @@ import { usePhotoContext } from "../../store/image_context";
 import Constants from "expo-constants";
 import { LoginContext } from "../../store/LoginContext";
 
-// const uri = "http://213.35.96.167";
-const { debuggerHost } = Constants.manifest2.extra.expoGo;
-const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+const uri = "http://213.35.96.167";
+// const { debuggerHost } = Constants.manifest2.extra.expoGo;
+// const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 
 function RecordScreen({ navigation }) {
   const {

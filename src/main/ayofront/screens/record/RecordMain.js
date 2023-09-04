@@ -40,9 +40,9 @@ const RecordMain = ({ navigation }) => {
   console.log("밀컨택스트API :: ", mealList);
 
   //Server 통신을 위한 URI 수정
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-  //const uri = "http://213.35.96.167";
+  // const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  // const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  const uri = "http://213.35.96.167";
 
   //서버로 보내기전 데이터 포멧팅
   const updatedMealList = mealList.map((meal) => {

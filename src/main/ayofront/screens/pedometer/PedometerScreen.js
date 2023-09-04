@@ -10,7 +10,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View
+  View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { LoginContext } from "../../store/LoginContext";
@@ -27,9 +27,9 @@ import DailyGoalInputScreen from "./DailyGoalInputScreen";
 
 function PedometerScreen() {
   const { userInfo, setUserInfo } = useContext(LoginContext);
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-  //const uri = "http://213.35.96.167";
+  // const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  // const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  const uri = "http://213.35.96.167";
 
   const {
     steps,
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: GlobalStyles.colors.primary100,
-    paddingTop: Platform.OS === "ios" ? "15%" : "10%"
+    paddingTop: Platform.OS === "ios" ? "15%" : "10%",
   },
   dayContainerWrapper: {
     flexDirection: "row",

@@ -50,9 +50,9 @@ import { LoginContext } from "../../store/LoginContext";
 import { useAccountsContext } from "../../store/accounts_context";
 
 const MyRecordsComponent = () => {
-  const { debuggerHost } = Constants.manifest2.extra.expoGo;
-  const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-  //const uri = "http://213.35.96.167";
+  // const { debuggerHost } = Constants.manifest2.extra.expoGo;
+  // const uri = `http://${debuggerHost.split(":").shift()}:8080`;
+  const uri = "http://213.35.96.167";
 
   const { userInfo, setUserInfo } = useContext(LoginContext);
   const { accountInfos, setAccountInfos } = useAccountsContext();
