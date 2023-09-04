@@ -97,7 +97,7 @@ width: 88%;
 margin-top : 50px;
 margin-left : 20px;
 margin-right : 20px;
-margin-bottom : 30px;
+margin-bottom : 0px;
 align-items: center;
 justify-content: center;
 bottom: 60px;
@@ -142,6 +142,7 @@ margin-left : 40px;
 margin-right : 20px;
 flex-direction : row;
 position: relative;
+margin-bottom : 20px;
 `;
 export const PlanMethodCView = styled.View`
 align-items: center;
@@ -154,6 +155,7 @@ width: 80%;
 margin-top : 10px;
 margin-left : 40px;
 margin-right : 20px;
+margin-bottom : 20px;
 flex-direction : row;
 position: relative;
 `;
@@ -173,6 +175,7 @@ export const PlanEndText = styled.Text`
 font-size : 20px;
 line-height : 28px;
 text-shadow: 2px 3px 5px #f6c099;
+margin-bottom : 40px;
 `;
 export const PlanConfirmV = styled.View`
 height: 130px;
@@ -184,7 +187,7 @@ width : 85%;
 height : 50px;
 align-items: center;
 justify-content: center;
-margin-top : 25px;
+margin-top : 60px;
 margin-left : 30px;
 `;
 export const PlanConfirmT = styled.Text`
@@ -238,7 +241,7 @@ background-color: #E46C0A;
 height: 50px;
 width: 85%;
 position : absolute;
-bottom : 100px;
+bottom : 0px;
 margin-left : 30px;
 margin-right : 20px;
 align-items: center;
@@ -258,6 +261,7 @@ export const ConfirmMView = styled.View`
 justify-content : center;
 align-items: center;
 top:-270px;
+margin-top : 60px;
 `;
 export const ConfirmTView = styled.View`
 align-items: center;
@@ -312,9 +316,9 @@ align-items: center;
 justify-content: center;
 height : 50px;
 width : 100px;
-right : -120px;
+right : -150px;
 margin-bottom : 30px;
-bottom: 40px;
+bottom: 100px;
 `;
 export const TimerHomeBT = styled.Text`
 font-size : 20px;
@@ -362,13 +366,14 @@ font-weight : 500;
 color: white;
 `;
 export const TimerStop = styled.TouchableOpacity`
-margin-top : 40px;
+margin-top : 50px;
 width: 100px;
 height: 50px;
 background-color : #E46C0A;
 border-radius: 20px;
 align-items: center;
 justify-content: center;
+bottom: -50px;
 `;
 
 //---------------------FastDate.js---------------------//
