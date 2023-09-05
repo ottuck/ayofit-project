@@ -12,7 +12,7 @@
     },
     "preview": {
       "distribution": "internal",
-      "android": { "buildType": "apk", "withoutCredentials": true },
+      "android": { "buildType": "apk" },
       "ios": { "simulator": true }
     },
     "production": {}
