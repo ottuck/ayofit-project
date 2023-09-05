@@ -23,7 +23,7 @@ const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
   //Server 통신을 위한 URI 수정
   // const { debuggerHost } = Constants.manifest2.extra.expoGo;
   // const uri = `http://${debuggerHost.split(":").shift()}:8080`;
-  const uri = "http://213.35.96.167/";
+  const uri = "http://213.35.96.167";
 
   //Debounce를 적용한 SearchAPI 호출
   const [keyword, setKeyword] = useState(""); //검색 키워드
@@ -34,9 +34,10 @@ const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
       return; // 초기값일때(=페이지에 들어왔을때)는 요청을 보내지 않음
     }
 
-    const getList = () => {
+    const getList = async () => {
       const query = keyword.trim();
-      fetch(`${uri}/api/food/search/${query}`)
+      axios
+        .get(`${uri}/api/food/search/${query}`)
         .then((response) => {
           setList(response.data);
         })
@@ -59,7 +60,7 @@ const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
   const [error, setError] = useState("");
 
   const submitSearchResult = () => {
-    const foundItem = list.find(
+    const foundItem = list?.find(
       (item) => item.nFoodName.trim() === keyword.trim()
     );
     if (!foundItem) {
