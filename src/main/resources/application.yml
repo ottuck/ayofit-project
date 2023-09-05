@@ -33,8 +33,8 @@ logging:
     "[com.app.ayofit.mapper]": TRACE
 
 app:
-  firebase-configuration-file: ./serviceAccountKey.json
-  firebase-bucket: ayofit-57ea5.appspot.com
+  firebase-configuration-file: ./service-key.json
+  firebase-bucket: ayo-upload.appspot.com
 
 server:
   port: 80
