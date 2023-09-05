@@ -36,8 +36,7 @@ const SearchModal = ({ searchModalVisible, closeSearchModal, fromPage }) => {
 
     const getList = () => {
       const query = keyword.trim();
-      axios
-        .get(`${uri}/api/food/search/${query}`)
+      fetch(`${uri}/api/food/search/${query}`)
         .then((response) => {
           setList(response.data);
         })
