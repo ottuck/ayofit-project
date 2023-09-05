@@ -62,7 +62,7 @@ public class LoginDAO {
             return new LoginModel("SUCCESS", "Sign in successful", user);
         } else {
             if (loginMapper.setGoogle(uuid, reqId, reqEmail, reqName, reqPicture) == 1) {
-                return new LoginModel("SUCCESS", "Sign in successful",
+                return new LoginModel("SETINFO", "Sign in successful",
                         new LoginDTO(uuid, reqEmail, reqId, reqName, reqPicture));
             } else {
                 return new LoginModel("FAILED", "Google login canceled", null);
