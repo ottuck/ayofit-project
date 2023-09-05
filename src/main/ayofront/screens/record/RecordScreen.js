@@ -184,7 +184,7 @@ function RecordScreen({ navigation }) {
               { mealType: "Snack", meals: snackMeals },
             ].map((cardData, index) => {
               const imgData = img.find(
-                (item) => item.fType === cardData.mealType.toLowerCase()
+                (item) => item.fType === cardData.mealType
               );
               const imgUri = imgData ? imgData.fImg : null;
               //카드를 식별하여 left,right margin을 주기 위한 코드
