@@ -87,6 +87,7 @@ function RecordScreen({ navigation }) {
         },
       })
       .then((response) => {
+        console.log(response.data);
         const modifiedData = response.data.map((item) =>
           item === null ? 0 : item
         );
@@ -120,7 +121,6 @@ function RecordScreen({ navigation }) {
         },
       })
       .then((response) => {
-        // console.log(response);
         const newData = response.data.map((item) => {
           const nKeysObject = Object.fromEntries(
             Object.entries(item).map(([key, value]) => [
@@ -143,12 +143,8 @@ function RecordScreen({ navigation }) {
     console.log(cardData);
     setMealType(cardData.mealType);
     console.log(mealType);
-    setPhotoUri(
-      img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg
-    );
-    setPhotoId(
-      img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo
-    );
+    setPhotoUri(img.find((item) => item.fType === cardData.mealType)?.fImg);
+    setPhotoId(img.find((item) => item.fType === cardData.mealType)?.fNo);
 
     if (cardData.meals) {
       cleanMealList();
@@ -178,10 +174,10 @@ function RecordScreen({ navigation }) {
             contentContainerStyle={styles.cardScroll}
           >
             {[
-              { mealType: "Breakfast", meals: breakfastMeals },
-              { mealType: "Lunch", meals: lunchMeals },
-              { mealType: "Dinner", meals: dinnerMeals },
-              { mealType: "Snack", meals: snackMeals },
+              { mealType: "breakfast", meals: breakfastMeals },
+              { mealType: "lunch", meals: lunchMeals },
+              { mealType: "dinner", meals: dinnerMeals },
+              { mealType: "snack", meals: snackMeals },
             ].map((cardData, index) => {
               const imgData = img.find(
                 (item) => item.fType === cardData.mealType
