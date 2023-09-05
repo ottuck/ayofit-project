@@ -18,7 +18,7 @@ const MealCard1 = ({
   checkCardPress,
   cardStyle,
 }) => {
-
+  // console.log(imgUri);
   return (
     // <View style={styles.cardContainer}>
     <View style={[styles.cardContainer, ...cardStyle]}>
@@ -48,13 +48,21 @@ const MealCard1 = ({
               {carb === null || carb === undefined ? 0 : Math.floor(carb)} g
             </Text>
             <Text style={styles.nutrientValue}>
-              {protein === null || protein === undefined ? 0 : Math.floor(protein)} g
+              {protein === null || protein === undefined
+                ? 0
+                : Math.floor(protein)}{" "}
+              g
             </Text>
             <Text style={styles.nutrientValue}>
               {fat === null || fat === undefined ? 0 : Math.floor(fat)} g
             </Text>
             <Text style={styles.carloriesValue}>
-              {carb === null || protein === null || fat === null || carb === undefined || protein === undefined || fat === undefined
+              {carb === null ||
+              protein === null ||
+              fat === null ||
+              carb === undefined ||
+              protein === undefined ||
+              fat === undefined
                 ? "0 kcal"
                 : Math.floor(carb * 4 + protein * 4 + fat * 9) + " kcal"}
             </Text>
