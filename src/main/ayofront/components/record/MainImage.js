@@ -19,12 +19,14 @@ function MainImage({ navigate }) {
     await axios
       .get(`${uri}/api/file/get-image/${userInfo.id}`)
       .then((response) => {
+        // console.log(response.data);
         const newImgs = response.data.map((item) => ({
           fNo: item.fNo,
           fImg: item.fImg,
           fType: item.fType,
         }));
         setImgs(newImgs);
+        // console.log(newImgs);
       })
       .catch(() => {
         console.log("get error..");
