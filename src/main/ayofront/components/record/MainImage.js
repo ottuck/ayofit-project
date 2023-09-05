@@ -19,12 +19,14 @@ function MainImage({ navigate }) {
     await axios
       .get(`${uri}/api/file/get-image/${userInfo.id}`)
       .then((response) => {
+        // console.log(response);
         const newImgs = response.data.map((item) => ({
           fNo: item.fNo,
           fImg: item.fImg,
           fType: item.fType,
         }));
         setImgs(newImgs);
+        // console.log(newImgs);
       })
       .catch(() => {
         console.log("get error..");
@@ -59,12 +61,15 @@ function MainImage({ navigate }) {
             <Text style={styles.text}>Breakfast</Text>
             <TouchableOpacity onPress={navigate}>
               <View style={styles.imgCard}>
-                {img.find((item) => item.fType === "breakfast") ? (
+                {img.find(
+                  (item) => item.fType.toLowerCase() === "breakfast"
+                ) ? (
                   <Image
                     source={{
                       uri:
-                        img.find((item) => item.fType === "breakfast")?.fImg ||
-                        null,
+                        img.find(
+                          (item) => item.fType.toLowerCase() === "breakfast"
+                        )?.fImg || null,
                     }}
                     style={styles.img}
                   />
@@ -81,12 +86,12 @@ function MainImage({ navigate }) {
             <Text style={styles.text}>Lunch</Text>
             <TouchableOpacity onPress={navigate}>
               <View style={styles.imgCard}>
-                {img.find((item) => item.fType === "lunch") ? (
+                {img.find((item) => item.fType.toLowerCase() === "lunch") ? (
                   <Image
                     source={{
                       uri:
-                        img.find((item) => item.fType === "lunch")?.fImg ||
-                        null,
+                        img.find((item) => item.fType.toLowerCase() === "lunch")
+                          ?.fImg || null,
                     }}
                     style={styles.img}
                   />
@@ -105,12 +110,13 @@ function MainImage({ navigate }) {
             <Text style={styles.text}>Dinner</Text>
             <TouchableOpacity onPress={navigate}>
               <View style={styles.imgCard}>
-                {img.find((item) => item.fType === "dinner") ? (
+                {img.find((item) => item.fType.toLowerCase() === "dinner") ? (
                   <Image
                     source={{
                       uri:
-                        img.find((item) => item.fType === "dinner")?.fImg ||
-                        null,
+                        img.find(
+                          (item) => item.fType.toLowerCase() === "dinner"
+                        )?.fImg || null,
                     }}
                     style={styles.img}
                   />
@@ -127,12 +133,12 @@ function MainImage({ navigate }) {
             <Text style={styles.text}>Snack</Text>
             <TouchableOpacity onPress={navigate}>
               <View style={styles.imgCard}>
-                {img.find((item) => item.fType === "snack") ? (
+                {img.find((item) => item.fType.toLowerCase() === "snack") ? (
                   <Image
                     source={{
                       uri:
-                        img.find((item) => item.fType === "snack")?.fImg ||
-                        null,
+                        img.find((item) => item.fType.toLowerCase() === "snack")
+                          ?.fImg || null,
                     }}
                     style={styles.img}
                   />

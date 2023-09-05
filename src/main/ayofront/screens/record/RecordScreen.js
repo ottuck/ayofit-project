@@ -65,7 +65,7 @@ function RecordScreen({ navigation }) {
           fImg: item.fImg,
           fType: item.fType,
         }));
-        // console.log(newImgs);
+        console.log(newImgs);
         setImgs((prevImgs) => [...prevImgs, ...newImgs]);
       })
       .catch(() => {
