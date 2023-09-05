@@ -120,7 +120,7 @@ const RecordMain = ({ navigation }) => {
       })
       .then((response) => {
         console.log("PhotoFile deleted successfully");
-        setImgResult(response);
+        setImgResult(response.data);
         setPhotoUri(null);
       })
       .catch(() => {
