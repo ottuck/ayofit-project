@@ -18,7 +18,7 @@ const MealCard1 = ({
   checkCardPress,
   cardStyle,
 }) => {
-  console.log(imgUri);
+  // console.log(imgUri);
   return (
     // <View style={styles.cardContainer}>
     <View style={[styles.cardContainer, ...cardStyle]}>

@@ -36,7 +36,8 @@ public class FireBaseService {
 		Blob blob = bucket.create(uuid, content, file.getContentType());
 		System.out.println(blob.getMediaLink());
 		// uuid , userid
-		uuid = "https://firebasestorage.googleapis.com/v0/b/ayofit-57ea5.appspot.com/o/" + uuid + "?alt=media";
+		uuid = "https://firebasestorage.googleapis.com/v0/b/ayo-upload.appspot.com/o/" + uuid + "?alt=media";
+		
 		fileMapper.saveFile(uuid, userId, mealType);
 		return uuid;
 
@@ -44,7 +45,7 @@ public class FireBaseService {
 
 	public void deleteFile(int fNo, String fUrl) {
 		Bucket bucket = StorageClient.getInstance().bucket(firebaseBucket);
-		fUrl = fUrl.replace("https://firebasestorage.googleapis.com/v0/b/ayofit-57ea5.appspot.com/o/", "");
+		fUrl = fUrl.replace("https://firebasestorage.googleapis.com/v0/b/ayo-upload.appspot.com/o/", "");
 		fUrl = fUrl.replace("?alt=media", "");
 		System.out.println(fUrl);
 		Blob blob = bucket.get(fUrl);
