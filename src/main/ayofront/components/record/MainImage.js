@@ -19,7 +19,7 @@ function MainImage({ navigate }) {
     await axios
       .get(`${uri}/api/file/get-image/${userInfo.id}`)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         const newImgs = response.data.map((item) => ({
           fNo: item.fNo,
           fImg: item.fImg,
