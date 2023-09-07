@@ -2,7 +2,10 @@
 Hi there! 👋  We are a short-term team studying to become a professional developer in Korea  
 This app helps you record what you eat and manage your diet
 
+PPT link : https://www.canva.com/design/DAFtoV7Qnv4/Ev0cw_rZrvW5LgmwJdJ5pQ/view?utm_content=DAFtoV7Qnv4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink (한국어)  
 PPT link : https://www.canva.com/design/DAFtoiXIHt4/ULjWUUN1S9cuKEBd58mUrg/view?utm_content=DAFtoiXIHt4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink (日本語)  
+
+
 
 ## ⏳ Development term
 23.08.01 (MON) ~ 23.08.28 (FRI)
