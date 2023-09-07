@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.app.ayofit.mapper.RecordWeightMapper">
+    
+    <select id="findAllByUserId" parameterType="string" resultType="com.app.ayofit.model.RecordWeightDTO">
+	    SELECT R_W_NO as rNo, R_W_ID as rId, R_WEIGHT as rWeight, R_WEIGHT_DATE as rWeightDate 
+	    FROM RECORD_WEIGHT
+	    WHERE R_W_ID = #{rId}
+	    ORDER BY R_WEIGHT_DATE ASC
+	</select>
+
+	<select id="findByDateAndId" resultType="com.app.ayofit.model.RecordWeightDTO">
+		SELECT R_W_NO as rNo, R_W_ID as rId, R_WEIGHT as rWeight, R_WEIGHT_DATE as rWeightDate
+		FROM RECORD_WEIGHT WHERE R_WEIGHT_DATE=#{rWeightDate} AND R_W_ID=#{rId}
+	</select>
+
+	<select id="findWeightsBetweenDates" resultType="com.app.ayofit.model.RecordWeightDTO">
+	    SELECT R_W_NO as rNo, R_W_ID as rId, R_WEIGHT as rWeight, R_WEIGHT_DATE as rWeightDate
+	    FROM RECORD_WEIGHT
+	    WHERE R_W_ID = #{rId} AND R_WEIGHT_DATE BETWEEN #{startDate} AND #{endDate}
+	    ORDER BY R_WEIGHT_DATE ASC
+	</select>
+
+	<select id="findAllWeightsByUserId" resultType="com.app.ayofit.model.RecordWeightDTO">
+	    SELECT R_W_NO as rNo, R_W_ID as rId, R_WEIGHT as rWeight, R_WEIGHT_DATE as rWeightDate
+	    FROM RECORD_WEIGHT
+	    WHERE R_W_ID = #{rId} 
+	    ORDER BY R_WEIGHT_DATE ASC
+	</select>
+	
+    <insert id="insert">
+        INSERT INTO RECORD_WEIGHT (R_W_NO, R_W_ID, R_WEIGHT, R_WEIGHT_DATE) 
+        VALUES (RECORD_WEIGHT_SEQ.NEXTVAL, #{rId}, #{rWeight}, #{rWeightDate})
+    </insert>
+
+    <update id="update">
+        UPDATE RECORD_WEIGHT SET R_WEIGHT = #{rWeight} WHERE R_W_ID = #{rId} AND R_WEIGHT_DATE = #{rWeightDate}
+    </update>
+    
+    <delete id="delete">
+	    DELETE FROM RECORD_WEIGHT WHERE R_W_ID = #{rId} AND R_WEIGHT_DATE = #{rWeightDate}
+	</delete>
+
+</mapper>

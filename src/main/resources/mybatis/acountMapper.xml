@@ -1,8 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.app.ayofit.mapper.AcountMapper">
+<mapper namespace="com.app.ayofit.mapper.AccountMapper">
 
+	<insert id="regAccountInfos">
+		insert into accounts values (account_seq.nextval, #{userId}, #{aDTO.age}, #{aDTO.gender}, #{aDTO.height}, #{aDTO.curWeight}, #{aDTO.activity})
+	</insert>
 	
+	<insert id="regAccountGoal">
+		insert into goal
+		values (goal_seq.nextval, #{userId}, #{gDTO.calorie}, #{gDTO.tarWeight}, #{gDTO.carb}, #{gDTO.protein}, #{gDTO.fat}, CURRENT_DATE)
+	</insert>
+	
+	<insert id="regAccountWeight">
+		insert into record_weight values (record_weight_seq.nextval, #{userId}, #{aDTO.curWeight},sysdate)
+	</insert>
+	
+	<select id="getAccountGoals" resultType="GoalDTO">
+		select g_weight as tar_weight, g_kcal as calorie, g_carbohydrate as carb, g_protein as protein, g_fat as fat from goal where g_id = #{userId} 
+	</select>
+	
+	<select id="getAccountInfos" resultType="AccountDTO">
+		select a_age as age, a_gender as gender, a_height as height, a_weight as curWeight, a_activity as activity from accounts where a_login =#{userId}
+	</select>
+	
+	<select id="getAccountTarWeight">
+		select g_weight from goal where g_id = #{userId}
+	</select>
+	
+	<update id="updateAccountInfos">
+		update accounts set a_age=#{aDTO.age}, a_gender=#{aDTO.gender}, a_height=#{aDTO.height}, a_weight=#{aDTO.curWeight}, a_activity=#{aDTO.activity} where a_login=#{userId}
+	</update>
+	
+	<update id="updateAccountGoal">
+		update goal set g_weight=#{gDTO.tarWeight}, g_kcal=#{gDTO.calorie}, g_carbohydrate=#{gDTO.carb}, g_protein=#{gDTO.protein}, g_fat=#{gDTO.fat} where g_id=#{userId}
+	</update>
+
+	<update id="confirmInfo">
+		update login
+		set l_info = 1
+		where l_id = #{userId}
+	</update>
 	
 </mapper>

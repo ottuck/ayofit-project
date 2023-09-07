@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.app.ayofit.mapper.FavMapper">
+
+	<select id="getFavoirtes" resultType="FavDTO">
+		select favorites.f_no as favNo, nutrition.n_food_name as favName, nutrition.n_kcal as favKcal, 
+		nutrition.n_carbohydrate as favCarb, nutrition.n_protein as favProtein, nutrition.n_fat as favFat
+		from favorites, nutrition 
+		where f_n_no = n_no and f_id= #{userId}
+	</select>
+	
+	<insert id="regFavorites">
+		insert into favorites values (favorites_seq.nextval, #{userId}, #{no})
+	</insert>
+	
+	<delete id="deleteFavorites">
+		delete from favorites where f_no =#{no}
+	</delete>
+
+</mapper>

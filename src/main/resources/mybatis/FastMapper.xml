@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.app.ayofit.mapper.FastMapper">
+
+<insert id="insertFastData">
+    INSERT INTO FAST (F_NO, F_ID, F_ELAPSEDTIME, F_START, F_END)
+    VALUES (fast_seq.nextval, #{userId}, #{fDTO.elapsedTime}, TO_DATE(#{fDT0.confirmStartTime}, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#{fDTO.confirmEndTime}, 'YYYY-MM-DD HH24:MI:SS'))
+</insert>
+
+<select id="getAllFastRecord" resultType="FastDTO">
+	select F_ELAPSEDTIME AS elapsedTime , F_START AS ConfirmStartTime ,F_END AS ConfirmEndTime from FAST
+</select>
+</mapper>
