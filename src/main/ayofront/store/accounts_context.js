@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useReducer, useState } from "react";
 
 const AccountsContext = createContext();
 
@@ -38,9 +38,13 @@ function AccountsContextProvider({ children }) {
     dispatch({ type: "UPDATE_ACCOUNT_INFO", payload: updatedInfo });
   };
 
+  const [accountResult, setAcountResult] = useState([]);
+
   const value = {
     accountInfos,
     setAccountInfos,
+    accountResult,
+    setAcountResult,
   };
   return (
     <AccountsContext.Provider value={value}>

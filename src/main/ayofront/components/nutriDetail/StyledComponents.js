@@ -2,7 +2,7 @@ import styled from "styled-components/native";
 import * as Progress from "react-native-progress";
 
 export const HomeSafeAreaView = styled.SafeAreaView`
-  height: 2000px;
+  height: 2080px;
   background-color: #ffe9d8;
 `;
 
@@ -83,7 +83,7 @@ export const HomeNavButtonContainer = styled.View`
   padding-left: 20px;
   padding-right: 20px;
   top: 22px;
-  left: 42px;
+  left: 52.5px;
   right: 42px;
 `;
 

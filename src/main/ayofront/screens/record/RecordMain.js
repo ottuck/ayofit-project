@@ -29,8 +29,14 @@ const RecordMain = ({ navigation }) => {
   console.log("밀컨택스트 안 : ", mealList);
   const { userInfo, setUserInfo } = useContext(LoginContext);
 
-  const { formattedYYMMDD, mealType, mealList, favoriteMeals } =
-    useMealContext();
+  const {
+    formattedYYMMDD,
+    mealType,
+    mealList,
+    favoriteMeals,
+    results,
+    setResults,
+  } = useMealContext();
   console.log("밀컨택스트API :: ", mealList);
 
   //Server 통신을 위한 URI 수정
@@ -65,6 +71,9 @@ const RecordMain = ({ navigation }) => {
         params: { userId: userInfo.id },
       })
       .then((response) => {
+        // console.log(response.data);
+        setResults(response);
+        // console.log(results);
         console.log("MealData submitted successfully");
       })
       .catch(() => {
@@ -82,6 +91,7 @@ const RecordMain = ({ navigation }) => {
         },
       })
       .then((response) => {
+        setResults(response);
         console.log("MealData deleted successfully");
       })
       .catch(() => {
@@ -94,7 +104,8 @@ const RecordMain = ({ navigation }) => {
   const toggleImgModal = () => {
     setImgModalVisible(!imgModalVisible);
   };
-  const { photoUri, setPhotoUri, photoId } = usePhotoContext();
+  const { photoUri, setPhotoUri, photoId, imgResults, setImgResult } =
+    usePhotoContext();
 
   // 사진 파일 삭제 로직
   // console.log(photoUri);
@@ -109,6 +120,7 @@ const RecordMain = ({ navigation }) => {
       })
       .then((response) => {
         console.log("PhotoFile deleted successfully");
+        setImgResult(response.data);
         setPhotoUri(null);
       })
       .catch(() => {
@@ -156,16 +168,16 @@ const RecordMain = ({ navigation }) => {
       });
 
       const responseData = await response;
-      // console.log(responseData);
-      getImg();
+      // console.log("~~~~~~~~~~>" + responseData);
+      setImgResult(responseData);
     } catch (error) {
       console.error(error);
     }
   };
 
-  console.log(favoriteMeals);
+  // console.log(favoriteMeals);
 
-  const { dbFavorites, setFavoriteMeals } = useMealContext();
+  const { favResults, setFavResults } = useMealContext();
   // 즐겨찾기 식단 db에 등록
   const regFavMeals = () => {
     axios
@@ -174,6 +186,7 @@ const RecordMain = ({ navigation }) => {
       })
       .then((response) => {
         console.log(response.data);
+        setFavResults(response);
       })
       .catch((error) => {
         console.error(error);
@@ -371,7 +384,7 @@ const RecordMain = ({ navigation }) => {
           >
             {mealList.map((mealInfo, index) => (
               <MealCard2
-                key={index}
+                key={index} //index 문제일수도?
                 mealInfo={mealInfo}
                 useTimepicker={useTimepicker}
                 formattedCurrentTime={formattedCurrentTime}

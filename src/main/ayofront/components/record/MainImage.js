@@ -4,6 +4,7 @@ import axios from "axios";
 import Constants from "expo-constants";
 import { useContext, useEffect, useState } from "react";
 import { LoginContext } from "../../store/LoginContext";
+import { usePhotoContext } from "../../store/image_context";
 
 function MainImage({ navigate }) {
   const { debuggerHost } = Constants.manifest2.extra.expoGo;
@@ -11,18 +12,21 @@ function MainImage({ navigate }) {
   // const uri = "http://213.35.96.167";
 
   const { userInfo, setUserInfo } = useContext(LoginContext);
+  const { imgResults } = usePhotoContext();
 
   const [img, setImgs] = useState([]);
   const getImg = async () => {
     await axios
       .get(`${uri}/api/file/get-image/${userInfo.id}`)
       .then((response) => {
+        // console.log(response.data);
         const newImgs = response.data.map((item) => ({
           fNo: item.fNo,
           fImg: item.fImg,
           fType: item.fType,
         }));
         setImgs(newImgs);
+        // console.log(newImgs);
       })
       .catch(() => {
         console.log("get error..");
@@ -31,7 +35,7 @@ function MainImage({ navigate }) {
 
   useEffect(() => {
     getImg();
-  }, []);
+  }, [imgResults]);
 
   return (
     <View style={styles.container}>

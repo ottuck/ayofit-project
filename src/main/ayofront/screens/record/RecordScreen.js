@@ -22,17 +22,26 @@ const uri = `http://${debuggerHost.split(":").shift()}:8080`;
 function RecordScreen({ navigation }) {
   const {
     mealType,
+    setMealType,
     addItemToMealList,
     updateMealType,
     formattedYYMMDD,
+    addItemToMealListUseFlatMap,
     cleanMealList,
+    results,
   } = useMealContext();
   const { userInfo, setUserInfo } = useContext(LoginContext);
 
-  // 카드를 클릭할때 mealType 받아서 mealContext에 저장
-  const setMealType = (mealType) => {
-    updateMealType(mealType);
+  //mealType 찾는 다른 함수 고안(카드를 클릭할때 말고 useEffect로 페이지에 들어올때 실행시키기)
+  const [searchedMealType, setSearchedMealType] = useState();
+  const searchMealType = (mealType) => {
+    setSearchedMealType(mealType);
   };
+
+  // 카드를 클릭할때 mealType 받아서 mealContext에 저장
+  // const setMealType = (mealType) => {
+  //   updateMealType(mealType);
+  // };
 
   //Search Modal
   const [searchModalVisible, setSearchModalVisible] = useState(false);
@@ -46,7 +55,7 @@ function RecordScreen({ navigation }) {
 
   const [img, setImgs] = useState([]);
 
-  const { setPhotoUri, setPhotoId } = usePhotoContext();
+  const { setPhotoUri, setPhotoId, imgResults } = usePhotoContext();
   const getImg = () => {
     axios
       .get(`${uri}/api/file/get-image/${userInfo.id}`)
@@ -56,7 +65,7 @@ function RecordScreen({ navigation }) {
           fImg: item.fImg,
           fType: item.fType,
         }));
-        // console.log(newImgs);
+        console.log(newImgs);
         setImgs((prevImgs) => [...prevImgs, ...newImgs]);
       })
       .catch(() => {
@@ -78,6 +87,7 @@ function RecordScreen({ navigation }) {
         },
       })
       .then((response) => {
+        console.log(response.data);
         const modifiedData = response.data.map((item) =>
           item === null ? 0 : item
         );
@@ -87,19 +97,22 @@ function RecordScreen({ navigation }) {
         setSnackMeals(modifiedData[3]);
         // console.log('Sever => RecordScreen.js:', modifiedData);
       })
-      .catch(() => {
-        console.log("getMealByDate error..");
+      .catch((error) => {
+        console.log("getMealByDate error.." + error);
       });
   };
 
   useEffect(() => {
+    searchMealType();
     getTotalNutritionForDay();
     getImg();
-    console.log("!!!!");
-  }, []);
+  }, [imgResults, results]);
 
-  //SearchModal을 거치지 않고 mealMain페이지로 진입시 Sever에서 해당 날자 식단을 가져와서 MealContext에 저장
+  // console.log(mealType);
+  //검색창을 안거치고 넘어갈때 렌더링할 데이터 요청하기
   const getMealByTypeAndDate = () => {
+    console.log("axios요청 안");
+    console.log(mealType);
     axios
       .get(`${uri}/api/meal/type`, {
         params: {
@@ -108,27 +121,35 @@ function RecordScreen({ navigation }) {
         },
       })
       .then((response) => {
-        console.log("GET서버 => RecordMain.js:", response.data);
-        addItemToMealList(response.data);
+        const newData = response.data.map((item) => {
+          const nKeysObject = Object.fromEntries(
+            Object.entries(item).map(([key, value]) => [
+              key.replace(/^r/, "n"),
+              value,
+            ])
+          );
+          return nKeysObject;
+        });
+        // console.log('GET서버 :', newData);
+        addItemToMealListUseFlatMap(newData);
       })
-      .catch(() => {
-        console.log("getMealDataByTypeAndDate error..");
+      .catch((error) => {
+        console.log("getMealDataByTypeAndDate error.." + error);
       });
   };
 
   const handleCardPress = (cardData) => {
-    setMealType(cardData.mealType.toLowerCase());
-    setPhotoUri(
-      img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fImg
-    );
-    setPhotoId(
-      img.find((item) => item.fType === cardData.mealType.toLowerCase())?.fNo
-    );
+    console.log("handleCardPess안");
+    console.log(cardData);
+    setMealType(cardData.mealType);
+    console.log(mealType);
+    setPhotoUri(img.find((item) => item.fType === cardData.mealType)?.fImg);
+    setPhotoId(img.find((item) => item.fType === cardData.mealType)?.fNo);
 
     if (cardData.meals) {
       cleanMealList();
       getMealByTypeAndDate();
-      navigation.push("RecordMain"); // 음식 데이터가 있으면 RecordMain 화면으로 이동
+      navigation.navigate("RecordMain"); // 음식 데이터가 있으면 RecordMain 화면으로 이동
     } else {
       cleanMealList();
       openSearchModal(); // 음식 데이터가 없으면 openSearchModal 실행
@@ -153,13 +174,13 @@ function RecordScreen({ navigation }) {
             contentContainerStyle={styles.cardScroll}
           >
             {[
-              { mealType: "Breakfast", meals: breakfastMeals },
-              { mealType: "Lunch", meals: lunchMeals },
-              { mealType: "Dinner", meals: dinnerMeals },
-              { mealType: "Snack", meals: snackMeals },
+              { mealType: "breakfast", meals: breakfastMeals },
+              { mealType: "lunch", meals: lunchMeals },
+              { mealType: "dinner", meals: dinnerMeals },
+              { mealType: "snack", meals: snackMeals },
             ].map((cardData, index) => {
               const imgData = img.find(
-                (item) => item.fType === cardData.mealType.toLowerCase()
+                (item) => item.fType === cardData.mealType
               );
               const imgUri = imgData ? imgData.fImg : null;
               //카드를 식별하여 left,right margin을 주기 위한 코드
@@ -181,6 +202,7 @@ function RecordScreen({ navigation }) {
                   carb={cardData.meals.totalCarbohydrate}
                   protein={cardData.meals.totalProtein}
                   fat={cardData.meals.totalFat}
+                  searchMealType={searchMealType}
                   checkCardPress={handlePress} // 클로저를 사용한 함수 전달
                   cardStyle={cardStyle}
                 />

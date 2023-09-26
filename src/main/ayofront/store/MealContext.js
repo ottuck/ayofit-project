@@ -12,8 +12,17 @@ export const MealProvider = ({ children }) => {
 
   //MealCard2 handling
   const [mealList, setMealList] = useState([]);
+
   const addItemToMealList = (newItem) => {
     setMealList((prevMealList) => [...prevMealList, newItem]);
+  };
+  const addItemToMealListUseFlatMap = (newItem) => {
+    setMealList((prevMealList) => {
+      const updatedMealList = [...prevMealList, newItem].flatMap(
+        (item) => item
+      );
+      return updatedMealList;
+    });
   };
   const deleteToMealByNo = (nNO) => {
     setMealList((prevMealList) =>
@@ -22,8 +31,8 @@ export const MealProvider = ({ children }) => {
   };
   const cleanMealList = () => {
     setMealList([]);
+    // console.log('컨택스트 비움');
   };
-
 
   // Favorites handling
   const [favoriteMeals, setFavoriteMeals] = useState([]);
@@ -46,43 +55,51 @@ export const MealProvider = ({ children }) => {
     );
   };
 
+  const [results, setResults] = useState([]);
+  const [favResults, setFavResults] = useState([]);
 
-
-  //여러 페이지에서 쓸 현재 날자를 DB Date형식에 맞춰 포멧팅 해둠  
+  //여러 페이지에서 쓸 현재 날자를 DB Date형식에 맞춰 포멧팅 해둠
   const todayDate = new Date();
 
-  //1. POST,PUT 요청에 쓸 형식 : 날자 시간 같이 들어가기 때문에 (yyyy/mm/dd hh:mm:ss)
-  const formattedTodayDateAndTime = `${todayDate.getFullYear()}/${String(todayDate.getMonth() + 1).padStart(2, '0')
-    }/${String(todayDate.getDate()).padStart(2, '0')} ${String(
-      todayDate.getHours()
-    ).padStart(2, '0')}:${String(todayDate.getMinutes()).padStart(2, '0')}:${String(
-      todayDate.getSeconds()
-    ).padStart(2, '0')}`;
+  //1. POST,PUT 요청 보낼때 형식 : 날자 시간 같이 들어가기 때문에 (yyyy/mm/dd hh:mm:ss)
+  const formattedTodayDateAndTime = `${todayDate.getFullYear()}/${String(
+    todayDate.getMonth() + 1
+  ).padStart(2, "0")}/${String(todayDate.getDate()).padStart(2, "0")} ${String(
+    todayDate.getHours()
+  ).padStart(2, "0")}:${String(todayDate.getMinutes()).padStart(
+    2,
+    "0"
+  )}:${String(todayDate.getSeconds()).padStart(2, "0")}`;
   // console.log(formattedTodayDateAndTime);
 
-  //2. 서버에 GET 요청할때 쓸 형식 : 날자별로 조회할 경우가 많기 때문에 (yyyy/mm/dd)
-  const formattedYYMMDD = `${todayDate.getFullYear()}/${String(todayDate.getMonth() + 1).padStart(2, '0')
-    }/${String(todayDate.getDate()).padStart(2, '0')}`;
+  //2. GET 요청할 보낼때 쓸 형식 : 날자별로 조회할 경우가 많기 때문에 (yyyy/mm/dd)
+  const formattedYYMMDD = `${todayDate.getFullYear()}/${String(
+    todayDate.getMonth() + 1
+  ).padStart(2, "0")}/${String(todayDate.getDate()).padStart(2, "0")}`;
   // console.log(formattedYYMMDD);
 
-  const formattedTime24 = `${String(todayDate.getHours()).padStart(2, '0')
-    }:${String(todayDate.getMinutes()).padStart(2, '0')}`;
+  const formattedTime24 = `${String(todayDate.getHours()).padStart(
+    2,
+    "0"
+  )}:${String(todayDate.getMinutes()).padStart(2, "0")}`;
   // console.log(formattedTime24);
 
   const hours12 = todayDate.getHours() % 12 || 12;
-  const ampm = todayDate.getHours() < 12 ? 'am' : 'pm';
-  const formattedTime12 = `${ampm} ${String(hours12).padStart(2, '0')
-    }:${String(todayDate.getMinutes()).padStart(2, '0')}`;
+  const ampm = todayDate.getHours() < 12 ? "am" : "pm";
+  const formattedTime12 = `${ampm} ${String(hours12).padStart(2, "0")}:${String(
+    todayDate.getMinutes()
+  ).padStart(2, "0")}`;
   // console.log(formattedTime12);
-
 
   return (
     <MealContext.Provider
       value={{
         mealType,
+        setMealType,
         updateMealType,
         mealList,
         addItemToMealList,
+        addItemToMealListUseFlatMap,
         deleteToMealByNo,
         cleanMealList,
 
@@ -94,6 +111,10 @@ export const MealProvider = ({ children }) => {
         setDbFavorites,
         addToDbFavorites,
         deleteToDbFavorites,
+        results,
+        setResults,
+        favResults,
+        setFavResults,
 
         formattedTodayDateAndTime,
         formattedYYMMDD,

@@ -26,7 +26,7 @@ const FastRecord = ({ navigation }) => {
   useEffect(() => {
     // Axios GET 요청 설정
     axios
-      .get(`${uri}`)
+      .get(`${uri}/api/fast`)
       .then((response) => {
         setFastData(response.data);
       })
@@ -85,7 +85,7 @@ const FastRecord = ({ navigation }) => {
                   Using Time : {formatTimeFromSeconds(data.elapsedTime)}
                 </RecordUseTime>
                 <RecordSTime> Start : {data.confirmStartTime}</RecordSTime>
-                <RecordETime> End : {data.confirmEndTime}</RecordETime>
+                <RecordETime> End   : {data.confirmEndTime}</RecordETime>
               </RecordOneView>
             ))}
           </RecordUnderC>

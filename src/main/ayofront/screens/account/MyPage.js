@@ -19,6 +19,7 @@ import { useContext, useEffect, useState } from "react";
 import { LoginContext } from "../../store/LoginContext";
 import { useMealContext } from "../../store/MealContext";
 import FavMeal from "../../components/record/FavMeal";
+import { useAccountsContext } from "../../store/accounts_context";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -30,6 +31,7 @@ function MyPage({ navigation }) {
   //const uri = "http://213.35.96.167";
 
   const [goals, setGoals] = useState({});
+  const { accountResult } = useAccountsContext();
 
   const getAccountGoals = () => {
     axios
@@ -43,7 +45,8 @@ function MyPage({ navigation }) {
       });
   };
 
-  const { favoriteMeals, dbFavorites, setDbFavorites } = useMealContext();
+  const { favoriteMeals, dbFavorites, setDbFavorites, favResults } =
+    useMealContext();
 
   const getFavorites = () => {
     axios
@@ -61,11 +64,11 @@ function MyPage({ navigation }) {
 
   useEffect(() => {
     getAccountGoals();
-  }, []);
+  }, [accountResult]);
 
   useEffect(() => {
     getFavorites();
-  }, []);
+  }, [favResults]);
 
   const goToAccountInfo = () => {
     navigation.navigate("AccUpdateInfo");
