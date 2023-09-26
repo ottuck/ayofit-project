@@ -96,7 +96,7 @@ function RecordScreen({ navigation }) {
     getTotalNutritionForDay();
     getImg();
     console.log("!!!!");
-  }, [img]);
+  }, []);
 
   //SearchModal을 거치지 않고 mealMain페이지로 진입시 Sever에서 해당 날자 식단을 가져와서 MealContext에 저장
   const getMealByTypeAndDate = () => {

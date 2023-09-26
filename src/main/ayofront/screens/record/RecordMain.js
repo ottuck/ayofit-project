@@ -26,16 +26,11 @@ import { useMealContext } from "../../store/MealContext";
 import { usePhotoContext } from "../../store/image_context";
 
 const RecordMain = ({ navigation }) => {
-
   console.log("밀컨택스트 안 : ", mealList);
   const { userInfo, setUserInfo } = useContext(LoginContext);
 
-  const {
-    formattedYYMMDD,
-    mealType,
-    mealList,
-    favoriteMeals,
-  } = useMealContext();
+  const { formattedYYMMDD, mealType, mealList, favoriteMeals } =
+    useMealContext();
   console.log("밀컨택스트API :: ", mealList);
 
   //Server 통신을 위한 URI 수정
@@ -162,6 +157,7 @@ const RecordMain = ({ navigation }) => {
 
       const responseData = await response;
       // console.log(responseData);
+      getImg();
     } catch (error) {
       console.error(error);
     }
@@ -262,7 +258,6 @@ const RecordMain = ({ navigation }) => {
     transformDateTime(pickerTime);
   const { ampm: ampm1, formattedTime: formattedCurrentTime } =
     transformDateTime(currentTime);
-
 
   //Rendering page
   return (
