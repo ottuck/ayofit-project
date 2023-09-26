@@ -40,3 +40,6 @@ out/
 
 ### Wallet ###
 /Wallet_ayofit/
+
+### Firebase ###
+service-key.json
